@@ -1,0 +1,105 @@
+/* General */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: antiquewhite;
+  color: #000;
+}
+
+/* Loading Screen */
+.loading-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: antiquewhite;
+}
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+.icon-text {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.icon {
+  font-size: 120px;
+  color: #000000;
+}
+
+h1 {
+  font-size: 60px;
+  font-weight: 600;
+  color: #000;
+  margin: 0;
+}
+
+.tagline {
+  font-size: 18px;
+  color: #555;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.heartbeat-icon {
+  font-size: 40px;
+  display: inline-block;
+  animation: heartbeat 1.5s infinite;
+  color: #e74c3c;
+}
+/* Header (Homepage) */
+header {
+  border-bottom: 1px solid #ddd;
+  background: #ffffff;
+}
+
+#homepage {
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+}
+.homepage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#homepage h2 {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 40px;
+  font-weight: bold;
+}
+.heal-red {
+  color: rgba(14, 94, 241, 0.712);
+}
+
+.connect-blue {
+  color: rgb(83, 209, 104);
+}
+nav {
+  display: flex;
+  align-items: center;
+}
+
+nav a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #000;
+  font-size: 20px;
+  
+}
+
+nav a:hover {
+  color: #6b28d9;
+}
+
+nav a:last-child {
+  background-color: #6b28d9;
+  color: #fff;
+  padding: 8px 15px;
+  border-radius: 4px;
+  font-weight: bold;
+}
