@@ -112,3 +112,19 @@ nav a:last-child {
   height: calc(100vh - 60px);
   color: #413636ab;
 }
+.login-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 60px);
+  border: #e74c3c;
+  box-sizing: border-box;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid ;
+
+}
+
+
