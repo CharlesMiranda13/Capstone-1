@@ -71,11 +71,11 @@ header {
   font-size: 40px;
   font-weight: bold;
 }
-.heal-red {
+.heal-blue {
   color: rgba(14, 94, 241, 0.712);
 }
 
-.connect-blue {
+.connect-green {
   color: rgb(83, 209, 104);
 }
 nav {
@@ -102,7 +102,7 @@ nav a:last-child {
   border-radius: 4px;
   font-weight: bold;
 }
-
+/* Main Section */
 .hero-section {
   display: flex;
   flex-direction: column;
@@ -149,12 +149,6 @@ body:has(.login-container) {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   background-color: #fff;
   box-sizing: border-box;
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: #059669;
-  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
 }
 
 .form-group input:hover {
