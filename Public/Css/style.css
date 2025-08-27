@@ -59,7 +59,7 @@ header {
 #homepage {
   justify-content: space-between;
   align-items: center;
-  padding: 15px 40px;
+  padding: 10px 40px;
 }
 .homepage-header {
   display: flex;
@@ -106,14 +106,16 @@ nav a:last-child {
 /* Main Section */
 .main-section {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
+  align-items: center;
   height: calc(100vh - 60px);
   background-color: #D9D9D9;
+  gap: 500px;
 }
 .main-content {
   max-width: 800px;
-  text-align: center;
+  text-align: left;
   padding: 0 20px;
   margin: 0;
   box-sizing: border-box;
@@ -136,6 +138,14 @@ nav a:last-child {
   font-size: 16px;
   font-weight: 600;
   margin-top: 20px;
+}
+.main-image img {
+  max-width: 400px;        
+  height: auto;
+  border-radius: 10px;
+  margin-top: 0;            
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin-right: 100px;
 }
 
 /* Login section */
@@ -223,24 +233,27 @@ body:has(.login-container) {
 }
 
 /* Register section */
-.image-container {
+.Users {
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin-bottom: 20px;
-  flex-direction: column;
+  gap: 400px;
+  margin-top: 250px;
+}
+.User1, .User2 {
+  background: #fff;
+  padding: 160px 120px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   text-align: center;
-  padding: 10px;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  background-color: #f9fafb;
-  transition: transform 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 200px;
-  height: 250px;
-  margin: 10px;
-  box-sizing: border-box;
-  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.User1 a, .User2 a {
+  display: block;
+  margin-top: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
 }
 
 /*features section*/
