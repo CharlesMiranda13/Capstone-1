@@ -7,3 +7,10 @@ It aims to improve access to rehabilitation by enabling patients to connect with
 📌 Project Status
 
 🚧 This project is currently under development. Some features may not be fully implemented yet.
+
+
+👨‍💻 Group Members 
+• Espinoza, Joshua
+• Gozun, Jayvee
+• Miranda, Charles Kit
+• Mungcal, Lord Alfred - Leader
