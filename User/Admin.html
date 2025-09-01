@@ -4,21 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/Public/Css/style.css" />
 </head>
 <body>
     <div class ="sidebar">
-    <h1>HealConnect</h1>
-    <ul>
-        <li><a href="manage_users.html">Manage Users</a></li>
-        <li><a href="view_reports.html">View Reports</a></li>
-        <li><a href="settings.html">Settings</a></li>
-        <li><a href="logout.html">Logout</a></li>
-    </ul>
+        <h1>
+            <span class="heal-blue">Heal</span><span class="connect-green">Connect</span>
+        </h1>
+        <hr>
+
+        <a href="manage_users.html"><i class = "fa solid fa-users"></i>Manage Users</a></li>
+        <a href="view_reports.html"><i class = "fa solid fa-chart-bar"></i>View Reports</a></li>
+        <a href="settings.html"><i class = "fa solid fa-cog"></i>Settings</a></li>
+        <a href="logout.html"><i class = "fa solid fa-sign-out"></i>Logout</a></li>
+        
+    
+   
     </div>
-    <div class="content">
-        <h2>Admin Dashboard</h2>
-        <p>Welcome, Admin! Here you can manage users, view reports, and adjust settings.</p>
+    <div class="admin-main">
+        <h2>Dashboard</h2>
+        <div class="dashboard-cards">
+            <div class="card">
+                <h3>Total Users</h3>
+            </div>
+            <div class="card">
+                <h3>Active Sessions</h3>
+            </div>
+            <div class="card">
+                <h3>New Registrations</h3>
+            </div>
+            <div class="card">
+                <h3>Pending Approvals</h3>
+            </div>
+
 
 
 

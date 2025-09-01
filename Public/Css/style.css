@@ -375,7 +375,7 @@ footer {
 /*Admin*/
 .sidebar {
   width: 250px;
-  background-color: #a3e2df;
+  background-color: rgb(238, 222, 202);
   color: white;
   height: 100vh;
   position: fixed;
@@ -388,7 +388,43 @@ footer {
 .sidebar h1 {
   text-align: center;
   margin-bottom: 30px;
-  font-size: 24px;
+  font-size: 30px;
+}
+.sidebar a {
+  color: black;
+  text-decoration: none;
+  padding: 15px 20px;
+  display: block;
+  transition: background 0.3s ease;
+}
+.admin-main {
+  margin-left: 250px;
+  padding: 20px;
+}
+.sidebar a:hover {
+  background-color: #d2df5d;
+  color: white;
+}
+.sidebar i {
+  margin-right: 20px;
+}
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: left;
+  max-width: 400px;
+  display: inline-block;
+  margin-right: 155px;
+}
+.card h3 {
+  margin-top: 0;
+  font-size: 20px;
+  margin-bottom: 15px;
+  font-family: monospace;
 }
 
 /* Responsive Design */
