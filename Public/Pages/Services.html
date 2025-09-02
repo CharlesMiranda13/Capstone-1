@@ -1,31 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HealConnect</title>
-    <link rel="stylesheet" href="../css/style.css" />
-    <script src="../js/include.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HealConnect - Services</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/service.css">
+  <script src="../js/include.js"></script>
 </head>
 <body>
-    <div data-include="../Components/header.html"></div>
-    <main class ="about-main">
+  <div data-include="../Components/header.html"></div>
+
+  <main class="services-main">
     <h1>Our Services</h1>
-    <p>At HealConnect, we offer a range of services designed to connect patients with qualified physical therapists for remote therapy sessions. Our platform provides:</p>
-    <ul>
-        <li>Virtual Consultations: Schedule and attend therapy sessions from the comfort of your home.</li>
-        <li>Personalized Treatment Plans: Receive customized therapy plans tailored to your specific needs.</li>
-        <li>Progress Tracking: Monitor your recovery journey with easy-to-use tools and reports.</li>
-        <li>Resource Library: Access educational materials and exercise guides to support your therapy.</li>
-        <li>Secure Communication: Communicate with your therapist through our secure messaging system.</li>
-    </ul>
-    <p>Our goal is to make physical therapy accessible and convenient, helping you achieve better
-    health outcomes through expert care and support.</p>
+    <p class="intro">
+      At HealConnect, we offer a range of services designed to connect patients with qualified 
+      physical therapists for remote therapy sessions. Here’s what you can expect:
+    </p>
 
-    
-    </main>
-    <div data-include="../Components/footer.html"></div>
+    <div class="services-container">
 
-    
+      <div class="service-card">
+        <img src="/Images/Onlineconsult.jpg "alt="Virtual Consultation">
+        <h2>Virtual Consultations</h2>
+        <p>Schedule and attend therapy sessions from the comfort of your home with expert therapists.</p>
+        <h3>What to expect</h3>
+        <ul>
+            <li>Initial assessment and diagnosis</li>
+            <li>Personalized treatment plans</li>
+            <li>Follow-up sessions to track progress</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <img src="/images/treatmentplan.jpg" alt="Personalized Treatment">
+        <h2>Personalized Treatment Plans</h2>
+        <p>Receive customized therapy plans tailored to your specific health needs and goals.</p>
+        <h3>Includes</h3>
+        <ul>
+            <li>Exercise routines</li>
+            <li>Tailored exercise programs</li>
+            <li>Lifestyle recommendations</li>
+      </div>
+
+      <div class="service-card">
+        <img src="/images/progress.jpg" alt="Progress Tracking">
+        <h2>Progress Tracking</h2>
+        <p>Monitor your recovery with easy-to-use tracking tools and progress reports.</p>
+        <h3>Features</h3>
+        <ul>
+            <li>Regular progress updates</li>
+            <li>Adjustments to treatment plans as needed</li>
+            <li>Access to your therapy history</li>
+      </div>
+
+      <div class="service-card">
+        <img src="/images/secure.jpg" alt="Secure Communication">
+        <h2>Secure Communication</h2>
+        <p>Stay connected with your therapist through a private, secure messaging system.</p>
+        <h3>Benefits</h3>
+        <ul>
+            <li>Confidential messaging</li>
+            <li>Easy appointment scheduling</li>
+      </div>
+
+    </div>
+  </main>
+
+  <div data-include="../Components/footer.html"></div>
 </body>
 </html>
