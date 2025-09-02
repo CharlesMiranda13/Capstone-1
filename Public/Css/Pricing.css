@@ -1,0 +1,26 @@
+.pricing-main{
+    margin: 20px;
+    padding: 20px;
+    text-align: center;
+}
+.pricing-main h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #333;
+}
+.pricing-main p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 20px;
+}
+.pricing-card {
+    background: rgb(181, 230, 117);
+    padding: 100px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    width: 250px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    display: inline-block;
+    margin-right: 50px;
+}
