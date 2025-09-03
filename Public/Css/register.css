@@ -6,21 +6,6 @@
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
-
-.logo-image {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 15px;
-}
-
-.logo-image img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: contain;
-  background: #eee; /* placeholder */
-}
-
 /* Form */
 .register-form {
   display: flex;
@@ -39,7 +24,10 @@
 .register-form input[type="email"],
 .register-form input[type="password"],
 .register-form input[type="date"],
-.register-form input[type="file"] {
+.register-form input[type="file"] 
+.register-form input[type="select"]
+  
+{
   padding: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;

@@ -82,7 +82,7 @@
   
 }
 
-.User1, .User2 {
+.User1, .User2, .User3 {
   background: #fff;
   padding: 80px 60px;  
   border-radius: 10px;
@@ -93,7 +93,7 @@
   max-width: 250px;     
 }
 
-.User1 a, .User2 a {
+.User1 a, .User2 a, .User3 a {
   display: block;
   margin-top: 20px;
   font-size: 1.2rem;
@@ -109,6 +109,7 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   overflow: hidden;
 }
+
 
 .tab-header {
   display: flex;

@@ -7,6 +7,33 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
+.logo {
+  display: flex;
+  align-items: center;  
+  gap: 15px;            
+  justify-content: center; 
+}
+.logo img {
+  width: 150px;          
+  height: 150px;         
+  object-fit: cover;     
+  border-radius: 50%;  
+  border: 3px solid #494ce2;   
+}
+.header-logo img {
+  width: 50px;          
+  height: 50px;         
+  object-fit: cover;     
+  border-radius: 50%;  
+  border: 2px solid #494ce2;   
+}
+.header-logo {
+  display: flex;
+  align-items: center;  
+  gap: 10px;            
+  justify-content: center; 
+}
+
 
 /* Header */
 header {
@@ -95,6 +122,11 @@ main { min-height: 60vh; }
   font-weight: 600;
   margin-top: 20px;
 }
+.main-content button:hover {
+  background-color: #1361f3;
+  color: #fff;
+  cursor: pointer;
+}
 
 .main-image img {
   max-width: 400px;        
@@ -108,10 +140,17 @@ main { min-height: 60vh; }
 /* About Main Section */
 .about-main {
   max-width: 800px;
-  margin: 40px auto;
-  padding: 0 20px;
+  font-size: 18px;
+  padding: 50px 20px;
   text-align: left;
+  color: #333;
+  line-height: 1.6;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);  
+  margin: 40px;
 }
+
 
 
 /* Features section */
