@@ -8,21 +8,10 @@
   background: antiquewhite;
 }
 
-@keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.3); }
-}
 
-.icon-text {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 15px;
-}
-
-.icon {
-  font-size: 120px;
-  color: #000000;
+@keyframes spinBone {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 h1 {
@@ -40,9 +29,8 @@ h1 {
   text-align: center;
 }
 
-.heartbeat-icon {
-  font-size: 40px;
+.bone-icon {
+  font-size: 60px;     
   display: inline-block;
-  animation: heartbeat 1.5s infinite;
-  color: #e74c3c;
+  animation: spinBone 2s linear infinite;
 }
