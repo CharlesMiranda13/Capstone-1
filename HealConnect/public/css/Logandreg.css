@@ -1,0 +1,150 @@
+/* Login and registe section */
+.login-container {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 40px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.login-container h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.form-group { margin-bottom: 20px; }
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #374151;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+.form-group input:hover { border-color: #d1d5db; }
+
+.login-container button {
+  width: 100%;
+  background-color: #059669;
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 24px;
+}
+
+.login-container button:hover { background-color: #047857; }
+.login-container button:active { background-color: #065f46; }
+
+.login-container p {
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+  margin: 0;
+}
+
+.login-container p a {
+  color: #059669;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-container p a:hover {
+  text-decoration: underline;
+  color: #047857;
+}
+
+.Users {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  margin-top: 120px;
+  flex-wrap: wrap;
+  
+}
+
+.User1, .User2, .User3 {
+  background: #fff;
+  padding: 80px 60px;  
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  flex: 1 1 200px;      
+  max-width: 250px;     
+}
+
+.User1 a, .User2 a, .User3 a {
+  display: block;
+  margin-top: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
+}
+
+.tab-container {
+  max-width: 900px;
+  margin: 80px auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+
+.tab-header {
+  display: flex;
+  border-bottom: 2px solid #eee;
+}
+
+.tab-header button {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  background: #f9f9f9;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.tab-header button.active {
+  background: #1361f3;
+  color: #fff;
+}
+
+.tab-content {
+  padding: 30px;
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.tab-content .Users {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
