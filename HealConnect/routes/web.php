@@ -31,6 +31,10 @@ Route::get('/ptlist', function () {
     return view('ptlist');
 })->name('ptlist');
 
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
+
 Route::get('/logandsign', function () {
     return view('logandsign');
 });
