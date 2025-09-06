@@ -7,9 +7,9 @@
     <h1>Our Services</h1>
     <p class="intro" id="intro">
         At HealConnect, we offer a range of services designed to connect patients with qualified 
-        physical therapists for remote therapy sessions. Here’s what you can expect:
+        physical therapists for remote therapy sessions. Here is what you can expect:
     </p>
-    <button class= "speak-btn" data-target="intro">  listen</button>
+    <button class= "speak-btn" data-target="intro"></button>
 
     <div class="services-container">
 
@@ -23,7 +23,7 @@
                 <li>Personalized treatment plans</li>
                 <li>Follow-up sessions to track progress</li>
             </ul>
-             <button class="speak-btn" data-target="service1"> Listen</button>
+             <button class="speak-btn" data-target="service1"></button>
         </div>
 
         <div class="service-card" id="service2">
@@ -36,7 +36,7 @@
                 <li>Tailored exercise programs</li>
                 <li>Lifestyle recommendations</li>
             </ul>
-            <button class="speak-btn" data-target="service2"> Listen</button>
+            <button class="speak-btn" data-target="service2"></button>
         </div>
 
         <div class="service-card" id="service3">
@@ -49,7 +49,7 @@
                 <li>Adjustments to treatment plans as needed</li>
                 <li>Access to your therapy history</li>
             </ul>
-            <button class="speak-btn" data-target="service3"> Listen</button>
+            <button class="speak-btn" data-target="service3"></button>
         </div>
 
         <div class="service-card" id="service4">
@@ -61,7 +61,7 @@
                 <li>Confidential messaging</li>
                 <li>Easy appointment scheduling</li>
             </ul>
-            <button class="speak-btn" data-target="service4"> Listen</button>
+            <button class="speak-btn" data-target="service4"></button>
         </div>
 
     </div>

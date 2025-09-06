@@ -69,32 +69,32 @@
 }
 
 .speak-btn {
-  background: #28a745; /* green for health */
+  background: #28a745;
   color: #fff;
   border: none;
   padding: 8px 14px;
   margin-top: 10px;
-  border-radius: 25px; /* pill shape */
+  border-radius: 25px; 
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px; /* space between icon & text */
+  gap: 6px; 
   transition: background 0.3s ease, transform 0.2s ease;
 }
 
 .speak-btn:hover {
-  background: #218838; /* darker green on hover */
-  transform: scale(1.05); /* slight zoom */
+  background: #218838;
+  transform: scale(1.05);
 }
 
 .speak-btn:active {
-  transform: scale(0.95); /* press effect */
+  transform: scale(0.95); 
 }
 
 .speak-btn::before {
-  content: "🔊"; /* add speaker icon before text */
+  content: "🔊"; 
   font-size: 16px;
 }
 
