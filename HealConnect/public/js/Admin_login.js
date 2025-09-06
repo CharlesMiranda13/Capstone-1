@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
       const pass = document.getElementById("password").value;
 
       if (user === "admin" && pass === "1234") {
-        window.location.href = "/user/admin";
+        window.location.href = "/admin/dashboard";
       } else {
         alert("Invalid credentials! Try again.");
       }

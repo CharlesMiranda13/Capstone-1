@@ -1,26 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HealConnect</title>
+@extends('layouts.app')
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/loading.css') }}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+@section('title', 'Home - HealConnect')
 
-  <!-- JS -->
-  <script src="{{ asset('js/include.js') }}"></script>
-</head>
-<body>
-  <!-- Loading Screen -->
+@section('loading')
   @include('loading') 
+@endsection
 
-  <!-- Homepage -->
-  <main style="display:none">
-    @include('Header/footer.header') 
-
+@section('content')
+  <main>
     <section class="main-section">
       <div class="main-content">
         <h1>Connecting Patients and Therapists for Better Recovery</h1>
@@ -39,34 +26,29 @@
 
       <div class="features">
         <div class="feature">
-          <i class="fas fa-user-md feature-icon" aria-hidden="true"></i>
+          <i class="fas fa-user-md feature-icon"></i>
           <h3>Expert Therapists</h3>
           <p>Connect with certified physical therapists for personalized care.</p>
         </div>
 
         <div class="feature">
-          <i class="fas fa-video feature-icon" aria-hidden="true"></i>
+          <i class="fas fa-video feature-icon"></i>
           <h3>Virtual Consultations</h3>
           <p>Receive therapy sessions from the comfort of your home.</p>
         </div>
 
         <div class="feature">
-          <i class="fas fa-chart-line feature-icon" aria-hidden="true"></i>
+          <i class="fas fa-chart-line feature-icon"></i>
           <h3>Progress Tracking</h3>
           <p>Monitor your recovery with easy-to-use tools and reports.</p>
         </div>
 
         <div class="feature">
-          <i class="fas fa-calendar-check feature-icon" aria-hidden="true"></i>
+          <i class="fas fa-calendar-check feature-icon"></i>
           <h3>Appointment Scheduling</h3>
           <p>Book sessions at your convenience with our flexible scheduling system.</p>
         </div>
       </div>
     </section>
-
-    @include('Header/footer.footer') 
   </main>
-
-  <script src="{{ asset('js/loading.js') }}"></script>
-</body>
-</html>
+@endsection

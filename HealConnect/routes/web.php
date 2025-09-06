@@ -3,63 +3,24 @@
 use Illuminate\Support\Facades\Route;
 
 // Public Pages
-Route::get('/', function () {
-    return view('index');
+Route::view('/', 'index')->name('home');
+Route::view('/loading', 'loading');
+Route::view('/about', 'about')->name('about');
+Route::view('/services', 'services')->name('services');
+Route::view('/pricing', 'pricing')->name('pricing');
+Route::view('/ptlist', 'ptlist')->name('ptlist');
+Route::view('/contact', 'contact')->name('contact');
+Route::view('/therapists', 'therapists')->name('therapists');
+
+// Patient & Therapist Authentication (Users)
+Route::view('/logandsign', 'logandsign')->name('user.auth');
+Route::prefix('register')->group(function () {
+    Route::view('/therapist', 'register.indtherapist')->name('register.therapist');
+    Route::view('/patient', 'register.patientreg')->name('register.patient');
 });
 
-Route::get('/loading', function () {
-    return view('loading');
+// Admin Authentication
+Route::prefix('admin')->group(function () {
+    Route::view('/login', 'auth.adminlogin')->name('admin.login');
+    Route::view('/dashboard', 'user.admin.admin')->name('admin.dashboard');
 });
-
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
-
-Route::get('/services', function () {
-    return view('services');
-})->name('services');
-
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
-
-Route::get('/pricing', function () {
-    return view('pricing');
-})->name('pricing');
-
-Route::get('/ptlist', function () {
-    return view('ptlist');
-})->name('ptlist');
-
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
-
-Route::get('/logandsign', function () {
-    return view('logandsign');
-});
-
-Route::get('/register/therapist', function () {
-    return view('register.indtherapist');
-});
-Route::get('/register/patient', function () {
-    return view('register.patientreg');
-});
-
-Route::get('/therapists', function () {
-    return view('therapists');
-})->name('therapists');
-
-Route::get('/login', function () {
-    return view('logandsign');
-})->name('login');
-
-// Admin Page
-Route::get('/user/admin', function () {
-    return view('user.admin.admin'); 
-})->name('admin.dashboard');
-
-
-Route::get('/admin/login', function () {
-    return view('auth.adminlogin'); 
-})->name('admin.login');
