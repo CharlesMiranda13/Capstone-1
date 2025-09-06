@@ -9,18 +9,17 @@
     <link rel="stylesheet" href="{{ asset('css/service.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body class="@yield('body-class')">
     @yield('loading')
-
+    
     <div id="page-content" style="display:none;">
-        {{-- Header --}}
-        @include('Header/footer.header')
+        @include('header/footer.header')
 
-        {{-- Main Content --}}
-        @yield('content')
+        <main>
+            @yield('content')
+        </main>
 
-        {{-- Footer --}}
-        @include('Header/footer.footer')
+        @include('header/footer.footer')
     </div>
 
     <script src="{{ asset('js/include.js') }}"></script>
