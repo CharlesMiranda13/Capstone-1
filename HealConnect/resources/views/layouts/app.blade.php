@@ -7,6 +7,8 @@
 
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/service.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/pricing.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/tts.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="@yield('body-class')">
@@ -24,5 +26,6 @@
 
     <script src="{{ asset('js/include.js') }}"></script>
     <script src="{{ asset('js/loading.js') }}"></script>
+    <script src="{{ asset('js/hamburger.js') }}"></script>
 </body> 
 </html>

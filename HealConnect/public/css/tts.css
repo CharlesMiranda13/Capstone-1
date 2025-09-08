@@ -1,0 +1,32 @@
+.speak-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  opacity: 0; /* Hidden by default */
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.speak-btn:hover {
+  background: #218838;
+  transform: scale(1.05);
+}
+
+.speak-btn:active {
+  transform: scale(0.95); 
+}
+
+.speak-btn::before {
+  content: "🔊"; 
+  font-size: 16px;
+}

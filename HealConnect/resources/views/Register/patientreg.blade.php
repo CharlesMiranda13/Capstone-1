@@ -53,7 +53,7 @@
 
         <p style="text-align: center; font-size: 15px;">
             Do you have an account?
-            <a href="{{ url('/login') }}" class="login-link">Login here</a>
+            <a href="{{ url('/logandsign') }}" class="login-link">Login here</a>
         </p>
     </form>
 </main>
