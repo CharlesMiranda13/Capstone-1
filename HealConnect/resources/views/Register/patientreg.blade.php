@@ -1,22 +1,25 @@
 @extends('layouts.app')
-@section('title', 'Register - Patient')
-
+@section('title', 'Register - Patient Register')
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/register.css') }}">
 
-
 @section('content')
-
 <main class="register-main">
     <h1 style="text-align: center; font-size: 30px;">Sign Up to HealConnect</h1>
+
     <form action="#" method="post" class="register-form" enctype="multipart/form-data">
         @csrf
 
-        <label for="Fname">First Name:</label>
-        <input type="text" id="Fname" name="Fname" required />
-
-        <label for="Mname">Middle Name:</label>
-        <input type="text" id="Mname" name="Mname" required />
+        <div class="name-group">
+            <div>
+                <label for="Fname">First Name:</label>
+                <input type="text" id="Fname" name="Fname" required />
+            </div>
+            <div>
+                <label for="Mname">Middle Name:</label>
+                <input type="text" id="Mname" name="Mname" required />
+            </div>
+        </div>
 
         <label for="Lname">Last Name:</label>
         <input type="text" id="Lname" name="Lname" required />

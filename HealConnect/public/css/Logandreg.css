@@ -90,7 +90,11 @@
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   flex: 1 1 200px;      
-  max-width: 250px;     
+  max-width: 100px;     
+}
+.User1:hover, .User2:hover, .User3:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
 }
 
 .User1 a, .User2 a, .User3 a {
@@ -109,7 +113,6 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   overflow: hidden;
 }
-
 
 .tab-header {
   display: flex;

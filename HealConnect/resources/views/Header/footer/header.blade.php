@@ -7,7 +7,6 @@
       </h2>
     </div>
 
-    <!-- ✅ Added id="navbar" here -->
     <nav id="navbar">
       <a href="{{ url('/') }}">Home</a>
       <a href="{{ url('/services') }}">Services</a>
@@ -16,8 +15,7 @@
       <a href="{{ url('/contact') }}">Contact</a>
       <a href="{{ url('/logandsign') }}" class="btn-getstarted">Get Started</a>  
     </nav>
-
-    <!-- ✅ Add Hamburger Button -->
+    
     <button class="hamburger" onclick="toggleMenu()">☰</button>
   </div>
 </header>

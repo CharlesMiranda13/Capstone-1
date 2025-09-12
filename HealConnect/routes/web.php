@@ -16,6 +16,7 @@ Route::view('/therapists', 'therapists')->name('therapists');
 Route::view('/logandsign', 'logandsign')->name('user.auth');
 Route::prefix('register')->group(function () {
     Route::view('/therapist', 'register.indtherapist')->name('register.therapist');
+    Route::view('/clinic', 'register.clinicreg')->name('register.clinic');
     Route::view('/patient', 'register.patientreg')->name('register.patient');
 });
 

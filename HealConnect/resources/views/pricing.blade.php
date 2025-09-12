@@ -36,7 +36,7 @@
                 <li>Priority support</li>
                 <li>Team management & scheduling tools</li>
             </ul>
-            <a href="{{ route('register.therapist') }}" class="btn btn-primary">Get Started</a>
+            <a href="{{ route('register.clinic') }}" class="btn btn-primary">Get Started</a>
         </div>
     </div>
 
