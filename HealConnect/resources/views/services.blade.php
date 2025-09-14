@@ -5,7 +5,7 @@
 @section('content')
 <main class="services-main">
     <h1>Our Services</h1>
-    <p class="intro" id="intro">
+    <p class="intro">
         At HealConnect, we offer a range of services designed to connect patients with qualified 
         physical therapists for remote therapy sessions. Here is what you can expect:
     </p>
@@ -65,6 +65,5 @@
         </div>
 
     </div>
-    <script src="{{ asset('js/tts.js') }}"></script>
 </main>
 @endsection

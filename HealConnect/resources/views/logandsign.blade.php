@@ -6,6 +6,17 @@
     <link rel="stylesheet" href="{{ asset('css/Logandreg.css') }}">
 
     <main>
+        @php
+            $plan = request()->query('plan');
+        @endphp
+
+        {{-- Show selected plan notice if available --}}
+        @if($plan)
+            <div class="selected-plan" style="text-align:center; margin: 15px auto; padding:12px; border:1px solid #ccc; border-radius:8px; width: fit-content; background:#f9f9f9;">
+                <strong>You selected the {{ ucfirst($plan) }} Plan.</strong>
+            </div>
+        @endif
+
         <div class="tab-container">
             <div class="tab-header">
                 <button class="tab-btn active" data-tab="login">Login</button>
@@ -35,13 +46,13 @@
                 <h2 style="text-align:center;">Register as</h2>
                 <div class="Users">
                     <div class="User1">
-                        <a href="{{ url('register/therapist') }}">Independent PT</a>
+                        <a href="{{ url('register/therapist') }}{{ $plan ? '?plan='.$plan : '' }}">Independent PT</a>
                     </div>
                     <div class="User2">
-                        <a href="{{ url('register/clinic') }}">Clinic PT</a>
+                        <a href="{{ url('register/clinic') }}{{ $plan ? '?plan='.$plan : '' }}">Clinic PT</a>
                     </div>
                     <div class="User3">
-                        <a href="{{ url('register/patient') }}">Patient</a>
+                        <a href="{{ url('register/patient') }}{{ $plan ? '?plan='.$plan : '' }}">Patient</a>
                     </div>
                 </div>
             </div>

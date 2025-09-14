@@ -24,25 +24,29 @@
     <p>Comprehensive remote physical therapy solutions designed for your recovery journey</p>
 
     <div class="features">
-      <div class="feature">
+      <div class="feature" id ="feature1">
         <i class="fas fa-user-md feature-icon"></i>
         <h3>Expert Therapists</h3>
         <p>Connect with certified physical therapists for personalized care.</p>
+        <button class="speak-btn" data-target="feature1"></button>
       </div>
-      <div class="feature">
+      <div class="feature" id="feature2">
         <i class="fas fa-video feature-icon"></i>
         <h3>Virtual Consultations</h3>
         <p>Receive therapy sessions from the comfort of your home.</p>
+        <button class="speak-btn" data-target="feature2"></button>
       </div>
-      <div class="feature">
+      <div class="feature" id="feature3">
         <i class="fas fa-chart-line feature-icon"></i>
         <h3>Progress Tracking</h3>
         <p>Monitor your recovery with easy-to-use tools and reports.</p>
+        <button class="speak-btn" data-target="feature3"></button>
       </div>
-      <div class="feature">
+      <div class="feature" id="feature4">
         <i class="fas fa-calendar-check feature-icon"></i>
         <h3>Appointment Scheduling</h3>
         <p>Book sessions at your convenience with our flexible scheduling system.</p>
+        <button class="speak-btn" data-target="feature4"></button>
       </div>
     </div>
   </section>

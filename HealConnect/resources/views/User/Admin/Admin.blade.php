@@ -4,6 +4,7 @@
 @section('styles')
     <link rel="stylesheet" href="{{ asset('/Css/Admin.css') }}">
     <link rel="stylesheet" href="{{ asset('/Css/style.css') }}">
+@endsection
 
 @section('content')
     <h2>Dashboard</h2>

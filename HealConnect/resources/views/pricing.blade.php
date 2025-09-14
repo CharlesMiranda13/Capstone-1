@@ -21,7 +21,7 @@
                 <li>Priority support</li>
                 <li>Individual client management tools</li>
             </ul>
-            <a href="{{ route('register.therapist') }}" class="btn btn-primary">Get Started</a>
+            <a href="{{ route('user.auth', ['plan' => 'basic']) }}" class="btn btn-primary">Get Started</a>
         </div>
 
         <!-- Premium Plan -->
@@ -36,7 +36,7 @@
                 <li>Priority support</li>
                 <li>Team management & scheduling tools</li>
             </ul>
-            <a href="{{ route('register.clinic') }}" class="btn btn-primary">Get Started</a>
+            <a href="{{ route('user.auth', ['plan' => 'premium']) }}" class="btn btn-primary">Get Started</a>
         </div>
     </div>
 

@@ -70,7 +70,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 15px;
-  margin-bottom: 16px;
+  margin-bottom: 0; /* changed from 16px to 0 */
 }
 
 .name-group label {
@@ -86,6 +86,7 @@
   border: 1px solid #ccc;
   font-size: 14px;
   transition: all 0.3s ease;
+  margin-bottom: 0;
 }
 
 .name-group input:focus {
@@ -94,12 +95,40 @@
   outline: none;
 }
 
+/* File Input Group */
+.file-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 16px;
+}
+.file-group label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+}
+.file-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  margin-bottom: 0;
+}
+
 /* Footer Text */
 .register-main p {
   margin-top: 18px;
   font-size: 13px;
   text-align: center;
   color: #555;
+}
+.register-main h1 {
+  margin-bottom: 20px;
+  font-size: 26px;
+  font-weight: 700;
+  color: #2da44e;
 }
 
 .register-main p a {
@@ -111,6 +140,44 @@
 .register-main p a:hover {
   text-decoration: underline;
 }
+
+
+/* Clinic Register Styling */
+.register-main.clinic {
+  max-width: 600px;
+  padding: 40px 45px;
+}
+
+.register-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #2da44e;
+  margin-bottom: 25px;
+}
+
+.file-section {
+  margin-top: 20px;
+  padding: 18px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  border: 1px dashed #ccc;
+}
+
+.file-section label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 10px;
+  display: block;
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 768px) {
+  .clinic-group {
+    grid-template-columns: 1fr;
+  }
+}
+
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-8px); }

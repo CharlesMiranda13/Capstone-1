@@ -2,12 +2,13 @@
 @section('title', 'Register - Independent Therapist')
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+@section('endsection')
 
 @section('content')
 <main class="register-main">
-    <h1 style="text-align: center; font-size: 30px;">Sign Up to HealConnect</h1>
+    <h1 style="text-align: center; font-size: 30px;">Independent Therapist Registration</h1>
 
-    <form action="#" method="post" class="register-form" enctype="multipart/form-data">
+    <form action="{{ route('register.therapist') }}" method="POST" class="register-form" enctype="multipart/form-data">
         @csrf
 
         <div class="name-group">
@@ -49,8 +50,21 @@
             <option value="female">Female</option>
         </select>
 
-        <label for="ValidID">Valid ID:</label>
-        <input type="file" id="ValidID" name="ValidID" accept=".jpg, .jpeg, .png, .pdf" required />
+        <div class="file-group">
+            <div>
+                <label for="ValidID">Valid ID:</label>
+                <input type="file" id="ValidID" name="ValidID" accept=".jpg, .jpeg, .png, .pdf" required />
+            </div>
+            <div>
+                <label for="LicenseID">Professional License:</label>
+                <input type="file" id="LicenseID" name="LicenseID" accept=".jpg, .jpeg, .png, .pdf" required />
+            </div>
+        </div>
+
+        <small style="font-size: 12px; color: gray;">
+            By uploading your license, you agree that HealConnect will use this document solely for verifying your credentials. 
+            Your information will be kept secure and will not be shared without your consent.
+        </small>
 
         <button type="submit" class="register-button">Register</button>
 

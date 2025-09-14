@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@yield('title', 'Therapist Dashboard')</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="{{ asset('Css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('Css/patients.css') }}">
+
+    @yield('styles')
+</head>
+<body>
+    <div class="sidebar">
+        <h1>
+            <span class="heal-blue">Heal</span><span class="connect-green">Connect</span>
+        </h1>
+        <hr>
+        <a href="{{ url('/patients/patient') }}"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="{{ url('/patient/appointment') }}"><i class="fa-regular fa-calendar"></i> Appointment</a>
+        <a href="{{ url('/patient/records') }}"><i class="fa-regular fa-file-lines"></i> Records</a>
+        <a href="{{ url('/Setting') }}"><i class="fa-solid fa-gear"></i> Setting</a>
+        <a href="{{ url('/logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+    </div>
+
+        @yield('content')
+</body>
+</html>

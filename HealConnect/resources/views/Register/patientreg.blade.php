@@ -3,12 +3,13 @@
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/register.css') }}">
 
+
 @section('content')
 <main class="register-main">
-    <h1 style="text-align: center; font-size: 30px;">Sign Up to HealConnect</h1>
+    <h1 style="text-align: center; font-size: 30px;">Patient Registration</h1>
 
-    <form action="#" method="post" class="register-form" enctype="multipart/form-data">
-        @csrf
+    <form action="{{ route('register.patient.store') }}" method="POST" class="register-form" enctype="multipart/form-data">
+    @csrf
 
         <div class="name-group">
             <div>
@@ -36,8 +37,8 @@
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required />
 
-        <label for="confirm-password">Confirm Password:</label>
-        <input type="password" id="confirm-password" name="confirm-password" required />
+        <label for="password_confirmation">Confirm Password:</label>
+        <input type="password" id="password_confirmation" name="password_confirmation" required />
 
         <label for="dob">Date of Birth:</label>
         <input type="date" id="dob" name="dob" required />
@@ -51,6 +52,11 @@
 
         <label for="ValidID">Valid ID:</label>
         <input type="file" id="ValidID" name="ValidID" accept=".jpg, .jpeg, .png, .pdf" required />
+
+        <small style="font-size: 12px; color: gray;">
+            By uploading your license, you agree that HealConnect will use this document solely for verifying your credentials. 
+            Your information will be kept secure and will not be shared without your consent.
+        </small>
 
         <button type="submit" class="register-button">Register</button>
 
