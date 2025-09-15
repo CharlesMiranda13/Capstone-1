@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('password');
             $table->string('role'); // 'patient', 'therapist', 'admin
             $table->string('verification_code')->nullable();
-            $table->boolean('is_verified')->default(false);
+            $table->string('valid_id_path')->nullable(); 
+            $table->boolean('is_verified_by_admin')->default(false); // admin verification
             $table->rememberToken();
             $table->timestamps();
         });

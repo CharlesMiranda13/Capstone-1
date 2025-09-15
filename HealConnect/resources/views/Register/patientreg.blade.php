@@ -8,8 +8,8 @@
 <main class="register-main">
     <h1 style="text-align: center; font-size: 30px;">Patient Registration</h1>
 
-    <form action="{{ route('register.patient.store') }}" method="POST" class="register-form" enctype="multipart/form-data">
-    @csrf
+    <form action="{{ route('register.store', ['type' => 'patient']) }}" method="POST" class="register-form" enctype="multipart/form-data">
+        @csrf
 
         <div class="name-group">
             <div>

@@ -11,9 +11,14 @@
 </head>
 <body>
     <div class="sidebar">
-        <h1>
-            <span class="heal-blue">Heal</span><span class="connect-green">Connect</span>
-        </h1>
+        <div class="logo">
+            <div class="logo-circle">
+                <img src="{{ asset('images/logo.jpg') }}" alt="HealConnect Logo">
+            </div>
+            <div class="logo-text">
+                <span class="heal-blue">Heal</span><span class="connect-green">Connect</span>
+            </div>
+        </div>
         <hr>
         <a href="{{ url('/admin/manage-users') }}"><i class="fa-solid fa-users"></i> Manage Users</a>
         <a href="{{ url('/admin/view-reports') }}"><i class="fa-solid fa-chart-bar"></i> View Reports</a>

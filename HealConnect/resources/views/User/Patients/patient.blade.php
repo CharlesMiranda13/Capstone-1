@@ -9,6 +9,12 @@
 @section('content')
 <main class="patient-main">
     <div class="main-content left-column">
+        {{-- Info message from verification --}}
+        @if(session('info'))
+            <div class="info-message">
+                {{ session('info') }}
+            </div>
+        @endif
         <div class="welcome-header">
             <h2>Hello, {{ Auth::user()->name ?? 'Patient' }}!</h2>
         </div>

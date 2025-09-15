@@ -8,7 +8,7 @@
 <main class="register-main">
     <h1 style="text-align: center; font-size: 30px;">Independent Therapist Registration</h1>
 
-    <form action="{{ route('register.therapist') }}" method="POST" class="register-form" enctype="multipart/form-data">
+    <form action="{{ route('register.store', ['type' => 'therapist']) }}" method="POST" class="register-form" enctype="multipart/form-data">
         @csrf
 
         <div class="name-group">

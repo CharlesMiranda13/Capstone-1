@@ -8,7 +8,7 @@
 <main class="register-main clinic">
     <h1 class="register-title">Clinic Registration</h1>
 
-    <form action="#" method="post" class="register-form" enctype="multipart/form-data">
+    <form action="{{ route('register.store', ['type' => 'clinic']) }}" method="POST" class="register-form" enctype="multipart/form-data">
         @csrf
 
         <label for="ClinicName">Clinic Name:</label>
