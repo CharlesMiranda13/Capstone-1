@@ -58,5 +58,5 @@
             </div>
         </div>
     </main>
-    <script src="{{ asset('js/tabswitching.js') }}"></script>
+    <script src="{{ asset('js/include.js') }}"></script>
 @endsection

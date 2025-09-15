@@ -26,7 +26,6 @@
 
     <script src="{{ asset('js/include.js') }}"></script>
     <script src="{{ asset('js/loading.js') }}"></script>
-    <script src="{{ asset('js/hamburger.js') }}"></script>
     <script src="{{ asset('js/tts.js') }}"></script>
 </body> 
 </html>
