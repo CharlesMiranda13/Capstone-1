@@ -54,6 +54,40 @@
   margin-bottom: 15px;
   font-family: monospace;
 }
+.filters {
+  display: flex;
+  gap: 12px; /* space between input and select */
+  align-items: center;
+  padding: 10px 15px;
+  background: #fff; /* or use a light accent color */
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  max-width: 500px; /* keeps it compact */
+  margin-bottom: 20px;
+}
+.filters input,
+.filters select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
 
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
 
-
+.user-table th, .user-table td {
+  border: 5px solid #686868;
+  padding: 12px 15px;
+  text-align: left;
+}
+.user-table th {
+  background-color: #f4f4f4;
+  font-weight: 600;
+}

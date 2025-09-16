@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Admin\UserController; 
 
 // Public Pages
 Route::view('/', 'index')->name('home');
@@ -25,12 +26,29 @@ Route::prefix('register')->group(function () {
 });
 
 // Admin Authentication
-Route::prefix('admin')->group(function () {
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
-    Route::post('/login', [AuthController::class, 'login'])->name('admin.login.submit');
-    Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('admin.dashboard')->middleware('auth:admin');
-});
+Route::prefix('admin')->name('admin.')->group(function () {
+    // Authentication
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+    Route::get('/dashboard', [AuthController::class, 'dashboard'])
+        ->name('dashboard')
+        ->middleware('auth:admin');
+    Route::post('/logout', function () {
+        auth()->guard('admin')->logout();   
+        return redirect()->route('admin.login');
+    })->name('logout');
 
+    // User Management
+    Route::get('/users', [UserController::class, 'index'])
+        ->name('manage-users')
+        ->middleware('auth:admin');
+    Route::patch('/users/{id}/verify', [UserController::class, 'verify'])
+        ->name('users.verify')
+        ->middleware('auth:admin');
+    Route::delete('/users/{id}/decline', [UserController::class, 'decline'])
+        ->name('users.decline')
+        ->middleware('auth:admin');
+});
 // Patient Routes
 Route::prefix('patient')->group(function () {
     Route::view('/homepage', 'user.patients.patient')->name('patient.home');
