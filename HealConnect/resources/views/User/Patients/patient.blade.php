@@ -8,16 +8,22 @@
 
 @section('content')
 <main class="patient-main">
+
     <div class="main-content left-column">
+        {{-- Welcome header stays inside the left column --}}
+        <div class="welcome-header">
+            <h2>Hello, {{ Auth::user()->name ?? 'Patient' }}!</h2>
+            <img src="{{ Auth::user()->profile_picture ?? asset('images/default-profile.png') }}"
+                 alt="Profile Picture"
+                 class="profile-picture">
+        </div>
+
         {{-- Info message from verification --}}
         @if(session('info'))
             <div class="info-message">
                 {{ session('info') }}
             </div>
         @endif
-        <div class="welcome-header">
-            <h2>Hello, {{ Auth::user()->name ?? 'Patient' }}!</h2>
-        </div>
 
         <div class="card">
             <h3>Upcoming Appointments</h3>

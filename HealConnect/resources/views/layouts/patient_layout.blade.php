@@ -23,11 +23,11 @@
             </div>
         </div>
         <hr>
-        <a href="{{ url('/patients/patient') }}"><i class="fa-solid fa-house"></i> Home</a>
-        <a href="{{ url('/patient/appointment') }}"><i class="fa-regular fa-calendar"></i> Appointment</a>
-        <a href="{{ url('/patient/records') }}"><i class="fa-regular fa-file-lines"></i> Records</a>
-        <a href="{{ url('/Setting') }}"><i class="fa-solid fa-gear"></i> Setting</a>
-        <a href="{{ url('/logout') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        <a href="{{ route('user.patients.patient') }}"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="{{ route('user.patients.appointment') }}"><i class="fa-regular fa-calendar"></i> Appointment</a>
+        <a href="{{ route('user.patients.patient') }}"><i class="fa-regular fa-file-lines"></i> Records</a>
+        <a href="{{ route('user.patients.patient') }}"><i class="fa-solid fa-gear"></i> Setting</a>
+        <a href="{{ route('user.patients.patient') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
     </div>
 
         @yield('content')

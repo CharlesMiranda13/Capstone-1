@@ -51,9 +51,6 @@
   flex-direction: column;
   gap: 20px;
 }
-.welcome-header {
-    margin-left: 50px;
-}
 
 
 .left-column {
@@ -70,13 +67,21 @@
   min-width: 250px;   
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   margin-top: 125px;
 }
 
 .welcome-header {
-  font-size: 1.5rem;
-  font-weight: 600;
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  background-color: #f0e0c9;  
+  padding: 10px 20px;
+  border-radius: 10px;
+  width: 100%;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 
@@ -131,6 +136,27 @@
   margin-bottom: 15px;
   font-family: monospace;
 }
+
+.appointment-content h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.profile-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.profile-picture {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;   
+    object-fit: cover;    
+    border: 2px solid #555;
+}
+
 @media (max-width: 768px) {
   .patient-main {
     flex-direction: column;

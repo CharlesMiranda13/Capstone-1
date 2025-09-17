@@ -49,13 +49,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
         ->name('users.decline')
         ->middleware('auth:admin');
 });
+
 // Patient Routes
-Route::prefix('patient')->group(function () {
-    Route::view('/homepage', 'user.patients.patient')->name('patient.home');
-    Route::view('/appointment', 'user.patients.appointments')->name('patient.appointment');
-    Route::view('/records', 'user.patients.records')->name('patient.records');
-    Route::view('/setting', 'user.patients.setting')->name('patient.settings');
+Route::prefix('patient')->name('user.patients.')->group(function () {
+    Route::view('/homepage', 'user.patients.patient')->name('patient');
+    Route::view('/appointment', 'user.patients.appointment')->name('appointment');
+    Route::view('/records', 'user.patients.records')->name('records');
+    Route::view('/setting', 'user.patients.setting')->name('settings');
 });
+
 
 // Therapist Routes
 Route::prefix('therapist')->group(function () {
