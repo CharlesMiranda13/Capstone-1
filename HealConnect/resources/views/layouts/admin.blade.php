@@ -20,6 +20,7 @@
             </div>
         </div>
         <hr>
+        <a href="{{ route('admin.dashboard') }}"><i class="fa-solid fa-gauge"></i> Dashboard</a>
         <a href="{{ route('admin.manage-users') }}"><i class="fa-solid fa-users"></i> Manage Users</a>
         <a href="{{ url('/admin/view-reports') }}"><i class="fa-solid fa-chart-bar"></i> View Reports</a>
         <a href="{{ url('/admin/settings') }}"><i class="fa-solid fa-cog"></i> Settings</a>
