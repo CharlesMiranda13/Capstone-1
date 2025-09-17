@@ -23,15 +23,27 @@ class AuthController extends Controller
         ]);
 
         $credentials = $request->only('email', 'password');
+        $credentials['email'] = strtolower($credentials['email']); // normalize email
 
         if (Auth::attempt($credentials)) {
-            return redirect()->intended(route('admin.dashboard'));
+            $user = Auth::user();
+
+            if ($user->role === 'admin') {
+                return redirect()->intended(route('admin.dashboard'));
+            } elseif ($user->role === 'therapist') {
+                return redirect()->intended(route('therapist.dashboard'));
+            } else {
+                return redirect()->intended(route('patient.dashboard'));
+            }
         }
 
-        return back()->withErrors(['email' => 'Invalid credentials!'])->withInput();
+        // If login fails
+        return back()->withErrors([
+            'email' => 'Invalid credentials!',
+        ])->withInput();
     }
 
-    // Show dashboard
+    // Show dashboard (example for admin)
     public function dashboard()
     {
         return view('user.admin.admin');
