@@ -55,6 +55,7 @@ class RegisterController extends Controller
             'role' => $type, // patient, therapist, or clinic
             'verification_code' => $verificationCode,
             'valid_id_path' => $validIdPath,
+            'plan' =>$plan,
         ]);
 
         // Send verification email

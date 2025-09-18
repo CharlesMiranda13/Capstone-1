@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('is_verified_by_admin')->default(false); // admin verification
             $table->rememberToken();
             $table->timestamps();
+            $table->string('plan')->nullable();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

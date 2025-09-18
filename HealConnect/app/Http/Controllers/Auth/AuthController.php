@@ -15,33 +15,39 @@ class AuthController extends Controller
     }
 
     // Handle login submission
+
     public function login(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
-        ]);
+            ]);
 
-        $credentials = $request->only('email', 'password');
-        $credentials['email'] = strtolower($credentials['email']); // normalize email
+            $credentials = $request->only('email', 'password');
+            $credentials['email'] = strtolower($credentials['email']); // normalize email
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-
-            if ($user->role === 'admin') {
-                return redirect()->intended(route('admin.dashboard'));
-            } elseif ($user->role === 'therapist') {
-                return redirect()->intended(route('therapist.dashboard'));
-            } else {
-                return redirect()->intended(route('patient.dashboard'));
+            if (Auth::guard('admin')->attempt($credentials, $request->filled('remember'))) {
+            return redirect()->intended(route('admin.dashboard'));
             }
-        }
 
-        // If login fails
-        return back()->withErrors([
-            'email' => 'Invalid credentials!',
-        ])->withInput();
+            if (Auth::guard('web')->attempt($credentials, $request->filled('remember'))) {
+                $user = Auth::guard('web')->user();
+
+                if ($user->role === 'therapist') {
+                    return redirect()->intended(route('therapist.home'));
+                } elseif ($user->role === 'clinic') {
+                    return redirect()->intended(route('clinic.home'));
+                } else {
+                    return redirect()->intended(route('patient.home'));
+                }
+            }
+
+            // If both fail
+            return back()->withErrors([
+                'email' => 'Invalid credentials!',
+            ])->withInput();
     }
+
 
     // Show dashboard (example for admin)
     public function dashboard()
