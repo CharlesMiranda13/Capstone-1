@@ -54,11 +54,12 @@ class VerificationController extends Controller
             };
 
             return redirect()->route($route)
-                             ->with('info', 'Your email is verified! Account Status: Pending. Admin is verifying your application. Please wait for a number of business days.');
+                ->with('info', 'Your email is verified! Account Status: Pending. Admin is verifying your application. Please wait for a number of business days.');
         }
 
-        return back()->withErrors(['verification_code' => 'Invalid verification code.']);
-    }
+            return redirect()->route('verification.notice')->withErrors(['verification_code' => 'Invalid verification code.'])
+                ->with('email', $request->email);
+}
 
     // Resend code
     public function resend(Request $request)
@@ -75,6 +76,7 @@ class VerificationController extends Controller
 
         Mail::to($user->email)->send(new VerificationCodeMail($user));
 
-        return back()->with('success', 'A new verification code has been sent to your email!');
+        return redirect()->route('verification.notice')
+        ->with('success', 'A new verification code has been sent to your email!');
     }
 }

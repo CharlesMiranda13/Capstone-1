@@ -107,7 +107,6 @@ button:disabled {
     color: #842029;
 }
 
-/* Animation */
 @keyframes fadeIn {
     from {
         opacity: 0;

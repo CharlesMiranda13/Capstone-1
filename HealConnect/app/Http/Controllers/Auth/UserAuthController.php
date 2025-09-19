@@ -25,8 +25,21 @@ class UserAuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // Redirect user to patient homepage
-            return redirect()->intended(route('user.patients.patient'));
+
+            $user = Auth::user();
+
+            switch ($user->role) {
+                case 'patient':
+                    return redirect()->route('patient.home');
+                case 'therapist':
+                    return redirect()->route('therapist.home');        
+                case 'clinic':
+                    return redirect()->route('clinic.home');
+                default:
+                    return redirect()->route('home');
+                    
+            }
+
         }
 
         return back()->withErrors([
