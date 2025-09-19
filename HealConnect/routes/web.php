@@ -59,8 +59,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::patch('/users/{id}/verify', [UserController::class, 'verify'])
         ->name('users.verify')
         ->middleware('auth:admin');
-    Route::delete('/users/{id}/decline', [UserController::class, 'decline'])
+    Route::patch('/users/{id}/decline', [UserController::class, 'decline'])
         ->name('users.decline')
+        ->middleware('auth:admin');
+
+    Route::get('/users/{id}/edit', [UserController::class, 'edit'])
+        ->name('users.edit')
+        ->middleware('auth:admin');
+
+    Route::put('/users/{id}', [UserController::class, 'update'])
+        ->name('users.update')
+        ->middleware('auth:admin');
+
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])
+        ->name('users.destroy')
         ->middleware('auth:admin');
 });
 
@@ -77,13 +89,13 @@ Route::prefix('patient')->name('patient.')->group(function () {
 
 Route::prefix('therapist')->name('therapist.')->group(function () {
     Route::view('/home', 'user.therapists.dashboard')->name('home');
-    // more therapist routes here
+    //otw
 });
 
 /* Clinic Routes*/
 Route::prefix('clinic')->name('clinic.')->group(function () {
     Route::view('/home', 'user.clinics.dashboard')->name('home');
-    // more clinic routes here
+    //otw
 });
 
 /* Email Verification*/

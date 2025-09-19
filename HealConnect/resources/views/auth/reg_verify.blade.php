@@ -1,13 +1,9 @@
-@extends('layouts.patient_layout')
+@extends('layouts.auth')
 
 @section('content')
 <div class="container" style="max-width: 500px; margin: 50px auto;">
     <h2>Email Verification</h2>
     <p>Please check your email and enter the 6-digit verification code.</p>
-
-    @if(session('email'))
-        <p><strong>Email:</strong> {{ session('email') }}</p>
-    @endif
 
     @if(session('info'))
         <div style="background-color: #fff3cd; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
@@ -29,9 +25,11 @@
         </div>
     @endif
 
+    <p><strong>Email:</strong> {{ $email }}</p>
+
     <form method="POST" action="{{ route('verification.confirm') }}">
         @csrf
-        <input type="hidden" name="email" value="{{ session('email') }}">
+        <input type="hidden" name="email" value="{{ $email }}">
         <div style="margin-bottom: 10px;">
             <label>Verification Code:</label>
             <input type="text" name="verification_code" placeholder="Enter code" required autofocus>
@@ -41,7 +39,7 @@
 
     <form method="POST" action="{{ route('verification.resend') }}" style="margin-top: 15px;">
         @csrf
-        <input type="hidden" name="email" value="{{ session('email') }}">
+        <input type="hidden" name="email" value="{{ $email }}">
         <button type="submit" style="padding: 8px 15px; border-radius: 5px;">Resend Code</button>
     </form>
 </div>

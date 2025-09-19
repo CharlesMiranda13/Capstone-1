@@ -1,4 +1,4 @@
-@extends('layouts.patient_layout')
+@extends('layouts.therapist')
 
 @section('title', 'PT Dashboard')
 

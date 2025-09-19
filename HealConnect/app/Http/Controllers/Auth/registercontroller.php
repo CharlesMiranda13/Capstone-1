@@ -28,41 +28,60 @@ class RegisterController extends Controller
 
     public function register(Request $request, $type)
     {
-        $request->validate([
-            'Fname' => 'required|string|max:255',
-            'Mname' => 'nullable|string|max:255',
-            'Lname' => 'required|string|max:255',
+        // Base validation for all users
+        $rules = [
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
             'address' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
-            'dob' => 'required|date',
-            'Gender' => 'required|string',
             'ValidID' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-        ]);
+        ];
+
+        // Type-based additional validation
+        if ($type == 'patient' || $type == 'therapist') {
+            $rules = array_merge($rules, [
+                'Fname' => 'required|string|max:255',
+                'Mname' => 'nullable|string|max:255',
+                'Lname' => 'required|string|max:255',
+                'dob' => 'required|date',
+                'Gender' => 'required|string',
+            ]);
+        } elseif ($type == 'clinic') {
+            $rules = array_merge($rules, [
+                'Fname' => 'required|string|max:255', // Clinic Name
+                'License' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            ]);
+        }
+
+        $request->validate($rules);
 
         // Generate verification code
         $verificationCode = Str::upper(Str::random(6));
 
-        // Handle Valid ID upload
+        // Handle file uploads
         $validIdPath = $request->file('ValidID')->store('valid_ids', 'public');
+        $licensePath = $type === 'clinic' ? $request->file('License')->store('licenses', 'public') : null;
 
         // Create user
         $user = User::create([
-            'name' => $request->Fname . ' ' . $request->Mname . ' ' . $request->Lname,
+            'name' => $type === 'clinic'
+                ? $request->Fname
+                : $request->Fname . ' ' . $request->Mname . ' ' . $request->Lname,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $type, // patient, therapist, or clinic
             'verification_code' => $verificationCode,
             'valid_id_path' => $validIdPath,
-            'plan' =>$plan,
+            'license_path' => $licensePath,
+            'status' => 'Pending', // initially pending approval
         ]);
 
         // Send verification email
         Mail::to($user->email)->send(new VerificationCodeMail($user));
 
-        // Redirect to verification page with messages
-        return redirect()->route('verification.notice')->with('email', $user->email)
+        // Redirect to verification page
+        return redirect()->route('verification.notice')
+                         ->with('email', $user->email)
                          ->with('info', 'A verification code has been sent to your email. Your account is still being verified by the admin.');
     }
 }

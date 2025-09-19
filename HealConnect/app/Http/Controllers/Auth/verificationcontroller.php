@@ -12,9 +12,16 @@ use App\Mail\VerificationCodeMail;
 class VerificationController extends Controller
 {
     // Show verification page
-    public function show()
+    public function show(Request $request)
     {
-        return view('auth.reg_verify');
+        $email = $request->session()->get('email'); // fixed semicolon
+
+        if (!$email) {
+            return redirect()->route('register.form', 'patient')
+                             ->with('error', 'Please register first.');
+        }
+
+        return view('auth.reg_verify', compact('email'));
     }
 
     // Confirm verification code
@@ -26,40 +33,34 @@ class VerificationController extends Controller
         ]);
 
         $user = User::where('email', $request->email)
-            ->where('verification_code', $request->verification_code)
-            ->first();
+                    ->where('verification_code', $request->verification_code)
+                    ->first();
 
         if ($user) {
             $user->email_verified_at = now();
-            $user->verification_code = null; // clear code after verification
+            $user->verification_code = null;
+            $user->status = 'Pending'; // account pending admin approval
             $user->save();
 
-            // Log the user in
+            // Log user in
             auth()->login($user);
 
-            // Redirect dynamically based on role
-            switch ($user->role) {
-                case 'patient':
-                    $route = 'patient.home';
-                    break;
-                case 'therapist':
-                    $route = 'therapist.home';
-                    break;
-                case 'clinic':
-                    $route = 'clinic.home';
-                    break;
-                default:
-                    $route = 'home';
-            }
+            // Redirect based on role with pending message
+            $route = match($user->role) {
+                'patient' => 'patient.home',
+                'therapist' => 'therapist.home',
+                'clinic' => 'clinic.home',
+                default => 'home',
+            };
 
             return redirect()->route($route)
-                ->with('info', 'Your email is verified! Your account is still being verified by the admin.');
+                             ->with('info', 'Your email is verified! Account Status: Pending. Admin is verifying your application. Please wait for a number of business days.');
         }
 
         return back()->withErrors(['verification_code' => 'Invalid verification code.']);
     }
 
-    // Resend new code
+    // Resend code
     public function resend(Request $request)
     {
         $request->validate([
@@ -72,7 +73,6 @@ class VerificationController extends Controller
         $user->verification_code = $newCode;
         $user->save();
 
-        // Send the code via email
         Mail::to($user->email)->send(new VerificationCodeMail($user));
 
         return back()->with('success', 'A new verification code has been sent to your email!');

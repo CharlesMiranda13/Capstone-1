@@ -2,7 +2,7 @@
 @section('title', 'Register - Patient Register')
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/register.css') }}">
-
+@section('endsection')
 
 @section('content')
 <main class="register-main">
