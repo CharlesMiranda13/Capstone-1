@@ -10,7 +10,7 @@
 <main class="pt-main">
     <div class="main-content left-column">
         <div class="welcome-header">
-            <h2>Hello, {{ Auth::user()->name ?? 'Patient' }}!</h2>
+            <h2>Hello, {{ Auth::user()->name ??  }}!</h2>
         </div>
 
         <div class="card">

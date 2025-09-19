@@ -18,7 +18,7 @@
             </div>
             <div>
                 <label for="Mname">Middle Name:</label>
-                <input type="text" id="Mname" name="Mname" required />
+                <input type="text" id="Mname" name="Mname"/>
             </div>
         </div>
 
