@@ -9,12 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('plan')->nullable()->after('email');
+
+            if (!Schema::hasColumn('users', 'plan')) {
+                $table->string('plan')->nullable()->after('email');
+            }
         });
     }
+
 
     /**
      * Reverse the migrations.

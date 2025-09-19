@@ -9,9 +9,26 @@ use App\Models\User;
 class UserController extends Controller
 {
     // Show all users
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
+        $query = User::where('role', '!=', 'admin'); // exclude admin
+
+        // Optional: filter by role from dropdown
+        if ($request->has('role') && $request->role != 'all') {
+            $query->where('role', $request->role);
+        }
+
+        // Optional: search by name or email
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $users = $query->get();
+
         return view('User.Admin.manage_users', compact('users'));
     }
 
