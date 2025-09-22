@@ -6,9 +6,9 @@
     <title>@yield('title', 'Patient Dashboard')</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <link rel="stylesheet" href="{{ asset('Css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('Css/patients.css') }}">
+    <link rel="stylesheet" href="{{ asset('Css/style.css') }}">
+    
 
     @yield('styles')
 </head>
@@ -26,10 +26,13 @@
         <a href="{{ route('patient.home') }}"><i class="fa-solid fa-house"></i> Home</a>
         <a href="{{ route('patient.appointments') }}"><i class="fa-regular fa-calendar"></i> Appointment</a>
         <a href="{{ route('patient.records') }}"><i class="fa-regular fa-file-lines"></i> Records</a>
-        <a href="{{ route('patient.settings') }}"><i class="fa-solid fa-gear"></i> Setting</a>
+        <a href="{{ route('patient.messages') }}"><i class="fa-regular fa-message"></i> Messages</a>
         <a href="{{ route('patient.home') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
     </div>
 
+    {{-- Main Content --}}
+    <div class="main-content">
         @yield('content')
+    </div>
 </body>
 </html>

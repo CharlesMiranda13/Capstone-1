@@ -82,9 +82,10 @@ Route::prefix('patient')->name('patient.')->group(function () {
     Route::view('/home', 'user.patients.patient')->name('home');
     Route::view('/appointments', 'user.patients.appointment')->name('appointments');
     Route::view('/records', 'user.patients.records')->name('records');
-    Route::view('/settings', 'user.patients.setting')->name('settings');
-});
+    Route::view('/messages', 'user.patient.messages')->name('messages');
+    Route::view('/settings', 'user.patients.settings')->name('settings');
 
+});       
 /*Therapist Routes*/
 
 Route::prefix('therapist')->name('therapist.')->group(function () {

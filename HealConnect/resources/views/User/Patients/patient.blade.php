@@ -2,41 +2,31 @@
 
 @section('title', 'Patient Dashboard')
 
-@section('styles')
-    <link rel="stylesheet" href="{{ asset('Css/patient.css') }}">
-@endsection
-
 @section('content')
-<main class="patient-main">
-
-    <div class="main-content left-column">
-        {{-- Welcome header stays inside the left column --}}
-        <div class="welcome-header">
-            <h2>Hello, {{ Auth::user()->name ?? 'Patient' }}!</h2>
+    <div class="welcome-header">
+        <h2>Hello, {{ Auth::user()->name ?? 'Patient' }}!</h2>
+        <a href="{{ route('patient.settings') }}">
             <img src="{{ Auth::user()->profile_picture ?? asset('images/default-profile.png') }}"
-                 alt="Profile Picture"
-                 class="profile-picture">
-        </div>
+                 alt=""
+                 class="pic">
+        </a>
+    </div>
 
-        {{-- Info message from verification --}}
-        @if(session('info'))
-            <div class="info-message">
-                {{ session('info') }}
+    <main class="patient-main">
+        <div class="left-column">
+            <div class="card">
+                <h3>Upcoming Appointments</h3>
             </div>
-        @endif
 
-        <div class="card">
-            <h3>Upcoming Appointments</h3>
+            <div class="card">
+                <h3>Recent Medical Records</h3>
+            </div>
         </div>
-        <div class="card">
-            <h3>Recent Medical Records</h3>
-        </div>
-    </div>
 
-    <div class="right-column">
-        <div class="notification">
-            <h3><i class="fa fa-bell"></i> Notifications</h3>
+        <div class="right-column">
+            <div class="notification">
+                <h3><i class="fa fa-bell"></i> Notifications</h3>
+            </div>
         </div>
-    </div>
-</main>
+    </main>
 @endsection
