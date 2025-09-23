@@ -23,11 +23,32 @@
             </div>
         </div>
         <hr>
-        <a href="{{ route('patient.home') }}"><i class="fa-solid fa-house"></i> Home</a>
-        <a href="{{ route('patient.appointments') }}"><i class="fa-regular fa-calendar"></i> Appointment</a>
-        <a href="{{ route('patient.records') }}"><i class="fa-regular fa-file-lines"></i> Records</a>
-        <a href="{{ route('patient.messages') }}"><i class="fa-regular fa-message"></i> Messages</a>
-        <a href="{{ route('patient.home') }}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        <a href="{{ route('patient.home') }}"class="{{ request()->routeIs('patient.home') ? 'active' : '' }}">
+            <i class="fa-solid fa-house"></i> Home
+        </a>
+
+        <a href="{{ route('patient.appointments') }}" class="{{ request()->routeIs('patient.appointments') ? 'active' : '' }}">
+            <i class="fa-regular fa-calendar"></i> Appointment
+        </a>
+
+        <a href="{{ route('patient.records') }}" class="{{ request()->routeIs('patient.records') ? 'active' : '' }}">
+            <i class="fa-regular fa-file-lines"></i> Records
+        </a>
+
+        <a href="{{ route('patient.messages') }}" class="{{ request()->routeIs('patient.messages') ? 'active' : '' }}">
+            <i class="fa-regular fa-message"></i> Messages
+        </a>
+
+        <a href="{{ route('patient.therapists') }}" class="{{ request()->routeIs('patient.therapists') ? 'active' : '' }}">
+            <i class="fa-solid fa-user-md"></i> Therapists
+        </a>
+        
+        <form action="{{ route('patient.logout') }}" method="POST" style="display:inline;">
+            @csrf
+            <button type="submit" class="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+        </form>
     </div>
 
     {{-- Main Content --}}

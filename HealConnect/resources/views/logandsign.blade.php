@@ -27,10 +27,11 @@
             <div id="login" class="tab-content active">
                 <div class="login-container">
                     <h2>Login to HealConnect</h2>
-                    <form action="#" method="post">
+                    <form action="{{ route('login') }}" method="POST">
+                        @csrf
                         <div class="form-group">
-                            <label for="username">Email:</label>
-                            <input type="text" id="username" name="username" required>
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" required>
                         </div>
                         <div class="form-group">
                             <label for="password">Password:</label>

@@ -15,12 +15,13 @@
     <main class="patient-main">
         <div class="left-column">
             <div class="card">
-                <h3>Upcoming Appointments</h3>
+                <h3><i class = "fa fa-calendar"></i>Upcoming Appointments</h3>
             </div>
 
             <div class="card">
-                <h3>Recent Medical Records</h3>
+                <h3><i class = "fa fa-folder-open "></i>Recent Medical Records</h3>
             </div>
+
         </div>
 
         <div class="right-column">

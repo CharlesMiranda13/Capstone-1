@@ -36,17 +36,19 @@ class UserController extends Controller
     public function verify($id)
     {
         $user = User::findOrFail($id);
-        $user->status = 'verified';
+        $user->status = 'Active';
+        $user->is_verified_by_admin = true; 
         $user->save();
 
         return back()->with('success', 'User has been verified.');
     }
 
-    // Decline user (status only, not delete)
+    // Decline user 
     public function decline($id)
     {
         $user = User::findOrFail($id);
-        $user->status = 'declined'; 
+        $user->status = 'Unverified'; 
+        $user->is_verified_by_admin = false;
         $user->save();
 
         return back()->with('error', 'User has been declined.');

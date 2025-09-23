@@ -30,9 +30,15 @@
   padding: 20px;
 }
 .sidebar a:hover {
-  background-color: #d2df5d;
+  background-color: #72aceb; 
   color: white;
 }
+.sidebar a.active {
+  background: #007bff;   
+  color: #fff;
+  font-weight: bold;
+}
+
 .sidebar i {
   margin-right: 20px;
 }

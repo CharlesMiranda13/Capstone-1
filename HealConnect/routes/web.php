@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\UserAuthController;
 use App\Http\Controllers\Auth\AuthController;   
 use App\Http\Controllers\Admin\UserController; 
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\Patient\PatientController;
 
 /*Public Pages*/
 
@@ -37,6 +38,11 @@ Route::prefix('register')->group(function () {
     Route::get('/{type}', [RegisterController::class, 'showRegistrationForm'])->name('register.form');
     Route::post('/{type}', [RegisterController::class, 'register'])->name('register.store');
 });
+
+// Account Pending Page
+Route::get('/account/pending', function () {
+    return view('auth.pending');
+})->name('account.pending');
 
 /*Admin Authentication & Management*/
 
@@ -78,14 +84,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 /*Patient Routes*/
 
-Route::prefix('patient')->name('patient.')->group(function () {
-    Route::view('/home', 'user.patients.patient')->name('home');
+Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])->group(function () {
+    Route::get('/home', [PatientController::class, 'dashboard'])->name('home');
     Route::view('/appointments', 'user.patients.appointment')->name('appointments');
     Route::view('/records', 'user.patients.records')->name('records');
     Route::view('/messages', 'user.patient.messages')->name('messages');
     Route::view('/settings', 'user.patients.settings')->name('settings');
+    Route::view('/therapists', 'user.patient.therapits')->name('therapists');
 
-});       
+    Route::post('/logout', [App\Http\Controllers\Auth\UserAuthController::class, 'logout'])
+    ->name('logout');
+
+});      
 /*Therapist Routes*/
 
 Route::prefix('therapist')->name('therapist.')->group(function () {
@@ -98,6 +108,11 @@ Route::prefix('clinic')->name('clinic.')->group(function () {
     Route::view('/home', 'user.clinics.dashboard')->name('home');
     //otw
 });
+
+Route::get('/check-status', function () {
+    return response()->json(['status' => Auth::user()->status]);
+})->middleware('auth')->name('check.status');
+
 
 /* Email Verification*/
 Route::prefix('verify')->name('verification.')->group(function () {

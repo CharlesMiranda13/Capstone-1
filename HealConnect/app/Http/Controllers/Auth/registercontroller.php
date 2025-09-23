@@ -82,6 +82,6 @@ class RegisterController extends Controller
         // Redirect to verification page
         return redirect()->route('verification.notice')
                          ->with('email', $user->email)
-                         ->with('info', 'A verification code has been sent to your email. Your account is still being verified by the admin.');
+                         ->with('info', 'A verification code has been sent to your gmail.');
     }
 }
