@@ -105,8 +105,12 @@ Route::prefix('therapist')->name('therapist.')->group(function () {
 
 /* Clinic Routes*/
 Route::prefix('clinic')->name('clinic.')->group(function () {
-    Route::view('/home', 'user.clinics.dashboard')->name('home');
-    //otw
+    Route::view('/dashboard', 'user.therapist.clinic')->name('dashboard');
+    Route::view('/employees', 'user.therapist.employees')->name('employees');
+    Route::view('/appointments', 'user.therapist.appointment')->name('appointments');
+    Route::view('/services', 'user.therapist.services')->name('services');
+    Route::view('/records', 'user.therapist.records')->name('records');
+    Route::view('/settings', 'user.therapist.setting')->name('settings');
 });
 
 Route::get('/check-status', function () {
