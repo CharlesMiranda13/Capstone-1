@@ -24,11 +24,17 @@
             <i class="fa-solid fa-gauge"></i> Dashboard</a>
         <a href="{{ route('admin.manage-users') }}" class = "{{ request()->routeIs('admin.manage-users') ? 'active' : ''}}">
             <i class="fa-solid fa-users"></i> Manage Users</a>
-        <a href="{{ route('admin.manage-users') }}"class = "{{ request()->routeIs('admin.manage-users') ? 'active' : ''}}">
+        <a href="{{ route('admin.viewreports') }}"class = "{{ request()->routeIs('admin.viewreports') ? 'active' : ''}}">
             <i class="fa-solid fa-chart-bar"></i> View Reports</a>
-        <a href="{{ route('admin.manage-users') }}" class = "{{ request()->routeIs('admin.manage-users') ? 'active' : ''}}">
+        <a href="{{ route('admin.setting') }}" class = "{{ request()->routeIs('admin.setting') ? 'active' : ''}}">
             <i class="fa-solid fa-cog"></i> Settings</a>
-        <a href="{{ route('admin.dashboard') }}"><i class="fa-solid fa-sign-out"></i> Logout</a>
+
+        <form action="{{ route('admin.logout') }}" method="POST" style="display:inline;">
+            @csrf
+            <button type="submit" class="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+        </form>
     </div>
 
     <div class="admin-main">

@@ -53,6 +53,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AuthController::class, 'dashboard'])
         ->name('dashboard')
         ->middleware('auth:admin');
+    Route::get('viewreports', [AuthController::class, 'reports'])
+        ->name('viewreports')
+        ->middleware('auth:admin');
+    Route::get('setting', [AuthController::class, 'setting'])
+        ->name('setting')
+        ->middleware('auth:admin');
+    
     Route::post('/logout', function () {
         auth()->guard('admin')->logout();   
         return redirect()->route('admin.login');
