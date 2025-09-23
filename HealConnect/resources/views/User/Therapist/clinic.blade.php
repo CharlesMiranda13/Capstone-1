@@ -1,16 +1,16 @@
-@extends('layouts.therapist')
+@extends('layouts.clinic_layout')
 
-@section('title', 'PT Dashboard')
+@section('title', 'Clinic Dashboard')
 
 @section('styles')
-    <link rel="stylesheet" href="{{ asset('Css/patient.css') }}">
+    <link rel="stylesheet" href="{{ asset('Css/clinic.css') }}">
 @endsection
 
 @section('content')
-<main class="pt-main">
+<main class="clinic-main">
     <div class="main-content left-column">
         <div class="welcome-header">
-            <h2>Hello, {{ Auth::user()->name ??  }}!</h2>
+            <h2>Hello, {{ Auth::user()->name ?? 'Clinic' }}!</h2>
         </div>
 
         <div class="card">
