@@ -2,9 +2,6 @@
 
 @section('title', 'Clinic Dashboard')
 
-@section('styles')
-    <link rel="stylesheet" href="{{ asset('Css/clinic.css') }}">
-@endsection
 
 @section('content')
 <main class="clinic-main">

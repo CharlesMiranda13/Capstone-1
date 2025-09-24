@@ -3,7 +3,6 @@
 @section('title', 'Clinic Appointment')
 
 
-
 @section('content')
 <main class="appointment-main">
     <div class="appointment-content">

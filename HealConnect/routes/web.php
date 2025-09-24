@@ -50,7 +50,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Authentication
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-    Route::get('/dashboard', [AuthController::class, 'dashboard'])
+    Route::get('/dashboard', [UserController::class, 'dashboard'])
         ->name('dashboard')
         ->middleware('auth:admin');
     Route::get('viewreports', [AuthController::class, 'reports'])
@@ -106,7 +106,7 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
 /*Therapist Routes*/
 
 Route::prefix('therapist')->name('therapist.')->group(function () {
-    Route::view('/home', 'user.therapists.dashboard')->name('home');
+    Route::get('/home', [PatientController::class, 'dashboard'])->name('home');
     //otw
 });
 

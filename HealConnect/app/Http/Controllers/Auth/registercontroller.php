@@ -73,7 +73,7 @@ class RegisterController extends Controller
             'verification_code' => $verificationCode,
             'valid_id_path' => $validIdPath,
             'license_path' => $licensePath,
-            'status' => 'Pending', // initially pending approval
+            'status' => 'Pending', 
         ]);
 
         // Send verification email

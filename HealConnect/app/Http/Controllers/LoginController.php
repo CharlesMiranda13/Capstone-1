@@ -27,12 +27,23 @@ class UserLoginController extends Controller
 
             $user = Auth::guard('web')->user()->fresh();
 
-
+            // Check admin verification + status
             if (!$user->is_verified_by_admin || $user->status !== 'Active') {
                 return redirect()->route('account.pending');
             }
 
-            return redirect()->intended('/patient/home');
+            // Redirect based on role
+            switch ($user->role) {
+                case 'patient':
+                    return redirect()->intended('/patient/home');
+                case 'clinic':
+                    return redirect()->intended('/clinic/dashboard'); 
+                case 'independent':
+                    return redirect()->intended('/therapist/home'); 
+                default:
+                    Auth::logout();
+                    return redirect('/')->withErrors(['role' => 'Unauthorized role.']);
+            }
         }
 
         return back()->withErrors([

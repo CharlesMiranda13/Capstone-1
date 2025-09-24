@@ -24,7 +24,7 @@ class AuthController extends Controller
             ]);
 
             $credentials = $request->only('email', 'password');
-            $credentials['email'] = strtolower($credentials['email']); // normalize email
+            $credentials['email'] = strtolower($credentials['email']); 
 
             if (Auth::guard('admin')->attempt($credentials, $request->filled('remember'))) {
             return redirect()->intended(route('admin.dashboard'));
@@ -49,7 +49,6 @@ class AuthController extends Controller
     }
 
 
-    // Show dashboard (example for admin)
     public function dashboard()
     {
         return view('user.admin.admin');

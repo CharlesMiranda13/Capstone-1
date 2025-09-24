@@ -13,12 +13,12 @@ class UserController extends Controller
     {
         $query = User::where('role', '!=', 'admin'); // exclude admin
 
-        // Optional: filter by role from dropdown
+   
         if ($request->has('role') && $request->role != 'all') {
             $query->where('role', $request->role);
         }
 
-        // Optional: search by name or email
+   
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -87,4 +87,24 @@ class UserController extends Controller
         return redirect()->route('admin.manage-users')
             ->with('success', 'User deleted successfully.');
     }
+
+
+    // View reports page
+    public function dashboard()
+    {
+        $totalUsers = User::where('role', '!=', 'admin')->count();
+        $totalPatients = User::where('role', 'patient')->count();
+        $totalTherapists = User::where('role', 'therapist')->count();
+        $totalClinics = User::where('role', 'clinic')->count();
+        $pendingUsers = User::where('status', 'pending')->count();
+
+        return view('User.Admin.admin', compact(
+            'totalUsers', 
+            'totalPatients', 
+            'totalTherapists', 
+            'totalClinics',
+            'pendingUsers'
+    ));
+    }
+    
 }

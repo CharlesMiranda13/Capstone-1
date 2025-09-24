@@ -26,5 +26,9 @@ class Appointment extends Model
     {
         return $this->belongsTo(User::class, 'therapist_id');
     }
+    public function clinic()
+    {
+        return $this->belongsTo(User::class, 'clinic_id');
+    }
 
 }
