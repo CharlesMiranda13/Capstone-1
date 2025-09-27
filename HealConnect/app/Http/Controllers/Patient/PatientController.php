@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Appointment;
 use App\Models\Record;
 use App\Models\Notification;
+use App\Models\User;
 
 class PatientController extends Controller
 {
@@ -21,9 +22,9 @@ class PatientController extends Controller
             ->get();
 
         //$records = Record::where('patient_id', $user->id)
-          //  ->latest()
-           // ->take(3)
-           // ->get();
+            //->latest()
+            //->take(3)
+            //->get();
 
        // $notifications = Notification::where('user_id', $user->id)
          //   ->latest()
@@ -34,5 +35,12 @@ class PatientController extends Controller
 
 
         //return view('user.patients.patient', compact('user', 'appointments', 'records', 'notifications'));
+    }
+
+    public function listOfTherapist()
+    {
+        $therapists = User::whereIn('role', [User::ROLE_THERAPIST, User::ROLE_CLINIC])->get();
+
+        return view('user.patients.listoftherapist', compact('therapists'));
     }
 }

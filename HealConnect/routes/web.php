@@ -97,7 +97,7 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
     Route::view('/records', 'user.patients.records')->name('records');
     Route::view('/messages', 'user.patient.messages')->name('messages');
     Route::view('/settings', 'user.patients.settings')->name('settings');
-    Route::view('/therapists', 'user.patient.therapits')->name('therapists');
+    Route::get('/therapists', [PatientController::class, 'listOfTherapists'])->name('therapists');
 
     Route::post('/logout', [App\Http\Controllers\Auth\UserAuthController::class, 'logout'])
     ->name('logout');

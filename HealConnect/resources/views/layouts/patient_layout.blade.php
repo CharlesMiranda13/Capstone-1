@@ -31,7 +31,7 @@
             <i class="fa-regular fa-calendar"></i> Appointment
         </a>
 
-        <a href="{{ route('patient.records') }}" class="{{ request()->routeIs('patient.records') ? 'active' : '' }}">
+        <a href="{{ route('patient.records') }}" class="{{ request()->routeIs('patients.records') ? 'active' : '' }}">
             <i class="fa-regular fa-file-lines"></i> Records
         </a>
 
