@@ -39,6 +39,9 @@
 
         <label for="password_confirmation">Confirm Password:</label>
         <input type="password" id="password_confirmation" name="password_confirmation" required />
+            @error('password')
+                <small style="color:red;">{{ $message }}</small>
+            @enderror
 
         <label for="operating_hours">Operating Hours:</label>
         <input type="text" id="operating_hours" name="operating_hours" placeholder="Mon-Fri 9AM - 6PM" value="{{ old('operating_hours') }}" />
@@ -52,10 +55,16 @@
                 <div>
                     <label for="ValidID">Valid ID (Owner/Representative):</label>
                     <input type="file" id="ValidID" name="ValidID" accept=".jpg, .jpeg, .png, .pdf" required />
+                @error('ValidID')
+                    <small style="color:red;">{{ $message }}</small>
+                @enderror
                 </div>
                 <div>
                     <label for="License">Clinic License / DOH Accreditation:</label>
                     <input type="file" id="License" name="License" accept=".jpg, .jpeg, .png, .pdf" required />
+                @error('License')
+                    <small style="color:red;">{{ $message }}</small>
+                @enderror
                 </div>
             </div>
         </div>

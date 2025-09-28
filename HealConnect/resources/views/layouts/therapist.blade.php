@@ -40,7 +40,7 @@
         </a>
 
         <a href="{{ route('therapist.client') }}" class="{{ request()->routeIs('therapist.client') ? 'active' : '' }}">
-            <i class="fa-solid fa-user-md"></i> Therapists
+            <i class="fa-solid fa-user-md"></i> Clients
         </a>
         
         <form action="{{ route('therapist.logout') }}" method="POST" style="display:inline;">

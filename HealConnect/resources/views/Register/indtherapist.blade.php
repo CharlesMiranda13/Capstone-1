@@ -48,6 +48,9 @@
 
         <label for="password_confirmation">Confirm Password:</label>
         <input type="password" id="password_confirmation" name="password_confirmation" required />
+            @error('password')
+                <small style="color:red;">{{ $message }}</small>
+            @enderror
 
         <label for="specialization">Specialization:</label>
         <input type="text" id="specialization" name="specialization" required />
@@ -59,10 +62,16 @@
                 <div>
                     <label for="ValidID">Valid ID:</label>
                     <input type="file" id="ValidID" name="ValidID" accept=".jpg, .jpeg, .png, .pdf" required />
+                @error('ValidID')
+                    <small style="color:red;">{{ $message }}</small>    
+                @enderror
                 </div>
                 <div>
                     <label for="License">License: </label>
                     <input type="file" id="License" name="License" accept=".jpg, .jpeg, .png, .pdf" required />
+                @error('License')
+                    <small style="color:red;">{{ $message }}</small>    
+                @enderror
                 </div>
             </div>
         </div>

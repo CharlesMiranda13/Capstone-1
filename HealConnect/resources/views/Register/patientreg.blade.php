@@ -33,12 +33,18 @@
 
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required />
+            @error('email')
+                <small style="color:red;">{{ $message }}</small>
+            @enderror
 
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required />
 
         <label for="password_confirmation">Confirm Password:</label>
         <input type="password" id="password_confirmation" name="password_confirmation" required />
+            @error('password')
+                <small style="color:red;">{{ $message }}</small>
+            @enderror
 
         <label for="dob">Date of Birth:</label>
         <input type="date" id="dob" name="dob" required />
@@ -52,6 +58,9 @@
 
         <label for="ValidID">Valid ID:</label>
         <input type="file" id="ValidID" name="ValidID" accept=".jpg, .jpeg, .png, .pdf" required />
+            @error('ValidID')
+                <small style="color:red;">{{ $message }}</small>
+            @enderror
 
         <small style="font-size: 12px; color: gray;">
             By uploading your license, you agree that HealConnect will use this document solely for verifying your credentials. 

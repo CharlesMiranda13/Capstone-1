@@ -53,7 +53,14 @@ class RegisterController extends Controller
             ]);
         }
 
-        $request->validate($rules);
+        $messages = [
+            'email.unique' => 'The email has already been taken.',
+            'password.confirmed' => 'The password confirmation does not match.',
+            'ValidID.mimes' => 'The Valid ID must be a file of type: jpg, jpeg, png, pdf.',
+            'License.mimes' => 'The License must be a file of type: jpg, jpeg, png, pdf.',
+        ];
+
+        $request->validate($rules, $messages);
 
         // Generate verification code
         $verificationCode = Str::upper(Str::random(6));
