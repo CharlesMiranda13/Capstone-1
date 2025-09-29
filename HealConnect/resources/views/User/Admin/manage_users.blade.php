@@ -33,11 +33,11 @@
                     <td>{{ ucfirst($user->role) }}</td>
                     <td>{{ $user->status ?? 'pending' }}</td>   
                     <td>
-                        {{-- ✅ Verify --}}
+                        {{-- ✅ Approve --}}
                         <form action="{{ route('admin.users.verify', $user->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('PATCH')
-                            <button type="submit" class="btn btn-success">Verify</button>
+                            <button type="submit" class="btn btn-success">Approve</button>
                         </form>
 
                         {{-- ✅ Decline --}}

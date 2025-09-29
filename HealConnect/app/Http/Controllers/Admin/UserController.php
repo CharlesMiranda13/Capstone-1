@@ -33,14 +33,14 @@ class UserController extends Controller
     }
 
     // Verify user
-    public function verify($id)
+    public function approve($id)
     {
         $user = User::findOrFail($id);
         $user->status = 'Active';
         $user->is_verified_by_admin = true; 
         $user->save();
 
-        return back()->with('success', 'User has been verified.');
+        return back()->with('success', 'User has been approved.');
     }
 
     // Decline user 
