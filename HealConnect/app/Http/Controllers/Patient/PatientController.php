@@ -11,6 +11,11 @@ use App\Models\User;
 
 class PatientController extends Controller
 {
+    private function getTherapists()
+    {
+        return User::verifiedTherapists()->get();
+    }
+
     public function dashboard()
     {
         $user = Auth::user();
@@ -21,26 +26,26 @@ class PatientController extends Controller
             ->take(3)
             ->get();
 
-        //$records = Record::where('patient_id', $user->id)
-            //->latest()
-            //->take(3)
-            //->get();
+        $therapists = $this->getTherapists();
 
-       // $notifications = Notification::where('user_id', $user->id)
-         //   ->latest()
-         //   ->take(5)
-         //   ->get();
-
-         return view('user.patients.patient', compact('user', 'appointments'));
-
-
-        //return view('user.patients.patient', compact('user', 'appointments', 'records', 'notifications'));
+        return view('user.patients.patient', compact('user', 'appointments', 'therapists'));
     }
 
     public function listOfTherapist()
     {
-        $therapists = User::whereIn('role', [User::ROLE_THERAPIST, User::ROLE_CLINIC])->get();
+        $therapists = $this->getTherapists();
 
         return view('user.patients.listoftherapist', compact('therapists'));
     }
+
+    public function publicTherapists()
+    {
+        $therapists = User::verifiedTherapists()->get(); 
+        return view('ptlist', compact('therapists')); 
+    }
+
+
+
+
+
 }

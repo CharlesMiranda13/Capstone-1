@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\UserAuthController;
@@ -17,9 +18,8 @@ Route::view('/loading', 'loading');
 Route::view('/about', 'about')->name('about');
 Route::view('/services', 'services')->name('services');
 Route::view('/pricing', 'pricing')->name('pricing');
-Route::view('/ptlist', 'ptlist')->name('ptlist');
 Route::view('/contact', 'contact')->name('contact');
-Route::view('/therapists', 'therapists')->name('therapists');
+Route::get('/ptlist', [PatientController::class, 'publicTherapists'])->name('ptlist');
 
 /* User Authentication (Patients, Therapists, Clinics)*/
 
@@ -98,7 +98,8 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
     Route::view('/records', 'user.patients.records')->name('records');
     Route::view('/messages', 'user.patient.messages')->name('messages');
     Route::view('/settings', 'user.patients.settings')->name('settings');
-    Route::get('/therapists', [PatientController::class, 'listOfTherapists'])->name('therapists');
+    Route::get('/therapists', [PatientController::class, 'listOfTherapist'])
+        ->name('therapists');
 
     Route::post('/logout', [App\Http\Controllers\Auth\UserAuthController::class, 'logout'])
     ->name('logout');

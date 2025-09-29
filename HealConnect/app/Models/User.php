@@ -46,4 +46,11 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function scopeVerifiedTherapists($query)
+    {
+        return $query->whereIn('role', ['therapist', 'clinic'])
+                ->where('is_verified_by_admin', true)
+                ->where('status', 'Active');
+    }
 }
