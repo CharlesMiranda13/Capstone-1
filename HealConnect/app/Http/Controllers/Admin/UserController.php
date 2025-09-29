@@ -33,7 +33,7 @@ class UserController extends Controller
     }
 
     // Verify user
-    public function approve($id)
+    public function verify($id)
     {
         $user = User::findOrFail($id);
         $user->status = 'Active';

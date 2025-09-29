@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Admin\UserController; 
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\Patient\PatientController;
+use App\Http\Controllers\Indtherapist\IndtherapistController;
 
 /*Public Pages*/
 
@@ -106,8 +107,16 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
 /*Therapist Routes*/
 
 Route::prefix('therapist')->name('therapist.')->group(function () {
-    Route::get('/home', [PatientController::class, 'dashboard'])->name('home');
-    //otw
+    Route::get('/home', [IndtherapistController::class, 'dashboard'])->name('home');
+    Route::view('/appointments', 'user.therapist.appointment')->name('appointments');
+    Route::view('/records', 'user.therapist.records')->name('records');
+    Route::view('/messages', 'user.therapist.messages')->name('messages');
+    Route::view('/settings', 'user.therapist.settings')->name('settings');
+    Route::view('/clients', 'user.therapist.client')->name('client');
+
+    Route::post('/logout', [App\Http\Controllers\Auth\UserAuthController::class, 'logout'])
+    ->name('logout');
+
 });
 
 /* Clinic Routes*/

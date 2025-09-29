@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Therapist;
+namespace App\Http\Controllers\Indtherapist;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Appointment;
 use App\Models\Notification;
 
-class TherapistController extends Controller
+class IndtherapistController extends Controller
 {
     public function dashboard()
     {
@@ -24,6 +24,6 @@ class TherapistController extends Controller
         //     ->take(5)
         //     ->get();
 
-        return view('user.therapists.dashboard', compact('user', 'appointments'));
+        return view('user.therapist.independent.independent', compact('user', 'appointments'));
     }
 }
