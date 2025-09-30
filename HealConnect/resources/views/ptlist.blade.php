@@ -13,7 +13,6 @@
                     <h3>{{ $therapist->name }}</h3>
                     <p><strong>Email:</strong> {{ $therapist->email }}</p>
                     <p><strong>Role:</strong> {{ ucfirst($therapist->role) }}</p>
-                    <p><strong>Status:</strong> ✅ Verified</p>
                 </div>
             @endforeach
         </div>

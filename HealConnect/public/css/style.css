@@ -299,6 +299,16 @@ footer {
   width: 100%;
 }
 
+.therapist-card {
+  background: #b6b0b0;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+
 
 /* Responsive Design */
 @media (max-width: 1000px) {

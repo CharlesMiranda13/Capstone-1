@@ -70,6 +70,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/users', [UserController::class, 'index'])
         ->name('manage-users')
         ->middleware('auth:admin');
+
+    Route::get('/users/{id}',[UserController::class, 'show'])
+        ->name('users.show')
+        ->middleware('auth:admin');
+
     Route::patch('/users/{id}/verify', [UserController::class, 'verify'])
         ->name('users.verify')
         ->middleware('auth:admin');

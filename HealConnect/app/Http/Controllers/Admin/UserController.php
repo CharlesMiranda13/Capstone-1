@@ -106,5 +106,11 @@ class UserController extends Controller
             'pendingUsers'
     ));
     }
+
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
+        return view('User.Admin.user_details', compact('user'));
+    }
     
 }

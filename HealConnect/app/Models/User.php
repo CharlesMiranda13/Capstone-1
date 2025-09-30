@@ -22,7 +22,11 @@ class User extends Authenticatable
         'password',
         'role',
         'verification_code',
-        'is_verified_by_admin',];
+        'is_verified_by_admin',
+        'status',
+        'profile_picture',
+        'gender',
+        'specialty',];
 
     /**
      * The attributes that should be hidden for serialization.
