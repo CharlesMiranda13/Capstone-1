@@ -1,6 +1,9 @@
 @extends('layouts.therapist')
 
 @section('title', 'PT Dashboard')
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/patients.css') }}">
+@endsection
 
 @section('content')
     <div class="welcome-header">

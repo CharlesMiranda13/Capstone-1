@@ -2,6 +2,10 @@
 
 @section('title', 'Patient Dashboard')
 
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/patients.css') }}">
+@endsection
+
 @section('content')
     <div class="welcome-header">
         <h2>Hello, {{ Auth::user()->name ?? 'Patient' }}!</h2>
