@@ -40,24 +40,10 @@
                         {{-- View --}}
                         <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-info btn-sm">View</a>
 
-                        {{-- Approve --}}
-                        <form action="{{ route('admin.users.verify', $user->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('PATCH')
-                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
-                        </form>
-
-                        {{--Decline --}}
-                        <form action="{{ route('admin.users.decline', $user->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('PATCH')
-                            <button type="submit" class="btn btn-warning btn-sm">Decline</button>
-                        </form>
-
                          <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-warning btn-sm">Delete</button>
+                            <button type="submit" class="btn btn-del btn-sm">Delete</button>
                         </form>
 
                         {{-- Edit --}}
