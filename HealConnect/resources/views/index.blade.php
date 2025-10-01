@@ -8,16 +8,32 @@
 @endsection
 
 @section('content')
-  <section class="main-section">
-    <div class="main-content">
-      <h1>Connecting Patients and Therapists for Better Recovery</h1>
-      <p>Your journey to better health starts here.</p>
-      <button class="get-started-btn" onclick="window.location.href='{{ url('/about') }}'">About Us</button>
+<section class="main-section">
+  <div class="main-content">
+    <h1>Connecting Patients and Therapists for Better Recovery</h1>
+    <p>Your journey to better health starts here.</p>
+    <button class="get-started-btn" onclick="window.location.href='{{ url('/about') }}'">About Us</button>
+  </div>  
+  <div class="flip-card">
+    <div class="flip-card-inner">
+ 
+      <div class="flip-card-front">
+        <img src="{{ asset('images/pictherapy.jpg') }}" alt="Physical Therapy">
+      </div>
+  
+      <div class="flip-card-back">
+        <h2>What is Physical Therapy</h2>
+        <p>
+          Physical Therapy (PT) is a healthcare practice focused on helping individuals 
+          restore movement, relieve pain, and recover from injuries or surgeries. 
+          It also improves strength, balance, and overall quality of life — empowering 
+          people to stay active and independent.
+        </p>
+      </div>
     </div>
-    <div class="main-image">
-      <img src="{{ asset('images/pictherapy.jpg') }}" alt="Physical Therapy" />
-    </div>
-  </section>
+  </div>
+</section>
+
 
   <section class="features-section">
     <h2>Why Choose HealConnect?</h2>

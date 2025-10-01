@@ -13,24 +13,20 @@
         <p><strong>Status:</strong> {{ $user->status ?? 'Pending' }}</p>
         <p><strong>Created At:</strong> {{ $user->created_at->format('M d, Y') }}</p>
 
-        {{-- ✅ Extra details --}}
+     
         @if ($user->profile_details)
             <p><strong>Profile Details:</strong> {{ $user->profile_details }}</p>
         @endif
 
-        {{-- ✅ Uploaded Credentials --}}
-        @if ($user->credentials_file)
+        {{--  Uploaded Credentials --}}
+        @if ($user->valid_id_path)
             <p><strong>Submitted Credentials:</strong></p>
-            <a href="{{ asset('storage/' . $user->credentials_file) }}" target="_blank" class="btn btn-primary">
-                View File
+            <a href="{{ asset('storage/' . $user->valid_id_path) }}" target="_blank" class="btn btn-primary">
+                View Valid ID
             </a>
         @else
             <p><em>No credentials submitted.</em></p>
         @endif
     </div>
-
-    <div class="actions" style="margin-top:20px;">
-        {{-- Back to Manage Users --}}
-        <a href="{{ route('admin.manage-users') }}" class="btn btn-secondary">Back</a>
-    </div>
+    
 @endsection

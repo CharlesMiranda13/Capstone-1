@@ -37,27 +37,31 @@
                     <td>{{ ucfirst($user->role) }}</td>
                     <td>{{ $user->status ?? 'Pending' }}</td>   
                     <td>
-                        {{-- 🔍 View --}}
+                        {{-- View --}}
                         <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-info btn-sm">View</a>
 
-                        {{-- ✅ Approve --}}
+                        {{-- Approve --}}
                         <form action="{{ route('admin.users.verify', $user->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="btn btn-success btn-sm">Approve</button>
                         </form>
 
-                        {{-- ❌ Decline --}}
+                        {{--Decline --}}
                         <form action="{{ route('admin.users.decline', $user->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="btn btn-warning btn-sm">Decline</button>
                         </form>
 
-                        {{-- ✏️ Edit --}}
-                        <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                         <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-warning btn-sm">Delete</button>
+                        </form>
 
-                        {{-- 🗑️ Delete → Moved to user_details.blade.php --}}
+                        {{-- Edit --}}
+                        <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-primary btn-sm">Edit</a>
                     </td>
                 </tr>
             @endforeach
