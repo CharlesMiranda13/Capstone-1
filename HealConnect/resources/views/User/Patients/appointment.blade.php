@@ -1,6 +1,6 @@
 @extends('layouts.patient_layout')
 
-@section('title', 'Patient Dashboard')
+@section('title', 'Dashboard')
 
 @section('content')
 <main class="appointment-main">

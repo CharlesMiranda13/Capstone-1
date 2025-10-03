@@ -29,7 +29,11 @@
         <input type="text" id="address" name="address" required />
 
         <label for="phone">Phone Number:</label>
-        <input type="tel" id="phone" name="phone" required />
+        <input type="tel" id="phone" name="phone" 
+            pattern="^09\d{9}$" 
+            maxlength="11"
+            required 
+            placeholder="09XXXXXXXXX" />
 
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required />

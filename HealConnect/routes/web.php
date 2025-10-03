@@ -95,21 +95,27 @@ Route::prefix('admin')->name('admin.')->group(function () {
         ->middleware('auth:admin');
 });
 
-/*Patient Routes*/
-
+/* Patient Routes */
 Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])->group(function () {
     Route::get('/home', [PatientController::class, 'dashboard'])->name('home');
     Route::view('/appointments', 'user.patients.appointment')->name('appointments');
     Route::view('/records', 'user.patients.records')->name('records');
-    Route::view('/messages', 'user.patient.messages')->name('messages');
-    Route::view('/settings', 'user.patients.settings')->name('settings');
-    Route::get('/therapists', [PatientController::class, 'listOfTherapist'])
-        ->name('therapists');
+    Route::view('/messages', 'user.patients.messages')->name('messages');
 
-    Route::post('/logout', [App\Http\Controllers\Auth\UserAuthController::class, 'logout'])
-    ->name('logout');
+    // Settings 
+    Route::get('/settings', [PatientController::class, 'settings'])->name('settings');
+    Route::put('/settings/profile', [PatientController::class, 'updateProfile'])->name('update.profile');
+    Route::put('/settings/info', [PatientController::class, 'updateInfo'])->name('update.info');
+    Route::put('/settings/password', [PatientController::class, 'updatePassword'])->name('update.password');
 
-});      
+    // Therapist list
+    Route::get('/therapists', [PatientController::class, 'listOfTherapist'])->name('therapists');
+
+    // Logout
+    Route::post('/logout', [App\Http\Controllers\Auth\UserAuthController::class, 'logout'])->name('logout');
+});
+
+
 /*Therapist Routes*/
 
 Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.status'])->group(function () {

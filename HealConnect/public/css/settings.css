@@ -1,0 +1,129 @@
+/* settings.css */
+
+.settings-main {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.settings-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.settings-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #2c3e50;
+}
+
+/* Card Style */
+.card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px 25px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #34495e;
+    border-left: 4px solid #3498db;
+    padding-left: 10px;
+}
+
+/* Profile Picture Upload */
+.profile-upload {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile-image {
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ddd;
+}
+
+.upload-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.upload-controls input[type="file"] {
+    font-size: 14px;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 13px;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #2c3e50;
+}
+
+input {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+input:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 4px rgba(52,152,219,0.4);
+}
+
+/* Buttons */
+.submit-button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.primary-button {
+    background: #3498db;
+    color: #fff;
+}
+.primary-button:hover {
+    background: #2980b9;
+}
+
+.success-button {
+    background: #27ae60;
+    color: #fff;
+}
+.success-button:hover {
+    background: #1e8449;
+}
+
+.warning-button {
+    background: #e67e22;
+    color: #fff;
+}
+.warning-button:hover {
+    background: #ca6f1e;
+}
