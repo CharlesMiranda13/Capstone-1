@@ -11,7 +11,7 @@ class UserController extends Controller
     // Show all users
     public function index(Request $request)
     {
-        $query = User::where('role', '!=', 'admin'); // exclude admin
+        $query = User::where('role', '!=', 'admin'); 
 
    
         if ($request->has('role') && $request->role != 'all') {

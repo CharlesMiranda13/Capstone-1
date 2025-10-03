@@ -112,7 +112,7 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
 });      
 /*Therapist Routes*/
 
-Route::prefix('therapist')->name('therapist.')->group(function () {
+Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.status'])->group(function () {
     Route::get('/home', [IndtherapistController::class, 'dashboard'])->name('home');
     Route::view('/appointments', 'user.therapist.appointment')->name('appointments');
     Route::view('/records', 'user.therapist.records')->name('records');
@@ -127,7 +127,7 @@ Route::prefix('therapist')->name('therapist.')->group(function () {
 
 /* Clinic Routes*/
 Route::prefix('clinic')->name('clinic.')->group(function () {
-    Route::view('/dashboard', 'user.therapist.clinic')->name('dashboard');
+    Route::get('/home', [IndtherapistController::class, 'dashboard'])->name('home');
     Route::view('/employees', 'user.therapist.employees')->name('employees');
     Route::view('/appointments', 'user.therapist.appointment')->name('appointments');
     Route::view('/services', 'user.therapist.services')->name('services');

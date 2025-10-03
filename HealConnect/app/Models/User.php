@@ -26,7 +26,9 @@ class User extends Authenticatable
         'status',
         'profile_picture',
         'gender',
-        'specialty',];
+        'specialty',
+        'valid_id_path',
+        'license_path',];
 
     /**
      * The attributes that should be hidden for serialization.

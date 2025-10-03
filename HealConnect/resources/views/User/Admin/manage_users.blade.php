@@ -45,9 +45,6 @@
                             @method('DELETE')
                             <button type="submit" class="btn btn-del btn-sm">Delete</button>
                         </form>
-
-                        {{-- Edit --}}
-                        <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-primary btn-sm">Edit</a>
                     </td>
                 </tr>
             @endforeach

@@ -29,7 +29,6 @@
 
         <label for="Gender">Gender:</label>
         <select id="Gender" name="Gender" required>
-            <option value="">Select Gender</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
         </select>
@@ -54,6 +53,8 @@
 
         <label for="specialization">Specialization:</label>
         <input type="text" id="specialization" name="specialization" required />
+
+        
 
 
         {{-- File Upload Section --}}

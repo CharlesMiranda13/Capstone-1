@@ -17,7 +17,7 @@
             @endforeach
         </div>
     @else
-        <p style="text-align: center;">No verified therapists or clinics available at the moment.</p>
+        <p style="text-align: center;">No verified therapists or clinics registered at the moment.</p>
     @endif
 </main>
 @endsection
