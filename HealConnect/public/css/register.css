@@ -65,21 +65,21 @@
   transform: scale(1.02);
 }
 
-/* Name Fields in 1 Row */
-.name-group {
+
+.group {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 15px;
   margin-bottom: 0; 
 }
 
-.name-group label {
+.group label {
   font-size: 14px;
   font-weight: 500;
   color: #000000;
 }
 
-.name-group input {
+.group input {
   width: 100%;
   padding: 12px 14px;
   border-radius: 8px;
@@ -89,12 +89,28 @@
   margin-bottom: 0;
 }
 
-.name-group input:focus {
+.group input:focus {
   border-color: #2da44e;
   box-shadow: 0 0 6px rgba(45, 164, 78, 0.3);
   outline: none;
 }
 
+.form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 1rem;
+}
+
+.form-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-col label {
+  margin-bottom: 6px;
+  font-weight: 600;
+}
 /* File Input Group */
 .file-group {
   display: grid;
@@ -176,8 +192,6 @@
   margin-bottom: 10px;
 }
 
-
-/* Clinic Register Styling */
 
 .register-title {
   text-align: center;

@@ -1,18 +1,12 @@
 @extends('layouts.patient_layout')
-
 @section('title', 'Settings')
-
-@section('styles')
-    <link rel="stylesheet" href="{{ asset('Css/settings.css') }}">
-@endsection
-
 @section('content')
 <main class="settings-main">
     <div class="settings-content">
         <h2 class="settings-title">Account Settings</h2>
 
         {{-- Update Profile Picture --}}
-        <div class="card">
+        <div class="scard">
             <h4 class="section-title">Profile Picture</h4>
             <form action="{{ route('patient.update.profile') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -35,8 +29,8 @@
             </form>
         </div>
 
-        {{-- Update Personal Information --}}
-        <div class="card">
+        
+        <div class="scard">
             <h4 class="section-title">Personal Information</h4>
             <form action="{{ route('patient.update.info') }}" method="POST">
                 @csrf
@@ -62,8 +56,8 @@
             </form>
         </div>
 
-        {{-- Change Password --}}
-        <div class="card">
+
+        <div class="scard">
             <h4 class="section-title">Change Password</h4>
             <form action="{{ route('patient.update.password') }}" method="POST">
                 @csrf

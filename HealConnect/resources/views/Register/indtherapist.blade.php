@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Register - Independent Therapist')
-@section('styles')
-    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+@section('styles') 
+<link rel="stylesheet" href="{{ asset('css/register.css') }}">
 
 @section('content')
 <main class="register-main therapist">
@@ -10,12 +10,12 @@
     <form action="{{ route('register.store', ['type' => 'therapist']) }}" method="POST" class="register-form" enctype="multipart/form-data">
         @csrf
 
-        <div class="name-group">
-            <div>
+        <div class="form-row">
+            <div class="form-col">
                 <label for="Fname">First Name:</label>
                 <input type="text" id="Fname" name="Fname" required />
             </div>
-            <div>
+            <div class="form-col">
                 <label for="Mname">Middle Name:</label>
                 <input type="text" id="Mname" name="Mname"/>
             </div>
@@ -24,14 +24,20 @@
         <label for="Lname">Last Name:</label>
         <input type="text" id="Lname" name="Lname" required />
 
-        <label for="dob">Date of Birth:</label>
-        <input type="date" id="dob" name="dob" required />
-
-        <label for="Gender">Gender:</label>
-        <select id="Gender" name="Gender" required>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-        </select>
+        <div class="form-row">
+            <div class="form-col">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" required />
+            </div>
+            <div class="form-col">
+                <label for="Gender">Gender:</label>
+                <select id="Gender" name="Gender" required>
+                    <option value="">--Please choose an option--</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+        </div>
 
         <label for="address">Address:</label>
         <input type="text" id="address" name="address" required />
@@ -47,9 +53,9 @@
 
         <label for="password_confirmation">Confirm Password:</label>
         <input type="password" id="password_confirmation" name="password_confirmation" required />
-            @error('password')
-                <small style="color:red;">{{ $message }}</small>
-            @enderror
+        @error('password')
+            <small style="color:red;">{{ $message }}</small>
+        @enderror
 
         <div class="form-group">
             <label class="form-label">Areas of Specialization</label>
@@ -66,22 +72,26 @@
             <small class="mess">You may select more than one specialization.</small>
         </div>
 
-        {{-- File Upload Section --}}
+        <div class="form-group">
+            <label for="experience_years" class="form-label">Years of Experience</label>
+            <input type="number" id="experience_years" name="experience_years" min="0" max="50" placeholder="e.g., 5" required>
+        </div>
+
         <div class="file-section">
             <div class="file-group">
                 <div>
                     <label for="ValidID">Valid ID:</label>
                     <input type="file" id="ValidID" name="ValidID" accept=".jpg, .jpeg, .png, .pdf" required />
-                @error('ValidID')
-                    <small style="color:red;">{{ $message }}</small>    
-                @enderror
+                    @error('ValidID')
+                        <small style="color:red;">{{ $message }}</small>    
+                    @enderror
                 </div>
                 <div>
                     <label for="License">License: </label>
                     <input type="file" id="License" name="License" accept=".jpg, .jpeg, .png, .pdf" required />
-                @error('License')
-                    <small style="color:red;">{{ $message }}</small>    
-                @enderror
+                    @error('License')
+                        <small style="color:red;">{{ $message }}</small>    
+                    @enderror
                 </div>
             </div>
         </div>
