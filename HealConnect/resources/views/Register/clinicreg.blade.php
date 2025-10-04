@@ -46,8 +46,20 @@
         <label for="operating_hours">Operating Hours:</label>
         <input type="text" id="operating_hours" name="operating_hours" placeholder="Mon-Fri 9AM - 6PM" value="{{ old('operating_hours') }}" />
 
-        <label for="specialization">Specializations / Services:</label>
-        <textarea id="specialization" name="specialization" rows="3">{{ old('specialization') }}</textarea>
+        <div class="form-group">
+            <label class="form-label">Areas of Specialization</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="specialization[]" value="Orthopedic"> Orthopedic Rehabilitation</label>
+                <label><input type="checkbox" name="specialization[]" value="Neurological"> Neurological Rehabilitation</label>
+                <label><input type="checkbox" name="specialization[]" value="Pediatric"> Pediatric Therapy</label>
+                <label><input type="checkbox" name="specialization[]" value="Sports"> Sports Therapy</label>
+                <label><input type="checkbox" name="specialization[]" value="Geriatric"> Geriatric Therapy</label>
+                <label><input type="checkbox" name="specialization[]" value="Cardiopulmonary"> Cardiopulmonary Rehabilitation</label>
+                <label><input type="checkbox" name="specialization[]" value="WomenHealth"> Women's Health</label>
+                <label><input type="checkbox" name="specialization[]" value="Other"> Other</label>
+            </div>
+            <small class="mess">You may select more than one specialization.</small>
+        </div>
 
         {{-- File Upload Section --}}
         <div class="file-section">

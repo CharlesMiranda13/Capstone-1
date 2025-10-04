@@ -1,5 +1,5 @@
 .register-main {
-  max-width: 500px;
+  max-width: 1000px;
   margin: 60px auto;
   padding: 35px 40px;
   background: #ffffff; 
@@ -48,7 +48,7 @@
 
 /* Register Button */
 .register-button {
-  margin-top: 10px;
+  margin-top: 20px;
   padding: 14px;
   background: #2da44e;
   color: #fff;
@@ -70,7 +70,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 15px;
-  margin-bottom: 0; /* changed from 16px to 0 */
+  margin-bottom: 0; 
 }
 
 .name-group label {
@@ -141,12 +141,43 @@
   text-decoration: underline;
 }
 
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.checkbox-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 20px;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin-right: 8px;
+  accent-color: #007bff; 
+}
+
+.mess {
+  font-size: 12px;
+  color: gray;
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
+
 
 /* Clinic Register Styling */
-.register-main.clinic {
-  max-width: 600px;
-  padding: 40px 45px;
-}
 
 .register-title {
   text-align: center;
@@ -158,6 +189,7 @@
 
 .file-section {
   margin-top: 20px;
+  margin-bottom: 20px;
   padding: 18px;
   background: #f9f9f9;
   border-radius: 10px;
@@ -175,6 +207,9 @@
 @media (max-width: 768px) {
   .clinic-group {
     grid-template-columns: 1fr;
+  }
+  .register-main{
+    max-width: 50%;
   }
 }
 

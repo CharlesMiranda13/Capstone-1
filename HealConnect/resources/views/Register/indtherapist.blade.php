@@ -51,11 +51,20 @@
                 <small style="color:red;">{{ $message }}</small>
             @enderror
 
-        <label for="specialization">Specialization:</label>
-        <input type="text" id="specialization" name="specialization" required />
-
-        
-
+        <div class="form-group">
+            <label class="form-label">Areas of Specialization</label>
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="specialization[]" value="Orthopedic"> Orthopedic Rehabilitation</label>
+                <label><input type="checkbox" name="specialization[]" value="Neurological"> Neurological Rehabilitation</label>
+                <label><input type="checkbox" name="specialization[]" value="Pediatric"> Pediatric Therapy</label>
+                <label><input type="checkbox" name="specialization[]" value="Sports"> Sports Therapy</label>
+                <label><input type="checkbox" name="specialization[]" value="Geriatric"> Geriatric Therapy</label>
+                <label><input type="checkbox" name="specialization[]" value="Cardiopulmonary"> Cardiopulmonary Rehabilitation</label>
+                <label><input type="checkbox" name="specialization[]" value="WomenHealth"> Women's Health</label>
+                <label><input type="checkbox" name="specialization[]" value="Other"> Other</label>
+            </div>
+            <small class="mess">You may select more than one specialization.</small>
+        </div>
 
         {{-- File Upload Section --}}
         <div class="file-section">
