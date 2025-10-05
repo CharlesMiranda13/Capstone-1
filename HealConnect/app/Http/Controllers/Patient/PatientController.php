@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Patient;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Appointment;
 use App\Models\Record;
 use App\Models\Notification;
@@ -16,6 +19,7 @@ class PatientController extends Controller
         return User::verifiedTherapists()->get();
     }
 
+    // Patient Dashboard
     public function dashboard()
     {
         $user = Auth::user();
@@ -31,6 +35,7 @@ class PatientController extends Controller
         return view('user.patients.patient', compact('user', 'appointments', 'therapists'));
     }
 
+    // List of Therapists (inside patient view)
     public function listOfTherapist()
     {
         $therapists = $this->getTherapists();
@@ -38,30 +43,38 @@ class PatientController extends Controller
         return view('user.patients.listoftherapist', compact('therapists'));
     }
 
+    // Public Therapist List (for non-logged in users maybe)
     public function publicTherapists()
     {
         $therapists = User::verifiedTherapists()->get(); 
         return view('ptlist', compact('therapists')); 
     }
 
+    // Settings Page
     public function settings()
     {
         $user = Auth::user();
         return view('user.patients.settings', compact('user'));
     }
 
+    // Update Settings (Profile + Info + Password)
     public function updateSettings(Request $request)
     {
         $user = Auth::user();
 
         $request->validate([
-            'name' => 'required|string|max:255',
+            'Fname' => 'required|string|max:255',
+            'Mname' => 'nullable|string|max:255',
+            'Lname' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20',
             'email' => [
                 'required',
                 'email',
                 Rule::unique('users')->ignore($user->id),
             ],
+            'dob' => 'required|date',
+            'Gender' => 'required|string|in:male,female',
             'password' => 'nullable|string|min:8|confirmed',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -73,10 +86,14 @@ class PatientController extends Controller
             $user->profile_picture = $fileName;
         }
 
-        // Update other details
-        $user->name = $request->name;
+        // Update personal info
+        $user->Fname = $request->Fname;
+        $user->Mname = $request->Mname;
+        $user->Lname = $request->Lname;
+        $user->address = $request->address;
         $user->phone = $request->phone;
         $user->email = $request->email;
+
 
         // Update password if filled
         if (!empty($request->password)) {
@@ -88,6 +105,3 @@ class PatientController extends Controller
         return redirect()->back()->with('success', 'Settings updated successfully!');
     }
 }
-
-
-

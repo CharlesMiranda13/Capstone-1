@@ -1,22 +1,21 @@
 @extends('layouts.app')
-@section('title', 'Register - Patient Register')
-@section('styles')
-    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
-@section('endsection')
+@section('title', 'Register - Independent Therapist')
+@section('styles') 
+<link rel="stylesheet" href="{{ asset('css/register.css') }}">
 
 @section('content')
-<main class="register-main">
-    <h1 style="text-align: center; font-size: 30px;">Patient Registration</h1>
+<main class="register-main patient">
+    <h1 class="register-title">Patient Registration</h1>
 
     <form action="{{ route('register.store', ['type' => 'patient']) }}" method="POST" class="register-form" enctype="multipart/form-data">
         @csrf
 
-        <div class="name-group">
-            <div>
+        <div class="form-row">
+            <div class="form-col">
                 <label for="Fname">First Name:</label>
                 <input type="text" id="Fname" name="Fname" required />
             </div>
-            <div>
+            <div class="form-col">
                 <label for="Mname">Middle Name:</label>
                 <input type="text" id="Mname" name="Mname"/>
             </div>
@@ -25,7 +24,22 @@
         <label for="Lname">Last Name:</label>
         <input type="text" id="Lname" name="Lname" required />
 
-        <label for="address">Current Address:</label>
+        <div class="form-row">
+            <div class="form-col">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" required />
+            </div>
+            <div class="form-col">
+                <label for="Gender">Gender:</label>
+                <select id="Gender" name="Gender" required>
+                    <option value="">--Please choose an option--</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+        </div>
+
+        <label for="address">Address:</label>
         <input type="text" id="address" name="address" required />
 
         <label for="phone">Phone Number:</label>
@@ -50,21 +64,17 @@
                 <small style="color:red;">{{ $message }}</small>
             @enderror
 
-        <label for="dob">Date of Birth:</label>
-        <input type="date" id="dob" name="dob" required />
-
-        <label for="Gender">Sex:</label>
-        <select id="Gender-select" name="Gender" required>
-            <option value="">--Please choose an option--</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-        </select>
-
-        <label for="ValidID">Valid ID:</label>
-        <input type="file" id="ValidID" name="ValidID" accept=".jpg, .jpeg, .png, .pdf" required />
-            @error('ValidID')
-                <small style="color:red;">{{ $message }}</small>
-            @enderror
+        <div class="file-section">
+            <div class="file-group">
+                <div>
+                    <label for="ValidID">Valid ID:</label>
+                    <input type="file" id="ValidID" name="ValidID" accept=".jpg, .jpeg, .png, .pdf" required />
+                    @error('ValidID')
+                        <small style="color:red;">{{ $message }}</small>    
+                    @enderror
+                </div>
+            </div>
+        </div>
 
         <small style="font-size: 12px; color: gray;">
             By uploading your license, you agree that HealConnect will use this document solely for verifying your credentials. 
@@ -72,10 +82,8 @@
         </small>
 
         <button type="submit" class="register-button">Register</button>
-
-        <p style="text-align: center; font-size: 15px;">
-            Do you have an account?
-            <a href="{{ url('/logandsign') }}" class="login-link">Login here</a>
+        <p>
+            Already have an account? <a href="{{ url('/logandsign') }}">Login here</a>
         </p>
     </form>
 </main>

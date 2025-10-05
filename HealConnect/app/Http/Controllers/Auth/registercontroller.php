@@ -48,7 +48,7 @@ class RegisterController extends Controller
             ]);
         } elseif ($type == 'clinic') {
             $rules = array_merge($rules, [
-                'Fname' => 'required|string|max:255', // Clinic Name
+                'Fname' => 'required|string|max:255', 
                 'License' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             ]);
         }
@@ -80,7 +80,11 @@ class RegisterController extends Controller
             'verification_code' => $verificationCode,
             'valid_id_path' => $validIdPath,
             'license_path' => $licensePath,
-            'status' => 'Pending', 
+            'status' => 'Pending',
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'birthdate' => $request->dob,
+            'gender' => $request->Gender,
         ]);
 
         // Send verification email

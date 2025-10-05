@@ -1,5 +1,7 @@
 @extends('layouts.patient_layout')
+
 @section('title', 'Settings')
+
 @section('content')
 <main class="settings-main">
     <div class="settings-content">
@@ -29,7 +31,7 @@
             </form>
         </div>
 
-        
+        {{-- Update Personal Information --}}
         <div class="scard">
             <h4 class="section-title">Personal Information</h4>
             <form action="{{ route('patient.update.info') }}" method="POST">
@@ -56,7 +58,7 @@
             </form>
         </div>
 
-
+        {{-- Change Password --}}
         <div class="scard">
             <h4 class="section-title">Change Password</h4>
             <form action="{{ route('patient.update.password') }}" method="POST">
