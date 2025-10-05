@@ -83,8 +83,10 @@ class RegisterController extends Controller
             'status' => 'Pending',
             'phone' => $request->phone,
             'address' => $request->address,
-            'birthdate' => $request->dob,
+            'dob' => $request->dob,
             'gender' => $request->Gender,
+            'specialization' => $request->specialization,
+            'experience_years'=> $request->experience_years
         ]);
 
         // Send verification email

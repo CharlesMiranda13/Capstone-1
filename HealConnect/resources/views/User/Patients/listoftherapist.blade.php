@@ -3,7 +3,7 @@
 @section('title', 'List of Therapists & Clinics')
 
 @section('content')
-    <h2>Available Therapists & Clinics</h2>
+    <h2 style ="text-align: center">Available Therapists & Clinics</h2>
 
     <ul>
     @forelse($therapists as $therapist)
@@ -12,7 +12,7 @@
             <span style="color: gray;">({{ ucfirst($therapist->role) }})</span>
         </li>
     @empty
-        <li>No therapists or clinics available.</li>
+        <li style ="text-align:center"> No therapists or clinics available.</li>
     @endforelse
     </ul>
 @endsection

@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->date('dob')->nullable();
             $table->enum('gender', ['Male', 'Female', 'Other'])->nullable();
+            $table->integer('experience_years')->nullable();
+            $table->string('specialization')->nullable();
             $table->string('verification_code')->nullable();
             $table->enum('status', ['Unverified', 'Pending', 'Active'])->default('Unverified');
             $table->string('valid_id_path')->nullable();

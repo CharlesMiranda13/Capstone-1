@@ -43,7 +43,11 @@
         <input type="text" id="address" name="address" required />
 
         <label for="phone">Phone Number:</label>
-        <input type="tel" id="phone" name="phone" required />
+        <input type="tel" id="phone" name="phone" 
+            pattern="^09\d{9}$" 
+            maxlength="11"
+            required 
+            placeholder="09XXXXXXXXX" />
 
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required />
@@ -60,14 +64,14 @@
         <div class="form-group">
             <label class="form-label">Areas of Specialization</label>
             <div class="checkbox-group">
-                <label><input type="checkbox" name="specialization[]" value="Orthopedic"> Orthopedic Rehabilitation</label>
-                <label><input type="checkbox" name="specialization[]" value="Neurological"> Neurological Rehabilitation</label>
-                <label><input type="checkbox" name="specialization[]" value="Pediatric"> Pediatric Therapy</label>
-                <label><input type="checkbox" name="specialization[]" value="Sports"> Sports Therapy</label>
-                <label><input type="checkbox" name="specialization[]" value="Geriatric"> Geriatric Therapy</label>
-                <label><input type="checkbox" name="specialization[]" value="Cardiopulmonary"> Cardiopulmonary Rehabilitation</label>
-                <label><input type="checkbox" name="specialization[]" value="WomenHealth"> Women's Health</label>
-                <label><input type="checkbox" name="specialization[]" value="Other"> Other</label>
+                <label><input type="checkbox" name="specialization" value="Orthopedic"> Orthopedic Rehabilitation</label>
+                <label><input type="checkbox" name="specialization" value="Neurological"> Neurological Rehabilitation</label>
+                <label><input type="checkbox" name="specialization" value="Pediatric"> Pediatric Therapy</label>
+                <label><input type="checkbox" name="specialization" value="Sports"> Sports Therapy</label>
+                <label><input type="checkbox" name="specialization" value="Geriatric"> Geriatric Therapy</label>
+                <label><input type="checkbox" name="specialization" value="Cardiopulmonary"> Cardiopulmonary Rehabilitation</label>
+                <label><input type="checkbox" name="specialization" value="WomenHealth"> Women's Health</label>
+                <label><input type="checkbox" name="specialization" value="Other"> Other</label>
             </div>
             <small class="mess">You may select more than one specialization.</small>
         </div>

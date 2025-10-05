@@ -26,7 +26,9 @@ class User extends Authenticatable
         'status',
         'profile_picture',
         'gender',
-        'specialty',
+        'phone',
+        'specialization',
+        'experience_years',
         'valid_id_path',
         'license_path',];
 
