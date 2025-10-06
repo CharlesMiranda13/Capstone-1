@@ -63,20 +63,13 @@ class PatientController extends Controller
         $user = auth()->user();
 
         $request->validate([
-            'Fname' => 'required|string|max:255',
-            'Mname' => 'nullable|string|max:255',
-            'Lname' => 'required|string|max:255',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $user->Fname = $request->Fname;
-        $user->Mname = $request->Mname;
-        $user->Lname = $request->Lname;
 
         if ($request->hasFile('profile_picture')) {
-            $fileName = time() . '.' . $request->profile_picture->extension();
-            $request->profile_picture->move(public_path('uploads/profile_pictures'), $fileName);
-            $user->profile_picture = $fileName;
+            $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $user->profile_picture = $path;
         }
 
         $user->save();

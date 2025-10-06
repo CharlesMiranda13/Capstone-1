@@ -7,7 +7,6 @@
     <div class="settings-content">
         <h2 class="settings-title">Account Settings</h2>
 
-        {{-- Update Profile Picture --}}
         <div class="scard">
             <h4 class="section-title">Profile Picture</h4>
             <form action="{{ route('patient.update.profile') }}" method="POST" enctype="multipart/form-data">
@@ -15,8 +14,7 @@
                 @method('PUT')
 
                 <div class="profile-upload">
-                    <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : asset('images/default-avatar.png') }}" 
-                         alt="Profile Picture" 
+                    <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : asset('images/default-avatar.png') }}" alt="Profile Picture"
                          class="profile-image" 
                          style="width: 100px; height: 100px;">
 

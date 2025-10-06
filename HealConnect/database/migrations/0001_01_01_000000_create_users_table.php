@@ -28,6 +28,7 @@ return new class extends Migration
             $table->enum('status', ['Unverified', 'Pending', 'Active'])->default('Unverified');
             $table->string('valid_id_path')->nullable();
             $table->string('license_path')->nullable(); 
+            $table->string('profile_picture')->nullable(); 
             $table->boolean('is_verified_by_admin')->default(false); // admin verification
             $table->rememberToken();
             $table->timestamps();
