@@ -109,7 +109,8 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
     Route::put('/settings/password', [PatientController::class, 'updatePassword'])->name('update.password');
 
     // Therapist list
-    Route::get('/therapists', [PatientController::class, 'listOfTherapist'])->name('therapists');
+    Route::get('/therapists', [App\Http\Controllers\Patient\PatientController::class, 'listOfTherapist'])
+    ->name('therapists');
 
     // Logout
     Route::post('/logout', [App\Http\Controllers\Auth\UserAuthController::class, 'logout'])->name('logout');

@@ -38,12 +38,13 @@ class PatientController extends Controller
     // List of Therapists (inside patient view)
     public function listOfTherapist()
     {
-        $therapists = $this->getTherapists();
-
+        $therapists = \App\Models\User::whereIn('role', ['therapist', 'clinic'])
+            ->where('is_verified_by_admin', true)
+            ->get();
         return view('user.patients.listoftherapist', compact('therapists'));
     }
 
-    // Public Therapist List (for non-logged in users maybe)
+    // Public Therapist List (for non-logged in users)
     public function publicTherapists()
     {
         $therapists = User::verifiedTherapists()->get(); 
@@ -58,50 +59,63 @@ class PatientController extends Controller
     }
 
     // Update Settings (Profile + Info + Password)
-    public function updateSettings(Request $request)
-    {
-        $user = Auth::user();
+    public function updateProfile(Request $request) {
+        $user = auth()->user();
 
         $request->validate([
             'Fname' => 'required|string|max:255',
             'Mname' => 'nullable|string|max:255',
             'Lname' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('users')->ignore($user->id),
-            ],
-            'dob' => 'required|date',
-            'Gender' => 'required|string|in:male,female',
-            'password' => 'nullable|string|min:8|confirmed',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Update profile picture
+        $user->Fname = $request->Fname;
+        $user->Mname = $request->Mname;
+        $user->Lname = $request->Lname;
+
         if ($request->hasFile('profile_picture')) {
             $fileName = time() . '.' . $request->profile_picture->extension();
             $request->profile_picture->move(public_path('uploads/profile_pictures'), $fileName);
             $user->profile_picture = $fileName;
         }
 
-        // Update personal info
-        $user->Fname = $request->Fname;
-        $user->Mname = $request->Mname;
-        $user->Lname = $request->Lname;
+        $user->save();
+
+        return back()->with('success', 'Profile updated successfully!');
+    }
+
+    public function updateInfo(Request $request) {
+        $user = auth()->user();
+
+        $request->validate([
+            'address' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'email' => ['required','email', Rule::unique('users')->ignore($user->id)],
+            'dob' => 'required|date',
+            'Gender' => 'required|string|in:male,female',
+        ]);
+
         $user->address = $request->address;
         $user->phone = $request->phone;
         $user->email = $request->email;
-
-
-        // Update password if filled
-        if (!empty($request->password)) {
-            $user->password = Hash::make($request->password);
-        }
+        $user->dob = $request->dob;
+        $user->gender = $request->Gender;
 
         $user->save();
 
-        return redirect()->back()->with('success', 'Settings updated successfully!');
+        return back()->with('success', 'Info updated successfully!');
     }
+
+    public function updatePassword(Request $request) {
+        $user = auth()->user();
+
+        $request->validate([
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return back()->with('success', 'Password updated successfully!');
+        }
 }

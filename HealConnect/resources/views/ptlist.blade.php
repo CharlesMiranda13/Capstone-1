@@ -4,7 +4,7 @@
 
 @section('content')
 <main class="Therapist-main">
-    <h1 style="text-align: center;">List of Verified Therapists & Clinics</h1>
+    <h1>List of Verified Therapists & Clinics</h1>
 
     @if($therapists->count() > 0)
         <div class="therapist-list">
@@ -13,6 +13,8 @@
                     <h3>{{ $therapist->name }}</h3>
                     <p><strong>Email:</strong> {{ $therapist->email }}</p>
                     <p><strong>Role:</strong> {{ ucfirst($therapist->role) }}</p>
+                    <p><strong>Specialization:</strong> {{ ucfirst($therapist->specialization) }}</p>
+                    <p><strong>Years Experience:</strong> {{ ucfirst($therapist->experience_years) }}</p>
                 </div>
             @endforeach
         </div>
