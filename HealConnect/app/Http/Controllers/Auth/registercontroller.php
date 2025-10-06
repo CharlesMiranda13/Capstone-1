@@ -46,11 +46,15 @@ class RegisterController extends Controller
                 'dob' => 'required|date',
                 'Gender' => 'required|string',
             ]);
-        } elseif ($type == 'clinic') {
+        } elseif ($type == 'clinic' || $type == "therapist") {
             $rules = array_merge($rules, [
                 'Fname' => 'required|string|max:255', 
-                'License' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'license' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             ]);
+        }
+        if ($type == 'therapist' || $type == 'clinic') {
+            $rules['specialization'] = 'nullable|array';
+            $rules['specialization.*'] = 'string|max:255'; 
         }
 
         $messages = [
@@ -67,7 +71,9 @@ class RegisterController extends Controller
 
         // Handle file uploads
         $validIdPath = $request->file('ValidID')->store('valid_ids', 'public');
-        $licensePath = $type === 'clinic' ? $request->file('License')->store('licenses', 'public') : null;
+        $licensePath = ($type === 'clinic' || $type === 'therapist')
+            ? $request->file('license')->store('licenses', 'public')
+            : null;
 
         // Create user
         $user = User::create([
@@ -85,7 +91,9 @@ class RegisterController extends Controller
             'address' => $request->address,
             'dob' => $request->dob,
             'gender' => $request->Gender,
-            'specialization' => $request->specialization,
+            'specialization' => $request->has('specialization')
+                ? implode(',', $request->specialization)
+                : null,
             'experience_years'=> $request->experience_years
         ]);
 

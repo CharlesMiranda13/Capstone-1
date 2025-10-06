@@ -45,9 +45,16 @@
         @if (in_array($user->role, ['therapist','clinic']))
             <div class="form-group">
                 <label><strong>Specialization</strong></label>
-                <input type="text" class="form-control" value="{{ $user->specialization ?? 'N/A' }}" readonly>
+                @if ($user->specialization)
+                    <ul>
+                        @foreach(explode(',', $user->specialization) as $spec)
+                            <li>{{ trim($spec) }}</li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p>N/A</p>
+                @endif
             </div>
-
             <div class="form-group">
                 <label><strong>Experience (Years)</strong></label>
                 <input type="text" class="form-control" value="{{ $user->experience_years ?? 'N/A' }}" readonly>

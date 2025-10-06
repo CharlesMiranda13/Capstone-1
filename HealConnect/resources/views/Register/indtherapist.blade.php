@@ -64,14 +64,14 @@
         <div class="form-group">
             <label class="form-label">Areas of Specialization</label>
             <div class="checkbox-group">
-                <label><input type="checkbox" name="specialization" value="Orthopedic"> Orthopedic Rehabilitation</label>
-                <label><input type="checkbox" name="specialization" value="Neurological"> Neurological Rehabilitation</label>
-                <label><input type="checkbox" name="specialization" value="Pediatric"> Pediatric Therapy</label>
-                <label><input type="checkbox" name="specialization" value="Sports"> Sports Therapy</label>
-                <label><input type="checkbox" name="specialization" value="Geriatric"> Geriatric Therapy</label>
-                <label><input type="checkbox" name="specialization" value="Cardiopulmonary"> Cardiopulmonary Rehabilitation</label>
-                <label><input type="checkbox" name="specialization" value="WomenHealth"> Women's Health</label>
-                <label><input type="checkbox" name="specialization" value="Other"> Other</label>
+                <label><input type="checkbox" name="specialization[]" value="Orthopedic"> Orthopedic Rehabilitation</label>
+                <label><input type="checkbox" name="specialization[]" value="Neurological"> Neurological Rehabilitation</label>
+                <label><input type="checkbox" name="specialization[]" value="Pediatric"> Pediatric Therapy</label>
+                <label><input type="checkbox" name="specialization[]" value="Sports Therapy"> Sports Therapy</label>
+                <label><input type="checkbox" name="specialization[]" value="Geriatric"> Geriatric Therapy</label>
+                <label><input type="checkbox" name="specialization[]" value="Cardiopulmonary"> Cardiopulmonary Rehabilitation</label>
+                <label><input type="checkbox" name="specialization[]" value="WomenHealth"> Women's Health</label>
+                <label><input type="checkbox" name="specialization[]" value="Other"> Other</label>
             </div>
             <small class="mess">You may select more than one specialization.</small>
         </div>
@@ -91,8 +91,8 @@
                     @enderror
                 </div>
                 <div>
-                    <label for="License">License: </label>
-                    <input type="file" id="License" name="License" accept=".jpg, .jpeg, .png, .pdf" required />
+                    <label for="license">License: </label>
+                    <input type="file" id="license" name="license" accept=".jpg, .jpeg, .png, .pdf" required />
                     @error('License')
                         <small style="color:red;">{{ $message }}</small>    
                     @enderror
