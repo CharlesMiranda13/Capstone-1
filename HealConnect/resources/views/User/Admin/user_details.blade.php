@@ -3,27 +3,29 @@
 @section('title', 'User Details')
 
 @section('content')
-    <h2 style="margin-bottom: 20px;">User Details</h2>
+<div class="user-details">
+    <h2 style="margin-bottom: 25px; text-align:center;">User Details</h2>
 
-    <div class="user-form">
+    <div class="user-form" style="text-align: center;">
+
+        {{-- Profile Picture --}}
+        <div style="margin-bottom: 20px;">
+            <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('images/default-profile.png') }}" 
+                 alt="Profile Picture" 
+                 style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #ccc;">
+            <h3 style="margin-top: 10px;">{{ $user->name }}</h3>
+            <p style="color: #666;">{{ ucfirst($user->role) }}</p>
+        </div>
+
+        {{-- Basic Details --}}
         <div class="form-group">
             <label><strong>ID</strong></label>
             <input type="text" class="form-control" value="{{ $user->id }}" readonly>
         </div>
 
         <div class="form-group">
-            <label><strong>Name</strong></label>
-            <input type="text" class="form-control" value="{{ $user->name }}" readonly>
-        </div>
-
-        <div class="form-group">
             <label><strong>Email</strong></label>
             <input type="text" class="form-control" value="{{ $user->email }}" readonly>
-        </div>
-
-        <div class="form-group">
-            <label><strong>Role</strong></label>
-            <input type="text" class="form-control" value="{{ ucfirst($user->role) }}" readonly>
         </div>
 
         <div class="form-group">
@@ -41,26 +43,28 @@
             <input type="text" class="form-control" value="{{ $user->gender ?? 'Not specified' }}" readonly>
         </div>
 
-        {{-- Only for Therapist & Clinic --}}
+        {{-- Therapist / Clinic Details --}}
         @if (in_array($user->role, ['therapist','clinic']))
             <div class="form-group">
                 <label><strong>Specialization</strong></label>
                 @if ($user->specialization)
-                    <ul>
+                    <ul style="list-style: none; padding: 0;">
                         @foreach(explode(',', $user->specialization) as $spec)
-                            <li>{{ trim($spec) }}</li>
+                            <li>• {{ trim($spec) }}</li>
                         @endforeach
                     </ul>
                 @else
                     <p>N/A</p>
                 @endif
             </div>
+
             <div class="form-group">
                 <label><strong>Experience (Years)</strong></label>
                 <input type="text" class="form-control" value="{{ $user->experience_years ?? 'N/A' }}" readonly>
             </div>
         @endif
 
+        {{-- Created Date --}}
         <div class="form-group">
             <label><strong>Created At</strong></label>
             <input type="text" class="form-control" value="{{ $user->created_at->format('M d, Y') }}" readonly>
@@ -79,7 +83,7 @@
                 <p><em>No Valid ID submitted.</em></p>
             @endif
 
-            {{-- License (therapist/clinic only) --}}
+            {{-- License --}}
             @if (in_array($user->role, ['therapist','clinic']))
                 @if ($user->license_path)
                     <a href="{{ asset('storage/' . $user->license_path) }}" target="_blank" class="btn btn-primary" style="margin-left:10px;">
@@ -91,20 +95,20 @@
             @endif
         </div>
 
-        <div class="form-actions" style="margin-top: 20px;">
-            {{-- Approve --}}
-            <form action="{{ route('admin.users.verify', $user->id) }}" method="POST" style="display:inline;">
+        {{-- Actions --}}
+        <div class="form-actions" style="margin-top: 25px; display:flex; justify-content:center; gap:15px;">
+            <form action="{{ route('admin.users.verify', $user->id) }}" method="POST">
                 @csrf
                 @method('PATCH')
-                <button type="submit" class="btn btn-success">Approve</button>
+                <button type="submit" class="btn-success">Approve</button>
             </form>
 
-            {{-- Decline --}}
-            <form action="{{ route('admin.users.decline', $user->id) }}" method="POST" style="display:inline;">
+            <form action="{{ route('admin.users.decline', $user->id) }}" method="POST">
                 @csrf
                 @method('PATCH')
-                <button type="submit" class="btn btn-warning">Decline</button>
+                <button type="submit" class="btn-warning">Decline</button>
             </form>
         </div>
     </div>
+</div>
 @endsection
