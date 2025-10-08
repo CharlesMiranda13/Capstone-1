@@ -9,6 +9,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Appointment;
 use App\Models\Record;
+use App\Models\Referral;
 use App\Models\Notification;
 use App\Models\User;
 
@@ -41,7 +42,6 @@ class PatientController extends Controller
         $query = \App\Models\User::whereIn('role', ['therapist', 'clinic'])
             ->where('is_verified_by_admin', true);
 
-        // Apply search if provided
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
@@ -53,8 +53,11 @@ class PatientController extends Controller
         }
 
             $therapists = $query->paginate(10);
+            $patientHasApprovedReferral = Referral::where('patient_id', Auth::id())
+                ->where('status', 'approved')
+                ->exists();
 
-            return view('user.patients.listoftherapist', compact('therapists'));
+            return view('user.patients.listoftherapist', compact('therapists','patientHasApprovedReferral'));
     }
 
     // Public Therapist List (for non-logged-in users)
