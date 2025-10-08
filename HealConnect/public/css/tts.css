@@ -30,3 +30,123 @@
   content: "🔊"; 
   font-size: 16px;
 }
+
+/*therapist list*/
+.Therapist-main {
+  background-color: #fef5e7;
+  padding: 40px 20px;
+  min-height: 80vh;
+}
+
+.Therapist-main h1 {
+  text-align: center;
+  font-weight: 700;
+  color: #1b1b1b;
+  margin-bottom: 25px;
+}
+
+.search-filter-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  max-width: 600px;
+  margin: 0 auto 30px auto;
+  padding: 10px 15px;
+  background: #ffffff;
+  border-radius: 50px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+
+.search-input {
+  flex: 1;
+  padding: 12px 18px;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  border-radius: 50px;
+  background-color: #f4f6f8;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+.search-input:focus {
+  background-color: #fff;
+  box-shadow: 0 0 0 2px #007bff40;
+}
+
+.search-btn {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #007bff, #0056d2);
+  color: white;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.search-btn:hover {
+  background: linear-gradient(135deg, #0056d2, #0041a8);
+  transform: scale(1.05);
+}
+
+/* Responsive layout */
+@media (max-width: 600px) {
+  .search-filter-bar {
+    flex-direction: column;
+    gap: 12px;
+    border-radius: 20px;
+    padding: 15px;
+  }
+
+  .search-input, .search-btn {
+    width: 100%;
+  }
+}
+
+.therapist-table-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0 40px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.therapist-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.therapist-table th,
+.therapist-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+.therapist-table th {
+  background-color: #f7f9fb;
+  color: #333;
+  font-weight: 600;
+}
+
+.therapist-table tr:hover {
+  background-color: #f5f5f5;
+  transition: background-color 0.2s;
+}
+
+@media (max-width: 768px) {
+    #searchInput {
+        width: 90%;
+    }
+
+    .therapist-table th, .therapist-table td {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+

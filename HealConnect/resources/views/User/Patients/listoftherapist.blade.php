@@ -1,24 +1,53 @@
 @extends('layouts.patient_layout')
 
 @section('title', 'List of Therapists & Clinics')
+
 @section('styles')
-<link rel="stylesheet" href="{{ asset('css/patient.css') }}">
+<link rel="stylesheet" href="{{ asset('css/tts.css') }}">
 @endsection
 
 @section('content')
 <div class="ptlist">
-    <h2>Available Therapists & Clinics</h2>
-    <ul>
-        @forelse($therapists as $therapist)
-            <li>
-                <p><strong>Therapist/Clinic Name:</strong> {{ $therapist->name }}</p>
-                <p><strong>Therapist/Clinic Email:</strong> {{ $therapist->email }}</p> 
-                <p><strong>Therapist/Clinic Specialization:</strong> {{ $therapist->specialization }}</p>
-                <span>{{ ucfirst($therapist->role) }}</span>
-            </li>
-        @empty
-            <li style="text-align:center;">No therapists or clinics available.</li>
-        @endforelse
-    </ul>
+    <h2 class="therapist-title">Available Therapists & Clinics</h2>
+
+    <form method="GET" action="{{ route('patient.therapists') }}" class="search-filter-bar">
+        <input type="text" name="search" value="{{ request('search') }}" 
+        placeholder="Search by name, ID, specialization, or role..."class="search-input">
+        
+        <button type="submit" class="search-btn">Search</button>
+    </form>
+
+    @if($therapists->count() > 0)
+    <div class="therapist-table-container">
+        <table class="therapist-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Specialization</th>
+                    <th>Years of Experience</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($therapists as $therapist)
+                <tr>
+                    <td>{{ $therapist->name }}</td>
+                    <td>{{ $therapist->email }}</td>
+                    <td>{{ ucfirst($therapist->role) }}</td>
+                    <td>{{ ucfirst($therapist->specialization) }}</td>
+                    <td>{{ $therapist->experience_years }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        {{ $therapists->links() }}
+    </div>
+    @else
+        <p class="no-results">No therapists or clinics available.</p>
+    @endif
 </div>
 @endsection

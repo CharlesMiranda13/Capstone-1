@@ -35,20 +35,48 @@ class PatientController extends Controller
         return view('user.patients.patient', compact('user', 'appointments', 'therapists'));
     }
 
-    // List of Therapists (inside patient view)
-    public function listOfTherapist()
+    // List of Therapists (for logged-in patients)
+    public function listOfTherapist(Request $request)
     {
-        $therapists = \App\Models\User::whereIn('role', ['therapist', 'clinic'])
-            ->where('is_verified_by_admin', true)
-            ->get();
-        return view('user.patients.listoftherapist', compact('therapists'));
+        $query = \App\Models\User::whereIn('role', ['therapist', 'clinic'])
+            ->where('is_verified_by_admin', true);
+
+        // Apply search if provided
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('id', 'like', "%{$search}%")
+                ->orWhere('name', 'like', "%{$search}%")
+                ->orWhere('specialization', 'like', "%{$search}%")
+                ->orWhere('role', 'like', "%{$search}%");
+            });
+        }
+
+            $therapists = $query->paginate(10);
+
+            return view('user.patients.listoftherapist', compact('therapists'));
     }
 
-    // Public Therapist List (for non-logged in users)
-    public function publicTherapists()
+    // Public Therapist List (for non-logged-in users)
+    public function publicTherapists(Request $request)
     {
-        $therapists = User::verifiedTherapists()->get(); 
-        return view('ptlist', compact('therapists')); 
+        $query = User::whereIn('role', ['therapist', 'clinic'])
+            ->where('is_verified_by_admin', true);
+
+        // Apply search if provided
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('id', 'like', "%{$search}%")
+                ->orWhere('name', 'like', "%{$search}%")
+                ->orWhere('specialization', 'like', "%{$search}%")
+                ->orWhere('role', 'like', "%{$search}%");
+            });
+        }
+
+        $therapists = $query->paginate(10);
+
+        return view('ptlist', compact('therapists'));
     }
 
     // Settings Page
