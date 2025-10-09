@@ -11,6 +11,7 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\Patient\PatientController;
 use App\Http\Controllers\Indtherapist\IndtherapistController;
 use App\Http\Controllers\Patient\ReferralController;
+use App\Http\Controllers\Patient\AppointmentController;
 
 
 /*Public Pages*/
@@ -100,9 +101,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 /* Patient Routes */
 Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])->group(function () {
     Route::get('/home', [PatientController::class, 'dashboard'])->name('home');
-    Route::view('/appointments', 'user.patients.appointment')->name('appointments');
     Route::view('/records', 'user.patients.records')->name('records');
     Route::view('/messages', 'user.patients.messages')->name('messages');
+
+    //Appointment
+    Route::get('/appointments', [AppointmentController::class, 'create'])->name('appointments.create');
+    Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
 
     // Settings 
     Route::get('/settings', [PatientController::class, 'settings'])->name('settings');
