@@ -35,27 +35,6 @@
                     @endforeach
                 </select>
             </div>
-
-            <!-- Appointment Date -->
-            <div class="form-group">
-                <label for="appointment_date">Preferred Date</label>
-                <input type="date" name="appointment_date" min="{{ date('Y-m-d') }}" required>
-            </div>
-
-            <!-- Appointment Time -->
-            <div class="form-group">
-                <label for="appointment_time">Preferred Time</label>
-                <input type="time" name="appointment_time" required>
-            </div>
-
-            <!-- Notes -->
-            <div class="form-group">
-                <label for="notes">Additional Notes (Optional)</label>
-                <textarea name="notes" id="notes" rows="3" placeholder="Include any details or preferences..."></textarea>
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary">Submit Appointment Request</button>
         </form>
     </div>
 </main>

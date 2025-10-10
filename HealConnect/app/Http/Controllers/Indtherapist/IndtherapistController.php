@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Indtherapist;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Appointment;
+use Illuminate\Http\Request;
 use App\Models\Notification;
 
 class IndtherapistController extends Controller
@@ -26,4 +27,64 @@ class IndtherapistController extends Controller
 
         return view('user.therapist.independent.independent', compact('user', 'appointments'));
     }
+
+    public function settings()
+    {
+        $user = Auth::user();
+        return view('user.therapist.independent.settings', compact('user'));
+    }
+
+    // Update Settings (Profile + Info + Password)
+    public function updateProfile(Request $request) {
+        $user = auth()->user();
+
+        $request->validate([
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+
+        if ($request->hasFile('profile_picture')) {
+            $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+            $user->profile_picture = $path;
+        }
+
+        $user->save();
+
+        return back()->with('success', 'Profile updated successfully!');
+    }
+
+    public function updateInfo(Request $request) {
+        $user = auth()->user();
+
+        $request->validate([
+            'address' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'email' => ['required','email', Rule::unique('users')->ignore($user->id)],
+            'dob' => 'required|date',
+            'Gender' => 'required|string|in:male,female',
+        ]);
+
+        $user->address = $request->address;
+        $user->phone = $request->phone;
+        $user->email = $request->email;
+        $user->dob = $request->dob;
+        $user->gender = $request->Gender;
+
+        $user->save();
+
+        return back()->with('success', 'Info updated successfully!');
+    }
+
+    public function updatePassword(Request $request) {
+        $user = auth()->user();
+
+        $request->validate([
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return back()->with('success', 'Password updated successfully!');
+        }
 }

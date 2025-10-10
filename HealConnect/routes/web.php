@@ -134,8 +134,13 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
     Route::view('/appointments', 'user.therapist.appointment')->name('appointments');
     Route::view('/records', 'user.therapist.records')->name('records');
     Route::view('/messages', 'user.therapist.messages')->name('messages');
-    Route::view('/settings', 'user.therapist.settings')->name('settings');
     Route::view('/clients', 'user.therapist.client')->name('client');
+
+    Route::get('/settings', [IndtherapistController::class, 'settings'])->name('settings');
+    Route::put('/settings/profile', [IndtherapistController::class, 'updateProfile'])->name('update.profile');
+    Route::put('/settings/info', [IndtherapistController::class, 'updateInfo'])->name('update.info');
+    Route::put('/settings/password', [IndtherapistController::class, 'updatePassword'])->name('update.password');
+
 
     Route::post('/logout', [App\Http\Controllers\Auth\UserAuthController::class, 'logout'])
     ->name('logout');

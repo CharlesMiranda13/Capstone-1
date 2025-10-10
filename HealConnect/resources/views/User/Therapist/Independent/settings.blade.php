@@ -9,7 +9,7 @@
 
         <div class="scard">
             <h4 class="section-title">Profile Picture</h4>
-            <form action="{{ route('patient.update.profile') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('therapist.update.profile') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 

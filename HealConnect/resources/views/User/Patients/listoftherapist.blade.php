@@ -32,7 +32,6 @@
                         <th>Role</th>
                         <th>Specialization</th>
                         <th>Years of Experience</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,15 +42,6 @@
                             <td>{{ ucfirst($therapist->role) }}</td>
                             <td>{{ ucfirst($therapist->specialization) }}</td>
                             <td>{{ $therapist->experience_years }}</td>
-                            <td>
-                                @if($patientHasApprovedReferral)
-                                    <a href="{{ route('patient.book', $therapist->id) }}" class="btn-book">Book Appointment</a>
-                                @else
-                                    <a href="{{ route('patient.referral.upload') }}" class="btn-upload">
-                                        Upload Referral First
-                                    </a>
-                                @endif
-                            </td>
                         </tr>
                     @endforeach
                 </tbody>
