@@ -4,9 +4,15 @@ namespace App\Http\Controllers\Indtherapist;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Appointment;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Appointment;
+use App\Models\Record;
+use App\Models\Referral;
 use App\Models\Notification;
+use App\Models\User;
+
 
 class IndtherapistController extends Controller
 {

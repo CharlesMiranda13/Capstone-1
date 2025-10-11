@@ -1,152 +1,226 @@
 .speak-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: #28a745;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  opacity: 0; /* Hidden by default */
-  transition: opacity 0.2s ease, transform 0.2s ease;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
 }
 .speak-btn:hover {
-  background: #218838;
-  transform: scale(1.05);
+    background: #218838;
+    transform: scale(1.05);
 }
 
 .speak-btn:active {
-  transform: scale(0.95); 
+    transform: scale(0.95);
 }
 
 .speak-btn::before {
-  content: "🔊"; 
-  font-size: 16px;
+    content: "🔊";
+    font-size: 16px;
 }
 
 /*therapist list*/
-.Therapist-main {
-  background-color: #fef5e7;
-  padding: 40px 20px;
-  min-height: 80vh;
+
+.ptlist {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: "Poppins", sans-serif;
+    color: #333;
 }
 
-.Therapist-main h1 {
-  text-align: center;
-  font-weight: 700;
-  color: #1b1b1b;
-  margin-bottom: 25px;
+.therapist-title {
+    text-align: center;
+    font-size: 2rem;
+    color: #0077b6;
+    margin-bottom: 30px;
+    font-weight: 600;
 }
 
-.search-filter-bar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  max-width: 600px;
-  margin: 0 auto 30px auto;
-  padding: 10px 15px;
-  background: #ffffff;
-  border-radius: 50px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+.filter-tabs,
+.filter-services {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-
-.search-input {
-  flex: 1;
-  padding: 12px 18px;
-  border: none;
-  outline: none;
-  font-size: 1rem;
-  border-radius: 50px;
-  background-color: #f4f6f8;
-  transition: background 0.3s, box-shadow 0.3s;
+.filter-tabs a,
+.filter-services a {
+    color: #0077b6;
+    text-decoration: none;
+    font-weight: 500;
+    margin: 0 10px;
+    padding: 5px 10px;
+    transition: all 0.3s ease;
 }
 
-.search-input:focus {
-  background-color: #fff;
-  box-shadow: 0 0 0 2px #007bff40;
+.filter-tabs a:hover,
+.filter-services a:hover {
+    color: #023e8a;
+    text-decoration: underline;
 }
 
-.search-btn {
-  padding: 10px 22px;
-  border: none;
-  border-radius: 50px;
-  background: linear-gradient(135deg, #007bff, #0056d2);
-  color: white;
-  font-weight: 500;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-}
-
-.search-btn:hover {
-  background: linear-gradient(135deg, #0056d2, #0041a8);
-  transform: scale(1.05);
-}
-
-/* Responsive layout */
-@media (max-width: 600px) {
-  .search-filter-bar {
-    flex-direction: column;
-    gap: 12px;
+.filter-tabs .active,
+.filter-services .active {
+    background-color: #0077b6;
+    color: white;
     border-radius: 20px;
-    padding: 15px;
-  }
-
-  .search-input, .search-btn {
-    width: 100%;
-  }
+    padding: 6px 14px;
 }
 
-.therapist-table-container {
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 0 40px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+.service-label {
+    font-weight: 600;
+    margin-right: 10px;
+    color: #444;
 }
 
-.therapist-table {
-  width: 100%;
-  border-collapse: collapse;
+.therapist-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
 }
 
-.therapist-table th,
-.therapist-table td {
-  padding: 14px 18px;
-  border-bottom: 1px solid #eee;
-  text-align: left;
+.therapist-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 25px 20px;
+    text-align: center;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.therapist-table th {
-  background-color: #f7f9fb;
-  color: #333;
-  font-weight: 600;
+.therapist-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 119, 182, 0.2);
 }
 
-.therapist-table tr:hover {
-  background-color: #f5f5f5;
-  transition: background-color 0.2s;
+.therapist-logo img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    border: 3px solid #0077b6;
 }
 
-@media (max-width: 768px) {
-    #searchInput {
-        width: 90%;
-    }
-
-    .therapist-table th, .therapist-table td {
-        padding: 10px;
-        font-size: 14px;
-    }
+.therapist-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #023e8a;
 }
 
+.therapist-role {
+    color: #555;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+}
+
+.therapist-description {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+    min-height: 50px;
+}
+
+.therapist-location {
+    font-size: 0.9rem;
+    color: #444;
+    margin-bottom: 15px;
+}
+
+.therapist-location i {
+    color: #e63946;
+    margin-right: 5px;
+}
+
+.availability-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+
+.available {
+    color: #2a9d8f;
+}
+
+.unavailable {
+    color: #e76f51;
+}
+
+.availability-status i {
+    font-size: 0.7rem;
+}
+
+.therapist-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.btn-book,
+.btn-profile {
+    padding: 8px 14px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-book {
+    background-color: #0077b6;
+    color: white;
+}
+
+.btn-book:hover {
+    background-color: #023e8a;
+}
+
+.btn-profile {
+    border: 1px solid #0077b6;
+    color: #0077b6;
+}
+
+.btn-profile:hover {
+    background-color: #0077b6;
+    color: white;
+}
+
+.no-results {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #777;
+    margin-top: 40px;
+}
+
+.pagination {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination .page-link {
+    color: #0077b6;
+    border: none;
+}
+
+.pagination .active .page-link {
+    background-color: #0077b6;
+    color: white;
+}

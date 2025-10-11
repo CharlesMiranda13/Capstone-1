@@ -1,6 +1,9 @@
-@extends('layouts.patient_layout')
+@extends('layouts.therapist')
 
 @section('title', 'Settings')
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/settings.css') }}">
+@endsection
 
 @section('content')
 <main class="settings-main">
@@ -32,7 +35,7 @@
         {{-- Update Personal Information --}}
         <div class="scard">
             <h4 class="section-title">Personal Information</h4>
-            <form action="{{ route('patient.update.info') }}" method="POST">
+            <form action="{{ route('therapist.update.info') }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -59,7 +62,7 @@
         {{-- Change Password --}}
         <div class="scard">
             <h4 class="section-title">Change Password</h4>
-            <form action="{{ route('patient.update.password') }}" method="POST">
+            <form action="{{ route('therapist.update.password') }}" method="POST">
                 @csrf
                 @method('PUT')
 
