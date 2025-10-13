@@ -98,12 +98,36 @@ class UserController extends Controller
         $totalClinics = User::where('role', 'clinic')->count();
         $pendingUsers = User::where('status', 'pending')->count();
 
+        $monthlyData = User::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as count')
+            ->where('role', '!=', 'admin')
+            ->groupBy('month')
+            ->orderBy('month', 'asc')
+            ->get();
+
+        $months = [];
+        $counts = [];
+        foreach (range(1,12) as $m){
+            $months[] = date('M', mktime(0, 0, 0, $m, 1));
+            $counts[] = $monthlyData->firstWhere('month', $m)->count ?? 0;
+
+        }
+        $monthlyData = [
+            'labels' => $months,
+            'values' => $counts,
+        ];
+
+        $appointmentTypes = \App\Models\Appointment::selectRaw('appointment_type, COUNT(*) as count')
+            ->groupBy('appointment_type')
+            ->get();
+
         return view('User.Admin.admin', compact(
             'totalUsers', 
             'totalPatients', 
             'totalTherapists', 
             'totalClinics',
-            'pendingUsers'
+            'pendingUsers',
+            'monthlyData',
+            'appointmentTypes'
     ));
     }
 
