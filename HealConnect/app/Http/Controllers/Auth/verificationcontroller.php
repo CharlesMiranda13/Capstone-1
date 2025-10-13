@@ -14,7 +14,7 @@ class VerificationController extends Controller
     // Show verification page
     public function show(Request $request)
     {
-        $email = $request->session()->get('email'); // fixed semicolon
+        $email = $request->session()->get('email');
 
         if (!$email) {
             return redirect()->route('register.form', 'patient')
@@ -39,10 +39,9 @@ class VerificationController extends Controller
         if ($user) {
             $user->email_verified_at = now();
             $user->verification_code = null;
-            $user->status = 'Pending'; // account pending admin approval
+            $user->status = 'Pending'; 
             $user->save();
 
-            // Log user in
             auth()->login($user);
 
             // Redirect based on role with pending message

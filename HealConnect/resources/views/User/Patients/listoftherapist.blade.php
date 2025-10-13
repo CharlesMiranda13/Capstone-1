@@ -11,12 +11,13 @@
     <h2 class="therapist-title">Therapists / Clinics Near You</h2>
 
     <div class="filter-tabs">
+        <span>Category:</span>
         <a href="{{ route('patient.therapists') }}" 
-           class="{{ request('category') == '' ? 'active' : '' }}">All</a> |
+            class="{{ request('category') == '' ? 'active' : '' }}">All</a>
         <a href="{{ route('patient.therapists', ['category' => 'independent']) }}" 
-           class="{{ request('category') == 'independent' ? 'active' : '' }}">Independent Therapist</a> |
+            class="{{ request('category') == 'independent' ? 'active' : '' }}">Independent</a>
         <a href="{{ route('patient.therapists', ['category' => 'clinic']) }}" 
-           class="{{ request('category') == 'clinic' ? 'active' : '' }}">Clinic</a>
+            class="{{ request('category') == 'clinic' ? 'active' : '' }}">Clinic</a>
     </div>
 
     {{-- Services Tabs --}}

@@ -9,7 +9,6 @@ use App\Models\Appointment;
 
 class AppointmentController extends Controller
 {
-    // Show the appointment booking page
     public function create()
     {
         // Fetch all therapists
@@ -30,7 +29,7 @@ class AppointmentController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        // Add patient ID and default status
+ 
         $validated['patient_id'] = auth()->id();
         $validated['status'] = 'pending';
 

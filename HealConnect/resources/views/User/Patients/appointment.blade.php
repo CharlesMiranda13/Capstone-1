@@ -24,17 +24,6 @@
                 </select>
             </div>
 
-            <!-- Therapist -->
-            <div class="form-group">
-                <label for="therapist_id">Select Therapist</label>
-                <select name="therapist_id" id="therapist_id" required>
-                    @foreach($therapists as $therapist)
-                        <option value="{{ $therapist->id }}">
-                            {{ $therapist->name }} ({{ $therapist->specialization }})
-                        </option>
-                    @endforeach
-                </select>
-            </div>
         </form>
     </div>
 </main>
