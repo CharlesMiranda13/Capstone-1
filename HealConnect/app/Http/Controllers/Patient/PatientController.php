@@ -27,7 +27,7 @@ class PatientController extends Controller
 
         $appointments = Appointment::where('patient_id', $user->id)
             ->with('therapist')
-            ->orderBy('date', 'asc')
+            ->orderBy('appointment_date', 'asc')
             ->take(3)
             ->get();
 

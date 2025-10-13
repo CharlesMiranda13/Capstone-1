@@ -22,7 +22,7 @@ class IndtherapistController extends Controller
 
         $appointments = Appointment::where('therapist_id', $user->id)
             ->with('patient') // relationship in Appointment model
-            ->orderBy('date', 'asc')
+            ->orderBy('appointment_date', 'asc')
             ->take(3)
             ->get();
 

@@ -9,12 +9,12 @@
     <div class="welcome-header">
         <h2>Hello, {{ Auth::user()->name ?? 'Therapist' }}!</h2>
         <a href="{{ route('therapist.settings') }}">
-            <img src="{{ Auth::user()->profile_picture ?? asset('images/default-profile.png') }}"
-                 alt=""
-                 class="pic">
+            <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) 
+            : asset('images/default-profile.png') }}"
+            alt="Profile Picture"
+            class="pic">
         </a>
     </div>
-
     <main class="therapist-main">
         <div class="left-column">
             <div class="card">
