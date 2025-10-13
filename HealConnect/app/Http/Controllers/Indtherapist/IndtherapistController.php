@@ -12,6 +12,9 @@ use App\Models\Record;
 use App\Models\Referral;
 use App\Models\Notification;
 use App\Models\User;
+use App\Models\Availability;
+use Illuminate\Support\Facades\DB;
+
 
 
 class IndtherapistController extends Controller
@@ -34,11 +37,55 @@ class IndtherapistController extends Controller
         return view('user.therapist.independent.independent', compact('user', 'appointments'));
     }
 
-    public function settings()
+    public function availability()
     {
         $user = Auth::user();
-        return view('user.therapist.independent.settings', compact('user'));
+        $availabilities = Availability::where('therapist_id', $user->id)
+            ->orderByRaw("FIELD(day_of_week, 'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday')")
+            ->get();
+
+        return view('user.therapist.independent.availability', compact('user','availabilities'));
     }
+
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'day_of_week' => 'required|string',
+            'start_time' => 'required',
+            'end_time' => 'required|after:start_time',
+        ]);
+
+        Availability::create([
+            'therapist_id' => Auth::id(),
+            'day_of_week' => $request->day_of_week,
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time,
+        ]);
+
+        return back()->with('success', 'Availability added successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $availability = Availability::where('therapist_id', Auth::id())->findOrFail($id);
+        $availability->delete();
+
+        return back()->with('success', 'Availability deleted successfully.');
+    }
+    public function toggleAvailability($id){
+        $availability = Availability::where('therapist_id', Auth::id())->findOrFail($id);
+        $availability->is_active = !$availability->is_active;
+        $availability->save();
+
+        return back()->with('success', 'Availability status updated successfully.');
+    }
+
+        public function settings()
+        {
+            $user = Auth::user();
+            return view('user.therapist.independent.settings', compact('user'));
+        }
 
     // Update Settings (Profile + Info + Password)
     public function updateProfile(Request $request) {

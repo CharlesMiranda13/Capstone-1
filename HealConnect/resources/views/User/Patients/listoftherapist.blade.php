@@ -8,7 +8,7 @@
 
 @section('content')
 <div class="ptlist">
-    <h2 class="therapist-title">Therapists / Clinics Near You</h2>
+    <h2 class="therapist-title">Verified Therapists / Clinics </h2>
 
     <div class="filter-tabs">
         <span>Category:</span>
@@ -38,7 +38,7 @@
             @foreach($therapists as $therapist)
                 <div class="therapist-card">
                     <div class="therapist-logo">
-                        @if($therapist->profile_image)
+                        @if($therapist->profile_picture)
                             <img src="{{ asset('storage/' .Auth::user()->profile_picture) }}" alt="{{ $therapist->name }}">
                         @else
                             <img src="{{ asset('images/default-therapist.png') }}" alt="Default Therapist">

@@ -136,6 +136,12 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
     Route::view('/messages', 'user.therapist.messages')->name('messages');
     Route::view('/clients', 'user.therapist.client')->name('client');
 
+    Route::get('/availability', [IndtherapistController::class, 'availability'])->name('availability');   
+    Route::post('/appointments', [IndtherapistController::class, 'store'])->name('availability.store');
+    Route::patch('/availability/{id}/toggle', [IndtherapistController::class, 'toggleAvailability'])->name('availability.toggle');
+    Route::delete('/appointments/{id}', [IndtherapistController::class, 'destroy'])->name('availability.destroy');
+
+
     Route::get('/settings', [IndtherapistController::class, 'settings'])->name('settings');
     Route::put('/settings/profile', [IndtherapistController::class, 'updateProfile'])->name('update.profile');
     Route::put('/settings/info', [IndtherapistController::class, 'updateInfo'])->name('update.info');

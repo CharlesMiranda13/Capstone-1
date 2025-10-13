@@ -33,6 +33,7 @@
 
 /*therapist list*/
 
+/* ✅ Base Styles (your existing code) */
 .ptlist {
     padding: 40px 20px;
     max-width: 1200px;
@@ -223,4 +224,86 @@
 .pagination .active .page-link {
     background-color: #0077b6;
     color: white;
+}
+
+/* ✅ Responsive Adjustments */
+@media (max-width: 768px) {
+    .therapist-title {
+        font-size: 1.6rem;
+    }
+
+    .therapist-cards-container {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    .therapist-card {
+        padding: 20px 15px;
+    }
+
+    .btn-book,
+    .btn-profile {
+        padding: 7px 12px;
+        font-size: 0.9rem;
+    }
+
+    .filter-tabs a,
+    .filter-services a {
+        display: inline-block;
+        margin: 4px 5px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .ptlist {
+        padding: 20px 10px;
+    }
+
+    .therapist-title {
+        font-size: 1.4rem;
+    }
+
+    .therapist-cards-container {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .therapist-logo img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .therapist-name {
+        font-size: 1.1rem;
+    }
+
+    .therapist-description {
+        font-size: 0.85rem;
+    }
+
+    .filter-tabs,
+    .filter-services {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .filter-tabs a,
+    .filter-services a {
+        font-size: 0.85rem;
+        padding: 4px 8px;
+    }
+
+    .therapist-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .btn-book,
+    .btn-profile {
+        width: 100%;
+        padding: 8px 0;
+    }
 }

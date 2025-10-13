@@ -40,17 +40,21 @@ class PatientController extends Controller
     public function listOfTherapist(Request $request)
     {
         $query = \App\Models\User::whereIn('role', ['therapist', 'clinic'])
-            ->where('is_verified_by_admin', true);
+            ->where('is_verified_by_admin', true)
+            ->with('availability')
+            ->with('activeAvailability');
 
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('id', 'like', "%{$search}%")
-                ->orWhere('name', 'like', "%{$search}%")
-                ->orWhere('specialization', 'like', "%{$search}%")
-                ->orWhere('role', 'like', "%{$search}%");
-            });
+        if ($request->filled('category')) {
+            if ($request->category == 'independent') {
+                $query->where('role', 'therapist');
+            } elseif ($request->category == 'clinic') {
+                $query->where('role', 'clinic');
         }
+
+        if ($request->filled('service')){
+            $query->where('service_type', $request->service);
+        }
+    }
 
             $therapists = $query->paginate(10);
             $patientHasApprovedReferral = Referral::where('patient_id', Auth::id())
@@ -64,17 +68,16 @@ class PatientController extends Controller
     public function publicTherapists(Request $request)
     {
         $query = User::whereIn('role', ['therapist', 'clinic'])
-            ->where('is_verified_by_admin', true);
+            ->where('is_verified_by_admin', true)
+            ->with('availability')
+            ->with('activeAvailability');
 
-        // Apply search if provided
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-            $query->where(function ($q) use ($search) {
-                $q->where('id', 'like', "%{$search}%")
-                ->orWhere('name', 'like', "%{$search}%")
-                ->orWhere('specialization', 'like', "%{$search}%")
-                ->orWhere('role', 'like', "%{$search}%");
-            });
+        if ($request->filled('category')) {
+            if ($request->category == 'independent') {
+                $query->where('role', 'therapist');
+            } elseif ($request->category == 'clinic') {
+                $query->where('role', 'clinic');
+            }
         }
 
         $therapists = $query->paginate(10);

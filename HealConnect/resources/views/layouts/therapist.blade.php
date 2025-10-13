@@ -42,6 +42,10 @@
         <a href="{{ route('therapist.client') }}" class="{{ request()->routeIs('therapist.client') ? 'active' : '' }}">
             <i class="fa-solid fa-user-md"></i> Clients
         </a>
+
+        <a href="{{ route('therapist.availability') }}" class="{{ request()->routeIs('therapist.availability') ? 'active' : '' }}">
+            <i class="fa-solid fa-clock"></i> Availability
+        </a>
         
         <form action="{{ route('therapist.logout') }}" method="POST" style="display:inline;">
             @csrf

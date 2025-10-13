@@ -1,128 +1,120 @@
 .main-content {
-  margin-left: 250px;
-  padding: 20px;
-  max-width: 100% !important;  
+    margin-left: 250px;
+    padding: 20px;
+    max-width: 100% !important;
 }
 
+/* Sidebar */
 .sidebar {
-  width: 250px;
-  background-color: rgb(238, 222, 202);
-  color: #1b1a1a; 
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-  padding-top: 20px;
-  box-shadow: 5px 0 5px rgba(0,0,0,0.3);
+    width: 250px;
+    background-color: rgb(238, 222, 202);
+    color: #1b1a1a;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    box-shadow: 5px 0 5px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    z-index: 1000;
 }
 
 .sidebar h1 {
-  text-align: center;
-  margin-bottom: 30px;
-  font-size: 30px;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 30px;
 }
 
 .sidebar a {
-  color: #333;
-  text-decoration: none;
-  padding: 15px 20px;
-  display: block;
-  transition: background 0.3s ease, color 0.3s ease;
+    color: #333;
+    text-decoration: none;
+    padding: 15px 20px;
+    display: block;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 .sidebar a:hover {
-  background-color: #72aceb;   
-  color: white;
+    background-color: #72aceb;
+    color: white;
 }
 
 .sidebar i {
-  margin-right: 10px;
+    margin-right: 10px;
 }
 
 .sidebar a.active {
-  background: #007bff;   
-  color: #fff;
-  font-weight: bold;
-}
-.main-content{
-  margin-left: 250px;
-  padding: 20px;
- }
-
-
-.welcome-header {
-  margin-bottom: 20px;
-  font-size: 24px;
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
-  color: #333;
-  background-color: rgb(230, 230, 230);
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    background: #007bff;
+    color: #fff;
+    font-weight: bold;
 }
 
-.welcome-header h2 {
-  margin: 0;
-  font-size: 28px;
-  color: #333;
-  font-family: 'Arial', sans-serif;
-  text-align: left;
- 
+.sidebar form {
+    margin: 0;
+    padding: 0;
 }
-.welcome-header img{
-  width: 80px;             
-  height: 80px;
-  border-radius: 50%;     
-  object-fit: cover;       
-  border: 2px solid #333;
+
+.sidebar .logout-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 15px 20px;
+    color: #333;
+    font: inherit;
+    cursor: pointer;
+    display: block;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.sidebar .logout-btn:hover {
+    background-color: #72aceb;
+    color: white;
 }
 
 /* Main Layout */
 .patient-main {
-  margin-left: 40px; 
-  display: flex;
-  align-items: flex-start;  
-  gap: 20px;               
-  padding: 20px;
+    margin-left: 40px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px;
 }
 
-
 .left-column {
-  flex: 2; 
-  display: flex;
-  gap: 50px;
+    flex: 2;
+    display: flex;
+    gap: 50px;
+    flex-wrap: wrap;
 }
 
 .left-column .card {
-  display: flex;
-  gap: 15px;
+    display: flex;
+    gap: 15px;
 }
-
 
 .right-column {
-  flex: 1;
-  max-width: 300px;   
-  min-width: 250px;   
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+    flex: 1;
+    max-width: 300px;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
+
 .notification {
-  background: rgb(245, 242, 89);
-  padding: 20px 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  width: 250px;       
-  min-height: 120px;
+    background: rgb(245, 242, 89);
+    padding: 20px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    min-height: 120px;
 }
+
 .notification h3 {
-  margin: 0 0 10px;
-  font-size: 18px;
+    margin: 0 0 10px;
+    font-size: 18px;
 }
 
 .notification i {
@@ -131,87 +123,109 @@
 }
 
 .card {
-  background: white;
-  padding: 20px 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  width: 250px;       
-  min-height: 120px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+    padding: 20px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    min-height: 120px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .card h3 {
-  margin-top: 0;
-  font-size: 20px;
-  margin-bottom: 15px;
-  font-family: monospace;
+    margin-top: 0;
+    font-size: 20px;
+    margin-bottom: 15px;
+    font-family: monospace;
 }
+
 .card i {
     margin-right: 10px;
 }
 
-.appointment-content h2 {
-  font-size: 24px;
-  margin-bottom: 15px;
-  text-align: center;
+.welcome-header {
+    margin-bottom: 20px;
+    font-size: 24px;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    color: #333;
+    background-color: rgb(230, 230, 230);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.sidebar form {
-  margin: 0;
-  padding: 0;
+.welcome-header h2 {
+    margin: 0;
+    font-size: 28px;
+    color: #333;
+    font-family: "Arial", sans-serif;
 }
 
-.sidebar .logout-btn {
-  width: 100%;
-  background: none;
-  border: none;
-  text-align: left;
-  padding: 15px 20px;
-  color: #333;
-  font: inherit;
-  cursor: pointer;
-  display: block;
-  transition: background 0.3s ease, color 0.3s ease;
+.welcome-header img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #333;
 }
-
-
-.sidebar .logout-btn:hover {
-  background-color: #72aceb;
-  color: white;
-}
-
-/* Therapist List Page*/
-
-.ptlist {
-  padding: 40px 20px;
-  max-width: 1400px;
-  margin: auto;
-}
-
-.ptlist h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #050505;
-}
-.therapist-title {
-  text-align: center;
-  margin-bottom: 25px;
-  font-size: 1.8rem;
-  color: #2b2b2b;
-  font-weight: 600;
-}
-
 
 @media (max-width: 768px) {
-  .patient-main {
-    flex-direction: column;
-  }
-  .right-column {
-    width: 100%;
-  }
+    .sidebar {
+        width: 200px;
+    }
+
+    .main-content {
+        margin-left: 200px;
+        padding: 15px;
+    }
+    .welcome-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .welcome-header h2 {
+        font-size: 22px;
+    }
+
+    .welcome-header img {
+        width: 60px;
+        height: 60px;
+    }
+    .patient-main {
+        flex-direction: column;
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .left-column,
+    .right-column {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .card,
+    .notification {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        position: fixed;
+        left: -250px;
+        transition: left 0.3s ease;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
 }

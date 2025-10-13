@@ -61,4 +61,15 @@ class User extends Authenticatable
                 ->where('is_verified_by_admin', true)
                 ->where('status', 'Active');
     }
+
+    public function availability()
+    {
+        return $this->hasMany(\App\Models\Availability::class, 'therapist_id');
+    }
+
+    public function activeAvailability()
+    {
+        return $this->hasMany(\App\Models\Availability::class, 'therapist_id')
+            ->where('is_active', true);
+    }
 }
