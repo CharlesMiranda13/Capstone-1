@@ -63,6 +63,17 @@ class PatientController extends Controller
 
             return view('user.patients.listoftherapist', compact('therapists','patientHasApprovedReferral'));
     }
+    public function showProfile($id)
+    {
+        $therapist = User::whereIn('role', ['therapist', 'clinic'])
+            ->where('is_verified_by_admin', true)
+            ->with(['availability'])
+            ->findOrFail($id);
+
+        return view('user.patients.therapist_profile', compact('therapist'));
+    }
+
+
 
     // Public Therapist List (for non-logged-in users)
     public function publicTherapists(Request $request)

@@ -117,6 +117,9 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
     // Therapist list
     Route::get('/therapists', [App\Http\Controllers\Patient\PatientController::class, 'listOfTherapist'])
     ->name('therapists');
+    Route::get('/therapists/{id}/profile', [PatientController::class, 'showProfile'])
+    ->name('therapists.profile');
+
 
     // Referral Routes
     Route::get('/referral/upload', [ReferralController::class, 'create'])->name('referral.upload');
@@ -141,6 +144,7 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
     Route::patch('/availability/{id}/toggle', [IndtherapistController::class, 'toggleAvailability'])->name('availability.toggle');
     Route::delete('/appointments/{id}', [IndtherapistController::class, 'destroy'])->name('availability.destroy');
 
+    Route::get('/profile', [IndtherapistController::class, 'profile'])->name('profile');
 
     Route::get('/settings', [IndtherapistController::class, 'settings'])->name('settings');
     Route::put('/settings/profile', [IndtherapistController::class, 'updateProfile'])->name('update.profile');

@@ -40,13 +40,16 @@
         </a>
 
         <a href="{{ route('therapist.client') }}" class="{{ request()->routeIs('therapist.client') ? 'active' : '' }}">
-            <i class="fa-solid fa-user-md"></i> Clients
+            <i class="fa-solid fa-users"></i> Clients
         </a>
 
         <a href="{{ route('therapist.availability') }}" class="{{ request()->routeIs('therapist.availability') ? 'active' : '' }}">
             <i class="fa-solid fa-clock"></i> Services & Availability
         </a>
-        
+
+        <a href="{{ route('therapist.profile') }}" class="{{ request()->routeIs('therapist.profile') ? 'active' : '' }}">
+            <i class="fa-solid fa-user-md"></i>  Profile
+        </a>        
         <form action="{{ route('therapist.logout') }}" method="POST" style="display:inline;">
             @csrf
             <button type="submit" class="logout-btn">

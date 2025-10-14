@@ -89,6 +89,14 @@ class IndtherapistController extends Controller
         }
 
     // Update Settings (Profile + Info + Password)
+    public function profile()
+    {
+        $user = Auth::user();
+        return view('user.therapist.independent.profile', compact('user'));
+    }
+
+
+
     public function updateProfile(Request $request) {
         $user = auth()->user();
 

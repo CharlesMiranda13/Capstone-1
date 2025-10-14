@@ -70,7 +70,7 @@
 
                     <div class="therapist-actions">
                         <a href="{{ route('patient.appointments.create', $therapist->id) }}" class="btn-book">Book Now</a>
-                        <a href="{{ route('patient.appointments.create', $therapist->id) }}" class="btn-profile">View Profile</a>
+                        <a href="{{ route('patient.therapists.profile', $therapist->id) }}" class="btn-profile">View Profile</a>
                     </div>
                 </div>
             @endforeach
