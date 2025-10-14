@@ -58,7 +58,7 @@
 
 
                     {{-- Availability --}}
-                    @if($therapist->availability && count($therapist->availability) > 0)
+                    @if($therapist->availability->where('is_active', true)->count() > 0)
                         <span class="availability-status available">
                             <i class="fa-solid fa-circle"></i> Has Availability
                         </span>

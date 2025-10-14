@@ -44,7 +44,7 @@
         </a>
 
         <a href="{{ route('therapist.availability') }}" class="{{ request()->routeIs('therapist.availability') ? 'active' : '' }}">
-            <i class="fa-solid fa-clock"></i> Availability
+            <i class="fa-solid fa-clock"></i> Services & Availability
         </a>
         
         <form action="{{ route('therapist.logout') }}" method="POST" style="display:inline;">
@@ -59,5 +59,6 @@
     <div class="main-content">
         @yield('content')
     </div>
+    @yield('scripts')
 </body>
 </html>

@@ -67,140 +67,106 @@
 /* Availabitlity */
 
 .availability-container {
-    max-width: 900px;
-    margin: 40px auto;
-    background: #fff;
-    border-radius: 12px;
-    padding: 30px 40px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    font-family: "Poppins", sans-serif;
+    padding: 20px;
+    background-color: #fdfdfd;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 30px auto;
 }
 
-.availability-container h2 {
-    color: #1b1a1a;
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.availability-container h3 {
-    font-size: 20px;
-    margin-top: 40px;
-    margin-bottom: 10px;
-    color: #444;
-}
-
-.alert-success {
-    background-color: #e8f9ee;
-    color: #1a7a36;
-    border: 1px solid #c4e9c8;
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    text-align: center;
+.availability-form-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
 }
 
 .availability-form {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px 25px;
-    align-items: center;
-    margin-bottom: 30px;
+    flex: 1;
+    min-width: 300px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 .availability-form label {
-    grid-column: 1 / 3;
-    font-weight: 500;
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
     color: #333;
 }
 
 .availability-form select,
-.availability-form input[type="time"] {
-    padding: 10px 12px;
+.availability-form input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border-radius: 6px;
     border: 1px solid #ccc;
-    border-radius: 8px;
     font-size: 14px;
-    outline: none;
-    transition: 0.3s ease;
 }
 
-.availability-form select:focus,
-.availability-form input[type="time"]:focus {
-    border-color: #4c8bf5;
-    box-shadow: 0 0 4px rgba(76, 139, 245, 0.4);
-}
-
-.availability-form .btn-primary {
-    grid-column: 1 / 3;
-    background-color: #4c8bf5;
+.availability-form button {
+    display: inline-block;
+    padding: 10px 16px;
+    background-color: #1e88e5;
     color: white;
     border: none;
-    padding: 10px 16px;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background-color 0.3s;
 }
 
-.availability-form .btn-primary:hover {
-    background-color: #3b74d9;
+.availability-form button:hover {
+    background-color: #1565c0;
+}
+
+#calendar {
+    flex: 2;
+    min-width: 400px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 15px;
-    font-size: 14px;
-}
-
-table thead {
-    background-color: rgb(238, 222, 202);
-    color: #333;
+    margin-top: 20px;
 }
 
 table th,
 table td {
-    padding: 12px;
-    text-align: center;
+    padding: 10px;
     border-bottom: 1px solid #ddd;
+    text-align: center;
 }
 
-table tr:hover {
-    background-color: #f9f9f9;
+table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
 }
 
-.btn-danger {
-    background-color: #e74c3c;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
-    color: #fff;
-    cursor: pointer;
-    font-size: 13px;
-    transition: background 0.3s;
+.status-active {
+    color: #2e7d32;
+    font-weight: bold;
 }
 
-.btn-danger:hover {
-    background-color: #c0392b;
+.status-inactive {
+    color: #c62828;
+    font-weight: bold;
 }
-
-@media (max-width: 700px) {
-    .availability-container {
-        padding: 20px;
+@media (max-width: 900px) {
+    .availability-form-container {
+        flex-direction: column;
     }
 
-    .availability-form {
-        grid-template-columns: 1fr;
-    }
-
-    .availability-form label,
-    .availability-form .btn-primary {
-        grid-column: 1;
-    }
-
-    table th,
-    table td {
-        font-size: 13px;
-        padding: 8px;
+    #calendar {
+        width: 100%;
     }
 }

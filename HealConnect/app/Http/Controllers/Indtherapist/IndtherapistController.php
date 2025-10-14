@@ -14,7 +14,7 @@ use App\Models\Notification;
 use App\Models\User;
 use App\Models\Availability;
 use Illuminate\Support\Facades\DB;
-
+use Carbon\Carbon;
 
 
 class IndtherapistController extends Controller
@@ -50,19 +50,20 @@ class IndtherapistController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'day_of_week' => 'required|string',
+        $validated = $request->validate([
+            'date' => 'required|date',
             'start_time' => 'required',
             'end_time' => 'required|after:start_time',
         ]);
+        $dayOfWeek = \Carbon\Carbon::parse($validated['date'])->format('l');
 
         Availability::create([
             'therapist_id' => Auth::id(),
-            'day_of_week' => $request->day_of_week,
-            'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
+            'date' => $validated,
+            'day_of_week' => $dayOfWeek,
+            'start_time' => $validated['start_time'],
+            'end_time' => $validated['end_time'],
         ]);
-
         return back()->with('success', 'Availability added successfully.');
     }
 
@@ -96,7 +97,7 @@ class IndtherapistController extends Controller
         ]);
 
 
-        if ($request->hasFile('profile_picture')) {
+        if ($request->hasFile('profile_picture')) { 
             $path = $request->file('profile_picture')->store('profile_pictures', 'public');
             $user->profile_picture = $path;
         }

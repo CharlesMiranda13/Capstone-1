@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('therapist_id');
             $table->string('day_of_week');
+            $table->date('date')->nullable();
             $table->time('start_time');
             $table->time('end_time');
             $table->timestamps();
