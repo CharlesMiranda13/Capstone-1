@@ -12,6 +12,8 @@ use App\Models\Record;
 use App\Models\Referral;
 use App\Models\Notification;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+
 
 class PatientController extends Controller
 {
@@ -70,9 +72,14 @@ class PatientController extends Controller
             ->with(['availability'])
             ->findOrFail($id);
 
-        return view('user.patients.therapist_profile', compact('therapist'));
-    }
+        $services = DB::table('therapist_services')
+            ->where('therapist_id', $therapist->id)
+            ->value('appointment_type');
 
+        $servicesList = $services ? explode(',', $services) : [];
+
+        return view('user.patients.therapist_profile', compact('therapist', 'servicesList'));
+    }
 
 
     // Public Therapist List (for non-logged-in users)

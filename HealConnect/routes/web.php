@@ -136,11 +136,12 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
 
 Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.status'])->group(function () {
     Route::get('/home', [IndtherapistController::class, 'dashboard'])->name('home');
-    Route::view('/appointments', 'user.therapist.appointment')->name('appointments');
+    Route::view('/appointments', 'user.therapist.appointments')->name('appointments');
     Route::view('/records', 'user.therapist.records')->name('records');
     Route::view('/messages', 'user.therapist.messages')->name('messages');
     Route::view('/clients', 'user.therapist.client')->name('client');
 
+    Route::post('/services', [IndtherapistController::class, 'storeServices'])->name('services.store');
     Route::get('/availability', [IndtherapistController::class, 'availability'])->name('availability');   
     Route::post('/appointments', [IndtherapistController::class, 'store'])->name('availability.store');
     Route::patch('/availability/{id}/toggle', [IndtherapistController::class, 'toggleAvailability'])->name('availability.toggle');

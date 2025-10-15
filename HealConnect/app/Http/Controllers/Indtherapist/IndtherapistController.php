@@ -40,11 +40,37 @@ class IndtherapistController extends Controller
     public function availability()
     {
         $user = Auth::user();
+
         $availabilities = Availability::where('therapist_id', $user->id)
             ->orderByRaw("FIELD(day_of_week, 'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday')")
-            ->get();
+            ->simplepaginate(3);
 
-        return view('user.therapist.independent.availability', compact('user','availabilities'));
+        $calendarAvailabilities = Availability::where('therapist_id', $user->id)->get();
+            
+
+    // Fetch existing appointment types from create_appointment_table
+        $services = DB::table('appointments')
+            ->where('therapist_id', $user->id)
+            ->value('appointment_type');
+
+        $existingServices = $services ? explode(',', $services) : [];
+
+        return view('user.therapist.independent.availability', compact('user', 'availabilities','calendarAvailabilities' ,'existingServices'));
+    }
+    public function storeServices(Request $request)
+    {
+        $request->validate([
+            'appointment_types' => 'required|array',
+        ]);
+
+        $user = auth()->user();
+
+        DB::table('therapist_services')->updateOrInsert(
+            ['therapist_id' => $user->id],
+            ['appointment_type' => implode(',', $request->appointment_types)]
+        );
+
+        return back()->with('success', 'Your offered services have been updated successfully!');
     }
 
 
@@ -59,7 +85,7 @@ class IndtherapistController extends Controller
 
         Availability::create([
             'therapist_id' => Auth::id(),
-            'date' => $validated,
+            'date' => $validated['date'],
             'day_of_week' => $dayOfWeek,
             'start_time' => $validated['start_time'],
             'end_time' => $validated['end_time'],
@@ -82,7 +108,7 @@ class IndtherapistController extends Controller
         return back()->with('success', 'Availability status updated successfully.');
     }
 
-        public function settings()
+    public function settings()
         {
             $user = Auth::user();
             return view('user.therapist.independent.settings', compact('user'));
@@ -92,7 +118,17 @@ class IndtherapistController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        return view('user.therapist.independent.profile', compact('user'));
+        $availability = Availability::where('therapist_id', $user->id)
+            ->orderBy('date', 'asc')
+            ->get();
+
+        $services= DB::table('therapist_services')
+            ->where('therapist_id', $user->id)
+            ->value('appointment_type');
+
+        $servicesList = $services ? explode(',', $services) : [];
+
+        return view('user.therapist.independent.profile', compact('user', 'availability', 'servicesList'));
     }
 
 

@@ -1,5 +1,5 @@
 @extends('layouts.therapist')
-@section('title', 'Therapist Availability')
+@section('title', 'Therapist Services & Availability')
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/appointment.css') }}">
@@ -10,14 +10,37 @@
 <h2 style="text-align:center;">My Services & Availability</h2>
 
 <div class="availability-container">
-    {{-- Success message --}}
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    {{-- Form + Calendar Side by Side --}}
+    <!-- SERVICES SECTION -->
+    <div class="services-container">
+        <h3>Appointment Types I Offer</h3>
+
+        <form action="{{ route('therapist.services.store') }}" method="POST" class="service-form">
+            @csrf
+            <div class="checkbox-group">
+                <label><input type="checkbox" name="appointment_types[]" value="Online"
+                    {{ in_array('Online', $existingServices ?? []) ? 'checked' : '' }}> Online</label>
+
+                <label><input type="checkbox" name="appointment_types[]" value="In-person"
+                    {{ in_array('In-person', $existingServices ?? []) ? 'checked' : '' }}> In-Clinic</label>
+
+                <label><input type="checkbox" name="appointment_types[]" value="In-home"
+                    {{ in_array('In-home', $existingServices ?? []) ? 'checked' : '' }}> In-home</label>
+            </div>
+
+            <button type="submit" class="btn btn-success">Save Services</button>
+        </form>
+    </div>
+
+    <hr>
+
+    <!-- AVAILABILITY SECTION -->
+    <h3>Set Your Availability</h3>
     <div class="availability-form-container">
-        {{-- Add New Availability --}}
+        
         <form action="{{ route('therapist.availability.store') }}" method="POST" class="availability-form">
             @csrf
             <label>Date:</label>
@@ -32,11 +55,9 @@
             <button type="submit" class="btn btn-primary">Add Availability</button>
         </form>
 
-        {{-- Calendar --}}
         <div id="calendar"></div>
     </div>
 
-    {{-- Existing Schedule --}}
     <h3>Existing Schedule</h3>
     <table>
         <thead>
@@ -62,7 +83,6 @@
                         @endif
                     </td>
                     <td>
-                        {{-- Cancel or Reactivate --}}
                         <form action="{{ route('therapist.availability.toggle', $availability->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('PATCH')
@@ -71,7 +91,6 @@
                             </button>
                         </form>
 
-                        {{-- Delete --}}
                         <form action="{{ route('therapist.availability.destroy', $availability->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
@@ -84,19 +103,16 @@
             @endforelse
         </tbody>
     </table>
+    <div class="pagination-container">
+        {{ $availabilities->links() }}
+    </div>
 </div>
 @endsection
 
-
 @section('scripts')
-    {{-- FullCalendar JS --}}
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-
-    {{-- Pass data to JS --}}
-    <script>
-        window.availabilities = @json($availabilities);
-    </script>
-
-
-    <script src="{{ asset('js/availability.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script>
+    window.availabilities = @json($calendarAvailabilities);
+</script>
+<script src="{{ asset('js/availability.js') }}"></script>
 @endsection

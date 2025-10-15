@@ -1,6 +1,6 @@
 @extends('layouts.patient_layout')
 
-@section('title', $therapist->name . ' - Profile')
+@section('title', 'PT - Profile')
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
@@ -12,7 +12,6 @@
 
         <div class="header">
             <h2>{{ $therapist->name }}'s Profile</h2>
-            <p>Learn more about your therapist and their expertise.</p>
         </div>
 
         {{-- PROFILE CARD --}}
@@ -42,10 +41,16 @@
                         {{ $therapist->experience_years ? $therapist->experience_years . ' years experience' : 'Experience not specified' }}
                     </p>
                 </div>
+                
+                <div class ="app"> 
+                    <a href="{{ route('patient.appointments.create', $therapist->id) }}" class="btn-book">
+                        <i class="fa-solid fa-calendar-check"></i> Book Appointment
+                    </a>
 
-                <a href="{{ route('patient.appointments.create', $therapist->id) }}" class="btn-book">
-                    <i class="fa-solid fa-calendar-check"></i> Book Appointment
-                </a>
+                    <a href="{{ route('patient.appointments.create', $therapist->id) }}" class="btn-book">
+                        <i class="fa-solid fa-comments"></i> Messege Therapist
+                    </a>
+                </div>
             </div>
 
             {{-- RIGHT: DETAILS --}}
@@ -84,6 +89,19 @@
                         <p>No availability set.</p>
                     @endif
                 </div>
+
+                <div class="services-offered">
+                    <h4><i class="fa-solid fa-concierge-bell"></i> Services Offered</h4>
+                    @if(!empty($servicesList))
+                        <ul class="services-list">
+                            @foreach ($servicesList as $service)
+                                <li>{{ trim($service) }}</li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p>No appointment types added yet.</p>
+                    @endif
+
             </div>
         </section>
     </div>

@@ -24,7 +24,6 @@
     color: #777;
     font-size: 0.95rem;
 }
-
 .profile-card {
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -33,10 +32,6 @@
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
     overflow: hidden;
     transition: transform 0.2s ease;
-}
-
-.profile-card:hover {
-    transform: translateY(-5px);
 }
 
 .profile-left {
@@ -78,24 +73,41 @@
 }
 
 .contact-info i {
-    color: #f39c12;
+    color: #000000;
     margin-right: 8px;
 }
 
-.btn-book {
-    display: inline-block;
-    background: #162ae0;
-    color: #fff;
-    padding: 10px 18px;
+.app {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.app a {
+    flex: 1;
+    text-align: center;
+    padding: 10px 15px;
     border-radius: 8px;
+    font-weight: 600;
     text-decoration: none;
-    font-weight: 500;
-    margin-top: 20px;
-    transition: 0.3s;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.btn-book {
+    background-color: #f28b64;
 }
 
 .btn-book:hover {
-    background: #ff9f50;
+    background-color: #e27a53;
+}
+
+.btn-message {
+    background-color: #64b6f2;
+}
+
+.btn-message:hover {
+    background-color: #519ed4;
 }
 
 .profile-right {
@@ -114,8 +126,19 @@
     gap: 10px;
     font-weight: 600;
 }
-
-.specializations li,
+.specializations {
+    list-style: none;
+    padding-left: 0;
+}
+.specializations li {
+    background-color: #fff7f2;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    padding: 10px 15px;
+    color: #333;
+    font-weight: 500;
+    display: block;
+}
 .availability li {
     background: #fef6f0;
     padding: 10px 15px;

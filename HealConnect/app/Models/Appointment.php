@@ -10,6 +10,8 @@ class Appointment extends Model
 {
     use HasFactory;
 
+    protected $table = 'appointments';
+
     protected $fillable = [
         'patient_id',
         'therapist_id',
