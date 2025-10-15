@@ -22,10 +22,9 @@
                 <h3>{{ Auth::user()->name }}</h3>
                 <p class="role">{{ ucfirst(Auth::user()->role) }}</p>
                 <p class="description">{{ Auth::user()->description ?? 'A compassionate and dedicated therapist ready to assist you.' }}</p>
-                <p class="location"><i class="fa-solid fa-location-dot"></i> {{ Auth::user()->location ?? 'Location not specified' }}</p>
+                <p class="location"><i class="fa-solid fa-location-dot"></i> {{ Auth::user()->address ?? 'Location not specified' }}</p>       
                 <p class="contact-info"><i class="fa-solid fa-envelope"></i> {{ Auth::user()->email }}</p>
                 <p class="contact-info"><i class="fa-solid fa-phone"></i> {{ Auth::user()->phone ?? 'Phone not specified' }}</p>
-
                 <div class="specializations">
                     <strong>Specializations:</strong>
                     @if(Auth::user()->specialization)

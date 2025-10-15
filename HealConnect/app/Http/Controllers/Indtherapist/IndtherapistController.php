@@ -88,13 +88,12 @@ class IndtherapistController extends Controller
             return view('user.therapist.independent.settings', compact('user'));
         }
 
-    // Update Settings (Profile + Info + Password)
+    // (Profile + Info + Password)
     public function profile()
     {
         $user = Auth::user();
         return view('user.therapist.independent.profile', compact('user'));
     }
-
 
 
     public function updateProfile(Request $request) {
@@ -123,14 +122,14 @@ class IndtherapistController extends Controller
             'phone' => 'nullable|string|max:20',
             'email' => ['required','email', Rule::unique('users')->ignore($user->id)],
             'dob' => 'required|date',
-            'Gender' => 'required|string|in:male,female',
+            'gender' => 'required|string|in:male,female',
         ]);
 
         $user->address = $request->address;
         $user->phone = $request->phone;
         $user->email = $request->email;
         $user->dob = $request->dob;
-        $user->gender = $request->Gender;
+        $user->gender = $request->gender;
 
         $user->save();
 

@@ -28,6 +28,7 @@ class User extends Authenticatable
         'gender',
         'phone',
         'specialization',
+        'address',
         'experience_years',
         'valid_id_path',
         'license_path',];

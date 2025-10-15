@@ -10,7 +10,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\Patient\PatientController;
 use App\Http\Controllers\Indtherapist\IndtherapistController;
-use App\Http\Controllers\Patient\ReferralController;
+//use App\Http\Controllers\Patient\ReferralController;
 use App\Http\Controllers\Patient\AppointmentController;
 
 
@@ -122,8 +122,8 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
 
 
     // Referral Routes
-    Route::get('/referral/upload', [ReferralController::class, 'create'])->name('referral.upload');
-    Route::post('/referral/upload', [ReferralController::class, 'store'])->name('referral.store');
+    //Route::get('/referral/upload', [ReferralController::class, 'create'])->name('referral.upload');
+    //Route::post('/referral/upload', [ReferralController::class, 'store'])->name('referral.store');
 
     // Logout
     Route::post('/logout', [App\Http\Controllers\Auth\UserAuthController::class, 'logout'])->name('logout');

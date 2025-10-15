@@ -39,7 +39,7 @@
                 <div class="therapist-card">
                     <div class="therapist-logo">
                         @if($therapist->profile_picture)
-                            <img src="{{ asset('storage/' .Auth::user()->profile_picture) }}" alt="{{ $therapist->name }}">
+                            <img src="{{ asset('storage/' .$therapist->profile_picture) }}" alt="{{ $therapist->name }}">
                         @else
                             <img src="{{ asset('images/default-therapist.png') }}" alt="Default Therapist">
                         @endif

@@ -7,31 +7,55 @@
 @endsection
 
 @section('content')
-<main class="therapist-profile-main">
-    <div class="profile-section">
-        <h2>{{ $therapist->name }}’s Profile</h2>
+<main class="therapist-profile">
+    <div class="container">
 
-        <div class="profile-card">
-            <div class="profile-picture">
-                @if($therapist->profile_picture)
-                    <img src="{{ asset('storage/' . $therapist->profile_picture) }}" alt="Profile Picture">
-                @else
-                    <img src="{{ asset('images/default-therapist.png') }}" alt="Default Profile Picture">
-                @endif
-            </div>
+        <div class="header">
+            <h2>{{ $therapist->name }}'s Profile</h2>
+            <p>Learn more about your therapist and their expertise.</p>
+        </div>
 
-            <div class="profile-details">
+        {{-- PROFILE CARD --}}
+        <section class="profile-card">
+
+            {{-- LEFT: PROFILE INFO --}}
+            <div class="profile-left">
+                <div class="profile-pic">
+                    <img src="{{ $therapist->profile_picture 
+                        ? asset('storage/' . $therapist->profile_picture) 
+                        : asset('images/default-therapist.png') }}" 
+                        alt="{{ $therapist->name }}">
+                </div>
+
                 <h3>{{ $therapist->name }}</h3>
                 <p class="role">{{ ucfirst($therapist->role) }}</p>
-                <p class="description">{{ $therapist->description ?? 'A compassionate and dedicated therapist ready to assist you.' }}</p>
-                <p class="location"><i class="fa-solid fa-location-dot"></i> {{ $therapist->location ?? 'Location not specified' }}</p>
-                <p class="contact-info"><i class="fa-solid fa-envelope"></i> {{ $therapist->email }}</p>
-                <p class="contact-info"><i class="fa-solid fa-phone"></i> {{ $therapist->phone ?? 'Phone not specified' }}</p>
 
-                <div class="specializations">
-                    <strong>Specializations:</strong>
+                <p class="bio">
+                    {{ $therapist->description ?? 'A compassionate and dedicated therapist ready to assist you.' }}
+                </p>
+
+                <div class="contact-info">
+                    <p><i class="fa-solid fa-location-dot"></i> {{ $therapist->location ?? 'Location not specified' }}</p>
+                    <p><i class="fa-solid fa-envelope"></i> {{ $therapist->email }}</p>
+                    <p><i class="fa-solid fa-phone"></i> {{ $therapist->phone ?? 'Phone not specified' }}</p>
+                    <p><i class="fa-solid fa-briefcase"></i> 
+                        {{ $therapist->experience_years ? $therapist->experience_years . ' years experience' : 'Experience not specified' }}
+                    </p>
+                </div>
+
+                <a href="{{ route('patient.appointments.create', $therapist->id) }}" class="btn-book">
+                    <i class="fa-solid fa-calendar-check"></i> Book Appointment
+                </a>
+            </div>
+
+            {{-- RIGHT: DETAILS --}}
+            <div class="profile-right">
+
+                {{-- SPECIALIZATIONS --}}
+                <div class="card-section">
+                    <h4><i class="fa-solid fa-user-md"></i> Specializations</h4>
                     @if($therapist->specialization)
-                        <ul>
+                        <ul class="specializations">
                             @foreach(explode(',', $therapist->specialization) as $spec)
                                 <li>{{ trim($spec) }}</li>
                             @endforeach
@@ -40,8 +64,28 @@
                         <p>N/A</p>
                     @endif
                 </div>
+
+                {{-- AVAILABILITY --}}
+                <div class="card-section">
+                    <h4><i class="fa-solid fa-calendar-days"></i> Availability</h4>
+                    @if($therapist->availability && count($therapist->availability) > 0)
+                        <ul class="availability">
+                            @foreach($therapist->availability as $slot)
+                                <li>
+                                    <span class="date">{{ \Carbon\Carbon::parse($slot['date'])->format('F j, Y') }}</span>
+                                    <span class="time">
+                                        {{ \Carbon\Carbon::parse($slot['start_time'])->format('g:i A') }} - 
+                                        {{ \Carbon\Carbon::parse($slot['end_time'])->format('g:i A') }}
+                                    </span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p>No availability set.</p>
+                    @endif
+                </div>
             </div>
-        </div>
+        </section>
     </div>
 </main>
 @endsection
