@@ -96,6 +96,16 @@ class PatientController extends Controller
         return view('ptlist', compact('therapists'));
     }
 
+    public function publicTherapistProfile($id)
+{
+    $therapist = User::whereIn('role', ['therapist', 'clinic'])
+            ->where('is_verified_by_admin', true)
+            ->with(['availability'])
+            ->findOrFail($id);
+
+        return view('view_profile', compact('therapist'));
+}
+
     // Settings Page
     public function settings()
     {

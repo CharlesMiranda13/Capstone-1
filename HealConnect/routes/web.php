@@ -23,6 +23,8 @@ Route::view('/services', 'services')->name('services');
 Route::view('/pricing', 'pricing')->name('pricing');
 Route::view('/contact', 'contact')->name('contact');
 Route::get('/ptlist', [PatientController::class, 'publicTherapists'])->name('ptlist');
+Route::get('/therapists/{id}/profile', [PatientController::class, 'publicTherapistProfile'])
+    ->name('view_profile');
 
 /* User Authentication (Patients, Therapists, Clinics)*/
 
