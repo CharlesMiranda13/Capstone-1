@@ -182,13 +182,8 @@ nav {
   width: 100%;
   aspect-ratio: 4 / 3;
   perspective: 1000px;
-  cursor: pointer;
 }
-.flip-card:hover{
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 
-}
 .flip-card-inner {
   position: relative;
   width: 100%;
@@ -197,9 +192,7 @@ nav {
   transition: transform 0.6s;
   transform-style: preserve-3d;
 }
-.flip-card.flipped .flip-card-inner {
-  transform: rotateY(180deg);
-}
+
 .flip-card-front, .flip-card-back {
   position: absolute;
   width: 100%;
@@ -227,6 +220,92 @@ nav {
 .flip-card-back p{
   font-size: larger;
 }
+
+.physical-therapy-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 80px 20px;
+  background: #f5f5f5;
+  flex-direction: row;
+  gap: 50px;
+  height: calc(100vh - 60px);
+}
+
+.physical-therapy {
+  max-width: 800px;
+  text-align: left;
+  padding: 0 20px;
+}
+
+.physical-therapy, 
+.physical-therapy-img {
+  flex: 1;
+  min-width: 50px; 
+  margin: 10px;
+}
+
+.physical-therapy p {
+  font-size: 40px;
+  color: black;
+  margin-top: 10px;
+  font-weight: 100;
+}
+
+.physical-therapy h2{
+  font-size: 40px;
+  color: black;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+
+.physical-therapy-img {
+  .physical-therapy-section {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  padding: 80px 20px;
+  background: #f5f5f5;
+  flex-direction: row;
+  gap: 50px;
+  font-size: 40px;
+}
+
+.physical-therapy {
+  max-width: 600px;
+  text-align: left;
+  padding: 0 20px;
+  font-size: 40px;
+}
+
+.physical-therapy, 
+.physical-therapy-img {
+  flex: 1;
+  min-width: 50px; 
+  margin: 10px;
+}
+
+.physical-therapy p {
+  font-size: 40px;
+  color: black;
+  margin-top: 10px;
+  font-weight: 100;
+}
+
+
+.physical-therapy-img {
+  flex-shrink: 0;              
+  max-width: 250px;            
+  max-height: 250px;           
+  width: auto;
+  height: auto;
+  border-radius: 12px;
+  object-fit: contain;
+}
+}
+
+
 
 /* About Main Section */
 .about-main {
@@ -379,7 +458,25 @@ footer {
   .flip-card-front img {
     height: auto; 
   }
+
+  .physical-therapy-section {
+    flex-direction: column;
+    text-align: center;
+    padding: 30px 20px;
+  }
+
+  .physical-therapy {
+    max-width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .physical-therapy-img {
+    width: 90%;
+    height: auto; 
+  }
 }
+
+
 
 @media (max-width: 480px) {
   nav a {

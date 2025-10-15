@@ -64,7 +64,7 @@
 
                     <div class="therapist-actions">
                         <a href="{{ url('/logandsign') }}" class="btn-book">Book Now</a>
-                        <a href="{{ url('/logandsign') }}" class="btn-profile">View Profile</a>
+                        <a href="{{ route('view_profile', $therapist->id) }}" class="btn-profile">View Profile</a>
                     </div>
                 </div>
             @endforeach
