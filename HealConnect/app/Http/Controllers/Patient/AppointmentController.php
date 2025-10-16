@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Appointment;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AppointmentController extends Controller
 {
@@ -18,27 +19,43 @@ class AppointmentController extends Controller
 
     public function create($therapistId)
     {
-    // Get the therapist
         $therapist = User::whereIn('role', ['therapist', 'clinic'])
             ->where('id', $therapistId)
             ->firstOrFail();
 
-    // Get therapist services from the table
         $services = DB::table('therapist_services')
             ->where('therapist_id', $therapist->id)
             ->value('appointment_type');
 
         $servicesList = $services ? explode(',', $services) : [];
 
-    // Get active availabilities
+    
         $availabilities = $therapist->availability()
             ->where('is_active', true)
-            ->orderBy('date')
+            ->orderBy('day_of_week')
             ->orderBy('start_time')
             ->get();
 
-        return view('user.patients.appointment_booking',compact('therapist', 'servicesList', 'availabilities')
-    );
+    
+        $dates = [];
+        $today = Carbon::today();
+
+        foreach ($availabilities as $availability) {
+            for ($i = 0; $i < 14; $i++) {
+                $date = $today->copy()->addDays($i);
+                if (strtolower($date->format('l')) == strtolower($availability->day_of_week)) {
+                    $dates[] = [
+                        'date' => $date->format('Y-m-d'),
+                        'day_of_week' => $availability->day_of_week,
+                        'start_time' => $availability->start_time,
+                        'end_time' => $availability->end_time,
+                    ];
+                }
+            }
+        }
+
+        return view('user.patients.appointment_booking', ['therapist' => $therapist,'servicesList' => $servicesList,'availabilities' => $dates, ]);
+
     }
 
     public function store(Request $request)

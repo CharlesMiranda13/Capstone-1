@@ -7,52 +7,67 @@
 @endsection
 
 @section('content')
-<main class="appointments">
-    <div class="container">
-        <div class="header">
-            <h2> My Appointments</h2>
-        </div>
+<main class="appointments-page">
+    <section class="appointments-container">
+        <header class="appointments-header">
+            <h2>My Appointments</h2>
+        </header>
 
         {{-- Success Message --}}
         @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
+            <div class="alert success">
+                <i class="fa-solid fa-check-circle"></i> {{ session('success') }}
             </div>
         @endif
 
         {{-- Check if there are any appointments --}}
         @if ($appointments->isEmpty())
-            <p class="no-appointments">You have no scheduled appointments yet.</p>
+            <div class="empty-state">
+                <i class="fa-regular fa-calendar-xmark"></i>
+                <p>You don't have any scheduled appointments yet.</p>
+            </div>
         @else
             <div class="appointments-list">
                 @foreach ($appointments as $appointment)
                     <div class="appointment-card">
-                        <div class="appointment-header">
-                            <h3>{{ $appointment->therapist->name ?? 'Unknown Therapist' }}</h3>
-                            <span class="status {{ strtolower($appointment->status) }}">
-                                {{ ucfirst($appointment->status) }}
-                            </span>
+                        <div class="appointment-card-header">
+                            <div class="therapist-info">
+                                <h3>{{ $appointment->therapist->name ?? 'Unknown Therapist' }}</h3>
+                                <span class="status {{ strtolower($appointment->status) }}">
+                                    {{ ucfirst($appointment->status) }}
+                                </span>
+                            </div>
                         </div>
 
-                        <div class="appointment-details">
-                            <p><strong>Type:</strong> {{ ucfirst($appointment->appointment_type) }}</p>
-                            <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</p>
-                            <p><strong>Time:</strong> {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</p>
+                        <div class="appointment-info">
+                            <p><i class="fa-solid fa-stethoscope"></i> 
+                                <strong>Type:</strong> {{ ucfirst($appointment->appointment_type) }}
+                            </p>
+                            <p><i class="fa-regular fa-calendar"></i> 
+                                <strong>Date:</strong> {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}
+                            </p>
+                            <p><i class="fa-regular fa-clock"></i> 
+                                <strong>Time:</strong> {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}
+                            </p>
+
                             @if ($appointment->notes)
-                                <p><strong>Notes:</strong> {{ $appointment->notes }}</p>
+                                <p><i class="fa-regular fa-note-sticky"></i> 
+                                    <strong>Notes:</strong> {{ $appointment->notes }}
+                                </p>
                             @endif
                         </div>
 
-                        {{-- Optional actions --}}
                         <div class="appointment-actions">
                             @if ($appointment->status === 'pending')
-                                <button class="btn btn-cancel">Cancel</button>
+                                <button class="btn btn-cancel">
+                                    <i class="fa-solid fa-ban"></i> Cancel Appointment
+                                </button>
                             @endif
                         </div>
                     </div>
                 @endforeach
             </div>
         @endif
-    </div>
+    </section>
 </main>
 @endsection

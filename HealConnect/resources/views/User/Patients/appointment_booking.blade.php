@@ -68,8 +68,8 @@
                         <select name="appointment_date" id="appointment_date" required>
                             <option value="">-- Choose Date --</option>
                             @foreach($availabilities as $availability)
-                                <option value="{{ $availability->date }}">
-                                    {{ \Carbon\Carbon::parse($availability->date)->format('F j, Y (l)') }}
+                                <option value="{{ $availability['date'] }}">
+                                    {{ \Carbon\Carbon::parse($availability['date'])->format('F j, Y (l)') }}
                                 </option>
                             @endforeach
                         </select>
