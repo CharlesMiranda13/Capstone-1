@@ -7,7 +7,7 @@
 @endsection
 
 @section('content')
-<h2 style="text-align:center;">My Services & Availability</h2>
+<h2 style="text-align:center;">My Services & Schedule</h2>
 
 <div class="availability-container">
     @if(session('success'))

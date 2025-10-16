@@ -107,7 +107,8 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
     Route::view('/messages', 'user.patients.messages')->name('messages');
 
     //Appointment
-    Route::get('/appointments', [AppointmentController::class, 'create'])->name('appointments.create');
+    Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
+    Route::get('/appointments/{therapist}/book', [AppointmentController::class, 'create'])->name('appointments.create');
     Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
 
     // Settings 
@@ -136,14 +137,19 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
 
 Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.status'])->group(function () {
     Route::get('/home', [IndtherapistController::class, 'dashboard'])->name('home');
-    Route::view('/appointments', 'user.therapist.appointments')->name('appointments');
     Route::view('/records', 'user.therapist.records')->name('records');
     Route::view('/messages', 'user.therapist.messages')->name('messages');
     Route::view('/clients', 'user.therapist.client')->name('client');
 
+    // Therapist Appointments
+    Route::get('/appointments', [App\Http\Controllers\Indtherapist\IndtherapistController::class, 'appointments'])
+    ->name('appointments');
+    Route::post('/appointments/{id}/update-status', [IndtherapistController::class, 'updateAppointmentStatus'])->name('appointments.updateStatus');
+
+    Route::get('/services', [IndtherapistController::class, 'services'])->name('services');
     Route::post('/services', [IndtherapistController::class, 'storeServices'])->name('services.store');
     Route::get('/availability', [IndtherapistController::class, 'availability'])->name('availability');   
-    Route::post('/appointments', [IndtherapistController::class, 'store'])->name('availability.store');
+    Route::post('/availability', [IndtherapistController::class, 'store'])->name('availability.store');
     Route::patch('/availability/{id}/toggle', [IndtherapistController::class, 'toggleAvailability'])->name('availability.toggle');
     Route::delete('/appointments/{id}', [IndtherapistController::class, 'destroy'])->name('availability.destroy');
 

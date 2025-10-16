@@ -27,7 +27,7 @@
             <i class="fa-solid fa-house"></i> Home
         </a>
 
-        <a href="{{ route('patient.appointments.create') }}" class="{{ request()->routeIs('patient.appointments') ? 'active' : '' }}">
+        <a href="{{ route('patient.appointments.index') }}" class="{{ request()->routeIs('patient.appointments.index') ? 'active' : '' }}">
             <i class="fa-regular fa-calendar"></i> Appointment
         </a>
 

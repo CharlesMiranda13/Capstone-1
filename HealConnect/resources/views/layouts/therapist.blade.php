@@ -44,7 +44,7 @@
         </a>
 
         <a href="{{ route('therapist.availability') }}" class="{{ request()->routeIs('therapist.availability') ? 'active' : '' }}">
-            <i class="fa-solid fa-clock"></i> Services & Availability
+            <i class="fa-solid fa-clock"></i> Services & Schedule
         </a>
 
         <a href="{{ route('therapist.profile') }}" class="{{ request()->routeIs('therapist.profile') ? 'active' : '' }}">

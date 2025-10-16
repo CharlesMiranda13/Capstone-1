@@ -40,7 +40,7 @@
                 </div>
                               
                 <div class="card-section">
-                    <h4><i class="fa-solid fa-hand-holding-medical"></i> Offered Appointment Types</h4>
+                    <h4><i class="fa-solid fa-hand-holding-medical"></i> Offered Service Types</h4>
                     @if(!empty($servicesList))
                         <ul class="services-list">
                             @foreach ($servicesList as $service)

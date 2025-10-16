@@ -41,22 +41,23 @@ class IndtherapistController extends Controller
     {
         $user = Auth::user();
 
+        // Fetch all availabilities of this therapist
         $availabilities = Availability::where('therapist_id', $user->id)
             ->orderByRaw("FIELD(day_of_week, 'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday')")
-            ->simplepaginate(3);
+            ->simplePaginate(3);
 
         $calendarAvailabilities = Availability::where('therapist_id', $user->id)->get();
-            
 
-    // Fetch existing appointment types from create_appointment_table
-        $services = DB::table('appointments')
+
+        $services = DB::table('therapist_services')
             ->where('therapist_id', $user->id)
             ->value('appointment_type');
 
         $existingServices = $services ? explode(',', $services) : [];
 
-        return view('user.therapist.independent.availability', compact('user', 'availabilities','calendarAvailabilities' ,'existingServices'));
+        return view('user.therapist.independent.availability', compact('user','availabilities','calendarAvailabilities','existingServices'));
     }
+
     public function storeServices(Request $request)
     {
         $request->validate([
@@ -113,6 +114,35 @@ class IndtherapistController extends Controller
             $user = Auth::user();
             return view('user.therapist.independent.settings', compact('user'));
         }
+
+
+    // View Appointments Page
+    public function appointments()
+        {
+            $therapistId = Auth::id(); 
+
+            $appointments = \App\Models\Appointment::where('therapist_id', $therapistId)
+                ->with('patient')
+                ->orderBy('appointment_date', 'asc')
+                ->get();
+
+            return view('user.therapist.Independent.appointment', compact('appointments'));
+        }
+
+    // Update Appointment Status
+    public function updateAppointmentStatus(Request $request, $id)
+        {
+            $request->validate([
+                'status' => 'required|in:approved,rejected,completed',
+            ]);
+
+            $appointment = Appointment::where('therapist_id', Auth::id())->findOrFail($id);
+            $appointment->status = $request->status;
+            $appointment->save();
+
+            return back()->with('success', 'Appointment status updated successfully.');
+        }
+
 
     // (Profile + Info + Password)
     public function profile()

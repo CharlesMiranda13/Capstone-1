@@ -1,51 +1,84 @@
-.appointment-main {
-    display: flex;
-    justify-content: center;
-    margin-top: 40px;
+.appointments {
+    min-height: 100vh;
+    padding: 40px;
 }
-
-.appointment-content {
-    width: 100%;
-    max-width: 600px;
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.appointment-content h2 {
-    text-align: center;
-    margin-bottom: 25px;
-    color: #2b3d5b;
-}
-
-.appointment-form .form-group {
+.header h2 {
+    color: #4a3b2d;
     margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.appointment-form label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #333;
+.no-appointments {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 18px;
+    color: #7a6b5b;
+}
+.appointments-list {
+    display: grid;
+    gap: 20px;
 }
 
-.appointment-form select,
-.appointment-form input,
-.appointment-form textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    transition: 0.2s;
+.appointment-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.appointment-form select:focus,
-.appointment-form input:focus,
-.appointment-form textarea:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+.appointment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    text-transform: capitalize;
+}
+
+.status.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+.status.approved {
+    background: #d4edda;
+    color: #155724;
+}
+.status.completed {
+    background: #cce5ff;
+    color: #004085;
+}
+.status.cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.appointment-details p {
+    margin: 5px 0;
+    color: #444;
+}
+
+.appointment-actions {
+    margin-top: 10px;
+    text-align: right;
+}
+
+.btn-cancel {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-cancel:hover {
+    background: #b02a37;
 }
 
 .btn-primary {
