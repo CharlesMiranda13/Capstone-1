@@ -8,22 +8,22 @@
     <h2 class="therapist-title">Verified Therapists / Clinics </h2>
 
     <div class="filter-tabs">
-        <a href="{{ route('patient.therapists') }}" 
+        <a href="{{ route('ptlist') }}" 
            class="{{ request('category') == '' ? 'active' : '' }}">All</a> |
-        <a href="{{ route('patient.therapists', ['category' => 'independent']) }}" 
+        <a href="{{ route('ptlist', ['category' => 'independent']) }}" 
            class="{{ request('category') == 'independent' ? 'active' : '' }}">Independent Therapist</a> |
-        <a href="{{ route('patient.therapists', ['category' => 'clinic']) }}" 
+        <a href="{{ route('ptlist', ['category' => 'clinic']) }}" 
            class="{{ request('category') == 'clinic' ? 'active' : '' }}">Clinic</a>
     </div>
 
     {{-- Services Tabs --}}
     <div class="filter-services">
         <span class="service-label">Services:</span>
-        <a href="{{ route('patient.therapists', ['service' => 'home']) }}" 
+        <a href="{{ route('ptlist', ['service' => 'home']) }}" 
            class="{{ request('service') == 'home' ? 'active' : '' }}">In-home</a> |
-        <a href="{{ route('patient.therapists', ['service' => 'online']) }}" 
+        <a href="{{ route('ptlist', ['service' => 'online']) }}" 
            class="{{ request('service') == 'online' ? 'active' : '' }}">Online</a> |
-        <a href="{{ route('patient.therapists', ['service' => 'clinic']) }}" 
+        <a href="{{ route('ptlist', ['service' => 'clinic']) }}" 
            class="{{ request('service') == 'clinic' ? 'active' : '' }}">Clinic</a>
     </div>
 

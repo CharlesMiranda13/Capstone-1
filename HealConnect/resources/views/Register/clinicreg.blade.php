@@ -72,8 +72,8 @@
                 @enderror
                 </div>
                 <div>
-                    <label for="License">Clinic License / DOH Accreditation:</label>
-                    <input type="file" id="License" name="License" accept=".jpg, .jpeg, .png, .pdf" required />
+                    <label for="license">Clinic License / DOH Accreditation:</label>
+                    <input type="file" id="license" name="license" accept=".jpg, .jpeg, .png, .pdf" required />
                 @error('License')
                     <small style="color:red;">{{ $message }}</small>
                 @enderror
