@@ -8,6 +8,7 @@
     <h2 class="therapist-title">Verified Therapists / Clinics </h2>
 
     <div class="filter-tabs">
+        <span class="service-label">Category:</span>
         <a href="{{ route('ptlist') }}" 
            class="{{ request('category') == '' ? 'active' : '' }}">All</a> |
         <a href="{{ route('ptlist', ['category' => 'independent']) }}" 
@@ -33,7 +34,7 @@
                 <div class="therapist-card">
                     <div class="therapist-logo">
                         @if($therapist->profile_picture)
-                            <img src="{{ asset('storage/' .Auth::user()->profile_picture) }}" alt="{{ $therapist->name }}">
+                            <img src="{{ asset('storage/' .$therapist->profile_picture) }}" alt="{{ $therapist->name }}">
                         @else
                             <img src="{{ asset('images/default-therapist.png') }}" alt="Default Therapist">
                         @endif
