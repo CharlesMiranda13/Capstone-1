@@ -27,7 +27,7 @@
         <div class="form-row">
             <div class="form-col">
                 <label for="dob">Date of Birth:</label>
-                <input type="date" id="dob" name="dob" required />
+                <input type="date" id="dob" name="dob" required max="{{ date('Y-m-d')}}" min= "{{ date('Y-m-d', strtotime('-120 years'))}}" />
             </div>
             <div class="form-col">
                 <label for="Gender">Gender:</label>
