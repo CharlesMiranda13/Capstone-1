@@ -19,11 +19,26 @@
 
     <main class="patient-main">
         <div class="left-column">
-            <div class="card">
+            <div class="card appointments-card">
                 <h3><i class = "fa fa-calendar"></i>Upcoming Appointments</h3>
+                <div class="appointments-list">
+                    @forelse ($appointments as $appointment)
+                    <div class ="appointment-item">
+                        <p class ="therapist-name">{{$appointment->therapist->name}}</p>
+                        <p class ="appointment-date">
+                            {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('F j, Y - g:i A') }}
+                        </p>
+                        <p class = "appointment-type">
+                            Type: {{ ucfirst($appointment->appointment_type) }}
+                        </p>
+                    </div>
+                @empty
+                <p class="empty-state"> No appointments scheduled.</p>
+                @endforelse
+                </div>
             </div>
 
-            <div class="card">
+            <div class="medical-card">
                 <h3><i class = "fa fa-folder-open "></i>Recent Medical Records</h3>
             </div>
 

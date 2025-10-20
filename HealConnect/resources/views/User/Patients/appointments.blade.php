@@ -3,15 +3,15 @@
 @section('title', 'My Appointments')
 
 @section('styles')
+<link rel="stylesheet" href="{{ asset('css/patient_appointment.css') }}">
 <link rel="stylesheet" href="{{ asset('css/appointment.css') }}">
+
 @endsection
 
 @section('content')
 <main class="appointments-page">
     <section class="appointments-container">
-        <header class="appointments-header">
-            <h2>My Appointments</h2>
-        </header>
+        <h2>My Appointments</h2>
 
         {{-- Success Message --}}
         @if (session('success'))

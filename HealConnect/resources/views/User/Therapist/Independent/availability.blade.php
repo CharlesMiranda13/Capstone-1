@@ -2,7 +2,7 @@
 @section('title', 'Therapist Services & Availability')
 
 @section('styles')
-<link rel="stylesheet" href="{{ asset('css/appointment.css') }}">
+<link rel="stylesheet" href="{{ asset('css/therapist_appointment.css') }}">
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
 @endsection
 

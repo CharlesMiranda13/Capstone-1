@@ -27,6 +27,9 @@
                             <p class="appointment-date">
                                 {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('F j, Y - g:i A') }}
                             </p>
+                            <p class = "appointment-type">
+                                Type: {{ ucfirst($appointment->appointment_type) }}
+                            </p>
                         </div>
                     @empty
                     <p class="empty-state">No upcoming appointments.</p>
