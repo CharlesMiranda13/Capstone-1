@@ -22,7 +22,7 @@
                 <li>Priority support</li>
                 <li>Individual client management tools</li>
             </ul>
-            <!-- ✅ Updated route -->
+            <!-- Updated route -->
             <a href="{{ url('/logandsign') }}?plan=basic" class="btn btn-primary">Get Started</a>
         </div>
 
@@ -38,7 +38,7 @@
                 <li>Priority support</li>
                 <li>Team management & scheduling tools</li>
             </ul>
-            <!-- ✅ Updated route -->
+            <!-- Updated route -->
             <a href="{{ url('/logandsign') }}?plan=premium" class="btn btn-primary">Get Started</a>
         </div>
     </div>

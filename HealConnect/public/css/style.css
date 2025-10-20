@@ -1,489 +1,504 @@
 /* General */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: antiquewhite;
-  color: #000;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: antiquewhite;
+    color: #000;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 .logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  padding: 10px 15px;
-  margin: 0 15px 20px 15px; 
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px 15px;
+    margin: 0 15px 20px 15px;
 }
 .logo img {
-  width: 70px;          
-  height: 70px;         
-  object-fit: cover;     
-  border-radius: 50%;  
-  border: 3px solid #494ce2;   
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #494ce2;
 }
 .header-logo img {
-  width: 50px;          
-  height: 50px;         
-  object-fit: cover;     
-  border-radius: 50%;  
-  border: 2px solid #494ce2;   
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #494ce2;
 }
 .header-logo {
-  display: flex;
-  align-items: center;  
-  gap: 10px;            
-  justify-content: center; 
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
 }
 .logo-circle {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: #f1f5f9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
 }
 .logo-circle img {
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
 }
 
 .logo-text {
-  font-size: 18px;
-  font-weight: bold;
-  color: #0b2c3d;
+    font-size: 18px;
+    font-weight: bold;
+    color: #0b2c3d;
 }
 
 /* Header */
 header {
-  border-bottom: 1px solid #ddd;
-  background: #ffffff;
+    border-bottom: 1px solid #ddd;
+    background: #ffffff;
 }
 
 #homepage {
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 40px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
 }
 
 .homepage-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 #homepage h2 {
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 40px;
-  font-weight: bold;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 40px;
+    font-weight: bold;
 }
 
-.heal-blue { color: rgba(14, 94, 241, 0.712); }
-.connect-green { color: rgb(83, 209, 104); }
+.heal-blue {
+    color: rgba(14, 94, 241, 0.712);
+}
+.connect-green {
+    color: rgb(83, 209, 104);
+}
 
 nav {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 nav a {
-  margin-left: 20px;
-  text-decoration: none;
-  color: #000;
-  font-size: 20px;
+    margin-left: 20px;
+    text-decoration: none;
+    color: #000;
+    font-size: 20px;
 }
 
-nav a:hover { color: #6b28d9; }
+nav a:hover {
+    color: #6b28d9;
+}
 
 nav a.btn-getstarted {
-  background-color: #1361f3;
-  color: #fff !important;
-  padding: 8px 15px;
-  border-radius: 4px;
-  font-weight: bold;
-  text-decoration: none;
+    background-color: #1361f3;
+    color: #fff !important;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-weight: bold;
+    text-decoration: none;
 }
 
 nav a.btn-getstarted:hover {
-  background-color: #0f4ecc;
+    background-color: #0f4ecc;
 }
 /* Main Section */
-main { min-height: 60vh; }
+main {
+    min-height: 60vh;
+}
 .main-section {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 80px 20px;
-  background: #f5f5f5;
-  flex-direction: row;
-  gap: 50px;
-  height: calc(100vh - 60px);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 80px 20px;
+    background: #f5f5f5;
+    flex-direction: row;
+    gap: 50px;
+    height: calc(100vh - 60px);
 }
 
 .main-content {
-  max-width: 800px;
-  text-align: left;
-  padding: 0 20px;
-
+    max-width: 800px;
+    text-align: left;
+    padding: 0 20px;
 }
-.main-content, 
+.main-content,
 .flip-card {
-  flex: 1;
-  min-width: 50px; 
-  margin: 10px;
+    flex: 1;
+    min-width: 50px;
+    margin: 10px;
 }
 
 .main-content p {
-  font-size: 20px;
-  color: black;
-  margin-top: 10px;
-  font-weight: 100;
+    font-size: 20px;
+    color: black;
+    margin-top: 10px;
+    font-weight: 100;
 }
 
 .main-content button {
-  background-color: white;
-  color: black;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  margin-top: 20px;
+    background-color: white;
+    color: black;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 20px;
 }
 .main-content button:hover {
-  background-color: #1361f3;
-  color: #fff;
-  cursor: pointer;
+    background-color: #1361f3;
+    color: #fff;
+    cursor: pointer;
 }
 
 nav {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .hamburger {
-  display: none;
-  font-size: 24px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #000;
+    display: none;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #000;
 }
 .flip-card {
-  background: transparent;
-  max-width: 500px;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  perspective: 1000px;
+    background: transparent;
+    max-width: 500px;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    perspective: 1000px;
 }
 
 .flip-card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
 }
 
-.flip-card-front, .flip-card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+.flip-card-front,
+.flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 .flip-card-front img {
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
-  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    object-fit: cover;
 }
 /* Back side */
 .flip-card-back {
-  background: white;
-  color: black;
-  transform: rotateY(180deg);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+    background: white;
+    color: black;
+    transform: rotateY(180deg);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
-.flip-card-back p{
-  font-size: larger;
+.flip-card-back p {
+    font-size: larger;
 }
 
 .physical-therapy-section {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 80px 20px;
-  background: #f5f5f5;
-  flex-direction: row;
-  gap: 50px;
-  height: calc(100vh - 60px);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 80px 20px;
+    background: #f5f5f5;
+    flex-direction: row;
+    gap: 50px;
+    height: calc(100vh - 60px);
 }
 
 .physical-therapy {
-  max-width: 800px;
-  text-align: left;
-  padding: 0 20px;
+    max-width: 800px;
+    text-align: left;
+    padding: 0 20px;
 }
 
-.physical-therapy, 
+.physical-therapy,
 .physical-therapy-img {
-  flex: 1;
-  min-width: 50px; 
-  margin: 10px;
+    flex: 1;
+    min-width: 50px;
+    margin: 10px;
 }
 
 .physical-therapy p {
-  font-size: 40px;
-  color: black;
-  margin-top: 10px;
-  font-weight: 100;
+    font-size: 40px;
+    color: black;
+    margin-top: 10px;
+    font-weight: 100;
 }
 
-.physical-therapy h2{
-  font-size: 40px;
-  color: black;
-  margin-top: 10px;
-  font-weight: 500;
+.physical-therapy h2 {
+    font-size: 40px;
+    color: black;
+    margin-top: 10px;
+    font-weight: 500;
 }
-
 
 .physical-therapy-img {
-  .physical-therapy-section {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-around;
-  padding: 80px 20px;
-  background: #f5f5f5;
-  flex-direction: row;
-  gap: 50px;
-  font-size: 40px;
+    .physical-therapy-section {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-around;
+        padding: 80px 20px;
+        background: #f5f5f5;
+        flex-direction: row;
+        gap: 50px;
+        font-size: 40px;
+    }
+
+    .physical-therapy {
+        max-width: 600px;
+        text-align: left;
+        padding: 0 20px;
+        font-size: 40px;
+    }
+
+    .physical-therapy,
+    .physical-therapy-img {
+        flex: 1;
+        min-width: 50px;
+        margin: 10px;
+    }
+
+    .physical-therapy p {
+        font-size: 40px;
+        color: black;
+        margin-top: 10px;
+        font-weight: 100;
+    }
+
+    .physical-therapy-img {
+        flex-shrink: 0;
+        max-width: 250px;
+        max-height: 250px;
+        width: auto;
+        height: auto;
+        border-radius: 12px;
+        object-fit: contain;
+    }
 }
-
-.physical-therapy {
-  max-width: 600px;
-  text-align: left;
-  padding: 0 20px;
-  font-size: 40px;
-}
-
-.physical-therapy, 
-.physical-therapy-img {
-  flex: 1;
-  min-width: 50px; 
-  margin: 10px;
-}
-
-.physical-therapy p {
-  font-size: 40px;
-  color: black;
-  margin-top: 10px;
-  font-weight: 100;
-}
-
-
-.physical-therapy-img {
-  flex-shrink: 0;              
-  max-width: 250px;            
-  max-height: 250px;           
-  width: auto;
-  height: auto;
-  border-radius: 12px;
-  object-fit: contain;
-}
-}
-
-
 
 /* About Main Section */
 .about-main {
-  max-width: 800px;
-  font-size: 18px;
-  padding: 50px 20px;
-  text-align: left;
-  color: #333;
-  line-height: 1.6;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);  
-  margin: 40px;
+    max-width: 800px;
+    font-size: 18px;
+    padding: 50px 20px;
+    text-align: left;
+    color: #333;
+    line-height: 1.6;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin: 40px;
 }
 
 .about-main:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
 }
 .about-main:hover .speak-btn {
-  opacity: 1;
-  pointer-events: auto;
+    opacity: 1;
+    pointer-events: auto;
 }
 /* Features section */
-.features-section { text-align: center; }
+.features-section {
+    text-align: center;
+}
 
 .features-section h2 {
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 40px;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 40px;
 }
 .features {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 25px;
-  justify-items: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    justify-items: center;
 }
 .feature {
-  background: #fff;
-  padding: 25px 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  max-width: 300px;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  margin-top: 20px;
+    background: #fff;
+    padding: 25px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-top: 20px;
 }
 .feature:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 .feature:hover .speak-btn {
-  opacity: 1;
+    opacity: 1;
 }
 .feature-icon {
-  font-size: 2.2rem;
-  margin-bottom: 15px;
+    font-size: 2.2rem;
+    margin-bottom: 15px;
 }
-.feature:nth-child(1) .feature-icon { color: #4CAF50; }
-.feature:nth-child(2) .feature-icon { color: #2196F3; } 
-.feature:nth-child(3) .feature-icon { color: #E91E63; } 
-.feature:nth-child(4) .feature-icon { color: #FF9800; } 
+.feature:nth-child(1) .feature-icon {
+    color: #4caf50;
+}
+.feature:nth-child(2) .feature-icon {
+    color: #2196f3;
+}
+.feature:nth-child(3) .feature-icon {
+    color: #e91e63;
+}
+.feature:nth-child(4) .feature-icon {
+    color: #ff9800;
+}
 
 .feature h3 {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 .feature p {
-  font-size: 0.95rem;
-  color: #444;
+    font-size: 0.95rem;
+    color: #444;
 }
 
 /* Footer */
 footer {
-  background-color: #f3f4f6;
-  padding: 20px;
-  text-align: center;
-  color: #6b7280;
-  font-size: 14px;
-  margin-top: 50px; 
-  max-width: 100%;
+    background-color: #f3f4f6;
+    padding: 20px;
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+    margin-top: 50px;
+    max-width: 100%;
 }
 .pending-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  text-align: center;
-  padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    padding: 20px;
 }
 
 .pending-message {
-  font-size: 1.5rem;
-  margin-top: 20px;
+    font-size: 1.5rem;
+    margin-top: 20px;
+}
+.pending-message h2 {
+    color: #ca1616;
+    margin-bottom: 15px;
 }
 .pending-card {
-  background: #97d473;
-  padding: 30px 40px;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  max-width: 400px;
-  width: 100%;
+    background: #97d473;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
 }
-
 
 /* Responsive Design */
 @media (max-width: 1000px) {
-  nav {
-    display: none;
-    flex-direction: column;
-    position: absolute;
-    top: 70px;
-    right: 5%;
-    background: white;
-    width: 80%;
-    max-width: 300px;
-    padding: 5%;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  }
+    nav {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        right: 5%;
+        background: white;
+        width: 80%;
+        max-width: 300px;
+        padding: 5%;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-  nav.show {
-    display: flex;
-  }
+    nav.show {
+        display: flex;
+    }
 
-  .hamburger {
-    display: block;
-  }
+    .hamburger {
+        display: block;
+    }
 }
 
 @media (max-width: 768px) {
-  .main-section {
-    flex-direction: column;
-    text-align: center;
-    padding: 30px 20px;
-  }
+    .main-section {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px 20px;
+    }
 
-  .main-content {
-    max-width: 100%;
-    margin-bottom: 20px;
-  }
+    .main-content {
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
 
-  .flip-card {
-    width: 90%;
-    height: auto; 
-  }
+    .flip-card {
+        width: 90%;
+        height: auto;
+    }
 
-  .flip-card-front img {
-    height: auto; 
-  }
+    .flip-card-front img {
+        height: auto;
+    }
 
-  .physical-therapy-section {
-    flex-direction: column;
-    text-align: center;
-    padding: 30px 20px;
-  }
+    .physical-therapy-section {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px 20px;
+    }
 
-  .physical-therapy {
-    max-width: 100%;
-    margin-bottom: 20px;
-  }
+    .physical-therapy {
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
 
-  .physical-therapy-img {
-    width: 90%;
-    height: auto; 
-  }
+    .physical-therapy-img {
+        width: 90%;
+        height: auto;
+    }
 }
 
-
-
 @media (max-width: 480px) {
-  nav a {
-    font-size: 14px;
-    margin: 0.5rem 0;
-  }
-  .main-image img {
-    max-width: 100%;
-  }
+    nav a {
+        font-size: 14px;
+        margin: 0.5rem 0;
+    }
+    .main-image img {
+        max-width: 100%;
+    }
 }

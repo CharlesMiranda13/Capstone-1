@@ -9,7 +9,7 @@
 @section('content')
 <main class="public-therapist-profile-main">
     <div class="public-profile-section">
-        <h2>{{ $therapist->name }}’s Profile</h2>
+        <h2>{{ $therapist->name }}'s Profile</h2>
 
         <div class="public-profile-card">
             <div class="public-profile-picture">

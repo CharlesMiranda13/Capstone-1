@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AccountApprovedMail;
+
 
 class UserController extends Controller
 {
@@ -40,7 +43,14 @@ class UserController extends Controller
         $user->is_verified_by_admin = true; 
         $user->save();
 
-        return back()->with('success', 'User has been approved.');
+        try{
+            Mail::to($user->email)->send(new AccountApprovedMail($user));
+        } catch (\Exception $e) {
+            // Log the error or handle it as needed
+            \Log::error('Failed to send account approval email: ' . $e->getMessage());
+        }
+
+        return back()->with('success', 'User has been approved and notified via email.');
     }
 
     // Decline user 
