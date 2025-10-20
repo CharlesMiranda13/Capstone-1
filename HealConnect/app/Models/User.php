@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Carbon\Carbon;
 
 class User extends Authenticatable
 {
@@ -29,7 +30,7 @@ class User extends Authenticatable
         'phone',
         'specialization',
         'address',
-        'experience_years',
+        'start_year',
         'valid_id_path',
         'license_path',];
 
@@ -72,5 +73,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\Availability::class, 'therapist_id')
             ->where('is_active', true);
+    }
+    
+    public function getExperienceYearsAttribute()
+    {
+        if (!$this->start_year) {
+            return null;
+        }
+
+        return Carbon::parse($this->start_year)->diffInYears(Carbon::now());
     }
 }

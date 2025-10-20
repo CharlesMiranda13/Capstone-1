@@ -60,7 +60,7 @@
 
             <div class="form-group">
                 <label><strong>Experience (Years)</strong></label>
-                <input type="text" class="form-control" value="{{ $user->experience_years ?? 'N/A' }}" readonly>
+                <input type="text" class="form-control" value="{{ round($user->experience_years ?? 0) }}" readonly>
             </div>
         @endif
 

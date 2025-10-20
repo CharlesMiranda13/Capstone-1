@@ -77,8 +77,8 @@
         </div>
 
         <div class="form-group">
-            <label for="experience_years" class="form-label">Years of Experience</label>
-            <input type="number" id="experience_years" name="experience_years" min="0" max="50" placeholder="e.g., 5" required>
+            <label for="start_year" class="form-label">Year Started Practicing</label>
+            <input type="date" id="start_year" name="start_year" max="{{ date('Y-m-d') }}" required>
         </div>
 
         <div class="file-section">

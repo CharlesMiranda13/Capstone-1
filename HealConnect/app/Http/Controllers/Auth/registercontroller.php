@@ -94,7 +94,7 @@ class RegisterController extends Controller
             'specialization' => $request->has('specialization')
                 ? implode(',', $request->specialization)
                 : null,
-            'experience_years'=> $request->experience_years
+            'start_year' => $request->start_year,
         ]);
 
         // Send verification email
