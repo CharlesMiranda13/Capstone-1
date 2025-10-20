@@ -2,7 +2,7 @@
 
 @section('title', 'PT Dashboard')
 @section('styles')
-<link rel="stylesheet" href="{{ asset('css/patients.css') }}">
+<link rel="stylesheet" href="{{ asset('css/therapist.css') }}">
 @endsection
 
 @section('content')
@@ -17,19 +17,30 @@
     </div>
     <main class="therapist-main">
         <div class="left-column">
-            <div class="card">
-                <h3><i class = "fa fa-calendar"></i>Upcoming Appointments</h3>
+            {{-- Upcoming Appointments --}}
+            <div class="card appointments-card">
+                <h3><i class="fa fa-calendar"></i> Upcoming Appointments</h3>
+                <div class="appointments-list">
+                    @forelse ($appointments as $appointment)
+                        <div class="appointment-item">
+                            <p class="patient-name">{{ $appointment->patient->name }}</p>
+                            <p class="appointment-date">
+                                {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('F j, Y - g:i A') }}
+                            </p>
+                        </div>
+                    @empty
+                    <p class="empty-state">No upcoming appointments.</p>
+                    @endforelse
+                </div>
             </div>
 
-            <div class="card">
-                <h3><i class = "fa fa-folder-open "></i>Total Client</h3>
-            </div>
-
-        </div>
-
-        <div class="right-column">
-            <div class="notification">
-                <h3><i class="fa fa-bell"></i> Notifications</h3>
+            {{-- Total Clients --}}
+            <div class="card client-card">
+                <h3><i class="fa fa-folder-open"></i> Total Clients</h3>
+                <div class="client-count">
+                    <h2>{{ $appointmentCount?? 0 }}</h2>
+                    <p>Active Clients</p>
+                </div>
             </div>
         </div>
 </main>

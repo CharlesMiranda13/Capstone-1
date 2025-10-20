@@ -26,7 +26,7 @@
                 <p class="bio">{{ $therapist->description ?? 'A compassionate and dedicated therapist ready to assist you.' }}</p>
 
                 <div class="contact-info">
-                    <p><i class="fa-solid fa-location-dot"></i> {{ $therapist->location ?? 'Location not specified' }}</p>
+                    <p><i class="fa-solid fa-location-dot"></i> {{ $therapist->address ?? 'Location not specified' }}</p>
                     <p><i class="fa-solid fa-envelope"></i> {{ $therapist->email }}</p>
                     <p><i class="fa-solid fa-phone"></i> {{ $therapist->phone ?? 'Phone not specified' }}</p>
                 </div>

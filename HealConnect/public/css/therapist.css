@@ -100,33 +100,11 @@
     gap: 15px;
 }
 
-.right-column {
-    flex: 1;
-    max-width: 300px;
-    min-width: 250px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-.notification {
-    background: rgb(245, 242, 89);
-    padding: 20px 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    width: 250px;
-    min-height: 120px;
-}
-.notification h3 {
-    margin: 0 0 10px;
-    font-size: 18px;
-}
-
-.notification i {
-    color: #000000;
-    margin-right: 10px;
-}
-
 .card {
+    flex: 1;
+    text-align: left;
+    flex-direction: column;
+    justify-content: space-between;
     background: white;
     padding: 20px 20px;
     border-radius: 8px;
@@ -142,6 +120,8 @@
 }
 
 .card h3 {
+    display: flex;
+    align-items: center;
     margin-top: 0;
     font-size: 20px;
     margin-bottom: 15px;
@@ -149,6 +129,23 @@
 }
 .card i {
     margin-right: 10px;
+}
+.appointment-item {
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    padding: 10px 15px;
+    margin-top: 8px;
+    transition: background 0.3s ease;
+}
+.patient-name {
+    font-weight: 600;
+    margin-bottom: 4px;
+    font-size: 15px;
+}
+.appointment-date {
+    color: #666;
+    font-size: 14px;
+    margin: 0;
 }
 
 .appointment-content h2 {

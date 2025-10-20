@@ -34,11 +34,11 @@
                 </p>
 
                 <div class="contact-info">
-                    <p><i class="fa-solid fa-location-dot"></i> {{ $therapist->location ?? 'Location not specified' }}</p>
+                    <p><i class="fa-solid fa-location-dot"></i> {{ $therapist->address ?? 'Location not specified' }}</p>
                     <p><i class="fa-solid fa-envelope"></i> {{ $therapist->email }}</p>
                     <p><i class="fa-solid fa-phone"></i> {{ $therapist->phone ?? 'Phone not specified' }}</p>
                     <p><i class="fa-solid fa-briefcase"></i> 
-                        {{ $therapist->experience_years ? $therapist->experience_years . ' years experience' : 'Experience not specified' }}
+                        {{ $therapist->experience_years ? round($therapist->experience_years) . ' years experience' : 'Experience not specified' }}
                     </p>
                 </div>
                 

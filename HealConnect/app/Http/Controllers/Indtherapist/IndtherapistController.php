@@ -29,12 +29,11 @@ class IndtherapistController extends Controller
             ->take(3)
             ->get();
 
-        // $notifications = Notification::where('user_id', $user->id)
-        //     ->latest()
-        //     ->take(5)
-        //     ->get();
+        $appointmentCount = Appointment::where('therapist_id', $user->id)
+            ->distinct('patient_id')
+            ->count('patient_id');
 
-        return view('user.therapist.independent.independent', compact('user', 'appointments'));
+        return view('user.therapist.independent.independent', compact('user', 'appointments', 'appointmentCount'));
     }
 
     public function availability()
