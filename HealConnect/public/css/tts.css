@@ -226,7 +226,7 @@
     color: white;
 }
 
-/* ✅ Responsive Adjustments */
+/* Responsive Adjustments */
 @media (max-width: 768px) {
     .therapist-title {
         font-size: 1.6rem;

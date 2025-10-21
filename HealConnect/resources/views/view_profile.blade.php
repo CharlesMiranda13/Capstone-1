@@ -24,7 +24,7 @@
                 <h3>{{ $therapist->name }}</h3>
                 <p class="public-role">{{ ucfirst($therapist->role) }}</p>
                 <p class="public-description">{{ $therapist->description ?? 'A compassionate and dedicated therapist ready to assist you.' }}</p>
-                <p class="public-location"><i class="fa-solid fa-location-dot"></i> {{ $therapist->location ?? 'Location not specified' }}</p>
+                <p class="public-location"><i class="fa-solid fa-location-dot"></i> {{ $therapist->address ?? 'Location not specified' }}</p>
                 <p class="public-contact-info"><i class="fa-solid fa-envelope"></i> {{ $therapist->email }}</p>
                 <p class="public-contact-info"><i class="fa-solid fa-phone"></i> {{ $therapist->phone ?? 'Phone not specified' }}</p>
 

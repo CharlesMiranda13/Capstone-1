@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const availabilities = JSON.parse(dataElement.textContent);
 
-    console.log("Loaded availabilities:", availabilities); // 👈 check DevTools console
+    console.log("Loaded availabilities:", availabilities); // check DevTools console
 
     dateSelect.addEventListener('change', function () {
         const selectedDate = this.value;

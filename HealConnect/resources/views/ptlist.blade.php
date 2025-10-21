@@ -48,7 +48,7 @@
 
                     <p class="therapist-location">
                         <i class="fa-solid fa-location-dot"></i>
-                        {{ $therapist->location ?? 'Location not specified' }}
+                        {{ $therapist->address ?? 'Location not specified' }}
                     </p>
 
 
