@@ -167,7 +167,7 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
 });
 
 /* Clinic Routes*/
-Route::prefix('clinic')->name('clinic.')->group(function () {
+Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'check.status'])->group(function () {
     Route::get('/home', [IndtherapistController::class, 'dashboard'])->name('home');
     Route::view('/employees', 'user.therapist.employees')->name('employees');
     Route::view('/appointments', 'user.therapist.appointment')->name('appointments');

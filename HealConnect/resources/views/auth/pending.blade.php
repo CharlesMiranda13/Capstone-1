@@ -12,4 +12,10 @@
             <p>Logged in as: <strong>{{ Auth::user()->name }}</strong></p>
         @endif
     </div>
+    
+    <div class="pending-home-btn">
+        <a href="{{ url('/') }}" class="home-btn">Return to Home</a>
+    </div>
+    
+    
 @endsection

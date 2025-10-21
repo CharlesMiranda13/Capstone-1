@@ -37,7 +37,7 @@ class UserLoginController extends Controller
                 case 'patient':
                     return redirect()->intended('/patient/home');
                 case 'clinic':
-                    return redirect()->intended('/clinic/dashboard'); 
+                    return redirect()->intended('/clinic/home'); 
                 case 'independent':
                     return redirect()->intended('/therapist/home'); 
                 default:
