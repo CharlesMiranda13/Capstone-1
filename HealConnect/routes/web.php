@@ -144,7 +144,7 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
     // Therapist Appointments
     Route::get('/appointments', [App\Http\Controllers\Indtherapist\IndtherapistController::class, 'appointments'])
     ->name('appointments');
-    Route::post('/appointments/{id}/update-status', [IndtherapistController::class, 'updateAppointmentStatus'])->name('appointments.updateStatus');
+    Route::patch('/appointments/{id}/update-status', [IndtherapistController::class, 'updateAppointmentStatus'])->name('appointments.updateStatus');
 
     Route::get('/services', [IndtherapistController::class, 'services'])->name('services');
     Route::post('/services', [IndtherapistController::class, 'storeServices'])->name('services.store');
@@ -154,6 +154,10 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
     Route::delete('/appointments/{id}', [IndtherapistController::class, 'destroy'])->name('availability.destroy');
 
     Route::get('/profile', [IndtherapistController::class, 'profile'])->name('profile');
+
+    // Patient Profile
+    Route::get('/patients/{id}/profile', [IndtherapistController::class, 'patientProfile'])->name('patients.profile');
+
 
     Route::get('/settings', [IndtherapistController::class, 'settings'])->name('settings');
     Route::put('/settings/profile', [IndtherapistController::class, 'updateProfile'])->name('update.profile');

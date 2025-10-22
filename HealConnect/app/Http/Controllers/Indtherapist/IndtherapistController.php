@@ -213,4 +213,12 @@ class IndtherapistController extends Controller
 
         return back()->with('success', 'Password updated successfully!');
         }
+
+    // View Patient Profile
+    public function patientProfile($id)
+    {
+        $patient = User::where('role', 'patient')->findOrFail($id);
+
+        return view('user.therapist.independent.patient_profile', compact('patient'));
+    }
 }

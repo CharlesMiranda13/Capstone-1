@@ -41,7 +41,7 @@
                             <td>{{ $appointment->notes ?? 'N/A' }}</td>
                             <td>
                                 @if($appointment->referral)
-                                    <a href="{{ asset('storage/referrals/' . $appointment->refferals) }}" target="_blank">View Referral</a>
+                                    <a href="{{ asset('storage/referrals/' . $appointment->referrals) }}" target="_blank">View Referral</a>
                                 @else
                                     N/A
                                 @endif
@@ -55,11 +55,28 @@
                                     {{ ucfirst($appointment->status) }}
                                 </span>
                             </td>
-                            <td>
+                            <td class="d-flex align-items-center gap-2">
+                                <a href="{{ route('therapist.patients.profile', $appointment->patient->id) }}" class="btn btn-sm btn-info">
+                                    <i class="fa fa-user"></i> View Profile
+                                </a>
+
+                                @if($appointment->appointment_type === 'online' && $appointment->status === 'approved')
+                                    <a href="{{ $appointment->session_link }}" target="_blank" class="btn btn-sm btn-success">
+                                        <i class="fa fa-video"></i> Join Session
+                                    </a>
+                                @endif
+
+                                @if($appointment->status === 'completed')
+                                    <a href="{{ route('therapist.session.notes', $appointment->id) }}" class="btn btn-sm btn-primary">
+                                        <i class="fa fa-file-medical"></i> Add Notes
+                                    </a>
+                                 @endif
+
                                 <form action="{{ route('therapist.appointments.updateStatus', $appointment->id) }}" method="POST">
                                     @csrf
+                                    @method('PATCH')
                                     <select name="status" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
-                                        <option value="">Change</option>
+                                        <option value="" disabled selected>Change Status</option>
                                         <option value="approved">Approve</option>
                                         <option value="rejected">Reject</option>
                                         <option value="completed">Complete</option>
