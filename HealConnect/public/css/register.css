@@ -1,26 +1,26 @@
 .register-main {
-  max-width: 1000px;
-  margin: 60px auto;
-  padding: 35px 40px;
-  background: #ffffff; 
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  font-family: 'Poppins', sans-serif;
-  animation: fadeIn 0.5s ease-in-out;
+    max-width: 1000px;
+    margin: 60px auto;
+    padding: 35px 40px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    font-family: "Poppins", sans-serif;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
 /* Form Layout */
 .register-form {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Labels */
 .register-form label {
-  margin: 10px 0 6px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #000000;
+    margin: 10px 0 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #000000;
 }
 
 /* Inputs & Select */
@@ -31,209 +31,212 @@
 .register-form input[type="date"],
 .register-form input[type="file"],
 .register-form select {
-  padding: 12px 14px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  margin-bottom: 16px;
-  transition: all 0.3s ease;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
 }
 
 .register-form input:focus,
 .register-form select:focus {
-  border-color: #2da44e;
-  box-shadow: 0 0 6px rgba(45, 164, 78, 0.3);
-  outline: none;
+    border-color: #2da44e;
+    box-shadow: 0 0 6px rgba(45, 164, 78, 0.3);
+    outline: none;
 }
 
 /* Register Button */
 .register-button {
-  margin-top: 20px;
-  padding: 14px;
-  background: #2da44e;
-  color: #fff;
-  font-size: 16px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
+    margin-top: 20px;
+    padding: 14px;
+    background: #2da44e;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
 }
 
 .register-button:hover {
-  background: #238636;
-  transform: scale(1.02);
+    background: #238636;
+    transform: scale(1.02);
 }
 
-
 .group {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-  margin-bottom: 0; 
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 0;
 }
 
 .group label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #000000;
+    font-size: 14px;
+    font-weight: 500;
+    color: #000000;
 }
 
 .group input {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  margin-bottom: 0;
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    margin-bottom: 0;
 }
 
 .group input:focus {
-  border-color: #2da44e;
-  box-shadow: 0 0 6px rgba(45, 164, 78, 0.3);
-  outline: none;
+    border-color: #2da44e;
+    box-shadow: 0 0 6px rgba(45, 164, 78, 0.3);
+    outline: none;
 }
 
 .form-row {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 1rem;
+    display: flex;
+    gap: 20px;
+    margin-bottom: 1rem;
 }
 
 .form-col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .form-col label {
-  margin-bottom: 6px;
-  font-weight: 600;
+    margin-bottom: 6px;
+    font-weight: 600;
 }
 /* File Input Group */
 .file-group {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-bottom: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 16px;
 }
 .file-group label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #000000;
+    font-size: 14px;
+    font-weight: 500;
+    color: #000000;
 }
 .file-group input {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  margin-bottom: 0;
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    margin-bottom: 0;
 }
 
 /* Footer Text */
 .register-main p {
-  margin-top: 18px;
-  font-size: 13px;
-  text-align: center;
-  color: #555;
+    margin-top: 18px;
+    font-size: 13px;
+    text-align: center;
+    color: #555;
 }
 .register-main h1 {
-  margin-bottom: 20px;
-  font-size: 26px;
-  font-weight: 700;
-  color: #2da44e;
+    margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: 700;
+    color: #2da44e;
 }
 
 .register-main p a {
-  color: #2da44e;
-  text-decoration: none;
-  font-weight: 500;
+    color: #2da44e;
+    text-decoration: none;
+    font-weight: 500;
 }
 
 .register-main p a:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .form-label {
-  font-weight: 600;
-  display: block;
-  margin-bottom: 0.5rem;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.5rem;
 }
 
 .checkbox-group {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 20px;
 }
 
 .checkbox-group label {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    cursor: pointer;
 }
 
 .checkbox-group input[type="checkbox"] {
-  margin-right: 8px;
-  accent-color: #007bff; 
+    margin-right: 8px;
+    accent-color: #007bff;
 }
 
 .mess {
-  font-size: 12px;
-  color: gray;
-  margin-top: 6px;
-  margin-bottom: 10px;
+    font-size: 12px;
+    color: gray;
+    margin-top: 6px;
+    margin-bottom: 10px;
 }
 
-
 .register-title {
-  text-align: center;
-  font-size: 28px;
-  font-weight: 700;
-  color: #2da44e;
-  margin-bottom: 25px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #2da44e;
+    margin-bottom: 25px;
 }
 
 .file-section {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  padding: 18px;
-  background: #f9f9f9;
-  border-radius: 10px;
-  border: 1px dashed #ccc;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 18px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    border: 1px dashed #ccc;
 }
 
 .file-section label {
-  font-size: 14px;
-  font-weight: 600;
-  margin-top: 10px;
-  display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 10px;
+    display: block;
 }
 
 /* Responsive for smaller screens */
 @media (max-width: 768px) {
-  .clinic-group {
-    grid-template-columns: 1fr;
-  }
-  .register-main{
-    max-width: 50%;
-  }
+    .clinic-group {
+        grid-template-columns: 1fr;
+    }
+    .register-main {
+        max-width: 50%;
+    }
 }
-
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 @media (max-width: 768px) {
-  .name-group {
-    grid-template-columns: 1fr;
-  }
+    .name-group {
+        grid-template-columns: 1fr;
+    }
 }

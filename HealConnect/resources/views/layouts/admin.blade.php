@@ -26,6 +26,8 @@
             <i class="fa-solid fa-users"></i> Manage Users</a>
         <a href="{{ route('admin.viewreports') }}"class = "{{ request()->routeIs('admin.viewreports') ? 'active' : ''}}">
             <i class="fa-solid fa-chart-bar"></i> View Reports</a>
+        <a href="{{ route('admin.viewreports') }}"class = "{{ request()->routeIs('admin.viewreports') ? 'active' : ''}}">
+            <i class="fa-solid fa-area-chart"></i> Analytics Reports</a>
         <a href="{{ route('admin.setting') }}" class = "{{ request()->routeIs('admin.setting') ? 'active' : ''}}">
             <i class="fa-solid fa-cog"></i> Settings</a>
 
@@ -40,5 +42,6 @@
     <div class="admin-main">
         @yield('content')
     </div>
+    @yield('scripts')
 </body>
 </html>

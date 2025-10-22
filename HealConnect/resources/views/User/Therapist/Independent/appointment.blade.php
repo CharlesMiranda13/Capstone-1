@@ -26,6 +26,7 @@
                         <th>Date</th>
                         <th>Time</th>
                         <th>Notes</th>
+                        <th>Refferal</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -38,6 +39,12 @@
                             <td>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</td>
                             <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</td>
                             <td>{{ $appointment->notes ?? 'N/A' }}</td>
+                            <td>
+                                @if($appointment->referral)
+                                    <a href="{{ asset('storage/referrals/' . $appointment->refferals) }}" target="_blank">View Referral</a>
+                                @else
+                                    N/A
+                                @endif
                             <td>
                                 <span class="badge 
                                     @if($appointment->status == 'pending') bg-warning

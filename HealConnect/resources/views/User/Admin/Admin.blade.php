@@ -51,9 +51,9 @@
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    window.dashboardata = {
+    window.dashboardData = {
         usergrowth: @json($monthlyData),
-        appointmenttypes: @json($appointmentTypes)
+        appointmentTypeData: @json($appointmentTypes)
     };
 </script>
 <script src="{{ asset('js/admin_dashboard.js') }}"></script>   

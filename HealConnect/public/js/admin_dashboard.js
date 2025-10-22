@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const { usergrowth, appointmentTypeData } = window.dashboardData;
 
     // USER GROWTH CHART
-    const ctxUser = document.getElementById("userGrowthChart");
+    const ctxUser = document.getElementById("monthlyChart");
     if (ctxUser) {
         new Chart(ctxUser, {
             type: "line",
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 labels: usergrowth.labels,
                 datasets: [{
                     label: "New Users",
-                    data: userGrowthData.values,
+                    data: usergrowth.values,
                     borderColor: "rgba(54, 162, 235, 1)",
                     backgroundColor: "rgba(54, 162, 235, 0.2)",
                     borderWidth: 2,
@@ -23,14 +23,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     legend: { display: false }
                 },
                 scales: {
-                    y: { beginAtZero: true }
+                    y: { 
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            precision: 0,
+                            callback: function(value){
+                                return Math.floor(value);
+                            }
+                        }
+                    }
                 }
             }
         });
     }
 
     // APPOINTMENT TYPE CHART
-    const ctxAppt = document.getElementById("appointmentTypeChart");
+    const ctxAppt = document.getElementById("appointmentChart");
     if (ctxAppt) {
         new Chart(ctxAppt, {
             type: "doughnut",

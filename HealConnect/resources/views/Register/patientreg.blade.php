@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <label for="Lname">Last Name:</label>
+        <label for="Lname" style ="font-weight: 600;">Last Name:</label>
         <input type="text" id="Lname" name="Lname" required />
 
         <div class="form-row">
@@ -39,26 +39,26 @@
             </div>
         </div>
 
-        <label for="address">Address:</label>
+        <label for="address" style ="font-weight: 600;">Address:</label>
         <input type="text" id="address" name="address" required />
 
-        <label for="phone">Phone Number:</label>
+        <label for="phone" style ="font-weight: 600;">Phone Number:</label>
         <input type="tel" id="phone" name="phone" 
             pattern="^09\d{9}$" 
             maxlength="11"
             required 
             placeholder="09XXXXXXXXX" />
 
-        <label for="email">Email:</label>
+        <label for="email" style ="font-weight: 600;">Email:</label>
         <input type="email" id="email" name="email" required />
             @error('email')
                 <small style="color:red;">{{ $message }}</small>
             @enderror
 
-        <label for="password">Password:</label>
+        <label for="password" style ="font-weight: 600;">Password:</label>
         <input type="password" id="password" name="password" required />
 
-        <label for="password_confirmation">Confirm Password:</label>
+        <label for="password_confirmation" style ="font-weight: 600;">Confirm Password:</label>
         <input type="password" id="password_confirmation" name="password_confirmation" required />
             @error('password')
                 <small style="color:red;">{{ $message }}</small>
