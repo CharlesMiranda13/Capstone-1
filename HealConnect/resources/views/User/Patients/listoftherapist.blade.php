@@ -11,7 +11,7 @@
     <h2 class="therapist-title">Verified Therapists / Clinics </h2>
 
     <div class="filter-tabs">
-        <span>Category:</span>
+        <span class="service-label">Category:</span>
         <a href="{{ route('patient.therapists') }}" 
             class="{{ request('category') == '' ? 'active' : '' }}">All</a>
         <a href="{{ route('patient.therapists', ['category' => 'independent']) }}" 
