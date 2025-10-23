@@ -11,6 +11,33 @@
     <div class="container">
         <h2 style = "text-align:center">My Appointments</h2>
 
+        <div class="search-filter">
+            <form method="GET" action="{{ route('therapist.appointments') }}" class="search-filter-form">
+                <input type="text" name="search" placeholder="Search by patient name or type..." 
+                value="{{ request('search') }}"
+                class="search-input">
+
+            <select name="status" class="filter-select" onchange="this.form.submit()">
+                <option value="">Status</option>
+                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
+                <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+            </select>
+            
+            <select name=type class="filter-select" onchange="this.form.submit()">
+                <option value="">All Types</option>
+                <option value="in-person" {{ request('type') == 'in-person' ? 'selected' : '' }}>In-Person</option>
+                <option value="online" {{ request('type') == 'online' ? 'selected' : '' }}>Online</option>
+            </select>
+
+            <button type="submit" class="btn-search">
+                <i class="fa fa-search"></i>
+            </button>
+            </form>
+        </div>
+
+
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
@@ -29,6 +56,7 @@
                         <th>Refferal</th>
                         <th>Status</th>
                         <th>Action</th>
+                        <th>View Profile</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -56,9 +84,7 @@
                                 </span>
                             </td>
                             <td class="d-flex align-items-center gap-2">
-                                <a href="{{ route('therapist.patients.profile', $appointment->patient->id) }}" class="btn btn-sm btn-info">
-                                    <i class="fa fa-user"></i> View Profile
-                                </a>
+                                
 
                                 @if($appointment->appointment_type === 'online' && $appointment->status === 'approved')
                                     <a href="{{ $appointment->session_link }}" target="_blank" class="btn btn-sm btn-success">
@@ -82,6 +108,12 @@
                                         <option value="completed">Complete</option>
                                     </select>
                                 </form>
+                                
+                            </td>
+                            <td>
+                                <a href="{{ route('therapist.patients.profile', $appointment->patient->id) }}" class="btn btn-sm btn-info">
+                                    <i class="fa fa-user"></i>
+                                </a>
                             </td>
                         </tr>
                     @endforeach

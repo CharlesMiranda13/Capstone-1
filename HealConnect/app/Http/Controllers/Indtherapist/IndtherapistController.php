@@ -116,17 +116,39 @@ class IndtherapistController extends Controller
 
 
     // View Appointments Page
-    public function appointments()
-        {
-            $therapistId = Auth::id(); 
+    public function appointments(Request $request)
+    {
+        $therapistId = Auth::id();
 
-            $appointments = \App\Models\Appointment::where('therapist_id', $therapistId)
-                ->with('patient')
-                ->orderBy('appointment_date', 'asc')
-                ->get();
-
-            return view('user.therapist.Independent.appointment', compact('appointments'));
+        $query = Appointment::with('patient')
+            ->where('therapist_id', $therapistId);
+            
+    // Search by patient name or appointment type
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('patient', function ($subQuery) use ($search) {
+                    $subQuery->where('name', 'like', "%{$search}%");
+                })
+                ->orWhere('appointment_type', 'like', "%{$search}%");
+            });
         }
+
+    // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+    //  Filter by appointment type
+        if ($request->filled('type')) {
+            $query->where('appointment_type', $request->input('type'));
+        }
+
+    // Sort latest first
+        $appointments = $query->orderBy('appointment_date', 'desc')->get();
+
+        return view('user.therapist.independent.appointment', compact('appointments'));
+    }
 
     // Update Appointment Status
     public function updateAppointmentStatus(Request $request, $id)
