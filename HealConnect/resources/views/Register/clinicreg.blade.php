@@ -28,12 +28,12 @@
         <label for="address">Clinic Address:</label>
         <input type="text" id="address" name="address" required value="{{ old('address') }}"/>
 
-        <label for="phone">Phone Number:</label>
+        <label for="phone">Phone/Tel Number:</label>
         <input type="tel" id="phone" name="phone" 
-            pattern="^09\d{9}$" 
-            maxlength="11"
+            pattern="^(09\d{9}|0\d{1,3}-?\d{6,7})$"
+            maxlength="13"
             required 
-            placeholder="09XXXXXXXXX" />
+            placeholder="e.g. 09123456789 or 02-1234567" />
 
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required value="{{ old('email') }}"/>

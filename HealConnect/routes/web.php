@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\Patient\PatientController;
 use App\Http\Controllers\Indtherapist\IndtherapistController;
+use App\Http\Controllers\Clinictherapist\clinicController;
 //use App\Http\Controllers\Patient\ReferralController;
 use App\Http\Controllers\Patient\AppointmentController;
 
@@ -172,7 +173,7 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
 
 /* Clinic Routes*/
 Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'check.status'])->group(function () {
-    Route::get('/home', [IndtherapistController::class, 'dashboard'])->name('home');
+    Route::get('/home', [clinicController::class, 'dashboard'])->name('home');
     Route::view('/employees', 'user.therapist.employees')->name('employees');
     Route::view('/appointments', 'user.therapist.appointment')->name('appointments');
     Route::view('/services', 'user.therapist.services')->name('services');
