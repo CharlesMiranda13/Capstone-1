@@ -77,19 +77,23 @@ class IndtherapistController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'date' => ['required', 'date', 'after_or_equal:today'],
+            'date' => ['required', 'date'],
             'start_time' => ['required', 'date_format:H:i'],
             'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
         ]);
-        $dayOfWeek = \Carbon\Carbon::parse($validated['date'])->format('l');
+
+        $formattedDate = Carbon::parse($request->date)->format('Y-m-d');
+        $dayOfWeek = Carbon::parse($formattedDate)->format('l');
 
         Availability::create([
             'therapist_id' => Auth::id(),
-            'date' => $validated['date'],
+            'date' => $formattedDate,
             'day_of_week' => $dayOfWeek,
             'start_time' => $validated['start_time'],
             'end_time' => $validated['end_time'],
+            'is_active' => true,
         ]);
+
         return back()->with('success', 'Availability added successfully.');
     }
 

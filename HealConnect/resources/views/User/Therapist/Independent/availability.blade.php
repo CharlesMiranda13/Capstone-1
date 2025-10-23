@@ -44,7 +44,8 @@
         <form action="{{ route('therapist.availability.store') }}" method="POST" class="availability-form">
             @csrf
             <label>Date:</label>
-            <input type="date" name="date" required min="{{ date('Y-m-d') }}">
+            <input type="date" name="date" required min="{{ date('Y-m-d') }}" value="{{ old('date') }}">
+
 
             <label>Start Time:</label>
             <input type="time" name="start_time" required>
