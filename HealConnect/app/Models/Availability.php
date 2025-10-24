@@ -22,4 +22,10 @@ class Availability extends Model
     {
         return $this->belongsTo(User::class, 'therapist_id');
     }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class, 'therapist_id', 'therapist_id')
+            ->whereDate('appointment_date', $this->date);
+    }
 }

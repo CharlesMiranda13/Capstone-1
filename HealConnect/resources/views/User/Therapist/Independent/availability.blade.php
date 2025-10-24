@@ -72,18 +72,40 @@
         </thead>
         <tbody>
             @forelse($availabilities as $availability)
-                <tr>
-                    <td>{{ $availability->day_of_week }}, {{ \Carbon\Carbon::parse($availability->date)->format('F j, Y') }}</td>
-                    <td>{{ date('h:i A', strtotime($availability->start_time)) }}</td>
-                    <td>{{ date('h:i A', strtotime($availability->end_time)) }}</td>
-                    <td>
-                        @if($availability->is_active)
-                            <span class="status-active">Active</span>
-                        @else
-                            <span class="status-inactive">Cancelled</span>
-                        @endif
-                    </td>
-                    <td>
+            @php    
+                $bookedCount = \App\Models\Appointment::where('therapist_id', $availability->therapist_id)
+                    ->whereDate('appointment_date', $availability->date)
+                    ->count();
+            @endphp
+
+            <tr>
+                <td>{{ $availability->day_of_week }}, {{ \Carbon\Carbon::parse($availability->date)->format('F j, Y') }}</td>
+                <td>{{ date('h:i A', strtotime($availability->start_time)) }}</td>
+                <td>{{ date('h:i A', strtotime($availability->end_time)) }}</td>
+
+                <td>
+                    @if($availability->is_active)
+                        <span class="status-active">Active</span>
+                    @else
+                        <span class="status-inactive">Cancelled</span>
+                    @endif
+
+                    {{--Show booking notice--}}
+                    @if($bookedCount > 0)
+                        <div style="color: red; font-weight: bold; margin-top: 4px;">
+                            Booked by 
+                            @foreach($availability->appointments as $appointment)
+                                {{ $appointment->patient->name }}@if(!$loop->last), @endif
+                            @endforeach
+                        </div>
+                    @endif
+                </td>
+
+                <td>
+                {{-- Disable actions if booked --}}
+                    @if($bookedCount > 0)
+                        <button class="btn btn-secondary" disabled>Locked</button>
+                    @else
                         <form action="{{ route('therapist.availability.toggle', $availability->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('PATCH')
@@ -97,12 +119,14 @@
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
-                    </td>
-                </tr>
-            @empty
-                <tr><td colspan="5">No availability set.</td></tr>
-            @endforelse
-        </tbody>
+                    @endif
+                </td>
+            </tr>
+        @empty
+            <tr><td colspan="5">No availability set.</td></tr>
+        @endforelse
+    </tbody>
+
     </table>
     <div class="pagination-container">
         {{ $availabilities->links() }}

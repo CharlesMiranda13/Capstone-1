@@ -41,7 +41,8 @@ class IndtherapistController extends Controller
         $user = Auth::user();
 
         // Fetch all availabilities of this therapist
-        $availabilities = Availability::where('therapist_id', $user->id)
+        $availabilities = Availability::with('appointments')
+            ->where('therapist_id', $user->id)
             ->orderByRaw("FIELD(day_of_week, 'Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday')")
             ->simplePaginate(3);
 

@@ -32,27 +32,20 @@ class AppointmentController extends Controller
     
         $availabilities = $therapist->availability()
             ->where('is_active', true)
-            ->orderBy('day_of_week')
-            ->orderBy('start_time')
-            ->get();
+            ->whereDate('date', '>=', now())
+            ->orderBy('date', 'asc')
+            ->orderBy('start_time', 'asc')
+            ->get(['date', 'day_of_week', 'start_time', 'end_time']);
 
     
-        $dates = [];
-        $today = Carbon::today();
-
-        foreach ($availabilities as $availability) {
-            for ($i = 0; $i < 14; $i++) {
-                $date = $today->copy()->addDays($i);
-                if (strtolower($date->format('l')) == strtolower($availability->day_of_week)) {
-                    $dates[] = [
-                        'date' => $date->format('Y-m-d'),
-                        'day_of_week' => $availability->day_of_week,
-                        'start_time' => $availability->start_time,
-                        'end_time' => $availability->end_time,
-                    ];
-                }
-            }
-        }
+        $dates = $availabilities->map(function ($availability) {
+            return [
+                'date' => $availability->date,
+                'day_of_week' => $availability->day_of_week,
+                'start_time' => $availability->start_time,
+                'end_time' => $availability->end_time,
+            ];
+        });
 
         return view('user.patients.appointment_booking', ['therapist' => $therapist,'servicesList' => $servicesList,'availabilities' => $dates, ]);
 
