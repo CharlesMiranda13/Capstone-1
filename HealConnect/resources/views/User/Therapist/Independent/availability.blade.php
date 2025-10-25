@@ -73,7 +73,7 @@
         <tbody>
             @forelse($availabilities as $availability)
             @php    
-                $bookedCount = \App\Models\Appointment::where('therapist_id', $availability->therapist_id)
+                $bookedCount = \App\Models\Appointment::where('provider_id', $availability->provider_id)
                     ->whereDate('appointment_date', $availability->date)
                     ->count();
             @endphp

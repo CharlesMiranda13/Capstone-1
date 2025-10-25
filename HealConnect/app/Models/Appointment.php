@@ -10,30 +10,32 @@ class Appointment extends Model
 {
     use HasFactory;
 
-    protected $table = 'appointments';
-
     protected $fillable = [
         'patient_id',
-        'therapist_id',
-        'clinic_id',
+        'provider_id',
+        'provider_type',
         'appointment_type',
         'appointment_date',
         'appointment_time',
         'notes',
         'status',
     ];
-    
+
+    /** ---------------- RELATIONSHIPS ---------------- */
     public function patient()
     {
         return $this->belongsTo(User::class, 'patient_id');
     }
-    public function therapist()
+
+    //either IndependetTherapist or Clinic
+    public function provider()
     {
-        return $this->belongsTo(User::class, 'therapist_id');
-    }
-    public function clinic()
-    {
-        return $this->belongsTo(User::class, 'clinic_id');
+        return $this->morphTo();
     }
 
+    public function scopeForProvider($query, $provider)
+    {
+        return $query->where('provider_id', $provider->id)
+                     ->where('provider_type', get_class($provider));
+    }
 }

@@ -11,25 +11,32 @@ use Carbon\Carbon;
 
 class AppointmentController extends Controller
 {
+    // Show all appointments of the logged-in patient
     public function index()
     {
-        $appointments = Appointment::where('patient_id', auth()->id())->get();
+        $appointments = Appointment::where('patient_id', auth()->id())
+            ->with('provider') 
+            ->orderBy('appointment_date', 'desc')
+            ->get();
+
         return view('user.patients.appointments', compact('appointments'));
     }
 
+    // Show booking form for a specific therapist/clinic
     public function create($therapistId)
     {
         $therapist = User::whereIn('role', ['therapist', 'clinic'])
             ->where('id', $therapistId)
             ->firstOrFail();
 
-        $services = DB::table('therapist_services')
-            ->where('therapist_id', $therapist->id)
-            ->value('appointment_type');
 
-        $servicesList = $services ? explode(',', $services) : [];
+        $servicesList = $therapist->services
+            ->pluck('appointment_type')           
+            ->map(fn($s) => explode(',', $s))     
+            ->flatten()                           
+            ->all();
 
-    
+        // Get availabilities for therapist/clinic
         $availabilities = $therapist->availability()
             ->where('is_active', true)
             ->whereDate('date', '>=', now())
@@ -37,7 +44,6 @@ class AppointmentController extends Controller
             ->orderBy('start_time', 'asc')
             ->get(['date', 'day_of_week', 'start_time', 'end_time']);
 
-    
         $dates = $availabilities->map(function ($availability) {
             return [
                 'date' => $availability->date,
@@ -47,10 +53,14 @@ class AppointmentController extends Controller
             ];
         });
 
-        return view('user.patients.appointment_booking', ['therapist' => $therapist,'servicesList' => $servicesList,'availabilities' => $dates, ]);
-
+        return view('user.patients.appointment_booking', [
+            'therapist' => $therapist,
+            'servicesList' => $servicesList,
+            'availabilities' => $dates,
+        ]);
     }
 
+    // Store new appointment request
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -61,10 +71,18 @@ class AppointmentController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        $validated['patient_id'] = auth()->id();
-        $validated['status'] = 'pending';
+        $therapist = User::findOrFail($validated['therapist_id']);
 
-        Appointment::create($validated);
+        Appointment::create([
+            'appointment_type' => $validated['appointment_type'],
+            'appointment_date' => $validated['appointment_date'],
+            'appointment_time' => $validated['appointment_time'],
+            'notes' => $validated['notes'] ?? null,
+            'patient_id' => auth()->id(),
+            'provider_id' => $therapist->id,
+            'provider_type' => get_class($therapist),
+            'status' => 'pending',
+        ]);
 
         return redirect()
             ->route('patient.appointments.index')

@@ -28,7 +28,7 @@ class PatientController extends Controller
         $user = Auth::user();
 
         $appointments = Appointment::where('patient_id', $user->id)
-            ->with('therapist')
+            ->with('provider')
             ->orderBy('appointment_date', 'asc')
             ->take(3)
             ->get();
@@ -41,54 +41,60 @@ class PatientController extends Controller
     // List of Therapists (for logged-in patients)
     public function listOfTherapist(Request $request)
     {
-        $query = \App\Models\User::whereIn('role', ['therapist', 'clinic'])
-            ->where('is_verified_by_admin', true)
+        $query = User::verifiedTherapists()
             ->with('availability')
-            ->with('activeAvailability');
+            ->with('activeAvailability')
+            ->with('services'); // eager load services
 
         if ($request->filled('category')) {
             if ($request->category == 'independent') {
                 $query->where('role', 'therapist');
             } elseif ($request->category == 'clinic') {
                 $query->where('role', 'clinic');
+            }
         }
 
-        if ($request->filled('service')){
-            $query->where('service_type', $request->service);
+        if ($request->filled('service')) {
+            // filter by appointment type using polymorphic relationship
+            $query->whereHas('services', function ($q) use ($request) {
+                $q->where('appointment_type', 'like', '%' . $request->service . '%');
+            });
         }
+
+        $therapists = $query->paginate(10);
+
+        $patientHasApprovedReferral = Referral::where('patient_id', Auth::id())
+            ->where('status', 'approved')
+            ->exists();
+
+        return view('user.patients.listoftherapist', compact('therapists','patientHasApprovedReferral'));
     }
 
-            $therapists = $query->paginate(10);
-            $patientHasApprovedReferral = Referral::where('patient_id', Auth::id())
-                ->where('status', 'approved')
-                ->exists();
-
-            return view('user.patients.listoftherapist', compact('therapists','patientHasApprovedReferral'));
-    }
+    // Show therapist/clinic profile
     public function showProfile($id)
     {
-        $therapist = User::whereIn('role', ['therapist', 'clinic'])
-            ->where('is_verified_by_admin', true)
-            ->with(['availability'])
+        $therapist = User::verifiedTherapists()
+            ->with('availability')
+            ->with('services') // eager load services
             ->findOrFail($id);
 
-        $services = DB::table('therapist_services')
-            ->where('therapist_id', $therapist->id)
-            ->value('appointment_type');
-
-        $servicesList = $services ? explode(',', $services) : [];
+        // Get all appointment types from services
+        $servicesList = $therapist->services
+            ->pluck('appointment_type')
+            ->map(fn($s) => explode(',', $s))
+            ->flatten()
+            ->all();
 
         return view('user.patients.therapist_profile', compact('therapist', 'servicesList'));
     }
 
-
     // Public Therapist List (for non-logged-in users)
     public function publicTherapists(Request $request)
     {
-        $query = User::whereIn('role', ['therapist', 'clinic'])
-            ->where('is_verified_by_admin', true)
+        $query = User::verifiedTherapists()
             ->with('availability')
-            ->with('activeAvailability');
+            ->with('activeAvailability')
+            ->with('services');
 
         if ($request->filled('category')) {
             if ($request->category == 'independent') {
@@ -104,14 +110,20 @@ class PatientController extends Controller
     }
 
     public function publicTherapistProfile($id)
-{
-    $therapist = User::whereIn('role', ['therapist', 'clinic'])
-            ->where('is_verified_by_admin', true)
-            ->with(['availability'])
+    {
+        $therapist = User::verifiedTherapists()
+            ->with('availability')
+            ->with('services')
             ->findOrFail($id);
 
-        return view('view_profile', compact('therapist'));
-}
+        $servicesList = $therapist->services
+            ->pluck('appointment_type')
+            ->map(fn($s) => explode(',', $s))
+            ->flatten()
+            ->all();
+
+        return view('view_profile', compact('therapist', 'servicesList'));
+    }
 
     // Settings Page
     public function settings()
@@ -121,13 +133,13 @@ class PatientController extends Controller
     }
 
     // Update Settings (Profile + Info + Password)
-    public function updateProfile(Request $request) {
+    public function updateProfile(Request $request)
+    {
         $user = auth()->user();
 
         $request->validate([
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
 
         if ($request->hasFile('profile_picture')) {
             $path = $request->file('profile_picture')->store('profile_pictures', 'public');
@@ -139,7 +151,8 @@ class PatientController extends Controller
         return back()->with('success', 'Profile updated successfully!');
     }
 
-    public function updateInfo(Request $request) {
+    public function updateInfo(Request $request)
+    {
         $user = auth()->user();
 
         $request->validate([
@@ -161,7 +174,8 @@ class PatientController extends Controller
         return back()->with('success', 'Info updated successfully!');
     }
 
-    public function updatePassword(Request $request) {
+    public function updatePassword(Request $request)
+    {
         $user = auth()->user();
 
         $request->validate([
@@ -172,5 +186,5 @@ class PatientController extends Controller
         $user->save();
 
         return back()->with('success', 'Password updated successfully!');
-        }
+    }
 }

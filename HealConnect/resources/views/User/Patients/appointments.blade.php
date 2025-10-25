@@ -32,7 +32,7 @@
                     <div class="appointment-card">
                         <div class="appointment-card-header">
                             <div class="therapist-info">
-                                <h3>{{ $appointment->therapist->name ?? 'Unknown Therapist' }}</h3>
+                                <h3>{{ $appointment->provider->name ?? 'Unknown Therapist' }}</h3>
                                 <span class="status {{ strtolower($appointment->status) }}">
                                     {{ ucfirst($appointment->status) }}
                                 </span>

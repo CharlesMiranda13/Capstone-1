@@ -105,7 +105,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])->group(function () {
     Route::get('/home', [PatientController::class, 'dashboard'])->name('home');
     Route::view('/records', 'user.patients.records')->name('records');
-    Route::view('/messages', 'user.patients.messages')->name('messages');
+
+    // Chat
+    Route::get('/messages', [ChatController::class, 'index'])
+        ->middleware(['auth', 'role:patient'])
+        ->name('messages');
 
     //Appointment
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
@@ -139,7 +143,13 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
 Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.status'])->group(function () {
     Route::get('/home', [IndtherapistController::class, 'dashboard'])->name('home');
     Route::view('/records', 'user.therapist.records')->name('records');
-    Route::view('/messages', 'user.therapist.messages')->name('messages');
+
+    // Chat
+    Route::get('/therapist/messages', [ChatController::class, 'index'])
+    ->middleware(['auth'])
+    ->name('messages');
+
+
     Route::view('/clients', 'user.therapist.client')->name('client');
 
     // Therapist Appointments

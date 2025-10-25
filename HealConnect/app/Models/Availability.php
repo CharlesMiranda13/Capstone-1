@@ -10,7 +10,8 @@ class Availability extends Model
     use HasFactory;
 
     protected $fillable = [
-        'therapist_id',
+        'provider_id',  
+        'provider_type',
         'day_of_week',
         'start_time',
         'end_time',
@@ -18,14 +19,15 @@ class Availability extends Model
         'is_active'
     ];
 
-    public function therapist()
+    public function provider()
     {
-        return $this->belongsTo(User::class, 'therapist_id');
+        return $this->morphTo();
     }
 
     public function appointments()
     {
-        return $this->hasMany(Appointment::class, 'therapist_id', 'therapist_id')
-            ->whereDate('appointment_date', $this->date);
+        return $this->hasMany(Appointment::class, 'provider_id', 'provider_id')
+                ->where('provider_type', User::class)
+                ->whereDate('appointment_date', $this->date);
     }
 }

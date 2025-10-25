@@ -66,13 +66,17 @@ class User extends Authenticatable
 
     public function availability()
     {
-        return $this->hasMany(\App\Models\Availability::class, 'therapist_id');
+        return $this->morphMany(\App\Models\Availability::class, 'provider');
     }
 
     public function activeAvailability()
     {
-        return $this->hasMany(\App\Models\Availability::class, 'therapist_id')
+        return $this->morphMany(\App\Models\Availability::class, 'provider')
             ->where('is_active', true);
+    }
+    public function services()
+    {
+         return $this->morphMany(\App\Models\TherapistService::class, 'serviceable');
     }
     
     public function getExperienceYearsAttribute()

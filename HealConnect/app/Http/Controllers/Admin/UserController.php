@@ -46,7 +46,7 @@ class UserController extends Controller
         try{
             Mail::to($user->email)->send(new AccountApprovedMail($user));
         } catch (\Exception $e) {
-            // Log the error or handle it as needed
+
             \Log::error('Failed to send account approval email: ' . $e->getMessage());
         }
 

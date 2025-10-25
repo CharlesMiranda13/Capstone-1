@@ -92,11 +92,11 @@
                                     </a>
                                 @endif
 
-                                @if($appointment->status === 'completed')
+                               {{-- @if($appointment->status === 'completed')
                                     <a href="{{ route('therapist.session.notes', $appointment->id) }}" class="btn btn-sm btn-primary">
                                         <i class="fa fa-file-medical"></i> Add Notes
                                     </a>
-                                 @endif
+                                 @endif --}}
 
                                 <form action="{{ route('therapist.appointments.updateStatus', $appointment->id) }}" method="POST">
                                     @csrf

@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('therapist_services', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('therapist_id')->constrained('users')->onDelete('cascade');
+            $table->unsignedBigInteger('serviceable_id');
+            $table->string('serviceable_type');
             $table->string('appointment_type');
             $table->timestamps();
         });

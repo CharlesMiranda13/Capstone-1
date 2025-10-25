@@ -24,7 +24,7 @@
                 <div class="appointments-list">
                     @forelse ($appointments as $appointment)
                     <div class ="appointment-item">
-                        <p class ="therapist-name">{{$appointment->therapist->name}}</p>
+                        <p class ="therapist-name">{{$appointment->provider->name}}</p>
                         <p class ="appointment-date">
                             {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('F j, Y - g:i A') }}
                         </p>

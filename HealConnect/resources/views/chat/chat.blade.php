@@ -1,6 +1,4 @@
 @php
-    $user = Auth::user();
-
     switch ($user->role) {
         case 'patient':
             $layout = 'layouts.patient_layout';

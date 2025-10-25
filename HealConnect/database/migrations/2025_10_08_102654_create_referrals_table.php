@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('patient_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('therapist_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('clinic_id')->nullable()->constrained('users')->onDelete('set null');
             $table->string('file_path');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->text('remarks')->nullable(); 
