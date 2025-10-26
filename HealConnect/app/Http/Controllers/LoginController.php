@@ -29,17 +29,18 @@ class UserLoginController extends Controller
 
             // Check admin verification + status
             if (!$user->is_verified_by_admin || $user->status !== 'Active') {
+                Auth::logout();
                 return redirect()->route('account.pending');
             }
 
             // Redirect based on role
             switch ($user->role) {
                 case 'patient':
-                    return redirect()->intended('/patient/home');
+                    return redirect()->route('patient.home');
                 case 'clinic':
-                    return redirect()->intended('/clinic/home'); 
-                case 'independent':
-                    return redirect()->intended('/therapist/home'); 
+                    return redirect()->route('clinic.home');
+                case 'therapist':
+                    return redirect()->route('therapist.home');
                 default:
                     Auth::logout();
                     return redirect('/')->withErrors(['role' => 'Unauthorized role.']);

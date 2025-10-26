@@ -21,12 +21,12 @@ class clinicController extends Controller
     public function dashboard()
     {
         $user = Auth::user();
-        $appointments = Appointment::where('clinic_id', $user->id)
+        $appointments = Appointment::where('provider_id', $user->id)
             ->with('patient') // relationship in Appointment model
             ->orderBy('appointment_date', 'asc')
             ->take(3)
             ->get();
-        $appointmentCount = Appointment::where('clinic_id', $user->id)
+        $appointmentCount = Appointment::where('provider_id', $user->id)
             ->distinct('patient_id')
             ->count('patient_id');
               
