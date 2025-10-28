@@ -63,12 +63,6 @@
         @yield('content')
     </div>
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-
-    <script>
-         window.userId = {{ auth()->id() }};
-    </script>
-
-    <script src="{{ asset('js/chat.js') }}"></script>
     @yield('scripts')
 </body>
 </html>
