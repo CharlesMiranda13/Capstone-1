@@ -23,12 +23,27 @@
             </div>
         </div>
         <hr>
-        <a href="{{ route('clinic.home') }}"><i class="fa-solid fa-house"></i> Home</a>
-        <a href="{{ route('clinic.employees') }}"><i class="fa-solid fa-users"></i> Employees</a>
-        <a href="{{ route('clinic.appointments') }}"><i class="fa-regular fa-calendar"></i> Appointment</a>
-        <a href="{{ route('clinic.services') }}"><i class="fa-solid fa-dumbbell"></i> Services</a>
-        <a href="{{ route('clinic.records') }}"><i class="fa-regular fa-file-lines"></i> Records</a>
-        <a href="{{ route('clinic.settings') }}"><i class="fa-solid fa-gear"></i> Setting</a>
+        <a href="{{ route('clinic.home') }}" class="{{request()->routeIs('clinic.home') ? 'active' : '' }}">
+            <i class="fa-solid fa-house"></i> Home
+        </a>
+        <a href="{{ route('clinic.employees') }}" class="{{request()->routeIs('clinic.employees') ? 'active' : '' }}">
+            <i class="fa-solid fa-users"></i> Employees
+        </a>
+        <a href="{{ route('clinic.appointments') }}" class="{{request()->routeIs('clinic.appointments') ? 'active' : '' }}">
+            <i class="fa-regular fa-calendar"></i> Appointment
+        </a>
+        <a href="{{ route('messages') }}" class="{{ request()->routeIs('messages') ? 'active' : '' }}">
+            <i class="fa-regular fa-message"></i> Messages
+        </a>
+        <a href="{{ route('clinic.services') }}" class="{{request()->routeIs('clinic.services') ? 'active' : '' }}">
+            <i class="fa-regular fa-dummbell"></i> Services
+        </a>
+        <a href="{{ route('clinic.records') }}" class="{{request()->routeIs('clinic.records') ? 'active' : '' }}">
+            <i class="fa-regular fa-file-lines"></i> Records
+        </a>
+        <a href="{{ route('clinic.profile') }}" class="{{request()->routeIs('clinic.profile') ? 'active' : '' }}">
+            <i class="fa-solid fa-user-md"></i> Profile
+        </a>
         
         <form action="{{ route('therapist.logout') }}" method="POST" style="display:inline;">
             @csrf

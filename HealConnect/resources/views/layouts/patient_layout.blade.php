@@ -35,7 +35,7 @@
             <i class="fa-regular fa-file-lines"></i> Records
         </a>
 
-        <a href="{{ route('patient.messages') }}" class="{{ request()->routeIs('patient.messages') ? 'active' : '' }}">
+        <a href="{{ route('messages') }}" class="{{ request()->routeIs('messages') ? 'active' : '' }}">
             <i class="fa-regular fa-message"></i> Messages
         </a>
 
@@ -55,6 +55,14 @@
     <div class="main-content">
         @yield('content')
     </div>
+    
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+
+    <script>
+         window.userId = {{ auth()->id() }};
+    </script>
+
+    <script src="{{ asset('js/chat.js') }}"></script>
      @yield('scripts')
 </body>
 </html>
