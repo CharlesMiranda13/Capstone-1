@@ -11,8 +11,6 @@
         padding: 10px;
     }
 }
-
-/* --- MAIN CHAT WRAPPER --- */
 .chat-container {
     display: flex;
     height: 85vh;
