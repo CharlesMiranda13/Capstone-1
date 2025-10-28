@@ -11,6 +11,7 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\Patient\PatientController;
 use App\Http\Controllers\Indtherapist\IndtherapistController;
 use App\Http\Controllers\Clinictherapist\clinicController;
+use App\Http\Controllers\ChatController;
 //use App\Http\Controllers\Patient\ReferralController;
 use App\Http\Controllers\Patient\AppointmentController;
 
@@ -106,10 +107,7 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
     Route::get('/home', [PatientController::class, 'dashboard'])->name('home');
     Route::view('/records', 'user.patients.records')->name('records');
 
-    // Chat
-    Route::get('/messages', [ChatController::class, 'index'])
-        ->middleware(['auth', 'role:patient'])
-        ->name('messages');
+
 
     //Appointment
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
@@ -144,10 +142,6 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
     Route::get('/home', [IndtherapistController::class, 'dashboard'])->name('home');
     Route::view('/records', 'user.therapist.records')->name('records');
 
-    // Chat
-    Route::get('/therapist/messages', [ChatController::class, 'index'])
-    ->middleware(['auth'])
-    ->name('messages');
 
 
     Route::view('/clients', 'user.therapist.client')->name('client');
@@ -169,7 +163,7 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
     // Patient Profile
     Route::get('/patients/{id}/profile', [IndtherapistController::class, 'patientProfile'])->name('patients.profile');
 
-
+    //settings
     Route::get('/settings', [IndtherapistController::class, 'settings'])->name('settings');
     Route::put('/settings/profile', [IndtherapistController::class, 'updateProfile'])->name('update.profile');
     Route::put('/settings/info', [IndtherapistController::class, 'updateInfo'])->name('update.info');
@@ -188,12 +182,26 @@ Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'check.status'])->
     Route::view('/appointments', 'user.therapist.appointment')->name('appointments');
     Route::view('/services', 'user.therapist.services')->name('services');
     Route::view('/records', 'user.therapist.records')->name('records');
-    Route::view('/settings', 'user.therapist.setting')->name('settings');
+    
+    Route::get('/settings', [IndtherapistController::class, 'settings'])->name('settings');
+    Route::put('/settings/profile', [IndtherapistController::class, 'updateProfile'])->name('update.profile');
+    Route::put('/settings/info', [IndtherapistController::class, 'updateInfo'])->name('update.info');
+    Route::put('/settings/password', [IndtherapistController::class, 'updatePassword'])->name('update.password');
+
+    Route::post('/logout', [App\Http\Controllers\Auth\UserAuthController::class, 'logout'])
+    ->name('logout');
 });
 
 Route::get('/check-status', function () {
     return response()->json(['status' => Auth::user()->status]);
 })->middleware('auth')->name('check.status');
+
+/* Messages */
+Route::middleware(['auth', 'check.status'])->group(function () {
+    Route::get('/messages', [ChatController::class, 'index'])->name('messages');
+    Route::get('/messages/fetch', [ChatController::class, 'fetch'])->name('messages.fetch');
+    Route::post('/messages/send', [ChatController::class, 'send'])->name('messages.send');
+});
 
 
 /* Email Verification*/

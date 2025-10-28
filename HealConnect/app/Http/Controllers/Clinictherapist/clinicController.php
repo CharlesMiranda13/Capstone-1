@@ -34,4 +34,10 @@ class clinicController extends Controller
 
     }
 
+    public function settings()
+    {
+        $user = Auth::user();
+        return view('shared.settings', compact('user'));
+    }
+
 }

@@ -41,11 +41,11 @@
         <a href="{{ route('clinic.records') }}" class="{{request()->routeIs('clinic.records') ? 'active' : '' }}">
             <i class="fa-regular fa-file-lines"></i> Records
         </a>
-        <a href="{{ route('clinic.profile') }}" class="{{request()->routeIs('clinic.profile') ? 'active' : '' }}">
+        <a href="{{ route('clinic.settings') }}" class="{{request()->routeIs('clinic.settings') ? 'active' : '' }}">
             <i class="fa-solid fa-user-md"></i> Profile
         </a>
         
-        <form action="{{ route('therapist.logout') }}" method="POST" style="display:inline;">
+        <form action="{{ route('clinic.logout') }}" method="POST" style="display:inline;">
             @csrf
             <button type="submit" class="logout-btn">
                 <i class="fa-solid fa-right-from-bracket"></i> Logout

@@ -1,22 +1,45 @@
-@extends('layouts.patient_layout')
+@php
+    $role = Auth::user()->role;
+
+    switch ($role) {
+        case 'patient':
+            $layouts = 'layouts.patient_layout';
+            break;
+        case 'therapist':
+            $layouts = 'layouts.therapist';
+            break;
+        case 'clinic':
+            $layouts = 'layouts.clinic_layout';
+            break;
+        default:
+            $layouts = 'layouts.app';
+            break;
+    }
+@endphp
+
+@extends($layouts)
 
 @section('title', 'Settings')
+
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/settings.css') }}">
+@endsection
 
 @section('content')
 <main class="settings-main">
     <div class="settings-content">
         <h2 class="settings-title">Account Settings</h2>
 
+        {{-- Profile Picture --}}
         <div class="scard">
             <h4 class="section-title">Profile Picture</h4>
-            <form action="{{ route('patient.update.profile') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route($role . '.update.profile') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
                 <div class="profile-upload">
-                    <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : asset('images/default-avatar.png') }}" alt="Profile Picture"
-                         class="profile-image" 
-                         style="width: 100px; height: 100px;">
+                    <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : asset('images/default-avatar.png') }}"
+                         alt="Profile Picture" class="profile-image" style="width: 100px; height: 100px;">
 
                     <div class="upload-controls">
                         <input type="file" name="profile_picture" accept="image/*" required>
@@ -32,7 +55,7 @@
         {{-- Update Personal Information --}}
         <div class="scard">
             <h4 class="section-title">Personal Information</h4>
-            <form action="{{ route('patient.update.info') }}" method="POST">
+            <form action="{{ route($role . '.update.info') }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -43,14 +66,36 @@
 
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
-                    <input type="tel" name="phone" id="phone" value="{{ old('phone', Auth::user()->phone) }}" 
-                           pattern="^(09\d{9}|\+639\d{9})$" placeholder="09XXXXXXXXX or +639XXXXXXXXX" required>
+                    <input type="tel" name="phone" id="phone"
+                           value="{{ old('phone', Auth::user()->phone) }}"
+                           pattern="^(09\d{9}|\+639\d{9})$"
+                           placeholder="09XXXXXXXXX or +639XXXXXXXXX" required>
                 </div>
 
                 <div class="form-group">
                     <label for="address">Address</label>
                     <input type="text" name="address" id="address" value="{{ old('address', Auth::user()->address) }}" required>
                 </div>
+
+                {{-- Extra Fields Based on Role --}}
+                @if($role === 'therapist')
+                    <div class="form-group">
+                        <label for="specialization">Specialization</label>
+                        <input type="text" name="specialization" id="specialization"
+                               value="{{ old('specialization', Auth::user()->specialization) }}">
+                    </div>
+                @elseif($role === 'clinic')
+                    <div class="form-group">
+                        <label for="clinic_name">Clinic Name</label>
+                        <input type="text" name="clinic_name" id="clinic_name"
+                               value="{{ old('clinic_name', Auth::user()->clinic_name) }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="clinic_license">Clinic License Number</label>
+                        <input type="text" name="clinic_license" id="clinic_license"
+                               value="{{ old('clinic_license', Auth::user()->clinic_license) }}">
+                    </div>
+                @endif
 
                 <button type="submit" class="submit-button success-button">Save Changes</button>
             </form>
@@ -59,7 +104,7 @@
         {{-- Change Password --}}
         <div class="scard">
             <h4 class="section-title">Change Password</h4>
-            <form action="{{ route('patient.update.password') }}" method="POST">
+            <form action="{{ route($role . '.update.password') }}" method="POST">
                 @csrf
                 @method('PUT')
 

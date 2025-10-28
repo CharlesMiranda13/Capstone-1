@@ -124,7 +124,7 @@ class IndtherapistController extends Controller
     public function settings()
     {
         $user = Auth::user();
-        return view('user.therapist.independent.settings', compact('user'));
+        return view('shared.settings', compact('user'));
     }
 
     /** ---------------- APPOINTMENTS ---------------- */

@@ -129,7 +129,7 @@ class PatientController extends Controller
     public function settings()
     {
         $user = Auth::user();
-        return view('user.patients.settings', compact('user'));
+        return view('shared.settings', compact('user'));
     }
 
     // Update Settings (Profile + Info + Password)
