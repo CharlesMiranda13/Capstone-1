@@ -75,166 +75,142 @@
 
 /* Main Layout */
 .welcome-header {
-    margin-bottom: 20px;
-    font-size: 24px;
-    align-items: center;
     display: flex;
     justify-content: space-between;
-    font-weight: bold;
-    color: #333;
-    background-color: #e6e6e6;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    align-items: center;
+    padding: 25px 40px;
+    background: linear-gradient(90deg, #4b8df8, #4ad0a9);
+    color: white;
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .welcome-header h2 {
-    margin: 0;
-    font-size: 28px;
-    color: #333;
-    font-family: "Arial", sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.5px;
 }
 
-.welcome-header img {
-    width: 80px;
-    height: 80px;
+.welcome-header .pic {
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #333;
+    border: 3px solid #fff;
+    transition: transform 0.3s ease;
 }
 
-/* Patient main*/
+.welcome-header .pic:hover {
+    transform: scale(1.05);
+}
+
+/* === Main Layout === */
 .patient-main {
-    margin-left: 40px;
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    padding: 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    padding: 40px;
 }
 
+/* === Left Column === */
 .left-column {
-    flex: 2;
     display: flex;
-    gap: 50px;
+    flex-direction: column;
+    gap: 25px;
 }
 
-.right-column {
-    flex: 1;
-}
-
+/* === Cards === */
 .card,
 .medical-card,
 .notification {
-    flex: 1;
-    background: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    text-align: left;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 25px;
+    transition: all 0.3s ease;
 }
 
 .card:hover,
 .medical-card:hover,
 .notification:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
 }
 
 .card h3,
 .medical-card h3,
 .notification h3 {
+    font-size: 1.2rem;
+    margin-bottom: 18px;
+    color: #2c3e50;
     display: flex;
     align-items: center;
-    margin-top: 0;
-    font-size: 20px;
-    margin-bottom: 15px;
-    font-family: monospace;
+    gap: 10px;
 }
 
-.card i,
-.medical-card i,
-.notification i {
-    margin-right: 10px;
-}
-
-/* === APPOINTMENTS === */
+/* === Appointments List === */
 .appointments-list {
-    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .appointment-item {
-    background-color: #f9f9f9;
-    border-radius: 6px;
-    padding: 10px 15px;
-    margin-top: 8px;
-    transition: background 0.3s ease;
+    background-color: #f8faff;
+    border-left: 4px solid #4b8df8;
+    border-radius: 10px;
+    padding: 15px;
+    transition: all 0.2s ease;
 }
 
 .appointment-item:hover {
-    background-color: #eaf3ff;
+    background-color: #e9f1ff;
 }
 
 .therapist-name {
     font-weight: 600;
-    margin-bottom: 4px;
-    font-size: 15px;
+    color: #34495e;
 }
 
 .appointment-date {
-    color: #666;
-    font-size: 14px;
-    margin: 0;
+    font-size: 0.95rem;
+    color: #555;
 }
 
-/*  MEDICAL RECORDS CARD  */
-.medical-card {
-    flex: 1;
-    background: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    text-align: left;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.notification {
-    background: #ebd72b;
-    border-radius: 8px;
-    padding: 20px;
-    text-align: left;
-}
-
-.notification h3 {
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.notification-item {
-    background-color: #f9f9f9;
-    border-radius: 6px;
-    padding: 10px;
-    margin-bottom: 8px;
-}
-
-.notification-item p {
-    margin: 0;
-    font-size: 14px;
-    color: #333;
+.appointment-type {
+    font-size: 0.9rem;
+    color: #888;
 }
 
 .empty-state {
-    color: #777;
-    font-size: 14px;
     text-align: center;
-    margin-top: 10px;
+    color: #aaa;
+    font-style: italic;
 }
 
-.card:hover,
-.medical-card:hover,
-.notification:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+/* === Medical Card === */
+.medical-card {
+    background-color: #fff;
 }
+
+/* === Right Column === */
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* === Notifications === */
+.notification {
+    position: sticky;
+    top: 40px;
+    background-color: rgb(240, 206, 13);
+}
+
+.notification h3 {
+    color: #2c3e50;
+}
+
+/* === Responsive Design === */
 
 @media (max-width: 768px) {
     .sidebar {

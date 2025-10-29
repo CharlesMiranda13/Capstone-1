@@ -13,6 +13,9 @@
     @yield('styles')
 </head>
 <body>
+    <div class="page-logo">
+        <img src="{{ asset('images/logo1.png') }}" alt="Logo">
+    </div>
     <div class="sidebar">
         <div class="logo">
             <div class="logo-circle">
