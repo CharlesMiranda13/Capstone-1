@@ -22,8 +22,8 @@ class ChatController extends Controller
         ->orWhereHas('receiver', function ($query) use ($user) {
             $query->where('sender_id', $user->id);
         })
-        ->where('id', '!=', $user->id) // Exclude self
-        ->where('role', '!=', 'admin') // Exclude admin if you want
+        ->where('id', '!=', $user->id) 
+        ->where('role', '!=', 'admin') 
         ->get()
         ->map(function ($otherUser) use ($user) {
             // Get latest message exchanged between the two users
