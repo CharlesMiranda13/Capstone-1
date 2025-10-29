@@ -47,9 +47,10 @@
                         <i class="fa-solid fa-calendar-check"></i> Book Appointment
                     </a>
 
-                    <a href="{{ route('patient.appointments.create', $therapist->id) }}" class="btn-book">
-                        <i class="fa-solid fa-comments"></i> Messege Therapist
+                    <a href="{{ route('messages', ['receiver_id' => $therapist->id]) }}" class="btn-book">
+                        <i class="fa-solid fa-comments"></i> Message Therapist
                     </a>
+
                 </div>
             </div>
 

@@ -11,16 +11,43 @@ use App\Models\User;
 class ChatController extends Controller
 {
     // Show chat page
-    public function index()
-    {
-        $user = Auth::user();
+   public function index(Request $request)
+   {
+    $user = Auth::user();
 
-        $conversations = User::where('id', '!=', $user->id)
-            ->where('role', '!=','admin')
-            ->get();
+    // Get users who have exchanged messages with the current user
+    $conversations = User::whereHas('sender', function ($query) use ($user) {
+            $query->where('receiver_id', $user->id);
+        })
+        ->orWhereHas('receiver', function ($query) use ($user) {
+            $query->where('sender_id', $user->id);
+        })
+        ->where('id', '!=', $user->id) // Exclude self
+        ->where('role', '!=', 'admin') // Exclude admin if you want
+        ->get()
+        ->map(function ($otherUser) use ($user) {
+            // Get latest message exchanged between the two users
+            $latestMessage = Message::where(function ($query) use ($user, $otherUser) {
+                    $query->where('sender_id', $user->id)
+                          ->where('receiver_id', $otherUser->id);
+                })
+                ->orWhere(function ($query) use ($user, $otherUser) {
+                    $query->where('sender_id', $otherUser->id)
+                          ->where('receiver_id', $user->id);
+                })
+                ->latest('created_at')
+                ->first();
 
-        return view('shared.chat', compact('user', 'conversations'));
+            $otherUser->latest_message = $latestMessage ? $latestMessage->message : null;
+
+            return $otherUser;
+        });
+    $receiverId = $request->query('receiver_id');
+    $receiver = $receiverId ? User::find($receiverId) : null;
+
+    return view('shared.chat', compact('user', 'conversations', 'receiver'));
     }
+
 
     // Fetch messages between current user and selected user
     public function fetch(Request $request)

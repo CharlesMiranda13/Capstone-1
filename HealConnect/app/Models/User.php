@@ -87,4 +87,16 @@ class User extends Authenticatable
 
         return Carbon::parse($this->start_year)->diffInYears(Carbon::now());
     }
+
+    //message
+    public function sender()
+    {
+        return $this->hasMany(\App\Models\Message::class, 'sender_id');
+    }
+
+    public function receiver()
+    {
+        return $this->hasMany(\App\Models\Message::class, 'receiver_id');
+    }
+
 }
