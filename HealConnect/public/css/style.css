@@ -339,6 +339,7 @@ nav {
 /* Features section */
 .features-section {
     text-align: center;
+    margin-bottom: 90px;
 }
 
 .features-section h2 {
@@ -397,15 +398,78 @@ nav {
 }
 
 /* Footer */
-footer {
-    background-color: #f3f4f6;
-    padding: 20px 0;
+.footer-top-bar {
+    background-color: #6b6b6b;
+    color: #ffffff;
     text-align: center;
-    color: #6b7280;
+    padding: 10px 0;
+    font-size: 13px;
+}
+
+.footer-top-bar a.get-listed-btn {
+    background-color: #62b7c2;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-left: 8px;
+    font-weight: 500;
+    transition: background 0.3s ease;
+}
+
+.footer-top-bar a.get-listed-btn:hover {
+    background-color: #4da4ae;
+}
+
+/* Footer */
+.healconnect-footer {
+    background-color: #016b84;
+    color: #ffffff;
+    padding: 30px 0;
     font-size: 14px;
-    margin-top: 10px;
     width: 100%;
 }
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+    flex-wrap: wrap;
+}
+
+.footer-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.footer-logo {
+    width: 40px;
+    height: auto;
+}
+
+.footer-right ul {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    margin: 0;
+    padding: 0;
+}
+
+.footer-right a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.footer-right a:hover {
+    color: #a8d8e5;
+}
+
 .pending-container {
     display: flex;
     flex-direction: column;
