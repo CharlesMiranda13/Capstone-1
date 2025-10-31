@@ -13,6 +13,7 @@ use App\Models\Referral;
 use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 
 class PatientController extends Controller
@@ -26,8 +27,10 @@ class PatientController extends Controller
     public function dashboard()
     {
         $user = Auth::user();
+        $now = Carbon::now();
 
         $appointments = Appointment::where('patient_id', $user->id)
+            ->whereDate('appointment_date', '>=', $now->toDateString())
             ->with('provider')
             ->orderBy('appointment_date', 'asc')
             ->take(3)

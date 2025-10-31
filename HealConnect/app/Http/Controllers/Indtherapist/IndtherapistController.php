@@ -18,16 +18,21 @@ use Carbon\Carbon;
 
 class IndtherapistController extends Controller
 {
-    /** ---------------- DASHBOARD ---------------- */
+    /**  DASHBOARD */
     public function dashboard()
     {
         $user = Auth::user();
+        $now = Carbon::now();
 
         $appointments = Appointment::forProvider($user)
             ->with('patient')
-            ->orderBy('appointment_date', 'asc')
-            ->take(3)
-            ->get();
+            ->get()
+            ->filter(function ($appointment) use ($now) {
+                $appointmentDateTime = Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time);
+                return $appointmentDateTime->greaterThan($now); 
+            })
+            ->sortBy('appointment_date')
+            ->take(3);
 
         $appointmentCount = Appointment::forProvider($user)
             ->distinct('patient_id')
@@ -36,7 +41,7 @@ class IndtherapistController extends Controller
         return view('user.therapist.independent.independent', compact('user', 'appointments', 'appointmentCount'));
     }
 
-    /** ---------------- AVAILABILITY ---------------- */
+    /**  AVAILABILITY */
     public function availability()
     {
         $user = Auth::user();
@@ -162,14 +167,34 @@ class IndtherapistController extends Controller
     }
 
     public function updateAppointmentStatus(Request $request, $id)
+
     {
         $request->validate([
-            'status' => 'required|in:approved,rejected,completed',
-        ]);
+            'status' => 'required|in:approved,rejected,completed',]);
 
         $appointment = Appointment::forProvider(Auth::user())->findOrFail($id);
         $appointment->status = $request->status;
         $appointment->save();
+
+        // Find related availability
+        $availability = Availability::where('provider_id', $appointment->provider_id)
+            ->whereDate('date', $appointment->appointment_date)
+            ->first();
+
+        if ($availability) {
+            if ($request->status === 'completed') {
+                $availability->status = 'completed';
+                $availability->is_active = false;
+            } elseif (in_array($request->status, ['approved', 'pending'])) {
+                $availability->status = 'active';
+                $availability->is_active = true;
+            } elseif ($request->status === 'rejected') {
+                $availability->status = 'cancelled';
+                $availability->is_active = false;
+            }
+
+            $availability->save();
+        }
 
         return back()->with('success', 'Appointment status updated successfully!');
     }

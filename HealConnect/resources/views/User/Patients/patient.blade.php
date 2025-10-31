@@ -26,7 +26,7 @@
                     <div class ="appointment-item">
                         <p class ="therapist-name">{{$appointment->provider->name}}</p>
                         <p class ="appointment-date">
-                            {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('F j, Y - g:i A') }}
+                            {{ \Carbon\Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time)->format('F j, Y - g:i A') }}
                         </p>
                         <p class = "appointment-type">
                             Type: {{ ucfirst($appointment->appointment_type) }}

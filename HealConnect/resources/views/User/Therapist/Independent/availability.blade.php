@@ -84,12 +84,14 @@
                 <td>{{ date('h:i A', strtotime($availability->end_time)) }}</td>
 
                 <td>
-                    @if($availability->is_active)
+                    @if($availability->status === 'active')
                         <span class="status-active">Active</span>
-                    @else
+                    @elseif($availability->status === 'cancelled')
                         <span class="status-inactive">Cancelled</span>
+                    @elseif($availability->status === 'completed')
+                        <span class="status-completed">Completed</span>
                     @endif
-
+                    
                     {{--Show booking notice--}}
                     @if($bookedCount > 0)
                         <div style="color: red; font-weight: bold; margin-top: 4px;">
