@@ -14,7 +14,7 @@
 <body class="@yield('body-class')">
     @yield('loading')
     
-    <div id="page-content" style="display:none;">
+    <div id="page-content" class="main-wrapper" style="display:none;">
         @include('header/footer.header')
 
         <main>
