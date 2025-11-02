@@ -14,6 +14,7 @@ use App\Http\Controllers\Clinictherapist\clinicController;
 use App\Http\Controllers\ChatController;
 //use App\Http\Controllers\Patient\ReferralController;
 use App\Http\Controllers\Patient\AppointmentController;
+use Illuminate\Support\Facades\Broadcast;
 
 
 /*Public Pages*/
@@ -144,7 +145,8 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
 
 
 
-    Route::view('/clients', 'user.therapist.client')->name('client');
+    Route::get('/clients', [IndtherapistController::class, 'clients'])->name('client');
+
 
     // Therapist Appointments
     Route::get('/appointments', [App\Http\Controllers\Indtherapist\IndtherapistController::class, 'appointments'])
@@ -211,8 +213,12 @@ Route::prefix('verify')->name('verification.')->group(function () {
     Route::post('/resend', [VerificationController::class, 'resend'])->name('resend');
 });
 
+
+
 /*Subscription / Pricing Plans*/
 Route::prefix('subscribe')->name('subscribe.')->group(function () {
     Route::get('/{plan}', [SubscriptionController::class, 'show'])->name('show');
     Route::post('/{plan}', [SubscriptionController::class, 'store'])->name('store');
 });
+
+Broadcast::routes(['middleware' => ['auth:web,admin']]);

@@ -24,9 +24,7 @@
                         <p class="email"><i class="fa-solid fa-envelope"></i> {{ $client->email }}</p>
                         <p class="phone"><i class="fa-solid fa-phone"></i> {{ $client->phone ?? 'Phone not specified' }}</p>
 
-                        <a href="{{ route('therapist.clients.show', $client->id) }}" class="btn btn-primary">
-                            View Profile
-                        </a>
+
                     </div>
                 @endforeach
             </div>

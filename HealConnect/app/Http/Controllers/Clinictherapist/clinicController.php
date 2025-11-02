@@ -22,7 +22,7 @@ class clinicController extends Controller
     {
         $user = Auth::user();
         $appointments = Appointment::where('provider_id', $user->id)
-            ->with('patient') // relationship in Appointment model
+            ->with('patient') 
             ->orderBy('appointment_date', 'asc')
             ->take(3)
             ->get();

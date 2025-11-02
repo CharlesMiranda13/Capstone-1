@@ -78,7 +78,7 @@ class PatientController extends Controller
     {
         $therapist = User::verifiedTherapists()
             ->with('availability')
-            ->with('services') // eager load services
+            ->with('services') 
             ->findOrFail($id);
 
         // Get all appointment types from services

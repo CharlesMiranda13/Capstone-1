@@ -198,6 +198,17 @@ class IndtherapistController extends Controller
 
         return back()->with('success', 'Appointment status updated successfully!');
     }
+    /** ---------------- Clients ---------------- */
+    public function clients() 
+    {
+        $user = Auth::user();
+        // Example: fetch patients assigned to this therapist
+        $clients = User::where('role', 'patient')->get(); 
+        return view('user.therapist.independent.client', compact('user', 'clients'));
+    }
+
+
+
 
     /** ---------------- PROFILE ---------------- */
     public function profile()
