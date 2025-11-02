@@ -27,46 +27,55 @@
                 <p>You don't have any scheduled appointments yet.</p>
             </div>
         @else
-            <div class="appointments-list">
-                @foreach ($appointments as $appointment)
-                    <div class="appointment-card">
-                        <div class="appointment-card-header">
-                            <div class="therapist-info">
-                                <h3>{{ $appointment->provider->name ?? 'Unknown Therapist' }}</h3>
-                                <span class="status {{ strtolower($appointment->status) }}">
-                                    {{ ucfirst($appointment->status) }}
-                                </span>
-                            </div>
-                        </div>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Therapist</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Notes</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($appointments as $appointment)
+                    <tr>
+                        <td>{{ $appointment->provider->name ?? 'Unknown Therapist' }}</td>
 
-                        <div class="appointment-info">
-                            <p><i class="fa-solid fa-stethoscope"></i> 
-                                <strong>Type:</strong> {{ ucfirst($appointment->appointment_type) }}
-                            </p>
-                            <p><i class="fa-regular fa-calendar"></i> 
-                                <strong>Date:</strong> {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}
-                            </p>
-                            <p><i class="fa-regular fa-clock"></i> 
-                                <strong>Time:</strong> {{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}
-                            </p>
+                        <td>{{ ucfirst($appointment->appointment_type) }}</td>
+                        <td>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</td>
 
+                        <td>
                             @if ($appointment->notes)
-                                <p><i class="fa-regular fa-note-sticky"></i> 
-                                    <strong>Notes:</strong> {{ $appointment->notes }}
-                                </p>
+                                {{ $appointment->notes }}
+                            @else
+                                <em>No notes</em>
                             @endif
-                        </div>
+                        </td>
 
-                        <div class="appointment-actions">
+                        <td>
+                            <span class="status {{ strtolower($appointment->status) }}">
+                                {{ ucfirst($appointment->status) }}
+                            </span>
+                        </td>
+
+                        <td>
                             @if ($appointment->status === 'pending')
-                                <button class="btn btn-cancel">
-                                    <i class="fa-solid fa-ban"></i> Cancel Appointment
+                                <button class="btn btn-sm btn-danger">
+                                    <i class="fa-solid fa-ban"></i> Cancel
                                 </button>
+                            @else
+                                —
                             @endif
-                        </div>
-                    </div>
-                @endforeach
-            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
         @endif
     </section>
 </main>
