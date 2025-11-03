@@ -4,8 +4,6 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/patient_appointment.css') }}">
-<link rel="stylesheet" href="{{ asset('css/appointment.css') }}">
-
 @endsection
 
 @section('content')

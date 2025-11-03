@@ -133,14 +133,16 @@ class IndtherapistController extends Controller
     }
 
     /** ---------------- APPOINTMENTS ---------------- */
+
     public function appointments(Request $request)
     {
         $user = Auth::user();
 
-        $query = Appointment::forProvider($user)
+        // Base query for therapist’s appointments
+        $query = Appointment::where('provider_id', $user->id)
             ->with('patient');
 
-        // Search by patient name or appointment type
+        // Search filter
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
@@ -161,10 +163,24 @@ class IndtherapistController extends Controller
             $query->where('appointment_type', $request->input('type'));
         }
 
-        $appointments = $query->orderBy('appointment_date', 'desc')->get();
+        // Get the latest appointment per patient
+        $appointments = $query
+            ->select('appointments.*')
+            ->join(DB::raw('(SELECT MAX(id) as latest_id FROM appointments GROUP BY patient_id) as latest'), 'appointments.id', '=', 'latest.latest_id')
+            ->orderBy('appointment_date', 'desc')
+            ->get();
+
+        // Mark returning patients (those with completed history)
+        foreach ($appointments as $appointment) {
+            $appointment->record_count = Appointment::where('provider_id', $appointment->provider_id)
+            ->where('patient_id', $appointment->patient_id)
+            ->where('status', 'completed')
+            ->count();
+        }
 
         return view('user.therapist.independent.appointment', compact('appointments'));
     }
+
 
     public function updateAppointmentStatus(Request $request, $id)
 

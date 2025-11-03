@@ -1,18 +1,14 @@
-.appointments-main {
-    width: 100%;
-    padding: 40px 20px;
-    display: block;
-    overflow-y: auto;
+.appointments-page {
+    margin-left: 250px;
+    padding: 2rem;
     min-height: 100vh;
 }
 
 .appointments-container {
-    max-width: 1100px;
-    margin: 0 auto;
-    background: #fff;
+    background: #ffffff;
     border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    padding: 30px;
+    padding: 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .appointments-container h2 {

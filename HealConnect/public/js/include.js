@@ -1,6 +1,3 @@
-// =========================
-// Dynamic HTML Include Loader
-// =========================
 document.addEventListener("DOMContentLoaded", function() {
   document.querySelectorAll("[data-include]").forEach(el => {
     const file = el.getAttribute("data-include");
@@ -16,16 +13,15 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 
-// =========================
 // Hamburger Menu
-// =========================
+
 function toggleMenu() {
   document.getElementById("navbar").classList.toggle("show");
 }
 
-// =========================
+
 // Tab Switching
-// =========================
+
 document.addEventListener("DOMContentLoaded", () => {
   const tabBtns = document.querySelectorAll(".tab-btn");
   const tabContents = document.querySelectorAll(".tab-content");
@@ -42,9 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// =========================
-// Flip Card Animation
-// =========================
+
 document.addEventListener("DOMContentLoaded", () => {
   const flipCard = document.querySelector(".flip-card");
   if (flipCard) {
@@ -54,16 +48,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// =========================
-// Card/Table View Toggle for Patients Page
-// =========================
+
+// Card/Table View Toggle for Clients Page
+
 document.addEventListener("DOMContentLoaded", () => {
   const cardBtn = document.getElementById("cardViewBtn");
   const tableBtn = document.getElementById("tableViewBtn");
   const cardView = document.getElementById("cardView");
   const tableView = document.getElementById("tableView");
 
-  // Prevent errors if not on the patients page
+  // Prevent errors if not on the Clients page
   if (!cardBtn || !tableBtn || !cardView || !tableView) return;
 
   cardBtn.addEventListener("click", () => {
