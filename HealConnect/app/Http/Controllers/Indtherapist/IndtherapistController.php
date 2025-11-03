@@ -202,9 +202,8 @@ class IndtherapistController extends Controller
     public function clients() 
     {
         $user = Auth::user();
-        // Example: fetch patients assigned to this therapist
-        $clients = User::where('role', 'patient')->get(); 
-        return view('user.therapist.independent.client', compact('user', 'clients'));
+        $patients = User::where('role', 'patient')->get(); 
+        return view('user.therapist.independent.client', compact('user', 'patients'));
     }
 
 
