@@ -24,21 +24,32 @@
   </div>
 </section>
 
-<section class="physical-therapy-section">
-  <div class="physical-therapy">
-    <h2>What is Physical Therapy?</h2>
-    <p>
-      Physical Therapy (PT) is a healthcare practice focused on helping individuals 
-      restore movement, relieve pain, and recover from injuries or surgeries. 
-      It also improves strength, balance, and overall quality of life — empowering 
-      people to stay active and independent.
-    </p>
+<section class="what-is-pt">
+  <div class="container">
+    <div class="pt-content">
+      <div class="pt-text">
+        <h2>What is Physical Therapy?</h2>
+        <p>
+          Physical Therapy, also called Physiotherapy, is a healthcare profession aimed at developing, maintaining, and restoring 
+          a person's maximum movement and functional ability throughout their lifespan. Through evidence-based interventions, 
+          it seeks to improve quality of life and address conditions where movement and function 
+          are limited or threatened due to injury, illness, disease, or aging.
+        </p>
+        <h2> Goals and Benefits of Physical Therapy </h2>
+        <ul>
+          <li> Restores physical function and mobility</li>
+          <li> Reduces pain through guided therapy</li>
+          <li> Prevents future injuries</li>
+          <li> Improves overall quality of life</li>
+        </ul>
+        <a href="{{ url('/More') }}" class="learn-more-btn">Learn More</a>
+      </div>
+      <div class="pt-image">
+        <img src="{{ asset('images/physicaltherapy.jpg') }}" alt="Physical Therapy session">
+      </div>
+    </div>
   </div>
-
-  <div class="physical-therapy-img">
-    <img src="{{ asset('images/physicaltherapy.jpg') }}" alt="Physical Therapy">
-  </div>
-</section> 
+</section>
 
 <section class="features-section">
   <h2>Why Choose HealConnect?</h2>

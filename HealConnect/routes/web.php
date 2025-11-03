@@ -22,6 +22,9 @@ use Illuminate\Support\Facades\Broadcast;
 Route::view('/', 'index')->name('home');
 Route::view('/loading', 'loading');
 Route::view('/about', 'about')->name('about');
+Route::get('/More', function () {
+    return view('more');
+});
 Route::view('/services', 'services')->name('services');
 Route::view('/pricing', 'pricing')->name('pricing');
 Route::view('/contact', 'contact')->name('contact');
