@@ -69,6 +69,7 @@
     </div>
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script src="{{ asset('js/include.js') }}"></script>
+    <script src="{{ asset('js/modal.js') }}"></script>
     @yield('scripts')
 </body>
 </html>

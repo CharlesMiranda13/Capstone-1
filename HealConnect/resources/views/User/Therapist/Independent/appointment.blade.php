@@ -109,12 +109,19 @@
                                     </form>
                                 </td>
                                 <td>
-                                    <a href="{{ route('therapist.patients.profile', $appointment->patient->id) }}" class="btn btn-info btn-sm">
+                                    <button class="openModalBtn" data-link="{{ route('therapist.patients.profile', $appointment->patient->id) }}">
                                         <i class="fa fa-user"></i>
-                                    </a>
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
+                        <div id="patientModal" class="modal">
+                            <div class="modal-content">
+                                <span class="close">&times;</span>
+                                <iframe id="profileFrame" src="" frameborder="0" style="width:100%; height:80vh;"></iframe>
+                            </div>
+                        </div>
+
                     </tbody>
                 </table>
             </div>
