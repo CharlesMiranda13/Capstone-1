@@ -118,7 +118,7 @@
                         <div id="patientModal" class="modal">
                             <div class="modal-content">
                                 <span class="close">&times;</span>
-                                <iframe id="profileFrame" src="" frameborder="0" style="width:100%; height:80vh;"></iframe>
+                                <div id="modal-body"></div>
                             </div>
                         </div>
 

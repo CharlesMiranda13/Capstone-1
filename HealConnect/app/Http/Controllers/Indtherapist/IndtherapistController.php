@@ -296,6 +296,7 @@ class IndtherapistController extends Controller
     public function patientProfile($id)
     {
         $patient = User::where('role', 'patient')->findOrFail($id);
-        return view('user.therapist.independent.patient_profile_content', compact('patient'));
+        $appointments = $patient->appointments ?? [];
+        return view('user.therapist.independent.patient_profile', compact('patient', 'appointments'));
     }
 }

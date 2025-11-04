@@ -1,26 +1,26 @@
-@extends('layouts.therapist')
+@if (!request()->has('embed'))
+    @extends('layouts.therapist')
 
-@section('title', 'Patient Profile')
+    @section('title', 'Patient Profile')
 
-@section('styles')
-<link rel="stylesheet" href="{{ asset('css/profile.css') }}">
-@endsection
+    @section('styles')
+        <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+    @endsection
 
-@section('content')
+    @section('content')
+@endif
+
 <main class="therapist-profile">
     <div class="container">
-
         <div class="header">
             <h2>{{ $patient->name }}'s Profile</h2>
         </div>
 
-        {{-- PROFILE CARD --}}
         <section class="profile-card">
-
-            {{-- LEFT: PROFILE INFO --}}
+            {{-- LEFT SIDE --}}
             <div class="profile-left">
-                <div class="profile-pic"> <img src="{{ $patient->profile_picture ? asset('storage/' . $patient->profile_picture) 
-                        : asset('images/default-patient.png') }}" 
+                <div class="profile-pic">
+                    <img src="{{ $patient->profile_picture ? asset('storage/' . $patient->profile_picture) : asset('images/default-patient.png') }}" 
                         alt="{{ $patient->name }}">
                 </div>
 
@@ -36,16 +36,15 @@
                     </p>
                 </div>
 
-                <div class ="app">
+                <div class="app">
                     <a href="{{ route('messages', ['receiver_id' => $patient->id]) }}" class="btn-book">
                         <i class="fa-solid fa-comments"></i> Message Therapist
                     </a>
                 </div>
             </div>
 
+            {{-- RIGHT SIDE --}}
             <div class="profile-right">
-
-                {{-- HEALTH INFO / NOTES --}}
                 <div class="card-section">
                     <h4><i class="fa-solid fa-notes-medical"></i> Health Information</h4>
                     @if($patient->medical_notes)
@@ -55,7 +54,6 @@
                     @endif
                 </div>
 
-                {{-- APPOINTMENT HISTORY --}}
                 <div class="card-section">
                     <h4><i class="fa-solid fa-calendar-days"></i> Appointment History</h4>
                     @if(isset($appointments) && count($appointments) > 0)
@@ -72,9 +70,11 @@
                         <p>No past appointments found.</p>
                     @endif
                 </div>
-
             </div>
         </section>
     </div>
 </main>
-@endsection
+
+@if (!request()->has('embed'))
+    @endsection
+@endif
