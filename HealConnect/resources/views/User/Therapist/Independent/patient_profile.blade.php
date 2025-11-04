@@ -38,7 +38,7 @@
 
                 <div class="app">
                     <a href="{{ route('messages', ['receiver_id' => $patient->id]) }}" class="btn-book">
-                        <i class="fa-solid fa-comments"></i> Message Therapist
+                        <i class="fa-solid fa-comments"></i> Message
                     </a>
                 </div>
             </div>
