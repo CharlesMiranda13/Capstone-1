@@ -240,94 +240,116 @@ nav {
     background-color: #ffffff;
 }
 
-.pt-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    gap: 50px;
-    max-width: 1200px;
+.what-is-pt .container {
+    max-width: 1500px;
     margin: 0 auto;
-    padding: 0 40px;
+}
+
+.pt-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4rem;
+    flex-wrap: wrap;
+}
+
+.pt-text {
+    flex: 1 1 450px;
 }
 
 .pt-text h2 {
     font-size: 2.5rem;
     color: #1f2937;
-    margin-bottom: 20px;
-    font-weight: 700;
-}
-
-.pt-text h3 {
-    font-size: 1.5rem;
-    color: #374151;
-    margin-top: 30px;
+    margin-bottom: 15px;
 }
 
 .pt-text p {
+    line-height: 1.7;
     color: #4b5563;
-    line-height: 1.8;
-    font-size: 1.1rem;
+    margin-bottom: 25px;
+    text-align: justify;
+    font-size: 1.8rem;
 }
 
 .pt-text ul {
-    margin: 20px 0;
+    margin-bottom: 25px;
     padding-left: 20px;
+}
+
+.pt-text li {
+    line-height: 1.7;
+    font-size: 1.8rem;
     color: #374151;
-}
-
-.pt-text ul li {
-    margin-bottom: 10px;
-    position: relative;
-}
-
-.pt-text ul li::before {
-    content: "✔";
-    color: #22c55e;
-    margin-right: 10px;
 }
 
 .learn-more-btn {
     display: inline-block;
     background-color: #2563eb;
-    color: white;
-    padding: 12px 25px;
-    border-radius: 8px;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 6px;
     text-decoration: none;
-    font-weight: 500;
-    transition: 0.3s ease;
-    margin-top: 20px;
-    box-shadow: 0 3px 6px rgba(19, 97, 243, 0.2);
+    font-weight: 600;
+    transition: background 0.3s;
 }
 
 .learn-more-btn:hover {
     background-color: #1e40af;
-    transform: translateY(-2px);
+}
+
+.pt-image {
+    flex: 1 1 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .pt-image img {
     width: 100%;
-    border-radius: 15px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    transition: transform 0.4s ease;
+    height: auto;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
-.pt-image img:hover {
-    transform: scale(1.03);
-}
-
-/* Responsive Design */
-@media (max-width: 900px) {
-    .pt-content {
-        grid-template-columns: 1fr;
+@media (max-width: 768px) {
+    /* Make the 'What is Physical Therapy' section look like main section */
+    .what-is-pt {
+        padding: 30px 20px;
         text-align: center;
+    }
+
+    .pt-content {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
     }
 
     .pt-text {
         order: 2;
+        max-width: 100%;
+    }
+
+    .pt-text h2 {
+        font-size: 1.8rem;
+    }
+
+    .pt-text p,
+    .pt-text li {
+        font-size: 1.1rem;
+        text-align: center;
     }
 
     .pt-image {
         order: 1;
+        width: 90%;
+    }
+
+    .pt-image img {
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
     }
 }
 
@@ -425,14 +447,21 @@ nav {
 }
 
 .intro-section {
-    background: linear-gradient(135deg, #1361f3 0%, #5b9dfc 100%);
-    color: white;
-    padding: 100px 20px 80px;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: #fff;
     text-align: center;
+    padding: 80px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
+.intro-section .container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
 .intro-section h1 {
-    font-size: 2.8rem;
+    font-size: 4.5rem;
     font-weight: 700;
     margin-bottom: 15px;
 }
@@ -440,8 +469,9 @@ nav {
 .intro-section .subtitle {
     max-width: 700px;
     margin: 0 auto;
-    font-size: 1.1rem;
+    font-size: 2.1rem;
     opacity: 0.9;
+    max-width: 1100px;
 }
 
 .content-section {
