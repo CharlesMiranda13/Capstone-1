@@ -32,7 +32,10 @@
             <i class="fa-solid fa-house"></i> Home
         </a>
         <a href="{{ route('clinic.employees') }}" class="{{request()->routeIs('clinic.employees') ? 'active' : '' }}">
-            <i class="fa-solid fa-users"></i> Employees
+            <i class="fa-solid fa-user-md"></i> Employees
+        </a>        
+        <a href="{{ route('therapist.client') }}" class="{{ request()->routeIs('therapist.client') ? 'active' : '' }}">
+            <i class="fa-solid fa-users"></i> Clients
         </a>
         <a href="{{ route('clinic.appointments') }}" class="{{request()->routeIs('clinic.appointments') ? 'active' : '' }}">
             <i class="fa-regular fa-calendar"></i> Appointment
@@ -41,7 +44,7 @@
             <i class="fa-regular fa-message"></i> Messages
         </a>
         <a href="{{ route('clinic.services') }}" class="{{request()->routeIs('clinic.services') ? 'active' : '' }}">
-            <i class="fa-regular fa-dummbell"></i> Services
+            <i class="fa-regular fa-dumbbell"></i> Services
         </a>
         <a href="{{ route('clinic.records') }}" class="{{request()->routeIs('clinic.records') ? 'active' : '' }}">
             <i class="fa-regular fa-file-lines"></i> Records

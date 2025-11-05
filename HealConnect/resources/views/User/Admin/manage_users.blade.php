@@ -7,13 +7,15 @@
         <div class="filters mb-3">
             <form method="GET" action="{{ route('admin.manage-users') }}" class="d-flex gap-2">
                 <input type="text" name="search" placeholder="Search users..." value="{{ request('search') }}">
-                <select name="role">
+                <select name="role" onchange="this.form.submit()">
                     <option value="all" {{ request('role') == 'all' ? 'selected' : '' }}>All</option>
                     <option value="patient" {{ request('role') == 'patient' ? 'selected' : '' }}>Patients</option>
                     <option value="therapist" {{ request('role') == 'therapist' ? 'selected' : '' }}>Therapists</option>
                     <option value="clinic" {{ request('role') == 'clinic' ? 'selected' : '' }}>Clinics</option>
                 </select>
-                <button type="submit" class="btn btn-primary btn-sm">Filter</button>
+                <button type="submit" class="btn-search">
+                    <i class="fa fa-search"></i>
+                </button>
             </form>
         </div>
 

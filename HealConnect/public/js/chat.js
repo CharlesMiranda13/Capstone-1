@@ -8,6 +8,25 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let currentReceiverId = null;
 
+    /** Render a single message bubble */
+    function renderMessage(msg, isOwn) {
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('message', isOwn ? 'sent' : 'received');
+
+        const time = new Date(msg.created_at || Date.now()).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        wrapper.innerHTML = `
+            <div class="bubble">
+                <p class="text">${msg.message}</p>
+                <span class="timestamp">${time}</span>
+            </div>
+        `;
+        chatMessages.appendChild(wrapper);
+    }
+
     /** Load messages for the selected receiver */
     function loadMessages(receiverId) {
         fetch(`/messages/fetch?receiver_id=${receiverId}`)
@@ -17,12 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (data.length === 0) {
                     chatMessages.innerHTML = `<p class="no-messages">No messages yet. Start the conversation!</p>`;
                 } else {
-                    data.forEach(msg => {
-                        const div = document.createElement('div');
-                        div.classList.add('message', msg.sender_id === window.userId ? 'sent' : 'received');
-                        div.innerHTML = `<p>${msg.message}</p>`;
-                        chatMessages.appendChild(div);
-                    });
+                    data.forEach(msg => renderMessage(msg, msg.sender_id === window.userId));
                 }
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             });
@@ -32,6 +46,9 @@ document.addEventListener('DOMContentLoaded', function () {
     chatList.addEventListener('click', e => {
         const chatItem = e.target.closest('.chat-item');
         if (!chatItem) return;
+
+        document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
+        chatItem.classList.add('active');
 
         const receiverId = chatItem.dataset.userId;
         const receiverName = chatItem.querySelector('h4').textContent;
@@ -60,25 +77,16 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(res => res.json())
         .then(data => {
             messageInput.value = '';
-
-
-            const msg = data.message;
-            const div = document.createElement('div');
-            div.classList.add('message', 'sent');
-            div.innerHTML = `<p>${msg.message}</p>`;
-            chatMessages.appendChild(div);
+            renderMessage(data.message, true);
             chatMessages.scrollTop = chatMessages.scrollHeight;
-
         });
     });
 
     /** Initialize Pusher (real-time) */
-    Pusher.logToConsole = true; //debugger
-
     const pusher = new Pusher(window.pusherKey, {
         cluster: window.pusherCluster,
         forceTLS: true,
-        authEndpoint: '/broadcasting/auth', 
+        authEndpoint: '/broadcasting/auth',
         auth: {
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
@@ -88,36 +96,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const channel = pusher.subscribe(`private-healconnect-chat.${window.userId}`);
 
-    pusher.connection.bind('connected', () => {
-        console.log('Pusher connected');
-    });
-
-    channel.bind('pusher:subscription_succeeded', () => {
-        console.log(`Subscribed to private-healconnect-chat.${window.userId}`);
-    });
-
     channel.bind('message.sent', function (data) {
         const msg = data.message;
-        console.log(" Message via Pusher:", msg);
+        if (msg.sender_id === window.userId) return; // prevent duplicates
 
-        // Ignore duplicates (sender already appends their own message)
-        if (msg.sender_id === window.userId) return;
-
-        //  If current chat is open and matches sender, append immediately
         if (currentReceiverId == msg.sender_id) {
-            const div = document.createElement('div');
-            div.classList.add('message', 'received');
-            div.innerHTML = `<p>${msg.message}</p>`;
-            chatMessages.appendChild(div);
+            renderMessage(msg, false);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         } else {
             const chatItem = document.querySelector(`.chat-item[data-user-id="${msg.sender_id}"]`);
-            if (chatItem) {
-                chatItem.classList.add('unread');
-            }
+            if (chatItem) chatItem.classList.add('unread');
         }
     });
-
 
     /** Auto-open chat if ?receiver_id=### in URL */
     const urlParams = new URLSearchParams(window.location.search);
@@ -125,13 +115,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (receiverIdFromUrl) {
         currentReceiverId = receiverIdFromUrl;
-        //find receiver in sidebar
         const chatItem = document.querySelector(`.chat-item[data-user-id="${receiverIdFromUrl}"]`);
         if (chatItem) {
             const receiverName = chatItem.querySelector('h4').textContent;
             const receiverImage = chatItem.querySelector('img').src;
             chatUsername.textContent = receiverName;
             chatUserImage.src = receiverImage;
+            chatItem.classList.add('active');
         }
         loadMessages(receiverIdFromUrl);
     }

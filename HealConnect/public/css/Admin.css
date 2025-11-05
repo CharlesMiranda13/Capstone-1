@@ -1,7 +1,9 @@
 .sidebar {
     width: 250px;
-    background-color: rgb(238, 222, 202);
-    color: white;
+    background-color: #f4f7fb;
+    border-right: none;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.08);
+    color: #1b1a1a;
     height: 100vh;
     position: fixed;
     top: 0;
@@ -9,47 +11,79 @@
     display: flex;
     flex-direction: column;
     padding-top: 20px;
-    box-shadow: 5px 0 5px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    z-index: 1000;
 }
+
 .sidebar h1 {
     text-align: center;
     margin-bottom: 30px;
     font-size: 30px;
 }
+
 .sidebar a {
-    color: black;
+    color: #1f2d3d;
+    font-weight: 500;
     text-decoration: none;
     padding: 15px 20px;
     display: block;
-    transition: background 0.3s ease;
+    transition: background 0.3s ease, color 0.3s ease;
 }
+
+.sidebar a:hover,
+.sidebar a.active {
+    background: linear-gradient(90deg, #4b8df8, #4ad0a9);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(75, 141, 248, 0.25);
+}
+
+.sidebar a i {
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.sidebar a:hover i,
+.sidebar a.active i {
+    color: #ffffff;
+}
+
+.sidebar form {
+    margin: 0;
+    padding: 0;
+}
+
+.sidebar .logout-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 15px 20px;
+    color: #333;
+    font: inherit;
+    cursor: pointer;
+    display: block;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.sidebar .logout-btn:hover {
+    background: linear-gradient(90deg, #4b8df8, #4ad0a9);
+    color: white;
+}
+
 .admin-main {
     margin-left: 150px;
     padding: 0 30px;
-    background-color: #fdf1e4;
+    background-color: #f3f4f6;
     min-height: 100vh;
     box-sizing: border-box;
 }
 .admin-main-manage-users {
     margin-left: 120px;
     padding: 0 30px;
-    background-color: #fdf1e4;
     min-height: 100vh;
     box-sizing: border-box;
 }
-.sidebar a:hover {
-    background-color: #72aceb;
-    color: white;
-}
-.sidebar a.active {
-    background: #007bff;
-    color: #fff;
-    font-weight: bold;
-}
 
-.sidebar i {
-    margin-right: 20px;
-}
 .dashboard-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -124,24 +158,6 @@
 .user-table th {
     background-color: #f4f4f4;
     font-weight: 600;
-}
-
-.sidebar .logout-btn {
-    width: 100%;
-    background: none;
-    border: none;
-    text-align: left;
-    padding: 15px 20px;
-    color: #333;
-    font: inherit;
-    cursor: pointer;
-    display: block;
-    transition: background 0.3s ease, color 0.3s ease;
-}
-
-.sidebar .logout-btn:hover {
-    background-color: #72aceb;
-    color: white;
 }
 
 /*User Details ito ha*/

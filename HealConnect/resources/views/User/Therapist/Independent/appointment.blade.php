@@ -91,11 +91,6 @@
                                 </td>
                                 <td>{{ $appointment->record_count > 0 ? $appointment->record_count : '0' }}</td>
                                 <td class="action-cell">
-                                    @if($appointment->appointment_type === 'online' && $appointment->status === 'approved')
-                                        <a href="{{ $appointment->session_link }}" target="_blank" class="btn btn-success btn-sm">
-                                            <i class="fa fa-video"></i> Join
-                                        </a>
-                                    @endif
 
                                     <form action="{{ route('therapist.appointments.updateStatus', $appointment->id) }}" method="POST" class="status-form">
                                         @csrf

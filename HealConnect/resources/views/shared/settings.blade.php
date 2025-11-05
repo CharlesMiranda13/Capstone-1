@@ -59,9 +59,15 @@
                 @csrf
                 @method('PUT')
 
+                {{-- Full Name / Clinic Name --}}
                 <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" name="name" id="name" value="{{ old('name', Auth::user()->name) }}" required>
+                    <label for="name">{{ $role === 'clinic' ? 'Clinic Name' : 'Full Name' }}</label>
+                    <input type="text"
+                        name="name"
+                        id="name"
+                        value="{{ old('name', Auth::user()->name) }}"
+                        placeholder="{{ $role === 'clinic' ? 'Enter Clinic Name' : 'Enter Full Name' }}"
+                        required>
                 </div>
 
                 <div class="form-group">
@@ -85,11 +91,6 @@
                                value="{{ old('specialization', Auth::user()->specialization) }}">
                     </div>
                 @elseif($role === 'clinic')
-                    <div class="form-group">
-                        <label for="clinic_name">Clinic Name</label>
-                        <input type="text" name="clinic_name" id="clinic_name"
-                               value="{{ old('clinic_name', Auth::user()->clinic_name) }}">
-                    </div>
                     <div class="form-group">
                         <label for="clinic_license">Clinic License Number</label>
                         <input type="text" name="clinic_license" id="clinic_license"
