@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Indtherapist;
 
+use App\Http\Controllers\TherapistController\ptController;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -16,30 +17,15 @@ use App\Models\Availability;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-class IndtherapistController extends Controller
+class IndtherapistController extends ptController
 {
     /**  DASHBOARD */
     public function dashboard()
     {
-        $user = Auth::user();
-        $now = Carbon::now();
-
-        $appointments = Appointment::forProvider($user)
-            ->with('patient')
-            ->get()
-            ->filter(function ($appointment) use ($now) {
-                $appointmentDateTime = Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time);
-                return $appointmentDateTime->greaterThan($now); 
-            })
-            ->sortBy('appointment_date')
-            ->take(3);
-
-        $appointmentCount = Appointment::forProvider($user)
-            ->distinct('patient_id')
-            ->count('patient_id');
-
-        return view('user.therapist.independent.independent', compact('user', 'appointments', 'appointmentCount'));
+        $data = $this->getDashboardData();
+        return view('user.therapist.independent.independent', $data);
     }
+
 
     /**  AVAILABILITY */
     public function availability()

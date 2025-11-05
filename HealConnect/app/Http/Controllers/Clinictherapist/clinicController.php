@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Clinictherapist;
 
+use App\Http\Controllers\TherapistController\ptController;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -16,28 +17,13 @@ use App\Models\Availability;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
-class clinicController extends Controller
+class ClinicController extends ptController
 {
     public function dashboard()
     {
-        $user = Auth::user();
-        $appointments = Appointment::where('provider_id', $user->id)
-            ->with('patient') 
-            ->orderBy('appointment_date', 'asc')
-            ->take(3)
-            ->get();
-        $appointmentCount = Appointment::where('provider_id', $user->id)
-            ->distinct('patient_id')
-            ->count('patient_id');
-              
-        return view('user.therapist.clinic.clinic', compact('user', 'appointments', 'appointmentCount'));
+        $data =$this->getDashboardData();
+        return view ('user.therapist.clinic.clinic', $data);
 
-    }
-
-    public function settings()
-    {
-        $user = Auth::user();
-        return view('shared.settings', compact('user'));
     }
 
 }
