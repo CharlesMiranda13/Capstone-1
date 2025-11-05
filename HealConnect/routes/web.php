@@ -188,10 +188,10 @@ Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'check.status'])->
     Route::view('/services', 'user.therapist.services')->name('services');
     Route::view('/records', 'user.therapist.records')->name('records');
     
-    Route::get('/settings', [IndtherapistController::class, 'settings'])->name('settings');
-    Route::put('/settings/profile', [IndtherapistController::class, 'updateProfile'])->name('update.profile');
-    Route::put('/settings/info', [IndtherapistController::class, 'updateInfo'])->name('update.info');
-    Route::put('/settings/password', [IndtherapistController::class, 'updatePassword'])->name('update.password');
+    Route::get('/settings', [clinicController::class, 'settings'])->name('settings');
+    Route::put('/settings/profile', [clinicController::class, 'updateProfile'])->name('update.profile');
+    Route::put('/settings/info', [clinicController::class, 'updateInfo'])->name('update.info');
+    Route::put('/settings/password', [clinicController::class, 'updatePassword'])->name('update.password');
 
     Route::post('/logout', [App\Http\Controllers\Auth\UserAuthController::class, 'logout'])
     ->name('logout');
