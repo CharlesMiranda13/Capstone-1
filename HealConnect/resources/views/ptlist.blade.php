@@ -5,29 +5,29 @@
 @section('content')
 <main class="Therapist-main">
     <div class="ptlist">
-    <h2 class="therapist-title">Verified Therapists / Clinics </h2>
+        <h2 class="therapist-title">VERIFIED THERAPISTS / CLINICS</h2>
 
-    <div class="filter-tabs">
-        <span class="service-label">Category:</span>
-        <a href="{{ route('ptlist') }}" 
-           class="{{ request('category') == '' ? 'active' : '' }}">All</a> |
-        <a href="{{ route('ptlist', ['category' => 'independent']) }}" 
-           class="{{ request('category') == 'independent' ? 'active' : '' }}">Independent Therapist</a> |
-        <a href="{{ route('ptlist', ['category' => 'clinic']) }}" 
-           class="{{ request('category') == 'clinic' ? 'active' : '' }}">Clinic</a>
+        <div class="filter-tabs">
+            <span class="service-label">Category:</span>
+            <a href="{{ route('ptlist') }}" 
+            class="{{ request('category') == '' ? 'active' : '' }}">All</a> |
+            <a href="{{ route('ptlist', ['category' => 'independent']) }}" 
+            class="{{ request('category') == 'independent' ? 'active' : '' }}">Independent Therapist</a> |
+            <a href="{{ route('ptlist', ['category' => 'clinic']) }}" 
+            class="{{ request('category') == 'clinic' ? 'active' : '' }}">Clinic</a>
+        </div>
+
+        {{-- Services Tabs --}}
+        <div class="filter-services">
+            <span class="service-label">Services:</span>
+            <a href="{{ route('ptlist', ['service' => 'home']) }}" 
+            class="{{ request('service') == 'home' ? 'active' : '' }}">In-home</a> |
+            <a href="{{ route('ptlist', ['service' => 'online']) }}" 
+            class="{{ request('service') == 'online' ? 'active' : '' }}">Online</a> |
+            <a href="{{ route('ptlist', ['service' => 'clinic']) }}" 
+            class="{{ request('service') == 'clinic' ? 'active' : '' }}">Clinic</a>
+        </div>
     </div>
-
-    {{-- Services Tabs --}}
-    <div class="filter-services">
-        <span class="service-label">Services:</span>
-        <a href="{{ route('ptlist', ['service' => 'home']) }}" 
-           class="{{ request('service') == 'home' ? 'active' : '' }}">In-home</a> |
-        <a href="{{ route('ptlist', ['service' => 'online']) }}" 
-           class="{{ request('service') == 'online' ? 'active' : '' }}">Online</a> |
-        <a href="{{ route('ptlist', ['service' => 'clinic']) }}" 
-           class="{{ request('service') == 'clinic' ? 'active' : '' }}">Clinic</a>
-    </div>
-
     @if($therapists->count() > 0)
         <div class="therapist-cards-container">
             @foreach($therapists as $therapist)

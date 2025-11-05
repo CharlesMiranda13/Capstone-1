@@ -35,12 +35,18 @@
 
 /* ✅ Base Styles (your existing code) */
 .ptlist {
-    padding: 40px 20px;
-    max-width: 1200px;
+    padding-bottom: 10px; 
+    width: 100vw;
     margin: 0 auto;
     font-family: "Poppins", sans-serif;
     color: #333;
+
+    border: 2px solid #016b84;
+    background-color: #ffffff;
+    box-sizing: border-box;    
+    background-color: #d8dbe6;
 }
+
 
 .therapist-title {
     text-align: center;
@@ -90,7 +96,8 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
     gap: 25px;
-    margin-top: 30px;
+    max-width: 1200px;
+    margin: 30px auto;
 }
 
 .therapist-card {
