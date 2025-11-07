@@ -65,19 +65,18 @@
     border-color: #3b82f6;
 }
 
-.btn-search {
+.search-filter .btn-search {
     background: #3b82f6;
     color: #fff;
     border: none;
-    padding: 0.6rem 1rem;
+    padding: 0.7rem 1.9rem;
     border-radius: 10px;
     cursor: pointer;
     transition: 0.3s;
+    position: relative;
+    top: -10px;
 }
 
-.btn-search:hover {
-    background: #2563eb;
-}
 
 /* ====== Alerts ====== */
 .alert-success {
@@ -142,12 +141,15 @@
 .bg-warning {
     background-color: #f59e0b;
 }
+
 .bg-success {
     background-color: #10b981;
 }
+
 .bg-danger {
     background-color: #ef4444;
 }
+
 .bg-primary {
     background-color: #3b82f6;
 }
@@ -195,6 +197,22 @@
     font-size: 1rem;
     color: #6b7280;
     padding: 1.5rem 0;
+}
+
+.openModalBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    top: -20px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 768px) {

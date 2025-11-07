@@ -17,7 +17,9 @@
   text-align: center;
 }
 
-.form-group { margin-bottom: 20px; }
+.form-group {
+  margin-bottom: 20px;
+}
 
 .form-group label {
   display: block;
@@ -37,7 +39,9 @@
   box-sizing: border-box;
 }
 
-.form-group input:hover { border-color: #d1d5db; }
+.form-group input:hover {
+  border-color: #d1d5db;
+}
 
 .login-container button {
   width: 100%;
@@ -52,8 +56,13 @@
   margin-bottom: 24px;
 }
 
-.login-container button:hover { background-color: #047857; }
-.login-container button:active { background-color: #065f46; }
+.login-container button:hover {
+  background-color: #047857;
+}
+
+.login-container button:active {
+  background-color: #065f46;
+}
 
 .login-container p {
   text-align: center;
@@ -79,25 +88,32 @@
   gap: 80px;
   margin-top: 120px;
   flex-wrap: wrap;
-  
+
 }
 
-.User1, .User2, .User3 {
+.User1,
+.User2,
+.User3 {
   background: #fff;
-  padding: 80px 60px;  
+  padding: 80px 60px;
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  flex: 1 1 200px;      
-  max-width: 100px;     
-}
-.User1:hover, .User2:hover, .User3:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  flex: 1 1 200px;
+  max-width: 100px;
 }
 
-.User1 a, .User2 a, .User3 a {
+.User1:hover,
+.User2:hover,
+.User3:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.User1 a,
+.User2 a,
+.User3 a {
   display: block;
   margin-top: 20px;
   font-size: 1.2rem;
@@ -110,7 +126,7 @@
   max-width: 900px;
   margin: 80px auto;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
@@ -151,13 +167,24 @@
   margin-top: 40px;
   flex-wrap: wrap;
 }
+
 .logo-image img {
-    width: 120px;        
-    height: 120px;         
-    border-radius: 50%;   
-    object-fit: cover;    
-    border: 3px solid #fff; 
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
-    display: block;
-    margin: 0 auto 20px;  
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: block;
+  margin: 0 auto 20px;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #842029;
+  border: 1px solid #f5c2c7;
+  padding: 10px 15px;
+  border-radius: 6px;
+  text-align: center;
+  margin-bottom: 15px;
 }
