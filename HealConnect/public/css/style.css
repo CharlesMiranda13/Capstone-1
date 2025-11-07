@@ -18,6 +18,7 @@ body {
     padding: 10px 15px;
     margin: 0 15px 20px 15px;
 }
+
 .logo img {
     width: 70px;
     height: 70px;
@@ -25,6 +26,7 @@ body {
     border-radius: 50%;
     border: 3px solid #494ce2;
 }
+
 .header-logo img {
     width: 50px;
     height: 50px;
@@ -32,12 +34,14 @@ body {
     border-radius: 50%;
     border: 2px solid #494ce2;
 }
+
 .header-logo {
     display: flex;
     align-items: center;
     gap: 10px;
     justify-content: center;
 }
+
 .logo-circle {
     width: 45px;
     height: 45px;
@@ -48,6 +52,7 @@ body {
     justify-content: center;
     overflow: hidden;
 }
+
 .logo-circle img {
     width: 30px;
     height: 30px;
@@ -59,6 +64,7 @@ body {
     font-weight: bold;
     color: #0b2c3d;
 }
+
 .page-logo {
     position: fixed;
     bottom: 0;
@@ -80,6 +86,7 @@ body {
 header {
     border-bottom: 1px solid #ddd;
     background: #ffffff;
+    margin-bottom: 10px;
 }
 
 #homepage {
@@ -103,6 +110,7 @@ header {
 .heal-blue {
     color: rgba(14, 94, 241, 0.712);
 }
+
 .connect-green {
     color: rgb(83, 209, 104);
 }
@@ -136,10 +144,12 @@ nav a.btn-getstarted {
 nav a.btn-getstarted:hover {
     background-color: #0f4ecc;
 }
+
 /* Main Section */
 main {
     min-height: 60vh;
 }
+
 .main-section {
     display: flex;
     align-items: center;
@@ -157,6 +167,7 @@ main {
     text-align: left;
     padding: 0 20px;
 }
+
 .main-content,
 .flip-card {
     flex: 1;
@@ -181,6 +192,7 @@ main {
     font-weight: 600;
     margin-top: 20px;
 }
+
 .main-content button:hover {
     background-color: #1361f3;
     color: #fff;
@@ -201,6 +213,7 @@ nav {
     cursor: pointer;
     color: #000;
 }
+
 .flip-card {
     background: transparent;
     max-width: 500px;
@@ -227,6 +240,7 @@ nav {
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
+
 .flip-card-front img {
     width: 100%;
     height: 100%;
@@ -313,6 +327,7 @@ nav {
 }
 
 @media (max-width: 768px) {
+
     /* Make the 'What is Physical Therapy' section look like main section */
     .what-is-pt {
         padding: 30px 20px;
@@ -371,10 +386,12 @@ nav {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     transform: translateY(-5px);
 }
+
 .about-main:hover .speak-btn {
     opacity: 1;
     pointer-events: auto;
 }
+
 /* Features section */
 .features-section {
     text-align: center;
@@ -389,12 +406,14 @@ nav {
     font-weight: bold;
     margin-bottom: 40px;
 }
+
 .features {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 25px;
     justify-items: center;
 }
+
 .feature {
     background: #fff;
     padding: 25px 20px;
@@ -405,26 +424,33 @@ nav {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     margin-top: 20px;
 }
+
 .feature:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
+
 .feature:hover .speak-btn {
     opacity: 1;
 }
+
 .feature-icon {
     font-size: 2.2rem;
     margin-bottom: 15px;
 }
+
 .feature:nth-child(1) .feature-icon {
     color: #4caf50;
 }
+
 .feature:nth-child(2) .feature-icon {
     color: #2196f3;
 }
+
 .feature:nth-child(3) .feature-icon {
     color: #e91e63;
 }
+
 .feature:nth-child(4) .feature-icon {
     color: #ff9800;
 }
@@ -434,6 +460,7 @@ nav {
     font-weight: bold;
     margin-bottom: 10px;
 }
+
 .feature p {
     font-size: 0.95rem;
     color: #444;
@@ -455,11 +482,13 @@ nav {
     justify-content: center;
     align-items: center;
 }
+
 .intro-section .container {
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
 }
+
 .intro-section h1 {
     font-size: 4.5rem;
     font-weight: 700;
@@ -611,10 +640,12 @@ nav {
     font-size: 1.5rem;
     margin-top: 20px;
 }
+
 .pending-message h2 {
     color: #ca1616;
     margin-bottom: 15px;
 }
+
 .pending-card {
     background: #97d473;
     padding: 30px 40px;
@@ -648,6 +679,7 @@ nav {
     text-decoration: none;
     color: black;
 }
+
 /* Global Page Structure Fix for Consistent Footer Position */
 html,
 body {
@@ -739,6 +771,7 @@ footer,
         font-size: 14px;
         margin: 0.5rem 0;
     }
+
     .main-image img {
         max-width: 100%;
     }

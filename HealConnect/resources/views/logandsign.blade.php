@@ -38,6 +38,12 @@
                             <input type="password" id="password" name="password" required>
                         </div>
                         <button type="submit">Login</button>
+
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                {{ $errors->first() }}
+                            </div>
+                        @endif
                     </form>
                 </div>
             </div>

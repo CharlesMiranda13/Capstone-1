@@ -17,6 +17,7 @@
     opacity: 0;
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
+
 .speak-btn:hover {
     background: #218838;
     transform: scale(1.05);
@@ -32,27 +33,24 @@
 }
 
 /*therapist list*/
-
-/* ✅ Base Styles (your existing code) */
 .ptlist {
-    padding-bottom: 10px; 
+    padding-top: 5px;
+    padding-bottom: 10px;
     width: 100vw;
     margin: 0 auto;
     font-family: "Poppins", sans-serif;
     color: #333;
-
-    border: 2px solid #016b84;
-    background-color: #ffffff;
-    box-sizing: border-box;    
+    box-sizing: border-box;
     background-color: #d8dbe6;
 }
 
-
 .therapist-title {
+    margin-top: 10px;
     text-align: center;
     font-size: 2rem;
     color: #000000;
     margin-bottom: 30px;
+    margin-top: 50px;
     font-weight: 600;
 }
 
