@@ -205,10 +205,8 @@ class IndtherapistController extends ptController
     {
         $user = Auth::user();
         $patients = User::where('role', 'patient')->get(); 
-        return view('user.therapist.independent.client', compact('user', 'patients'));
+        return view('User.Therapist.client', compact('user', 'patients'));
     }
-
-
 
 
     /** ---------------- PROFILE ---------------- */

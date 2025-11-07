@@ -36,10 +36,6 @@
             <i class="fa-regular fa-calendar"></i> Appointment
         </a>
 
-        <a href="{{ route('therapist.records') }}" class="{{ request()->routeIs('therapist.records') ? 'active' : '' }}">
-            <i class="fa-regular fa-file-lines"></i> Records
-        </a>
-
         <a href="{{ route('messages') }}" class="{{ request()->routeIs('messages') ? 'active' : '' }}">
             <i class="fa-regular fa-message"></i> Messages
         </a>

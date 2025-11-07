@@ -11,6 +11,7 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\Patient\PatientController;
 use App\Http\Controllers\Indtherapist\IndtherapistController;
 use App\Http\Controllers\Clinictherapist\clinicController;
+use App\Http\Controllers\TherapistController\ptController;
 use App\Http\Controllers\ChatController;
 //use App\Http\Controllers\Patient\ReferralController;
 use App\Http\Controllers\Patient\AppointmentController;
@@ -144,12 +145,14 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
 
 Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.status'])->group(function () {
     Route::get('/home', [IndtherapistController::class, 'dashboard'])->name('home');
-    Route::view('/records', 'user.therapist.records')->name('records');
+    
 
-
-
+    //clients
     Route::get('/clients', [IndtherapistController::class, 'clients'])->name('client');
-
+    Route::get('/patients/{patientId}/records', [ptController::class, 'patient_records'])->name('patients_records');
+    Route::put('/patients/{id}/ehr', [ptController::class, 'updateEHR'])->name('ehr.update');
+    Route::put('/patients/{id}/treatment', [ptController::class, 'updateTreatment'])->name('treatment.update');
+    Route::put('/patients/{id}/progress', [ptController::class, 'updateProgress'])->name('progress.update');
 
     // Therapist Appointments
     Route::get('/appointments', [App\Http\Controllers\Indtherapist\IndtherapistController::class, 'appointments'])
@@ -183,6 +186,14 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
 /* Clinic Routes*/
 Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'check.status'])->group(function () {
     Route::get('/home', [clinicController::class, 'dashboard'])->name('home');
+
+    Route::get('/patients/{patientId}/records', [ptController::class, 'patient_records'])
+        ->name('patients_records');
+    Route::put('/patients/{id}/ehr', [ptController::class, 'updateEHR'])->name('ehr.update');
+    Route::put('/patients/{id}/treatment', [ptController::class, 'updateTreatment'])->name('treatment.update');
+    Route::put('/patients/{id}/progress', [ptController::class, 'updateProgress'])->name('progress.update');
+
+
     Route::view('/employees', 'user.therapist.employees')->name('employees');
     Route::view('/appointments', 'user.therapist.appointment')->name('appointments');
     Route::view('/services', 'user.therapist.services')->name('services');
@@ -207,6 +218,8 @@ Route::middleware(['auth', 'check.status'])->group(function () {
     Route::get('/messages/fetch', [ChatController::class, 'fetch'])->name('messages.fetch');
     Route::post('/messages/send', [ChatController::class, 'send'])->name('messages.send');
 });
+
+
 
 
 /* Email Verification*/
