@@ -1,4 +1,18 @@
-@extends('layouts.therapist')
+@php
+    switch ($user->role) {
+        case 'therapist':
+            $layout = 'layouts.therapist';
+            break;
+        case 'clinic':
+            $layout = 'layouts.clinic_layout';
+            break;
+        default;
+            $layout = 'layouts.therapist';
+            break;
+    }
+@endphp
+
+@extends($layout)
 
 @section('title', 'Clients')
 

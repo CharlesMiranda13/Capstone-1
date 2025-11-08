@@ -12,14 +12,32 @@ use Carbon\Carbon;
 class ptController extends Controller
 {
     /**
+     * Determine provider type based on logged-in user's role.
+     */
+    protected function getProviderQuery(): array
+    {
+        $user = Auth::user();
+
+        $providerType = $user->role === 'clinic'
+            ? \App\Models\Clinic::class
+            : \App\Models\User::class;
+
+        return [
+            'provider_id' => $user->id,
+            'provider_type' => $providerType
+        ];
+    }
+
+    /**
      * Shared dashboard data for all therapists (clinic or independent)
      */
     protected function getDashboardData()
     {
         $user = Auth::user();
         $now = Carbon::now();
+        $provider = $this->getProviderQuery();
 
-        $appointments = Appointment::where('provider_id', $user->id)
+        $appointments = Appointment::where($provider)
             ->with('patient')
             ->get()
             ->filter(function ($appointment) use ($now) {
@@ -29,7 +47,7 @@ class ptController extends Controller
             ->sortBy('appointment_date')
             ->take(3);
 
-        $appointmentCount = Appointment::where('provider_id', $user->id)
+        $appointmentCount = Appointment::where($provider)
             ->distinct('patient_id')
             ->count('patient_id');
 
@@ -56,11 +74,21 @@ class ptController extends Controller
     {
         $patient = User::findOrFail($patientId);
 
+        // restrict access to only patients under this provider
+        $provider = $this->getProviderQuery();
+        $isLinked = Appointment::where($provider)
+            ->where('patient_id', $patientId)
+            ->exists();
+
+        if (!$isLinked) {
+            abort(403, 'Unauthorized access to this patient.');
+        }
+
         return view('User.Therapist.patients_records', [
             'patient' => $patient,
-            'ehr' => $patient->ehr,
-            'therapies' => $patient->therapies,
-            'exercises' => $patient->exercises,
+            'ehr' => $patient->ehr ?? null,
+            'therapies' => $patient->therapies ?? null,
+            'exercises' => $patient->exercises ?? null,
         ]);
     }
 
@@ -110,5 +138,41 @@ class ptController extends Controller
         $patient->save();
 
         return redirect()->back()->with('success', 'Progress note updated successfully!');
+    }
+
+    /**
+     * List of clients (patients)
+     */
+    public function clients(Request $request)
+    {
+        $user = Auth::user();
+
+
+        // Filter by provider_id + provider_type using polymorphic scope
+        $appointments = Appointment::forProvider($user)
+            ->with('patient') // eager load patient info
+            ->get();
+
+        // Get unique patients from appointments
+        $patients = $appointments->pluck('patient')->unique('id');
+
+        //  search by patient name
+        if ($request->filled('search')) {
+            $patients = $patients->filter(function($patient) use ($request) {
+                return str_contains(strtolower($patient->name), strtolower($request->search));
+            });
+        }
+
+        // filter by gender
+        if ($request->filled('gender')) {
+            $patients = $patients->filter(function($patient) use ($request) {
+                return $patient->gender === $request->gender;
+            });
+        }
+
+        return view('User.Therapist.clients', [
+            'patients' => $patients,
+            'user' => $user
+        ]);
     }
 }

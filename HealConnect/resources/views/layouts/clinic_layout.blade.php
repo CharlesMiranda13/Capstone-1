@@ -46,9 +46,6 @@
         <a href="{{ route('clinic.services') }}" class="{{request()->routeIs('clinic.services') ? 'active' : '' }}">
             <i class="fa-regular fa-dumbbell"></i> Services
         </a>
-        <a href="{{ route('clinic.records') }}" class="{{request()->routeIs('clinic.records') ? 'active' : '' }}">
-            <i class="fa-regular fa-file-lines"></i> Records
-        </a>
         <a href="{{ route('clinic.settings') }}" class="{{request()->routeIs('clinic.settings') ? 'active' : '' }}">
             <i class="fa-solid fa-user-md"></i> Profile
         </a>

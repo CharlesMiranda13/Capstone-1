@@ -201,7 +201,7 @@ class IndtherapistController extends ptController
         return back()->with('success', 'Appointment status updated successfully!');
     }
     /** ---------------- Clients ---------------- */
-    public function clients() 
+    public function clients(Request $request) 
     {
         $user = Auth::user();
         $patients = User::where('role', 'patient')->get(); 

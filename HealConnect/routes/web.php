@@ -183,30 +183,38 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
 
 });
 
-/* Clinic Routes*/
+/* Clinic Routes */
 Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'check.status'])->group(function () {
-    Route::get('/home', [clinicController::class, 'dashboard'])->name('home');
 
-    Route::get('/patients/{patientId}/records', [ptController::class, 'patient_records'])
-        ->name('patients_records');
+    // Dashboard
+    Route::get('/home', [ClinicController::class, 'dashboard'])->name('home');
+    Route::view('/services', 'user.therapist.clinic.services')->name('services');
+
+    // Clients (Patients under this clinic’s therapists)
+    Route::get('/clients', [ClinicController::class, 'clients'])->name('clients');
+
+    // Appointments (appointments of clinic's therapists)
+    Route::get('/appointments', [ClinicController::class, 'appointments'])->name('appointments');
+
+    // Patient Records 
+    Route::get('/patients/{patientId}/records', [ptController::class, 'patient_records'])->name('patients_records');
     Route::put('/patients/{id}/ehr', [ptController::class, 'updateEHR'])->name('ehr.update');
     Route::put('/patients/{id}/treatment', [ptController::class, 'updateTreatment'])->name('treatment.update');
     Route::put('/patients/{id}/progress', [ptController::class, 'updateProgress'])->name('progress.update');
 
-
+    // Employees
     Route::view('/employees', 'user.therapist.employees')->name('employees');
-    Route::view('/appointments', 'user.therapist.appointment')->name('appointments');
-    Route::view('/services', 'user.therapist.services')->name('services');
-    Route::view('/records', 'user.therapist.records')->name('records');
-    
-    Route::get('/settings', [clinicController::class, 'settings'])->name('settings');
-    Route::put('/settings/profile', [clinicController::class, 'updateProfile'])->name('update.profile');
-    Route::put('/settings/info', [clinicController::class, 'updateInfo'])->name('update.info');
-    Route::put('/settings/password', [clinicController::class, 'updatePassword'])->name('update.password');
 
-    Route::post('/logout', [App\Http\Controllers\Auth\UserAuthController::class, 'logout'])
-    ->name('logout');
+    // Settings
+    Route::get('/settings', [ClinicController::class, 'settings'])->name('settings');
+    Route::put('/settings/profile', [ClinicController::class, 'updateProfile'])->name('update.profile');
+    Route::put('/settings/info', [ClinicController::class, 'updateInfo'])->name('update.info');
+    Route::put('/settings/password', [ClinicController::class, 'updatePassword'])->name('update.password');
+
+    // Logout
+    Route::post('/logout', [App\Http\Controllers\Auth\UserAuthController::class, 'logout'])->name('logout');
 });
+
 
 Route::get('/check-status', function () {
     return response()->json(['status' => Auth::user()->status]);

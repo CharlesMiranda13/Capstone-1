@@ -22,20 +22,29 @@ class Appointment extends Model
     ];
 
     /** ---------------- RELATIONSHIPS ---------------- */
+
+    // Patient (always a User)
     public function patient()
     {
         return $this->belongsTo(User::class, 'patient_id');
     }
 
-    //either IndependetTherapist or Clinic
+    // Provider (either Clinic or Independent Therapist)
     public function provider()
     {
         return $this->morphTo();
     }
 
+    /** ---------------- SCOPES ---------------- */
+
+    /**
+     * Scope to filter appointments for a specific provider.
+     * Works for both independent therapists and clinics.
+     */
     public function scopeForProvider($query, $provider)
     {
         return $query->where('provider_id', $provider->id)
                      ->where('provider_type', get_class($provider));
     }
+
 }
