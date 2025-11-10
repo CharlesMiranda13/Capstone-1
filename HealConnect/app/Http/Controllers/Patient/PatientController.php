@@ -107,6 +107,13 @@ class PatientController extends Controller
             }
         }
 
+        if ($request->filled('service')) {
+            // filter by appointment type using polymorphic relationship
+            $query->whereHas('services', function ($q) use ($request) {
+                $q->where('appointment_type', 'like', '%' . $request->service . '%');
+            });
+        }
+
         $therapists = $query->paginate(10);
 
         return view('ptlist', compact('therapists'));
