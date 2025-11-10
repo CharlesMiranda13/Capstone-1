@@ -35,20 +35,20 @@ class ClinicController extends ptController
 
         // Get appointments only of these therapists AND correct provider_type
         $appointments = Appointment::whereIn('provider_id', $therapistIds)
-            ->where('provider_type', User::class) // ensure only clinic therapists
+            ->where('provider_type', User::class) 
             ->with('patient')
             ->get();
 
         // Unique patients
         $patients = $appointments->pluck('patient')->unique('id');
 
-        // Optional search by patient name
+        //  search by patient name
         if ($request->filled('search')) {
             $search = strtolower($request->search);
             $patients = $patients->filter(fn($p) => str_contains(strtolower($p->name), $search));
         }
 
-        // Optional filter by gender
+        // filter by gender
         if ($request->filled('gender')) {
             $patients = $patients->filter(fn($p) => $p->gender === $request->gender);
         }
