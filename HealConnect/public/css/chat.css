@@ -101,6 +101,32 @@
     background: #fff;
 }
 
+.date-divider {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #777;
+    margin: 12px 0;
+    position: relative;
+}
+
+.date-divider::before,
+.date-divider::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 40%;
+    height: 1px;
+    background-color: #ccc;
+}
+
+.date-divider::before {
+    left: 0;
+}
+
+.date-divider::after {
+    right: 0;
+}
+
 /* HEADER */
 .chat-header {
     display: flex;

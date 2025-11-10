@@ -7,16 +7,50 @@ document.addEventListener('DOMContentLoaded', function () {
     const chatUserImage = document.querySelector('.chat-user img');
 
     let currentReceiverId = null;
+    let lastMessageDate = null; //track last message date shown
 
-    /** Render a single message bubble */
+    /** format date label for each day */
+    function getDateLabel(dateObj) {
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+
+        const sameDay = (a, b) =>
+            a.getFullYear() === b.getFullYear() &&
+            a.getMonth() === b.getMonth() &&
+            a.getDate() === b.getDate();
+
+        if (sameDay(dateObj, today)) return "Today";
+        if (sameDay(dateObj, yesterday)) return "Yesterday";
+
+        return dateObj.toLocaleDateString([], {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+        });
+    }
+
+    /** Render a single message bubble (with date grouping) */
     function renderMessage(msg, isOwn) {
-        const wrapper = document.createElement('div');
-        wrapper.classList.add('message', isOwn ? 'sent' : 'received');
+        const dateObj = new Date(msg.created_at || Date.now());
+        const currentDate = dateObj.toDateString();
 
-        const time = new Date(msg.created_at || Date.now()).toLocaleTimeString([], {
+        // Add date header only once per day
+        if (lastMessageDate !== currentDate) {
+            const dateHeader = document.createElement('div');
+            dateHeader.classList.add('date-divider');
+            dateHeader.textContent = getDateLabel(dateObj);
+            chatMessages.appendChild(dateHeader);
+            lastMessageDate = currentDate;
+        }
+
+        const time = dateObj.toLocaleTimeString([], {
             hour: '2-digit',
             minute: '2-digit'
         });
+
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('message', isOwn ? 'sent' : 'received');
 
         wrapper.innerHTML = `
             <div class="bubble">
@@ -33,6 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(res => res.json())
             .then(data => {
                 chatMessages.innerHTML = '';
+                lastMessageDate = null; // reset date tracking
                 if (data.length === 0) {
                     chatMessages.innerHTML = `<p class="no-messages">No messages yet. Start the conversation!</p>`;
                 } else {
@@ -40,6 +75,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             });
+    }
+
+    /** Move chat to top of sidebar and update preview text */
+    function moveChatToTop(userId, latestMessage) {
+        const chatItem = chatList.querySelector(`.chat-item[data-user-id="${userId}"]`);
+        if (chatItem) {
+            const preview = chatItem.querySelector('.chat-info p');
+            preview.textContent = latestMessage;
+            chatList.prepend(chatItem);
+        }
     }
 
     /** Handle chat selection from sidebar */
@@ -57,6 +102,8 @@ document.addEventListener('DOMContentLoaded', function () {
         currentReceiverId = receiverId;
         chatUsername.textContent = receiverName;
         chatUserImage.src = receiverImage;
+        chatItem.classList.remove('unread');
+
         loadMessages(receiverId);
     });
 
@@ -79,6 +126,7 @@ document.addEventListener('DOMContentLoaded', function () {
             messageInput.value = '';
             renderMessage(data.message, true);
             chatMessages.scrollTop = chatMessages.scrollHeight;
+            moveChatToTop(currentReceiverId, data.message.message);
         });
     });
 
@@ -98,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     channel.bind('message.sent', function (data) {
         const msg = data.message;
-        if (msg.sender_id === window.userId) return; // prevent duplicates
+        if (msg.sender_id === window.userId) return;
 
         if (currentReceiverId == msg.sender_id) {
             renderMessage(msg, false);
@@ -107,6 +155,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const chatItem = document.querySelector(`.chat-item[data-user-id="${msg.sender_id}"]`);
             if (chatItem) chatItem.classList.add('unread');
         }
+
+        moveChatToTop(msg.sender_id, msg.message);
     });
 
     /** Auto-open chat if ?receiver_id=### in URL */

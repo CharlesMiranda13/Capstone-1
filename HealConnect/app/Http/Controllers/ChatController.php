@@ -11,41 +11,47 @@ use App\Models\User;
 class ChatController extends Controller
 {
     // Show chat page
-   public function index(Request $request)
-   {
-    $user = Auth::user();
+    public function index(Request $request)
+    {
+        $user = Auth::user();
 
-    // Get users who have exchanged messages with the current user
-    $conversations = User::whereHas('sender', function ($query) use ($user) {
-            $query->where('receiver_id', $user->id);
-        })
-        ->orWhereHas('receiver', function ($query) use ($user) {
-            $query->where('sender_id', $user->id);
-        })
-        ->where('id', '!=', $user->id) 
-        ->where('role', '!=', 'admin') 
-        ->get()
-        ->map(function ($otherUser) use ($user) {
-            // Get latest message exchanged between the two users
-            $latestMessage = Message::where(function ($query) use ($user, $otherUser) {
-                    $query->where('sender_id', $user->id)
-                          ->where('receiver_id', $otherUser->id);
-                })
-                ->orWhere(function ($query) use ($user, $otherUser) {
-                    $query->where('sender_id', $otherUser->id)
-                          ->where('receiver_id', $user->id);
-                })
-                ->latest('created_at')
-                ->first();
+        // Get users who have exchanged messages with the current user
+        $conversations = User::whereHas('sender', function ($query) use ($user) {
+                $query->where('receiver_id', $user->id);
+            })
+            ->orWhereHas('receiver', function ($query) use ($user) {
+                $query->where('sender_id', $user->id);
+            })
+            ->where('id', '!=', $user->id)
+            ->where('role', '!=', 'admin')
+            ->get()
+            ->map(function ($otherUser) use ($user) {
+                // Get latest message exchanged between the two users
+                $latestMessage = Message::where(function ($query) use ($user, $otherUser) {
+                        $query->where('sender_id', $user->id)
+                            ->where('receiver_id', $otherUser->id);
+                    })
+                    ->orWhere(function ($query) use ($user, $otherUser) {
+                        $query->where('sender_id', $otherUser->id)
+                            ->where('receiver_id', $user->id);
+                    })
+                    ->latest('created_at')
+                    ->first();
 
-            $otherUser->latest_message = $latestMessage ? $latestMessage->message : null;
+                // Attach latest message text and time to the user object
+                $otherUser->latest_message = $latestMessage ? $latestMessage->message : null;
+                $otherUser->latest_message_time = $latestMessage ? $latestMessage->created_at : now()->subYears(10);
 
-            return $otherUser;
-        });
-    $receiverId = $request->query('receiver_id');
-    $receiver = $receiverId ? User::find($receiverId) : null;
+                return $otherUser;
+            })
+            // Sort by latest message time descending 
+            ->sortByDesc('latest_message_time')
+            ->values();
 
-    return view('shared.chat', compact('user', 'conversations', 'receiver'));
+        $receiverId = $request->query('receiver_id');
+        $receiver = $receiverId ? User::find($receiverId) : null;
+
+        return view('shared.chat', compact('user', 'conversations', 'receiver'));
     }
 
 
