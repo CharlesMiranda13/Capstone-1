@@ -203,7 +203,11 @@ Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'check.status'])->
     Route::put('/patients/{id}/progress', [ptController::class, 'updateProgress'])->name('progress.update');
 
     // Employees
-    Route::view('/employees', 'user.therapist.employees')->name('employees');
+    Route::get('/employees', [App\Http\Controllers\Clinictherapist\EmployeeController::class, 'index'])->name('employees');
+    Route::post('/employees', [App\Http\Controllers\Clinictherapist\EmployeeController::class, 'store'])->name('employees.store');
+    Route::put('/employees/{id}', [App\Http\Controllers\Clinictherapist\EmployeeController::class, 'update'])->name('employees.update');
+    Route::delete('/employees/{id}', [App\Http\Controllers\Clinictherapist\EmployeeController::class, 'destroy'])->name('employees.destroy');
+    Route::get('/employees/{id}/schedule', [App\Http\Controllers\Clinictherapist\EmployeeController::class, 'manageSchedule'])->name('employees.schedule');
 
     // Settings
     Route::get('/settings', [ClinicController::class, 'settings'])->name('settings');
