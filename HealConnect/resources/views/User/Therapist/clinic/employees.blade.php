@@ -1,17 +1,80 @@
 @extends('layouts.clinic_layout')
 
-@section('title', 'Clinic Appointment')
+@section('title', 'Clinic Employees')
 
-
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/employee.css') }}">
+@endsection
 
 @section('content')
-<main class="appointment-main">
-    <div class="appointment-content">
-        <h2>List of Employees</h2>
-        <form action="#" method="POST" class="appointment-form">
-            @csrf
-            <h3 style = "text-align: center">otw</h3>
-        </form>
+<main class="employee-main">
+    <section class="employee-header">
+        <h2>Clinic Employees</h2>
+        <button id="addEmployeeBtn">Add Employee</button>
+    </section>
+
+    <section class="employee-table-section">
+        <table class="employee-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Position</th>
+                    <th>Schedule</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($employees as $index => $employee)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $employee->name }}</td>
+                        <td>{{ $employee->email }}</td>
+                        <td>{{ $employee->position }}</td>
+                        <td>{{ $employee->schedule ?? 'No schedule set' }}</td>
+                        <td class="actions">
+                            <button class="edit-btn" data-id="{{ $employee->id }}">Edit</button>
+                            <button class="delete-btn" data-id="{{ $employee->id }}">Delete</button>
+                            <button class="schedule-btn" data-id="{{ $employee->id }}">Manage Schedule</button>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="6" class="no-data">No employees found.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Add Employee Modal -->
+    <div id="addEmployeeModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Add New Employee</h3>
+
+            <form id="addEmployeeForm" method="POST" action="{{ route('clinic.employees.store') }}">
+                @csrf
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="position">Position</label>
+                <input type="text" id="position" name="position" required>
+
+                <button type="submit" class="submit-btn">Save Employee</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="employeeModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="employeeModalBody"></div>
+        </div>
     </div>
 </main>
 @endsection
