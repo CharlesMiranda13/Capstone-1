@@ -1,16 +1,24 @@
 @php
-    switch ($user->role) {
+    use Illuminate\Support\Facades\Auth;
+
+    $user = Auth::user();
+    switch ($user->role ?? 'therapist') {
         case 'therapist':
             $layout = 'layouts.therapist';
             break;
         case 'clinic':
             $layout = 'layouts.clinic_layout';
             break;
-        default;
+        case 'patient':
+            $layout = 'layouts.patient_layout';
+            break;
+        default:
             $layout = 'layouts.therapist';
             break;
     }
 @endphp
+
+@extends($layout)
 
 @section('title', $patient->name . ' - Medical Records')
 
@@ -51,6 +59,7 @@
             </div>
 
             {{-- Update Form --}}
+            @if($user->role === 'therapist' || $user->role === 'clinic')
             <form action="{{ route('therapist.ehr.update', $patient->id) }}" method="POST" class="update-form mt-4">
                 @csrf
                 @method('PUT')
@@ -73,6 +82,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary mt-3">Save / Update EHR</button>
             </form>
+            @endif
         </section>
 
         <hr>
@@ -80,7 +90,7 @@
         {{-- === TREATMENT PLAN === --}}
         <section class="record-section">
             <div class="section-header">
-                <h3> Treatment Plan</h3>
+                <h3>Treatment Plan</h3>
                 <p class="text-muted">Track and update ongoing treatment strategies.</p>
             </div>
 
@@ -98,6 +108,7 @@
             </div>
 
             {{-- Update Form --}}
+            @if($user->role === 'therapist' || $user->role === 'clinic')
             <form action="{{ route('therapist.treatment.update', $patient->id) }}" method="POST" class="update-form mt-4">
                 @csrf
                 @method('PUT')
@@ -111,6 +122,7 @@
                 </div>
                 <button type="submit" class="btn btn-success mt-3">Save Treatment Plan</button>
             </form>
+            @endif
         </section>
 
         <hr>
@@ -136,6 +148,7 @@
             </div>
 
             {{-- Update Form --}}
+            @if($user->role === 'therapist' || $user->role === 'clinic')
             <form action="{{ route('therapist.progress.update', $patient->id) }}" method="POST" class="update-form mt-4">
                 @csrf
                 @method('PUT')
@@ -143,6 +156,7 @@
                 <textarea name="notes" rows="3" class="form-control" placeholder="Enter progress observation..."></textarea>
                 <button type="submit" class="btn btn-info mt-3">Save Progress Note</button>
             </form>
+            @endif
         </section>
 
     </div>
