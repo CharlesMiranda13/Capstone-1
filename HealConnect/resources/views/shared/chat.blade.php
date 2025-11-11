@@ -21,6 +21,7 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/chat.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 @endsection
 
 @section('content')
@@ -69,13 +70,20 @@
 
             {{-- INPUT --}}
             <footer class="chat-input">
-                <form id="chat-form" autocomplete="off">
+                <form id="chat-form" autocomplete="off" enctype="multipart/form-data">
                     @csrf
-                    <input type="text" id="message-input" placeholder="Type your message..." required>
+                    <input type="text" id="message-input" name="message" placeholder="Type your message..." required>
 
-                    <button type="button" id="record-btn" class="mic-btn" title="voice message">
+                    {{-- File Upload --}}
+                    <input type="file" id="file-input" name="file" accept="image/*,video/*,application/pdf" style="display:none;">
+                    <button type="button" id="file-btn" title="Send file">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+
+                    {{-- Voice Message --}}
+                    <button type="button" id="record-btn" class="mic-btn" title="Voice message">
                         <i class="fas fa-microphone"></i>
-                </button> 
+                    </button>
 
                     <button type="submit" class="send-btn">
                         <i class="fas fa-paper-plane"></i>
@@ -93,6 +101,5 @@
     window.pusherKey = "{{ config('broadcasting.connections.pusher.key') }}";
     window.pusherCluster = "{{ config('broadcasting.connections.pusher.options.cluster') }}";
 </script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="{{ asset('js/chat.js') }}"></script>
 @endsection

@@ -324,3 +324,74 @@
         box-shadow: 0 0 0 0 rgba(229, 57, 53, 0);
     }
 }
+
+/* === FILE & MEDIA MESSAGES (FIXED + REFINED) === */
+
+/* IMAGES */
+.bubble img.chat-file {
+    max-width: 240px;
+    max-height: 200px;
+    border-radius: 12px;
+    object-fit: cover;
+    display: block;
+    margin-top: 6px;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.bubble img.chat-file:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+/* VIDEOS */
+.bubble video.chat-file {
+    max-width: 240px;
+    max-height: 180px;
+    border-radius: 12px;
+    display: block;
+    margin-top: 6px;
+    background-color: #000;
+    outline: none;
+}
+
+/* DOWNLOADABLE FILES (PDF, DOC, ETC.) */
+.bubble a.chat-file {
+    display: inline-block;
+    background: #f1f3f6;
+    color: #2c3e50;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    transition: background 0.2s ease, transform 0.2s ease;
+    font-weight: 500;
+}
+
+.bubble a.chat-file:hover {
+    background: #e0e4ea;
+    transform: translateY(-2px);
+}
+
+/* Sent Messages — Match Bubble Theme */
+.message.sent .bubble a.chat-file {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+.message.sent .bubble a.chat-file:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+/* Improve timestamp alignment for media bubbles */
+.bubble img.chat-file+.timestamp,
+.bubble video.chat-file+.timestamp,
+.bubble a.chat-file+.timestamp {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin-top: 4px;
+    text-align: right;
+}

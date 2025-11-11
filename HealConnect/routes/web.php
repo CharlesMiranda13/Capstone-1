@@ -229,6 +229,8 @@ Route::middleware(['auth', 'check.status'])->group(function () {
     Route::get('/messages', [ChatController::class, 'index'])->name('messages');
     Route::get('/messages/fetch', [ChatController::class, 'fetch'])->name('messages.fetch');
     Route::post('/messages/send', [ChatController::class, 'send'])->name('messages.send');
+    Route::post('/messages/send-voice', [ChatController::class, 'sendVoice'])->name('messages.sendVoice');
+    Route::post('/messages/send-file', [ChatController::class, 'sendFile'])->name('messages.sendFile');
 });
 
 
