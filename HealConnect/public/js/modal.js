@@ -117,4 +117,34 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 
+
+    // ----------------- IMAGE MODAL -----------------
+  const imageModal = document.getElementById("imageModal");
+  const modalImage = document.getElementById("modalImage");
+  const closeModal = imageModal?.querySelector(".close");
+  const chatMessages = document.getElementById("chat-messages");
+
+  if (imageModal && chatMessages) {
+    // Open modal when an image in chat is clicked
+    chatMessages.addEventListener("click", function (e) {
+      if (e.target.classList.contains("chat-file") && e.target.tagName === "IMG") {
+        modalImage.src = e.target.src;
+        imageModal.style.display = "block";
+      }
+    });
+
+    // Close when "×" is clicked
+    closeModal?.addEventListener("click", function () {
+      imageModal.style.display = "none";
+    });
+
+    // Close when clicking outside the image
+    window.addEventListener("click", function (e) {
+      if (e.target === imageModal) {
+        imageModal.style.display = "none";
+      }
+    });
+  }
+
+
 });

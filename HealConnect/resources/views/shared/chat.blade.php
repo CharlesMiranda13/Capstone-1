@@ -93,6 +93,10 @@
         </section>
     </div>
 </div>
+<div id="imageModal" class="image-modal" style="display:none;">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage">
+</div>
 @endsection
 
 @section('scripts')
