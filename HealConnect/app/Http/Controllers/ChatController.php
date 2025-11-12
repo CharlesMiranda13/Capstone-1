@@ -127,7 +127,7 @@ class ChatController extends Controller
     {
         $request->validate([
             'receiver_id' => 'required|exists:users,id',
-            'voice_message' => 'required|file|mimetypes:audio/webm,audio/mpeg,audio/ogg|max:10240', 
+            'voice_message' => 'required|file|mimes:webm,ogg,mp3,wav|max:10240',
         ]);
 
         $storagePath = storage_path('app/public/voice_messages');
