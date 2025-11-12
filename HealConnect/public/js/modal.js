@@ -146,5 +146,51 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
+  // VIEW VALID ID 
+  const viewBtn = document.getElementById('viewValidIdBtn');
+  const modal = document.getElementById('validIdModal');
+  const img = document.getElementById('validIdImage');
+  const closeBtn = document.getElementById('closeModalBtn');
+  const validIdPath = viewBtn.getAttribute('data-valid-id');
+
+  viewBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      img.src = validIdPath;
+      modal.style.display = 'flex';
+  });
+
+  closeBtn.addEventListener('click', function () {
+      modal.style.display = 'none';
+  });
+
+  window.addEventListener('click', function (e) {
+      if (e.target === modal) {
+          modal.style.display = 'none';
+      }
+  });
+
+
+  // VIEW LICENSE
+  const viewLicenseBtn = document.getElementById('viewLicenseBtn');
+  const licenseModal = document.getElementById('licenseModal');
+  const licenseImg = document.getElementById('licenseImage');
+  const closeLicenseBtn = document.getElementById('closeLicenseBtn');
+  const licensePath = viewLicenseBtn.getAttribute('data-license');
+
+  viewLicenseBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      licenseImg.src = licensePath;
+      licenseModal.style.display = 'flex';
+  });
+
+  closeLicenseBtn.addEventListener('click', function () {
+      licenseModal.style.display = 'none';
+  });
+
+  window.addEventListener('click', function (e) {
+      if (e.target === licenseModal) {
+          licenseModal.style.display = 'none';
+      }
+  });
 
 });

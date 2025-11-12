@@ -42,6 +42,7 @@
     <div class="admin-main">
         @yield('content')
     </div>
+    <script src="{{ asset('js/modal.js') }}"></script>
     @yield('scripts')
 </body>
 </html>

@@ -76,9 +76,14 @@
 
             {{-- Valid ID --}}
             @if ($user->valid_id_path)
-                <a href="{{ asset('storage/' . $user->valid_id_path) }}" target="_blank" class="btn btn-primary">
+                <a href="#" id="viewValidIdBtn" class="btn btn-primary" data-valid-id="{{ asset('storage/' . $user->valid_id_path) }}">
                     View Valid ID
                 </a>
+
+                <div id="validIdModal" class="modal">
+                    <span class="close" id="closeModalBtn">&times;</span>
+                    <img class="modal-content" id="validIdImage" alt="Valid ID">
+                </div>
             @else
                 <p><em>No Valid ID submitted.</em></p>
             @endif
@@ -86,9 +91,14 @@
             {{-- License --}}
             @if (in_array($user->role, ['therapist','clinic']))
                 @if ($user->license_path)
-                    <a href="{{ asset('storage/' . $user->license_path) }}" target="_blank" class="btn btn-primary" style="margin-left:10px;">
+                    <a href="#" id="viewLicenseBtn" class="btn btn-primary" data-license="{{ asset('storage/' . $user->license_path) }}">
                         View License
                     </a>
+
+                    <div id="licenseModal" class="modal">
+                        <span class="close" id="closeLicenseBtn">&times;</span>
+                        <img class="modal-content" id="licenseImage" alt="License">
+                    </div>
                 @else
                     <p><em>No License submitted.</em></p>
                 @endif
