@@ -1,131 +1,95 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
+  // ---------- GENERIC MODAL SETUP ----------
+  function setupModal(modalId, openBtnSelector, closeBtnSelector, displayType = "block") {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
 
-  // ----------------- PATIENT MODAL -----------------
-  const patientModal = document.getElementById("patientModal");
-  const patientModalBody = document.getElementById("modal-body");
-  const patientCloseBtn = patientModal?.querySelector(".close");
+    const openBtns = document.querySelectorAll(openBtnSelector);
+    const closeBtn = modal.querySelector(closeBtnSelector);
 
-  if (patientModal) {
-    document.querySelectorAll(".openModalBtn").forEach(button => {
-      button.addEventListener("click", function() {
-        const link = this.getAttribute("data-link");
-
-        fetch(link, { headers: { "X-Requested-With": "XMLHttpRequest" } })
-          .then(response => response.text())
-          .then(html => {
-            patientModalBody.innerHTML = html;
-            patientModal.style.display = "block";
-          })
-          .catch(error => console.error("Error loading profile:", error));
+    openBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        modal.style.display = displayType;
       });
     });
 
-    patientCloseBtn?.addEventListener("click", () => {
-      patientModal.style.display = "none";
-      patientModalBody.innerHTML = "";
+    closeBtn?.addEventListener("click", () => {
+      modal.style.display = "none";
     });
 
-    window.addEventListener("click", (event) => {
-      if (event.target === patientModal) {
-        patientModal.style.display = "none";
-        patientModalBody.innerHTML = "";
-      }
-    });
-  }
-  
-   // ----------------- EMPLOYEE MODALS -----------------
-  // ADD EMPLOYEE 
-  const addEmployeeModal = document.getElementById("addEmployeeModal");
-  const addEmployeeBtn = document.getElementById("addEmployeeBtn");
-  const addEmployeeClose = addEmployeeModal?.querySelector(".close");
-
-  if (addEmployeeModal) {
-    addEmployeeBtn?.addEventListener("click", () => {
-      addEmployeeModal.style.display = "block";
-    });
-
-    addEmployeeClose?.addEventListener("click", () => {
-      addEmployeeModal.style.display = "none";
-    });
-
-    window.addEventListener("click", (event) => {
-      if (event.target === addEmployeeModal) {
-        addEmployeeModal.style.display = "none";
-      }
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) modal.style.display = "none";
     });
   }
 
-  // EMPLOYEE MODAL 
-  const employeeModal = document.getElementById("employeeModal");
-  const employeeModalBody = document.getElementById("employeeModalBody");
-  const employeeClose = employeeModal?.querySelector(".close");
+  // ---------- DYNAMIC MODAL SETUP ----------
+  function setupDynamicModal(modalId, bodyId, btnSelector, urlBuilder) {
+    const modal = document.getElementById(modalId);
+    const body = document.getElementById(bodyId);
+    if (!modal || !body) return;
 
-  if (employeeModal) {
-    // Open employee modal for schedule or edit
-    document.querySelectorAll(".schedule-btn, .edit-btn").forEach(button => {
-      button.addEventListener("click", function() {
-        const employeeId = this.getAttribute("data-id");
-        let action = this.classList.contains("schedule-btn") ? "schedule" : "edit";
-        const url = `/clinic/employees/${employeeId}/${action}`;
+    const closeBtn = modal.querySelector(".close");
 
+    document.querySelectorAll(btnSelector).forEach(btn => {
+      btn.addEventListener("click", function () {
+        const url = urlBuilder(this);
         fetch(url, { headers: { "X-Requested-With": "XMLHttpRequest" } })
-          .then(response => response.text())
+          .then(res => res.text())
           .then(html => {
-            employeeModalBody.innerHTML = html;
-            employeeModal.style.display = "block";
+            body.innerHTML = html;
+            modal.style.display = "block";
           })
-          .catch(error => console.error(`Error loading ${action}:`, error));
+          .catch(err => console.error("Error loading modal content:", err));
       });
     });
 
-    employeeClose?.addEventListener("click", () => {
-      employeeModal.style.display = "none";
-      employeeModalBody.innerHTML = "";
+    closeBtn?.addEventListener("click", () => {
+      modal.style.display = "none";
+      body.innerHTML = "";
     });
 
-    window.addEventListener("click", (event) => {
-      if (event.target === employeeModal) {
-        employeeModal.style.display = "none";
-        employeeModalBody.innerHTML = "";
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.style.display = "none";
+        body.innerHTML = "";
       }
     });
   }
 
-  //  DELETE EMPLOYEE 
-  document.querySelectorAll(".delete-btn").forEach(button => {
-    button.addEventListener("click", function() {
-      const employeeId = this.getAttribute("data-id");
+  // ---------- DELETE HANDLER ----------
+  function setupDeleteHandler(selector, urlBuilder) {
+    document.querySelectorAll(selector).forEach(button => {
+      button.addEventListener("click", function () {
+        const id = this.getAttribute("data-id");
 
-      if (confirm("Are you sure you want to delete this employee?")) {
-        fetch(`/clinic/employees/${employeeId}`, {
-          method: "DELETE",
-          headers: {
-            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            "X-Requested-With": "XMLHttpRequest"
-          }
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            this.closest("tr").remove();
-          } else {
-            alert("Failed to delete employee.");
-          }
-        })
-        .catch(error => console.error("Error deleting employee:", error));
-      }
+        if (confirm("Are you sure you want to delete this employee?")) {
+          fetch(urlBuilder(id), {
+            method: "DELETE",
+            headers: {
+              "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+              "X-Requested-With": "XMLHttpRequest"
+            }
+          })
+            .then(res => res.json())
+            .then(data => {
+              if (data.success) this.closest("tr").remove();
+              else alert("Failed to delete employee.");
+            })
+            .catch(err => console.error("Error deleting employee:", err));
+        }
+      });
     });
-  });
+  }
 
+  // ---------- IMAGE MODAL IN CHAT ----------
+  function setupImageModal() {
+    const imageModal = document.getElementById("imageModal");
+    const modalImage = document.getElementById("modalImage");
+    const closeModal = imageModal?.querySelector(".close");
+    const chatMessages = document.getElementById("chat-messages");
 
-    // ----------------- IMAGE MODAL -----------------
-  const imageModal = document.getElementById("imageModal");
-  const modalImage = document.getElementById("modalImage");
-  const closeModal = imageModal?.querySelector(".close");
-  const chatMessages = document.getElementById("chat-messages");
+    if (!imageModal || !chatMessages) return;
 
-  if (imageModal && chatMessages) {
-    // Open modal when an image in chat is clicked
     chatMessages.addEventListener("click", function (e) {
       if (e.target.classList.contains("chat-file") && e.target.tagName === "IMG") {
         modalImage.src = e.target.src;
@@ -133,64 +97,51 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     });
 
-    // Close when "×" is clicked
-    closeModal?.addEventListener("click", function () {
+    closeModal?.addEventListener("click", () => {
       imageModal.style.display = "none";
     });
 
-    // Close when clicking outside the image
-    window.addEventListener("click", function (e) {
-      if (e.target === imageModal) {
-        imageModal.style.display = "none";
-      }
+    window.addEventListener("click", (e) => {
+      if (e.target === imageModal) imageModal.style.display = "none";
     });
   }
 
-  // VIEW VALID ID 
-  const viewBtn = document.getElementById('viewValidIdBtn');
-  const modal = document.getElementById('validIdModal');
-  const img = document.getElementById('validIdImage');
-  const closeBtn = document.getElementById('closeModalBtn');
-  const validIdPath = viewBtn.getAttribute('data-valid-id');
+  // ---------- VIEW IMAGE MODAL (VALID ID / LICENSE) ----------
+  function setupImageView(triggerId, modalId, imageId, closeId, dataAttr, displayType = "flex") {
+    const trigger = document.getElementById(triggerId);
+    const modal = document.getElementById(modalId);
+    const img = document.getElementById(imageId);
+    const closeBtn = document.getElementById(closeId);
+    if (!trigger || !modal || !img || !closeBtn) return;
 
-  viewBtn.addEventListener('click', function (e) {
+    const imagePath = trigger.getAttribute(dataAttr);
+
+    trigger.addEventListener("click", (e) => {
       e.preventDefault();
-      img.src = validIdPath;
-      modal.style.display = 'flex';
+      img.src = imagePath;
+      modal.style.display = displayType;
+    });
+
+    closeBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) modal.style.display = "none";
+    });
+  }
+
+  // ---------- INITIALIZE ALL ----------
+  setupDynamicModal("patientModal", "modal-body", ".openModalBtn", (btn) => btn.getAttribute("data-link"));
+  setupModal("addEmployeeModal", "#addEmployeeBtn", ".close");
+  setupDynamicModal("employeeModal", "employeeModalBody", ".schedule-btn, .edit-btn", (btn) => {
+    const id = btn.getAttribute("data-id");
+    const action = btn.classList.contains("schedule-btn") ? "schedule" : "edit";
+    return `/clinic/employees/${id}/${action}`;
   });
-
-  closeBtn.addEventListener('click', function () {
-      modal.style.display = 'none';
-  });
-
-  window.addEventListener('click', function (e) {
-      if (e.target === modal) {
-          modal.style.display = 'none';
-      }
-  });
-
-
-  // VIEW LICENSE
-  const viewLicenseBtn = document.getElementById('viewLicenseBtn');
-  const licenseModal = document.getElementById('licenseModal');
-  const licenseImg = document.getElementById('licenseImage');
-  const closeLicenseBtn = document.getElementById('closeLicenseBtn');
-  const licensePath = viewLicenseBtn.getAttribute('data-license');
-
-  viewLicenseBtn.addEventListener('click', function (e) {
-      e.preventDefault();
-      licenseImg.src = licensePath;
-      licenseModal.style.display = 'flex';
-  });
-
-  closeLicenseBtn.addEventListener('click', function () {
-      licenseModal.style.display = 'none';
-  });
-
-  window.addEventListener('click', function (e) {
-      if (e.target === licenseModal) {
-          licenseModal.style.display = 'none';
-      }
-  });
+  setupDeleteHandler(".delete-btn", (id) => `/clinic/employees/${id}`);
+  setupImageModal();
+  setupImageView("viewValidIdBtn", "validIdModal", "validIdImage", "closeModalBtn", "data-valid-id");
+  setupImageView("viewLicenseBtn", "licenseModal", "licenseImage", "closeLicenseBtn", "data-license");
 
 });
