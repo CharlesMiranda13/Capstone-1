@@ -54,6 +54,17 @@ class ChatController extends Controller
         return view('shared.chat', compact('user', 'conversations', 'receiver'));
     }
 
+    public function getUserInfo($id)
+    {
+        $user = User::select('id', 'name', 'profile_picture')->findOrFail($id);
+        $user->profile_picture = $user->profile_picture 
+            ? asset('storage/' . $user->profile_picture) 
+            : asset('images/logo1.png');
+
+        return response()->json($user);
+    }
+
+
 
     // Fetch messages between current user and selected user
     public function fetch(Request $request)

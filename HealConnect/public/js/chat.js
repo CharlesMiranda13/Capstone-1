@@ -237,8 +237,31 @@ document.addEventListener('DOMContentLoaded', function () {
     /** ------------------ Auto-open chat via URL ------------------ */
     const urlParams = new URLSearchParams(window.location.search);
     const receiverIdFromUrl = urlParams.get('receiver_id');
+
     if (receiverIdFromUrl) {
-        const chatItem = document.querySelector(`.chat-item[data-user-id="${receiverIdFromUrl}"]`);
-        if (chatItem) chatItem.click();
+        let chatItem = document.querySelector(`.chat-item[data-user-id="${receiverIdFromUrl}"]`);
+    
+        if (chatItem) {
+            chatItem.click();
+        } else {
+            fetch(`/messages/user-info/${receiverIdFromUrl}`)
+                .then(res => res.json())
+                .then(user => {
+                    const newChat = document.createElement('div');
+                    newChat.classList.add('chat-item', 'active');
+                    newChat.dataset.userId = user.id;
+                    newChat.innerHTML = `
+                        <img src="${user.profile_picture ?? '/images/logo1.png'}" class="avatar" alt="User">
+                        <div class="chat-info">
+                            <h4>${user.name}</h4>
+                            <p>Start a conversation...</p>
+                        </div>
+                    `;
+                    chatList.prepend(newChat);
+                    newChat.click();
+                })
+                .catch(err => console.error('Error fetching user info:', err));
+        }
     }
+
 });
