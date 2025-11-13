@@ -39,16 +39,13 @@ class ClinicController extends ptController
             ->with('patient')
             ->get();
 
-        // Unique patients
         $patients = $appointments->pluck('patient')->unique('id');
 
-        //  search by patient name
         if ($request->filled('search')) {
             $search = strtolower($request->search);
             $patients = $patients->filter(fn($p) => str_contains(strtolower($p->name), $search));
         }
 
-        // filter by gender
         if ($request->filled('gender')) {
             $patients = $patients->filter(fn($p) => $p->gender === $request->gender);
         }
@@ -57,44 +54,56 @@ class ClinicController extends ptController
     }
 
     /** ---------------- APPOINTMENTS ---------------- */
-    public function appointments(Request $request)
-    {
-        $clinic = Auth::user();
+    /** ---------------- APPOINTMENTS ---------------- */
+public function appointments(Request $request)
+{
+    $clinic = Auth::user();
 
-        // Get IDs of therapists under this clinic
-        $therapistIds = User::where('role', 'therapist')
-            ->where('clinic_id', $clinic->id)
-            ->pluck('id');
+    // Get IDs of therapists under this clinic
+    $therapistIds = User::where('role', 'therapist')
+        ->where('clinic_id', $clinic->id)
+        ->pluck('id');
 
-        // Query only appointments of these therapists
-        $query = Appointment::whereIn('provider_id', $therapistIds)
-            ->where('provider_type', User::class) // ensure only clinic therapists
-            ->with(['patient', 'provider']);
+    // Query only appointments of these therapists
+    $query = Appointment::whereIn('provider_id', $therapistIds)
+        ->where('provider_type', User::class) // ensure only clinic therapists
+        ->with(['patient', 'provider']);
 
-        // Search filter by patient name or appointment type
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->whereHas('patient', fn($subQuery) => $subQuery->where('name', 'like', "%$search%"))
-                ->orWhere('appointment_type', 'like', "%$search%");
-            });
-        }
-
-        // Filter by status
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        // Filter by appointment type
-        if ($request->filled('type')) {
-            $query->where('appointment_type', $request->type);
-        }
-
-        // Get appointments ordered by date descending
-        $appointments = $query->orderBy('appointment_date', 'desc')->get();
-
-        return view('user.therapist.clinic.appointment', compact('appointments'));
+    // Search filter by patient name or appointment type
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->whereHas('patient', fn($subQuery) => $subQuery->where('name', 'like', "%$search%"))
+              ->orWhere('appointment_type', 'like', "%$search%");
+        });
     }
+
+    // Filter by status
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
+    // Filter by appointment type
+    if ($request->filled('type')) {
+        $query->where('appointment_type', $request->type);
+    }
+
+    // Filter by provider (therapist)
+    if ($request->filled('provider_id')) {
+        $query->where('provider_id', $request->provider_id);
+    }
+
+    // Get appointments ordered by date descending
+    $appointments = $query->orderBy('appointment_date', 'desc')->get();
+
+    // Get list of providers for the filter dropdown
+    $providers = User::where('role', 'therapist')
+        ->where('clinic_id', $clinic->id)
+        ->get();
+
+    return view('user.therapist.clinic.appointment', compact('appointments', 'providers'));
+}
+
 
     /** ---------------- SETTINGS ---------------- */
     public function settings()
