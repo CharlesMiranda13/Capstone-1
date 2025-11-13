@@ -1,9 +1,4 @@
-.main-content {
-    margin-left: 250px;
-    padding: 20px;
-    max-width: 100% !important;
-}
-
+/* ---------- SIDEBAR (kept same as your current) ---------- */
 .sidebar {
     width: 250px;
     background-color: #f4f7fb;
@@ -53,11 +48,6 @@
     color: #ffffff;
 }
 
-.sidebar form {
-    margin: 0;
-    padding: 0;
-}
-
 .sidebar .logout-btn {
     width: 100%;
     background: none;
@@ -76,11 +66,16 @@
     color: white;
 }
 
+/* ---------- MAIN CONTENT ---------- */
 .main-content {
     margin-left: 250px;
     padding: 20px;
+    max-width: 100% !important;
+    background-color: #f3f4f6;
+    min-height: 100vh;
 }
 
+/* ---------- WELCOME HEADER ---------- */
 .welcome-header {
     display: flex;
     justify-content: space-between;
@@ -95,120 +90,162 @@
 .welcome-header h2 {
     margin: 0;
     font-size: 28px;
-    color: #333;
-    font-family: "Arial", sans-serif;
-    text-align: left;
+    font-family: "Poppins", sans-serif;
+    color: #fff;
 }
-.welcome-header img {
+
+.welcome-header .pic {
     width: 80px;
     height: 80px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #333;
+    border: 3px solid #fff;
 }
 
-/* Main Layout */
-.therapist-main {
-    margin-left: 40px;
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    padding: 20px;
+/* ---------- DASHBOARD CARDS ---------- */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    margin-top: 40px;
+    margin-bottom: 40px;
 }
 
-.left-column {
-    flex: 2;
-    display: flex;
-    gap: 50px;
+.dashboard-cards .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease-in-out;
+    color: #1f2d3d;
+    text-decoration: none;
 }
 
-.left-column .card {
-    display: flex;
-    gap: 15px;
+.dashboard-cards .card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 
-.card {
-    flex: 1;
-    text-align: left;
-    flex-direction: column;
-    justify-content: space-between;
-    background: white;
-    padding: 20px 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    width: 250px;
-    min-height: 120px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-.card h3 {
+.dashboard-cards .card h3 {
     display: flex;
     align-items: center;
-    margin-top: 0;
-    font-size: 20px;
+    font-size: 1.3rem;
     margin-bottom: 15px;
-    font-family: monospace;
+    color: #333;
 }
-.card i {
+
+.dashboard-cards .card i {
     margin-right: 10px;
+    font-size: 1.6rem;
+    color: #4b8df8;
 }
+
+.client-card h2 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #007bff;
+    margin-bottom: 5px;
+}
+
+.client-card p {
+    color: #777;
+    font-size: 0.95rem;
+}
+
+.appointments-list {
+    margin-top: 10px;
+    max-height: 230px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
 .appointment-item {
-    background-color: #f9f9f9;
-    border-radius: 6px;
-    padding: 10px 15px;
-    margin-top: 8px;
-    transition: background 0.3s ease;
+    background-color: #f9fafc;
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-left: 4px solid #4b8df8;
+    transition: 0.3s;
 }
+
+.appointment-item:hover {
+    background-color: #eef6ff;
+}
+
 .patient-name {
     font-weight: 600;
-    margin-bottom: 4px;
-    font-size: 15px;
-}
-.appointment-date {
-    color: #666;
-    font-size: 14px;
-    margin: 0;
-}
-
-.appointment-content h2 {
-    font-size: 24px;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.sidebar form {
-    margin: 0;
-    padding: 0;
-}
-
-.sidebar .logout-btn {
-    width: 100%;
-    background: none;
-    border: none;
-    text-align: left;
-    padding: 15px 20px;
     color: #333;
-    font: inherit;
-    cursor: pointer;
-    display: block;
-    transition: background 0.3s ease, color 0.3s ease;
+    margin-bottom: 4px;
 }
 
-.sidebar .logout-btn:hover {
-    background-color: #72aceb;
-    color: white;
+.appointment-date,
+.appointment-type {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 0;
 }
 
+/* ---------- ANALYTICS OVERVIEW ---------- */
+.analytics-overview {
+    margin-top: 10px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.analytics-overview h3 {
+    font-size: 1.6rem;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+    border-left: 5px solid #4b8df8;
+    padding-left: 10px;
+}
+
+.analytics-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 25px;
+}
+
+.analytics-card {
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s ease;
+}
+
+.analytics-card:hover {
+    transform: translateY(-4px);
+}
+
+.analytics-card h4 {
+    text-align: center;
+    color: #444;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.analytics-card canvas {
+    width: 100%;
+    max-height: 300px;
+}
+
+/* ---------- RESPONSIVE ---------- */
 @media (max-width: 768px) {
-    .patient-main {
+    .welcome-header {
         flex-direction: column;
+        gap: 10px;
+        text-align: center;
     }
-    .right-column {
-        width: 100%;
+
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-section {
+        grid-template-columns: 1fr;
     }
 }

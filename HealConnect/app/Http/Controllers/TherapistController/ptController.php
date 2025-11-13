@@ -37,26 +37,55 @@ class ptController extends Controller
         $now = Carbon::now();
         $provider = $this->getProviderQuery();
 
+        // Upcoming appointments (next 3)
         $appointments = Appointment::where($provider)
             ->with('patient')
             ->get()
-            ->filter(function ($appointment) use ($now) {
-                $appointmentDateTime = Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time);
-                return $appointmentDateTime->greaterThan($now);
-            })
+            ->filter(fn($a) => Carbon::parse($a->appointment_date . ' ' . $a->appointment_time)->greaterThan($now))
             ->sortBy('appointment_date')
             ->take(3);
 
+        // Total clients
         $appointmentCount = Appointment::where($provider)
             ->distinct('patient_id')
             ->count('patient_id');
+
+        // Completed sessions
+        $completedSessions = Appointment::where($provider)
+            ->where('status', 'completed')
+            ->count();
+
+        // Cancellations
+        $cancellations = Appointment::where($provider)
+            ->where('status', 'cancelled')
+            ->count();
+
+
+        // Monthly appointments data (for line chart)
+        $daysInMonth = $now->daysInMonth;
+        $monthlyData = collect(range(1, $daysInMonth))->map(fn($d) =>
+            Appointment::where($provider)
+                ->whereDate('appointment_date', $now->startOfMonth()->addDays($d - 1))
+                ->count()
+        );
+
+        // Appointments by type (for doughnut chart)
+        $appointmentTypes = Appointment::where($provider)
+            ->selectRaw('appointment_type, COUNT(*) as count')
+            ->groupBy('appointment_type')
+            ->pluck('count', 'appointment_type');
 
         return [
             'user' => $user,
             'appointments' => $appointments,
             'appointmentCount' => $appointmentCount,
+            'completedSessions' => $completedSessions,
+            'cancellations' => $cancellations,
+            'monthlyData' => $monthlyData,
+            'appointmentTypes' => $appointmentTypes,
         ];
     }
+
 
     /**
      * Shared settings page
