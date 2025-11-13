@@ -41,38 +41,44 @@ document.addEventListener('DOMContentLoaded', function () {
         const time = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const wrapper = document.createElement('div');
         wrapper.classList.add('message', isOwn ? 'sent' : 'received');
+        wrapper.dataset.messageId = msg.id;
 
-        // Render based on type
+        let bubbleContent = '';
         if (msg.type === 'voice') {
-            wrapper.innerHTML = `
-                <div class="bubble voice">
-                    <audio controls preload="none">
-                        <source src="${msg.message_url}" type="audio/webm">
-                        Your browser does not support the audio element.
-                    </audio>
-                    <span class="timestamp">${time}</span>
-                </div>
+            bubbleContent = `
+                <audio controls preload="none">
+                    <source src="${msg.message_url}" type="audio/webm">
+                    Your browser does not support the audio element.
+                </audio>
             `;
         } else if (msg.type === 'file' && msg.file_url) {
             const ext = msg.file_url.split('.').pop().toLowerCase();
-            let content = '';
             if (['jpg','jpeg','png','gif'].includes(ext)) {
-                content = `<img src="${msg.file_url}" class="chat-file" alt="image">`;
+                bubbleContent = `<img src="${msg.file_url}" class="chat-file" alt="image">`;
             } else if (['mp4','mov','avi'].includes(ext)) {
-                content = `<video controls class="chat-file"><source src="${msg.file_url}" type="video/${ext}"></video>`;
+                bubbleContent = `<video controls class="chat-file"><source src="${msg.file_url}" type="video/${ext}"></video>`;
             } else {
-                content = `<a href="${msg.file_url}" target="_blank">Download File</a>`;
+                bubbleContent = `<a href="${msg.file_url}" target="_blank">Download File</a>`;
             }
-            wrapper.innerHTML = `<div class="bubble">${content}<span class="timestamp">${time}</span></div>`;
         } else {
-            wrapper.innerHTML = `
-                <div class="bubble">
-                    <p class="text">${msg.message}</p>
-                    <span class="timestamp">${time}</span>
+            bubbleContent = `<p class="text">${msg.message}${msg.edited ? ' (edited)' : ''}</p>`;
+        }
+
+        // Menu for own messages
+        let actions = '';
+        if (isOwn) {
+            actions = `
+                <div class="message-menu">
+                    <span class="menu-toggle">⋯</span>
+                    <div class="menu-options">
+                        ${msg.type === 'text' ? `<span class="edit-message" data-message-id="${msg.id}">Edit</span>` : ''}
+                        <span class="delete-message" data-message-id="${msg.id}">Delete</span>
+                    </div>
                 </div>
             `;
         }
 
+        wrapper.innerHTML = `<div class="bubble">${bubbleContent}${actions}<span class="timestamp">${time}</span></div>`;
         chatMessages.appendChild(wrapper);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
@@ -126,19 +132,14 @@ document.addEventListener('DOMContentLoaded', function () {
         formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
 
         try {
-            const res = await fetch('/messages/send-file', {
-                method: 'POST',
-                body: formData
-            });
+            const res = await fetch('/messages/send-file', { method: 'POST', body: formData });
             const data = await res.json();
             renderMessage(data.message, true);
             moveChatToTop(currentReceiverId, `[File: ${file.name}]`);
         } catch (err) {
             console.error('File upload failed:', err);
             alert('Failed to send file.');
-        } finally {
-            fileInput.value = '';
-        }
+        } finally { fileInput.value = ''; }
     });
 
     /** ------------------ Send Text Message ------------------ */
@@ -160,9 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
             messageInput.value = '';
             renderMessage(data.message, true);
             moveChatToTop(currentReceiverId, data.message.message);
-        } catch (err) {
-            console.error("Text message send failed:", err);
-        }
+        } catch (err) { console.error("Text message send failed:", err); }
     });
 
     /** ------------------ Voice Recording ------------------ */
@@ -190,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             const res = await fetch("/messages/send-voice", { method: "POST", body: formData, headers: { 'Accept': 'application/json' } });
                             const data = await res.json();
                             renderMessage(data.message, true);
-                            moveChatToTop(currentReceiverId, "[Voice Message 🎧]");
+                            moveChatToTop(currentReceiverId, "[Voice Message]");
                         } catch (err) {
                             console.error("Voice upload failed:", err);
                             alert("Voice message failed.");
@@ -224,14 +223,78 @@ document.addEventListener('DOMContentLoaded', function () {
         const msg = data.message;
         if (msg.sender_id === window.userId) return;
 
-        if (currentReceiverId == msg.sender_id) {
-            renderMessage(msg, false);
-        } else {
+        if (currentReceiverId == msg.sender_id) renderMessage(msg, false);
+        else {
             const chatItem = document.querySelector(`.chat-item[data-user-id="${msg.sender_id}"]`);
             if (chatItem) chatItem.classList.add('unread');
         }
+        moveChatToTop(msg.sender_id, msg.type === 'file' ? "[File]" : msg.message);
+    });
 
-        moveChatToTop(msg.sender_id, msg.type === 'voice' ? "[Voice Message 🎧]" : (msg.type === 'file' ? "[File]" : msg.message));
+    /** ------------------ Edit/Delete Menu ------------------ */
+    chatMessages.addEventListener('click', e => {
+        // Toggle menu
+        if (e.target.classList.contains('menu-toggle')) {
+            const menu = e.target.nextElementSibling;
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Edit message (text only)
+        if (e.target.classList.contains('edit-message')) {
+            const messageId = e.target.dataset.messageId;
+            const wrapper = chatMessages.querySelector(`.message[data-message-id="${messageId}"]`);
+            const textElement = wrapper.querySelector('.text');
+            const newMessage = prompt('Edit your message:', textElement.textContent.replace(' (edited)',''));
+            if (!newMessage) return;
+
+            fetch(`/messages/update/${messageId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ message: newMessage })
+            })
+            .then(res => res.json())
+            .then(data => {
+                textElement.textContent = data.message.message + ' (edited)';
+                e.target.parentElement.style.display = 'none';
+            })
+            .catch(err => console.error(err));
+        }
+
+        // Delete message (text, file, or voice)
+        if (e.target.classList.contains('delete-message')) {
+            const messageId = e.target.dataset.messageId;
+            if (!confirm('Are you sure you want to delete this message?')) return;
+
+            fetch(`/messages/delete/${messageId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(() => {
+                const wrapper = chatMessages.querySelector(`.message[data-message-id="${messageId}"]`);
+                const msgType = wrapper.querySelector('audio') ? 'voice' :
+                                wrapper.querySelector('img, video, a') ? 'file' : 'text';
+                let deletedText = 'This message was deleted.';
+                if (msgType === 'voice') deletedText = 'This voice message was deleted.';
+                else if (msgType === 'file') deletedText = 'This file was deleted.';
+
+                wrapper.querySelector('.bubble').innerHTML = `<p class="text">${deletedText}</p>`;
+            })
+            .catch(err => console.error(err));
+        }
+    });
+
+    // Close menus when clicking outside
+    document.addEventListener('click', e => {
+        if (!e.target.classList.contains('menu-toggle')) {
+            document.querySelectorAll('.menu-options').forEach(menu => menu.style.display = 'none');
+        }
     });
 
     /** ------------------ Auto-open chat via URL ------------------ */
@@ -240,10 +303,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (receiverIdFromUrl) {
         let chatItem = document.querySelector(`.chat-item[data-user-id="${receiverIdFromUrl}"]`);
-    
-        if (chatItem) {
-            chatItem.click();
-        } else {
+        if (chatItem) chatItem.click();
+        else {
             fetch(`/messages/user-info/${receiverIdFromUrl}`)
                 .then(res => res.json())
                 .then(user => {
@@ -263,5 +324,4 @@ document.addEventListener('DOMContentLoaded', function () {
                 .catch(err => console.error('Error fetching user info:', err));
         }
     }
-
 });

@@ -150,7 +150,7 @@ class ptController extends Controller
 
         // Filter by provider_id + provider_type using polymorphic scope
         $appointments = Appointment::forProvider($user)
-            ->with('patient') // eager load patient info
+            ->with('patient') 
             ->get();
 
         // Get unique patients from appointments
