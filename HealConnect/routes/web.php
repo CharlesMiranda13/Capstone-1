@@ -227,12 +227,14 @@ Route::get('/check-status', function () {
 /* Messages */
 Route::middleware(['auth', 'check.status'])->group(function () {
     Route::get('/messages', [ChatController::class, 'index'])->name('messages');
-    Route::get('/messages/user-info/{id}', [ChatController::class, 'getUserInfo'])
-    ->middleware(['auth', 'check.status']);
+    Route::get('/messages/user-info/{id}', [ChatController::class, 'getUserInfo']);
     Route::get('/messages/fetch', [ChatController::class, 'fetch'])->name('messages.fetch');
     Route::post('/messages/send', [ChatController::class, 'send'])->name('messages.send');
     Route::post('/messages/send-voice', [ChatController::class, 'sendVoice'])->name('messages.sendVoice');
     Route::post('/messages/send-file', [ChatController::class, 'sendFile'])->name('messages.sendFile');
+    Route::put('/messages/{id}/edit', [ChatController::class, 'update'])->name('messages.update');
+    Route::delete('/messages/{id}', [ChatController::class, 'destroy'])->name('messages.destroy');
+
 });
 
 

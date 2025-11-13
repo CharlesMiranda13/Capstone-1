@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Message;
 use App\Events\MessageSent;
 use App\Models\User;
+use App\Events\MessageUpdated;
+use App\Events\MessageDeleted;
 
 class ChatController extends Controller
 {
@@ -189,5 +191,47 @@ class ChatController extends Controller
 
         return response()->json(['success' => true, 'message' => $message]);
     }
+
+    // ------------------ EDIT MESSAGE ------------------
+    public function update(Request $request, $id)
+    {
+        $message = Message::findOrFail($id);
+
+        // Only the sender can edit their own message
+        if ($message->sender_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $request->validate(['message' => 'required|string|max:1000']);
+
+        $message->message = $request->message;
+        $message->edited = true;
+        $message->save();
+
+        broadcast(new MessageUpdated($message))->toOthers();
+
+        return response()->json(['success' => true, 'message' => $message]);
+    }
+
+
+    // ------------------ DELETE MESSAGE ------------------
+    public function destroy($id)
+    {
+        $message = Message::findOrFail($id);
+
+        // Only the sender can delete their message
+        if ($message->sender_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $receiverId = $message->receiver_id;
+        $messageId = $message->id;
+
+        $message->delete();
+        broadcast(new MessageDeleted($messageId, $receiverId))->toOthers();
+
+        return response()->json(['success' => true]);
+    }
+
 
 }

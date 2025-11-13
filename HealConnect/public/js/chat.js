@@ -231,64 +231,75 @@ document.addEventListener('DOMContentLoaded', function () {
         moveChatToTop(msg.sender_id, msg.type === 'file' ? "[File]" : msg.message);
     });
 
-    /** ------------------ Edit/Delete Menu ------------------ */
-    chatMessages.addEventListener('click', e => {
-        // Toggle menu
-        if (e.target.classList.contains('menu-toggle')) {
-            const menu = e.target.nextElementSibling;
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-        }
+/** ------------------ Edit/Delete Menu ------------------ */
+chatMessages.addEventListener('click', e => {
+    const target = e.target;
 
-        // Edit message (text only)
-        if (e.target.classList.contains('edit-message')) {
-            const messageId = e.target.dataset.messageId;
+    // Toggle menu display
+    if (target.classList.contains('menu-toggle')) {
+        const menu = target.nextElementSibling;
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        return;
+    }
+
+    // Close all menus if clicked outside
+    if (!target.classList.contains('edit-message') && !target.classList.contains('delete-message')) {
+        document.querySelectorAll('.menu-options').forEach(menu => menu.style.display = 'none');
+    }
+
+    /** ------------------ EDIT MESSAGE ------------------ */
+    if (target.classList.contains('edit-message')) {
+        const messageId = target.dataset.messageId;
+        const wrapper = chatMessages.querySelector(`.message[data-message-id="${messageId}"]`);
+        const textElement = wrapper.querySelector('.text');
+        const currentText = textElement.textContent.replace(' (edited)', '');
+        const newMessage = prompt('Edit your message:', currentText);
+        if (!newMessage) return;
+
+        fetch(`/messages/${messageId}/edit`, {  // Correct route
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ message: newMessage })
+        })
+        .then(res => res.json())
+        .then(data => {
+            textElement.textContent = data.message.message + ' (edited)';
+            target.parentElement.style.display = 'none';
+        })
+        .catch(err => console.error('Edit failed:', err));
+    }
+
+    /** ------------------ DELETE MESSAGE ------------------ */
+    if (target.classList.contains('delete-message')) {
+        const messageId = target.dataset.messageId;
+        if (!confirm('Are you sure you want to delete this message?')) return;
+
+        fetch(`/messages/${messageId}`, {  // Correct route
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            }
+        })
+        .then(() => {
             const wrapper = chatMessages.querySelector(`.message[data-message-id="${messageId}"]`);
-            const textElement = wrapper.querySelector('.text');
-            const newMessage = prompt('Edit your message:', textElement.textContent.replace(' (edited)',''));
-            if (!newMessage) return;
+            const bubble = wrapper.querySelector('.bubble');
 
-            fetch(`/messages/update/${messageId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({ message: newMessage })
-            })
-            .then(res => res.json())
-            .then(data => {
-                textElement.textContent = data.message.message + ' (edited)';
-                e.target.parentElement.style.display = 'none';
-            })
-            .catch(err => console.error(err));
-        }
+            // Determine type to show proper deleted text
+            let deletedText = 'This message was deleted.';
+            if (wrapper.querySelector('audio')) deletedText = 'This voice message was deleted.';
+            else if (wrapper.querySelector('img, video, a')) deletedText = 'This file was deleted.';
 
-        // Delete message (text, file, or voice)
-        if (e.target.classList.contains('delete-message')) {
-            const messageId = e.target.dataset.messageId;
-            if (!confirm('Are you sure you want to delete this message?')) return;
+            bubble.innerHTML = `<p class="text">${deletedText}</p>`;
+        })
+        .catch(err => console.error('Delete failed:', err));
+    }
+});
 
-            fetch(`/messages/delete/${messageId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json'
-                }
-            })
-            .then(() => {
-                const wrapper = chatMessages.querySelector(`.message[data-message-id="${messageId}"]`);
-                const msgType = wrapper.querySelector('audio') ? 'voice' :
-                                wrapper.querySelector('img, video, a') ? 'file' : 'text';
-                let deletedText = 'This message was deleted.';
-                if (msgType === 'voice') deletedText = 'This voice message was deleted.';
-                else if (msgType === 'file') deletedText = 'This file was deleted.';
-
-                wrapper.querySelector('.bubble').innerHTML = `<p class="text">${deletedText}</p>`;
-            })
-            .catch(err => console.error(err));
-        }
-    });
 
     // Close menus when clicking outside
     document.addEventListener('click', e => {
