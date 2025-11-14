@@ -144,37 +144,10 @@ class IndtherapistController extends ptController
         return view('user.therapist.independent.appointment', compact('appointments'));
     }
 
+
     public function updateAppointmentStatus(Request $request, $id)
     {
-        $request->validate([
-            'status' => 'required|in:approved,rejected,completed',
-        ]);
-
-        $appointment = Appointment::forProvider(Auth::user())->findOrFail($id);
-        $appointment->status = $request->status;
-        $appointment->save();
-
-        // Update related availability
-        $availability = Availability::where('provider_id', $appointment->provider_id)
-            ->whereDate('date', $appointment->appointment_date)
-            ->first();
-
-        if ($availability) {
-            if ($request->status === 'completed') {
-                $availability->status = 'completed';
-                $availability->is_active = false;
-            } elseif (in_array($request->status, ['approved', 'pending'])) {
-                $availability->status = 'active';
-                $availability->is_active = true;
-            } elseif ($request->status === 'rejected') {
-                $availability->status = 'cancelled';
-                $availability->is_active = false;
-            }
-
-            $availability->save();
-        }
-
-        return back()->with('success', 'Appointment status updated successfully!');
+        return parent::updateAppointmentStatus($request, $id);
     }
 
     /** ---------------- CLIENTS ---------------- */

@@ -5,9 +5,12 @@ namespace App\Http\Controllers\TherapistController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use App\Models\Appointment;
+use App\Models\Availability;
 use Carbon\Carbon;
+use App\Mail\AppointmentStatusMail;
 
 class ptController extends Controller
 {
@@ -120,7 +123,7 @@ class ptController extends Controller
     }
 
     /**
-     *  Update Electronic Health Record (EHR)
+     * Update Electronic Health Record (EHR)
      */
     public function updateEHR(Request $request, $patientId)
     {
@@ -136,7 +139,7 @@ class ptController extends Controller
     }
 
     /**
-     *  Update Treatment Plan
+     * Update Treatment Plan
      */
     public function updateTreatment(Request $request, $patientId)
     {
@@ -152,7 +155,7 @@ class ptController extends Controller
     }
 
     /**
-     *  Update Progress Notes
+     * Update Progress Notes
      */
     public function updateProgress(Request $request, $patientId)
     {
@@ -165,5 +168,49 @@ class ptController extends Controller
         $patient->save();
 
         return redirect()->back()->with('success', 'Progress note updated successfully!');
+    }
+
+    /**
+     * Update appointment status (approved, rejected, completed)
+     * Sends email notification to patient.
+     */
+    public function updateAppointmentStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:approved,rejected,completed',
+        ]);
+
+        $appointment = Appointment::findOrFail($id);
+        $appointment->status = $request->status;
+        $appointment->save();
+
+        // Update related availability
+        $availability = Availability::where('provider_id', $appointment->provider_id)
+            ->whereDate('date', $appointment->appointment_date)
+            ->first();
+
+        if ($availability) {
+            if ($request->status === 'completed') {
+                $availability->status = 'completed';
+                $availability->is_active = false;
+            } elseif (in_array($request->status, ['approved', 'pending'])) {
+                $availability->status = 'active';
+                $availability->is_active = true;
+            } elseif ($request->status === 'rejected') {
+                $availability->status = 'cancelled';
+                $availability->is_active = false;
+            }
+            $availability->save();
+        }
+
+        // Send email notification to patient
+        try {
+            Mail::to($appointment->patient->email)
+                ->send(new AppointmentStatusMail($appointment));
+        } catch (\Exception $e) {
+            \Log::error("Failed to send appointment email: " . $e->getMessage());
+        }
+
+        return back()->with('success', 'Appointment status updated and patient notified!');
     }
 }

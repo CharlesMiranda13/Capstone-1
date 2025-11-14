@@ -30,7 +30,7 @@ class AccountApprovedMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'account_approved',
+            view: 'email.account_approved',
         );
     }
 
