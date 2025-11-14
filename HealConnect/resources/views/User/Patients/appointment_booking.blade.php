@@ -96,6 +96,9 @@
 <script id="availabilities-data" type="application/json">
     {!! json_encode($availabilities) !!}
 </script>
+<script id="booked-times-data" type="application/json">
+    {!! json_encode($bookedTimes) !!}
+</script>
 @endsection
 @section('scripts')
 <script src="{{ asset('js/booking.js') }}"></script>

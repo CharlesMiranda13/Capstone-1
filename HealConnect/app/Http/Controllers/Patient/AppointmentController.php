@@ -15,7 +15,7 @@ class AppointmentController extends Controller
     public function index()
     {
         $appointments = Appointment::where('patient_id', auth()->id())
-            ->with('provider') 
+            ->with('provider')
             ->orderBy('appointment_date', 'desc')
             ->get();
 
@@ -29,14 +29,14 @@ class AppointmentController extends Controller
             ->where('id', $therapistId)
             ->firstOrFail();
 
-
+        // Get service list
         $servicesList = $therapist->services
-            ->pluck('appointment_type')           
-            ->map(fn($s) => explode(',', $s))     
-            ->flatten()                           
+            ->pluck('appointment_type')
+            ->map(fn($s) => explode(',', $s))
+            ->flatten()
             ->all();
 
-        // Get availabilities for therapist/clinic
+        // Get availabilities
         $availabilities = $therapist->availability()
             ->where('is_active', true)
             ->whereDate('date', '>=', now())
@@ -53,10 +53,20 @@ class AppointmentController extends Controller
             ];
         });
 
+        // GET BOOKED TIMES (for filtering)
+
+        $bookedTimes = Appointment::where('provider_id', $therapistId)
+            ->where('provider_type', get_class($therapist))
+            ->whereDate('appointment_date', '>=', now())
+            ->get()
+            ->groupBy('appointment_date')
+            ->map(fn($group) => $group->pluck('appointment_time')->toArray());
+
         return view('user.patients.appointment_booking', [
             'therapist' => $therapist,
             'servicesList' => $servicesList,
             'availabilities' => $dates,
+            'bookedTimes' => $bookedTimes,
         ]);
     }
 
@@ -72,6 +82,22 @@ class AppointmentController extends Controller
         ]);
 
         $therapist = User::findOrFail($validated['therapist_id']);
+    
+        // PREVENT DOUBLE BOOKING
+
+        $isTaken = Appointment::where('provider_id', $therapist->id)
+            ->where('provider_type', get_class($therapist))
+            ->where('appointment_date', $validated['appointment_date'])
+            ->where('appointment_time', $validated['appointment_time'])
+            ->exists();
+
+        if ($isTaken) {
+            return back()
+                ->withInput()
+                ->with('error', 'This time slot is already booked. Please choose another one.');
+        }
+
+        // CREATE APPOINTMENT
 
         Appointment::create([
             'appointment_type' => $validated['appointment_type'],
