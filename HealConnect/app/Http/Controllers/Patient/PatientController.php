@@ -77,7 +77,10 @@ class PatientController extends Controller
     public function showProfile($id)
     {
         $therapist = User::verifiedTherapists()
-            ->with('availability')
+            ->with(['availability' => function ($query) {
+                $query->whereDate('date', '>=', Carbon::today())
+                ->orderBy('date', 'asc');
+            }])
             ->with('services') 
             ->findOrFail($id);
 

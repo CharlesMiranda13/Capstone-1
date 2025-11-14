@@ -214,6 +214,7 @@ class IndtherapistController extends ptController
     {
         $user = Auth::user();
         $availability = Availability::where('provider_id', $user->id)
+            ->whereDate('date', '>=', Carbon::today()) 
             ->orderBy('date', 'asc')
             ->get();
 
