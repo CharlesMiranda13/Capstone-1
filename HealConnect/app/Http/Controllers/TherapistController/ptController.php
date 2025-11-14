@@ -60,7 +60,6 @@ class ptController extends Controller
             ->where('status', 'cancelled')
             ->count();
 
-
         // Monthly appointments data (for line chart)
         $daysInMonth = $now->daysInMonth;
         $monthlyData = collect(range(1, $daysInMonth))->map(fn($d) =>
@@ -85,7 +84,6 @@ class ptController extends Controller
             'appointmentTypes' => $appointmentTypes,
         ];
     }
-
 
     /**
      * Shared settings page
@@ -167,41 +165,5 @@ class ptController extends Controller
         $patient->save();
 
         return redirect()->back()->with('success', 'Progress note updated successfully!');
-    }
-
-    /**
-     * List of clients (patients)
-     */
-    public function clients(Request $request)
-    {
-        $user = Auth::user();
-
-
-        // Filter by provider_id + provider_type using polymorphic scope
-        $appointments = Appointment::forProvider($user)
-            ->with('patient') 
-            ->get();
-
-        // Get unique patients from appointments
-        $patients = $appointments->pluck('patient')->unique('id');
-
-        //  search by patient name
-        if ($request->filled('search')) {
-            $patients = $patients->filter(function($patient) use ($request) {
-                return str_contains(strtolower($patient->name), strtolower($request->search));
-            });
-        }
-
-        // filter by gender
-        if ($request->filled('gender')) {
-            $patients = $patients->filter(function($patient) use ($request) {
-                return $patient->gender === $request->gender;
-            });
-        }
-
-        return view('User.Therapist.clients', [
-            'patients' => $patients,
-            'user' => $user
-        ]);
     }
 }

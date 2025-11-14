@@ -3,15 +3,11 @@
 namespace App\Http\Controllers\Indtherapist;
 
 use App\Http\Controllers\TherapistController\ptController;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Appointment;
-use App\Models\Record;
-use App\Models\Referral;
-use App\Models\Notification;
 use App\Models\User;
 use App\Models\Availability;
 use Illuminate\Support\Facades\DB;
@@ -19,15 +15,14 @@ use Carbon\Carbon;
 
 class IndtherapistController extends ptController
 {
-    /**  DASHBOARD */
+    /** ---------------- DASHBOARD ---------------- */
     public function dashboard()
     {
         $data = $this->getDashboardData();
         return view('user.therapist.independent.independent', $data);
     }
 
-
-    /**  AVAILABILITY */
+    /** ---------------- AVAILABILITY ---------------- */
     public function availability()
     {
         $user = Auth::user();
@@ -111,74 +106,51 @@ class IndtherapistController extends ptController
         return back()->with('success', 'Availability status updated successfully.');
     }
 
-    /** ---------------- SETTINGS ---------------- */
-    public function settings()
-    {
-        $user = Auth::user();
-        return view('shared.settings', compact('user'));
-    }
-
     /** ---------------- APPOINTMENTS ---------------- */
-
     public function appointments(Request $request)
     {
         $user = Auth::user();
 
-        // Base query for therapist’s appointments
-        $query = Appointment::where('provider_id', $user->id)
-            ->with('patient');
+        $query = Appointment::where('provider_id', $user->id)->with('patient');
 
-        // Search filter
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->where(function ($q) use ($search) {
-                $q->whereHas('patient', function ($subQuery) use ($search) {
-                    $subQuery->where('name', 'like', "%{$search}%");
-                })
-                ->orWhere('appointment_type', 'like', "%{$search}%");
+            $query->whereHas('patient', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
             });
         }
 
-        // Filter by status
         if ($request->filled('status')) {
             $query->where('status', $request->input('status'));
         }
 
-        // Filter by appointment type
         if ($request->filled('type')) {
             $query->where('appointment_type', $request->input('type'));
         }
 
-        // Get the latest appointment per patient
-        $appointments = $query
-            ->select('appointments.*')
-            ->join(DB::raw('(SELECT MAX(id) as latest_id FROM appointments GROUP BY patient_id) as latest'), 'appointments.id', '=', 'latest.latest_id')
-            ->orderBy('appointment_date', 'desc')
-            ->get();
+        $appointments = $query->orderBy('appointment_date', 'desc')->get();
 
-        // Mark returning patients (those with completed history)
         foreach ($appointments as $appointment) {
             $appointment->record_count = Appointment::where('provider_id', $appointment->provider_id)
-            ->where('patient_id', $appointment->patient_id)
-            ->where('status', 'completed')
-            ->count();
+                ->where('patient_id', $appointment->patient_id)
+                ->where('status', 'completed')
+                ->count();
         }
 
         return view('user.therapist.independent.appointment', compact('appointments'));
     }
 
-
     public function updateAppointmentStatus(Request $request, $id)
-
     {
         $request->validate([
-            'status' => 'required|in:approved,rejected,completed',]);
+            'status' => 'required|in:approved,rejected,completed',
+        ]);
 
         $appointment = Appointment::forProvider(Auth::user())->findOrFail($id);
         $appointment->status = $request->status;
         $appointment->save();
 
-        // Find related availability
+        // Update related availability
         $availability = Availability::where('provider_id', $appointment->provider_id)
             ->whereDate('date', $appointment->appointment_date)
             ->first();
@@ -200,21 +172,42 @@ class IndtherapistController extends ptController
 
         return back()->with('success', 'Appointment status updated successfully!');
     }
-    /** ---------------- Clients ---------------- */
-    public function clients(Request $request) 
+
+    /** ---------------- CLIENTS ---------------- */
+    public function clients(Request $request)
     {
         $user = Auth::user();
-        $patients = User::where('role', 'patient')->get(); 
+
+        // Only patients who booked at least one appointment
+        $appointments = Appointment::where('provider_id', $user->id)
+            ->with('patient')
+            ->get();
+
+        $patients = $appointments->pluck('patient')->unique('id');
+
+        // Search by patient name
+        if ($request->filled('search')) {
+            $patients = $patients->filter(fn($p) =>
+                str_contains(strtolower($p->name), strtolower($request->search))
+            );
+        }
+
+        // Filter by gender
+        if ($request->filled('gender')) {
+            $patients = $patients->filter(fn($p) =>
+                $p->gender === $request->gender
+            );
+        }
+
         return view('User.Therapist.client', compact('user', 'patients'));
     }
-
 
     /** ---------------- PROFILE ---------------- */
     public function profile()
     {
         $user = Auth::user();
         $availability = Availability::where('provider_id', $user->id)
-            ->whereDate('date', '>=', Carbon::today()) 
+            ->whereDate('date', '>=', Carbon::today())
             ->orderBy('date', 'asc')
             ->get();
 
