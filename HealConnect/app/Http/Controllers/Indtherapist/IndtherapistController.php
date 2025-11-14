@@ -128,7 +128,11 @@ class IndtherapistController extends ptController
             $query->where('appointment_type', $request->input('type'));
         }
 
-        $appointments = $query->orderBy('appointment_date', 'desc')->get();
+        $appointments = $query->orderBy('appointment_date', 'desc')
+            ->orderBy('appointment_time', 'desc')
+            ->get();
+
+        $appointments = $appointments->unique('patient_id');
 
         foreach ($appointments as $appointment) {
             $appointment->record_count = Appointment::where('provider_id', $appointment->provider_id)
