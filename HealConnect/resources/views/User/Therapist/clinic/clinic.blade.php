@@ -9,7 +9,7 @@
 
 @section('content')
 <div class="welcome-header">
-    <h2>Hello, {{ Auth::user()->name ?? 'Therapist' }}!</h2>
+    <h2>Welcome, {{ Auth::user()->name ?? 'Therapist' }}!</h2>
     <a href="{{ route('therapist.settings') }}">
         <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) 
         : asset('images/logo1.png') }}"
