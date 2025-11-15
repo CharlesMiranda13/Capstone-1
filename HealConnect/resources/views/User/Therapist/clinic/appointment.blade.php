@@ -31,15 +31,6 @@
                     <option value="online" {{ request('type') == 'online' ? 'selected' : '' }}>Online</option>
                 </select>
 
-                {{-- Filter by Provider --}}
-                <select name="provider_id" class="filter-select" onchange="this.form.submit()">
-                    <option value="">All Providers</option>
-                    @foreach($providers as $provider)
-                        <option value="{{ $provider->id }}" {{ request('provider_id') == $provider->id ? 'selected' : '' }}>
-                            {{ $provider->name }}
-                        </option>
-                    @endforeach
-                </select>
 
                 <button type="submit" class="btn-search">
                     <i class="fa fa-search"></i>

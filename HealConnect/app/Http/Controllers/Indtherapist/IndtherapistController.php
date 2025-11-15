@@ -250,8 +250,19 @@ class IndtherapistController extends ptController
     /** ---------------- PATIENT PROFILE ---------------- */
     public function patientProfile($id)
     {
+        $therapist = Auth::user();
+
+        // Get the patient
         $patient = User::where('role', 'patient')->findOrFail($id);
-        $appointments = $patient->appointments ?? [];
-        return view('user.therapist.independent.patient_profile', compact('patient', 'appointments'));
-    }
+
+        // Get appointments 
+        $appointments = Appointment::where('patient_id', $patient->id)
+            ->where('provider_id', $therapist->id)
+            ->where('provider_type', User::class)
+            ->orderBy('appointment_date', 'desc')
+            ->orderBy('appointment_time', 'desc')
+            ->get();
+
+        return view('user.therapist.patient_profile', compact('patient', 'appointments'));
+    }      
 }
