@@ -271,6 +271,15 @@
     margin-bottom: 15px;
 }
 
+.availability-container select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
 /*ALERT STYLES*/
 .alert {
     padding: 12px 18px;
@@ -321,6 +330,7 @@ input[type="time"] {
     font-size: 0.95rem;
     width: 100%;
 }
+
 
 button,
 .btn {
@@ -488,4 +498,40 @@ table tr:hover {
         flex-direction: column;
         gap: 10px;
     }
+}
+
+/* === additional sa clinic === */
+.services-container input[type="text"],
+.services-container input[type="number"],
+.services-container textarea,
+.services-container select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    width: 100%;
+}
+
+.services-container .checkbox-group {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.services-container table td span.text-muted {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+
+.services-container table td button,
+.services-container table td form button {
+    margin-right: 5px;
+}
+
+
+.modal-content form label {
+    margin-top: 10px;
+    display: block;
 }
