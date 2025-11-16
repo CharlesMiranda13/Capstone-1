@@ -54,38 +54,26 @@ class UserController extends Controller
     }
 
     // Decline user 
-    public function decline($id)
+    public function decline(Request $request, $id)
     {
         $user = User::findOrFail($id);
-        $user->status = 'Unverified'; 
+
+    
+        $request->validate([
+            'reason' => 'required|string|max:500'
+        ]);
+    
+        $user->status = 'Declined';
         $user->is_verified_by_admin = false;
         $user->save();
+   
+        try {
+            Mail::to($user->email)->send(new \App\Mail\AccountDeniedMail($user, $request->reason));
+        } catch (\Exception $e) {
+            \Log::error('Failed to send account decline email: ' . $e->getMessage());
+        }
 
-        return back()->with('error', 'User has been declined.');
-    }
-
-    // Edit user form
-    public function edit($id)
-    {
-        $user = User::findOrFail($id);
-        return view('User.Admin.edit_user', compact('user'));
-    }
-
-    // Update user details
-    public function update(Request $request, $id)
-    {
-        $user = User::findOrFail($id);
-
-        $request->validate([
-            'name'  => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'role'  => 'required|string',
-        ]);
-
-        $user->update($request->all());
-
-        return redirect()->route('admin.manage-users')
-            ->with('success', 'User updated successfully.');
+        return back()->with('error', 'User has been declined and notified via email.');
     }
 
     // Permanently delete user
