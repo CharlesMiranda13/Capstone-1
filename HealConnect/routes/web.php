@@ -94,14 +94,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         ->name('users.decline')
         ->middleware('auth:admin');
 
-    Route::get('/users/{id}/edit', [UserController::class, 'edit'])
-        ->name('users.edit')
-        ->middleware('auth:admin');
-
-    Route::put('/users/{id}', [UserController::class, 'update'])
-        ->name('users.update')
-        ->middleware('auth:admin');
-
     Route::delete('/users/{id}', [UserController::class, 'destroy'])
         ->name('users.destroy')
         ->middleware('auth:admin');
