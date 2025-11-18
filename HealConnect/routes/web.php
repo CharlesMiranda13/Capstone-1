@@ -180,7 +180,17 @@ Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'check.status'])->
 
     // Dashboard
     Route::get('/home', [ClinicController::class, 'dashboard'])->name('home');
-    Route::view('/services', 'user.therapist.clinic.services')->name('services');
+
+    //services
+    Route::get('/services', [ClinicController::class, 'services'])->name('services');
+    Route::post('/services', [ClinicController::class, 'storeService'])->name('services.store');
+    Route::put('/services/{id}', [ClinicController::class, 'updateService'])->name('services.update');
+    Route::delete('/services/{id}', [ClinicController::class, 'destroyService'])->name('services.destroy');
+
+    Route::get('/availability', [ClinicController::class, 'availability'])->name('availability');
+    Route::post('/availability', [ClinicController::class, 'storeSchedule'])->name('schedules.store');
+    Route::patch('/availability/{id}/toggle', [ClinicController::class, 'toggleSchedule'])->name('schedules.toggle');
+    Route::delete('/availability/{id}', [ClinicController::class, 'destroySchedule'])->name('schedules.destroy');
 
     // Clients (Patients under this clinic’s therapists)
     Route::get('/clients', [ClinicController::class, 'clients'])->name('clients');
@@ -228,8 +238,6 @@ Route::middleware(['auth', 'check.status'])->group(function () {
     Route::delete('/messages/{id}', [ChatController::class, 'destroy'])->name('messages.destroy');
 
 });
-
-
 
 
 /* Email Verification*/

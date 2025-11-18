@@ -13,6 +13,9 @@ class TherapistService extends Model
         'serviceable_id',
         'serviceable_type',
         'appointment_type',
+        'description',
+        'price',
+        'duration'
     ];
 
 
