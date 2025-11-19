@@ -29,7 +29,13 @@ class EmployeeController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'position' => 'required|string|max:255',
+            'priofile_pic' => 'nullable|image|max:2048',
         ]);
+
+        $profilePath = null;
+        if ($request->hasFile('profile_picture')) {
+            $profilePath = $request->file('profile_picture')->store('profiles', 'public');
+        }
 
         User::create([
             'name' => $request->name,

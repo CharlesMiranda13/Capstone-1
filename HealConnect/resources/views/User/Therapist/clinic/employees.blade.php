@@ -18,10 +18,10 @@
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>Profile</th>
                     <th>Full Name</th>
                     <th>Email</th>
                     <th>Position</th>
-                    <th>Schedule</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -29,10 +29,15 @@
                 @forelse($employees as $index => $employee)
                     <tr>
                         <td>{{ $index + 1 }}</td>
+                        <td>
+                            @if($employee->profile_picture)
+                                <img src="{{ asset('storage/' . $employee->profile_pictures) }}" alt="Profile Picture" class="profile-pic">
+                            @else
+                                <img src="{{ asset('images/logo1.png') }}" alt="Default Profile Picture" class="profile-pic">
+                            @endif
                         <td>{{ $employee->name }}</td>
                         <td>{{ $employee->email }}</td>
-                        <td>{{ $employee->position }}</td>
-                        <td>{{ $employee->schedule ?? 'No schedule set' }}</td>
+                        <td>{{ $employee->role }}</td>
                         <td class="actions">
                             <button class="edit-btn" data-id="{{ $employee->id }}">Edit</button>
                             <button class="delete-btn" data-id="{{ $employee->id }}">Delete</button>
@@ -55,7 +60,7 @@
             <h3>Add New Employee</h3>
 
             <form id="addEmployeeForm" method="POST" action="{{ route('clinic.employees.store') }}">
-                @csrf
+                @csrf   
                 <label for="name">Full Name</label>
                 <input type="text" id="name" name="name" required>
 
@@ -64,6 +69,9 @@
 
                 <label for="position">Position</label>
                 <input type="text" id="position" name="position" required>
+
+                <label for="profile_picture">Profile</label>
+                <input type="file" id="profile_picture" name="profile_picture" required>
 
                 <button type="submit" class="submit-btn">Save Employee</button>
             </form>

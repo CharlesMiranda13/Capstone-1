@@ -1,53 +1,62 @@
 .employee-main {
     width: 90%;
-    max-width: 1100px;
+    max-width: 1200px;
     margin: 2rem auto;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Header */
 .employee-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .employee-header h2 {
     color: #1b4965;
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 700;
 }
 
 .employee-header button {
     background-color: #1b4965;
-    color: white;
+    color: #fff;
     border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 6px;
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
     cursor: pointer;
-    font-weight: 500;
-    transition: 0.2s ease;
+    font-weight: 600;
+    transition: 0.3s ease;
 }
 
 .employee-header button:hover {
     background-color: #163b54;
 }
 
-/* Table */
+/* Employee Table */
+.employee-table-section {
+    overflow-x: auto;
+}
+
 .employee-table {
     width: 100%;
     border-collapse: collapse;
-    background-color: white;
-    border-radius: 8px;
+    background-color: #fff;
+    border-radius: 10px;
     overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .employee-table th,
 .employee-table td {
-    padding: 0.9rem 1rem;
+    padding: 1rem 1.2rem;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: middle;
 }
 
 .employee-table th {
@@ -58,26 +67,40 @@
 
 .employee-table tbody tr:hover {
     background-color: #f0f4f8;
+    transition: 0.2s ease;
 }
 
+/* Profile picture */
+.profile-pic {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+}
+
+/* No data row */
 .no-data {
     text-align: center;
     color: #777;
-    padding: 1rem;
+    padding: 1.2rem;
 }
 
 /* Action buttons */
 .actions {
     display: flex;
     gap: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .actions button {
     border: none;
-    border-radius: 5px;
-    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    padding: 0.5rem 0.9rem;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: 0.2s ease;
 }
 
 .edit-btn {
@@ -87,78 +110,115 @@
 
 .delete-btn {
     background-color: #dc3545;
-    color: white;
+    color: #fff;
 }
 
 .schedule-btn {
     background-color: #198754;
-    color: white;
+    color: #fff;
 }
 
 .actions button:hover {
     opacity: 0.85;
 }
 
-/* Modal */
 .modal {
     display: none;
     position: fixed;
-    z-index: 100;
+    z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 .modal-content {
     background-color: #fff;
     margin: 5% auto;
-    padding: 1.5rem 2rem;
-    border-radius: 10px;
+    padding: 2rem;
+    border-radius: 12px;
     width: 100%;
-    max-width: 400px;
+    max-width: 450px;
     position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .modal-content h3 {
     margin-bottom: 1rem;
     color: #1b4965;
+    font-size: 1.5rem;
+    text-align: center;
 }
 
 .modal-content label {
     display: block;
     font-weight: 600;
-    margin: 0.5rem 0 0.2rem;
+    margin: 0.6rem 0 0.3rem;
 }
 
-.modal-content input {
+.modal-content input[type="text"],
+.modal-content input[type="email"],
+.modal-content input[type="file"] {
     width: 100%;
-    padding: 0.5rem;
+    padding: 0.6rem;
     border: 1px solid #ccc;
-    border-radius: 6px;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
 }
 
 .submit-btn {
     width: 100%;
     background-color: #1b4965;
-    color: white;
+    color: #fff;
     border: none;
-    padding: 0.7rem;
-    border-radius: 6px;
-    margin-top: 1rem;
+    padding: 0.8rem;
+    border-radius: 8px;
     cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s ease;
 }
 
 .submit-btn:hover {
     background-color: #163b54;
 }
 
+/* Close button */
 .close {
     position: absolute;
     right: 1rem;
-    top: 0.8rem;
-    font-size: 1.3rem;
+    top: 1rem;
+    font-size: 1.5rem;
     cursor: pointer;
+    font-weight: 600;
+    color: #333;
+}
+
+@media screen and (max-width: 768px) {
+    .employee-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .employee-header button {
+        align-self: stretch;
+    }
+
+    .actions {
+        justify-content: flex-start;
+    }
 }
