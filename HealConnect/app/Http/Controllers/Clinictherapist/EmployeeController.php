@@ -10,14 +10,33 @@ use App\Models\User;
 class EmployeeController extends Controller
 {
     /** ---------------- VIEW EMPLOYEES ---------------- */
-    public function index()
+    public function index(Request $request)
     {
         $clinic = Auth::user();
-        $employees = User::where('clinic_id', $clinic->id)
-                         ->where('role', 'employee')
-                         ->get();
 
-        return view('user.therapist.clinic.employees', compact('employees'));
+        $query = User::where('clinic_id', $clinic->id)
+                     ->where('role', 'employee');
+
+        // Search by name
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter by position
+        if ($request->filled('position')) {
+            $query->where('position', $request->position);
+        }
+
+        $employees = $query->get();
+
+        // Get unique positions for dropdown
+        $positions = User::where('clinic_id', $clinic->id)
+                         ->where('role', 'employee')
+                         ->pluck('position')
+                         ->unique()
+                         ->sort();
+
+        return view('user.therapist.clinic.employees', compact('employees', 'positions'));
     }
 
     /** ---------------- ADD EMPLOYEE ---------------- */
@@ -25,7 +44,6 @@ class EmployeeController extends Controller
     {
         $clinic = Auth::user();
 
-        // Corrected validation
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -33,13 +51,10 @@ class EmployeeController extends Controller
             'profile_picture' => 'nullable|image|max:2048',
         ]);
 
-        // Handle profile picture
-        $profilePath = null;
-        if ($request->hasFile('profile_picture')) {
-            $profilePath = $request->file('profile_picture')->store('profile_pictures', 'public');
-        }
+        $profilePath = $request->hasFile('profile_picture') 
+            ? $request->file('profile_picture')->store('profile_pictures', 'public')
+            : null;
 
-        // Create employee
         User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -47,7 +62,7 @@ class EmployeeController extends Controller
             'role' => 'employee',
             'clinic_id' => $clinic->id,
             'profile_picture' => $profilePath,
-            'password' => bcrypt('password123'), // default password
+            'password' => bcrypt('password123'),
         ]);
 
         return back()->with('success', 'Employee added successfully!');
@@ -72,7 +87,6 @@ class EmployeeController extends Controller
             'profile_picture' => 'nullable|image|max:2048',
         ]);
 
-        // Update profile picture if uploaded
         if ($request->hasFile('profile_picture')) {
             $employee->profile_picture = $request->file('profile_picture')->store('profile_pictures', 'public');
         }

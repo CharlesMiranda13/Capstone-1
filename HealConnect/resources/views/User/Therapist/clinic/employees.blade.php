@@ -8,84 +8,134 @@
 
 @section('content')
 <main class="employee-main">
+
+    <!-- Header -->
     <section class="employee-header">
-        <h2>Clinic Employees</h2>
-        <button id="addEmployeeBtn">Add Employee</button>
-    </section>
+        <div class="employee-header-left">
+            <h2>Clinic Employees</h2>
+            <p>Manage employees, update details, and monitor schedules</p>
+        </div>
 
-    <section class="employee-table-section">
-        <table class="employee-table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Profile</th>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Position</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($employees as $index => $employee)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>
-                            <img 
-                                src="{{ $employee->profile_picture 
-                                    ? asset('storage/' . $employee->profile_picture) 
-                                    : asset('images/logo1.png') }}" 
-                                alt="Profile Picture" 
-                                class="profile-pic">
-                        </td>
-                        <td>{{ $employee->name }}</td>
-                        <td>{{ $employee->email }}</td>
-                        <td>{{ $employee->position }}</td>
-                        <td class="actions">
-                            <button class="edit-btn" data-id="{{ $employee->id }}">Edit</button>
-                            <button class="delete-btn" data-id="{{ $employee->id }}">Delete</button>
-                            <button class="schedule-btn" data-id="{{ $employee->id }}">Manage Schedule</button>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="6" class="no-data">No employees found.</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </section>
+        <div class="employee-header-right">
 
-    <!-- Add Employee Modal -->
-    <div id="addEmployeeModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h3>Add New Employee</h3>
+            <!-- FILTER FORM -->
+            <form method="GET" action="{{ route('clinic.employees') }}" class="filter-form">
+                <input type="text" name="search"
+                       placeholder="Search employees..."
+                       value="{{ request('search') }}">
 
-            <!-- enctype is required for file uploads -->
-            <form id="addEmployeeForm" method="POST" action="{{ route('clinic.employees.store') }}" enctype="multipart/form-data">
-                @csrf   
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" required>
+                <select name="position" onchange="this.form.submit()">
+                    <option value="">All Positions</option>
+                    <option value="Therapist">Therapist</option>
+                    <option value="Assistant">Staff</option>
+                </select>
 
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-
-                <label for="position">Position</label>
-                <input type="text" id="position" name="position" required>
-
-                <label for="profile_picture">Profile</label>
-                <input type="file" id="profile_picture" name="profile_picture">
-
-                <button type="submit" class="submit-btn">Save Employee</button>
+                <button type="submit" class="btn apply-btn">Apply</button>
             </form>
-        </div>
-    </div>
 
-    <div id="employeeModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div id="employeeModalBody"></div>
+            <button id="addEmployeeBtn" class="btn add-btn">
+                Add Employee
+            </button>
+
+        </div> >
+    </section> 
+
+
+    <!-- TABLE SECTION -->
+    <section class="employee-table-section">
+        <div class="table-card">
+            <table class="employee-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Profile</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Position</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse($employees as $index => $employee)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+
+                            <td>
+                                <img 
+                                    src="{{ $employee->profile_picture 
+                                        ? asset('storage/' . $employee->profile_picture)
+                                        : asset('images/logo1.png') }}"
+                                    alt="Profile Picture"
+                                    class="profile-pic"
+                                >
+                            </td>
+
+                            <td>{{ $employee->name }}</td>
+                            <td>{{ $employee->email }}</td>
+                            <td>{{ $employee->position }}</td>
+
+                            <td class="actions">
+                                <button class="edit-btn" data-id="{{ $employee->id }}">Edit</button>
+                                <button class="delete-btn" data-id="{{ $employee->id }}">Delete</button>
+                                <button class="schedule-btn" data-id="{{ $employee->id }}">Schedule</button>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="no-data">No employees found.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+
+            </table>
         </div>
+    </section>
+
+</main> 
+<!--  ADD EMPLOYEE MODAL    -->
+
+<div id="addEmployeeModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+
+        <h3>Add New Employee</h3>
+
+        <form id="addEmployeeForm" method="POST" action="{{ route('clinic.employees.store') }}" enctype="multipart/form-data">
+            @csrf
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label>Position</label>
+                <input type="text" name="position" required>
+            </div>
+
+            <div class="form-group">
+                <label>Profile Picture</label>
+                <input type="file" name="profile_picture">
+            </div>
+
+            <button type="submit" class="submit-btn">Save Employee</button>
+        </form>
     </div>
-</main>
+</div>
+
+
+<!-- EDIT MODAL -->
+<div id="employeeModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="employeeModalBody"></div>
+    </div>
+</div>
+
 @endsection
