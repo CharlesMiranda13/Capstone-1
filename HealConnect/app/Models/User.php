@@ -32,7 +32,9 @@ class User extends Authenticatable
         'address',
         'start_year',
         'valid_id_path',
-        'license_path',];
+        'license_path',
+        'clinic_id',
+        'position',];
 
     /**
      * The attributes that should be hidden for serialization.

@@ -25,24 +25,28 @@ class EmployeeController extends Controller
     {
         $clinic = Auth::user();
 
+        // Corrected validation
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'position' => 'required|string|max:255',
-            'priofile_pic' => 'nullable|image|max:2048',
+            'profile_picture' => 'nullable|image|max:2048',
         ]);
 
+        // Handle profile picture
         $profilePath = null;
         if ($request->hasFile('profile_picture')) {
-            $profilePath = $request->file('profile_picture')->store('profiles', 'public');
+            $profilePath = $request->file('profile_picture')->store('profile_pictures', 'public');
         }
 
+        // Create employee
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'position' => $request->position,
             'role' => 'employee',
             'clinic_id' => $clinic->id,
+            'profile_picture' => $profilePath,
             'password' => bcrypt('password123'), // default password
         ]);
 
@@ -53,8 +57,6 @@ class EmployeeController extends Controller
     public function edit($id)
     {
         $employee = User::findOrFail($id);
-
-        // Return a view snippet for modal
         return view('user.therapist.clinic.employee_edit', compact('employee'));
     }
 
@@ -67,14 +69,15 @@ class EmployeeController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $employee->id,
             'position' => 'required|string|max:255',
+            'profile_picture' => 'nullable|image|max:2048',
         ]);
 
-        $employee->update($request->only('name', 'email', 'position'));
-
-        // If AJAX request, return success message
-        if ($request->ajax()) {
-            return response()->json(['success' => true, 'message' => 'Employee updated successfully']);
+        // Update profile picture if uploaded
+        if ($request->hasFile('profile_picture')) {
+            $employee->profile_picture = $request->file('profile_picture')->store('profile_pictures', 'public');
         }
+
+        $employee->update($request->only('name', 'email', 'position'));
 
         return back()->with('success', 'Employee updated successfully!');
     }
@@ -85,7 +88,6 @@ class EmployeeController extends Controller
         $employee = User::findOrFail($id);
         $employee->delete();
 
-        // AJAX-friendly response
         if ($request->ajax()) {
             return response()->json(['success' => true]);
         }
@@ -97,8 +99,6 @@ class EmployeeController extends Controller
     public function manageSchedule($id)
     {
         $employee = User::findOrFail($id);
-
-        // Return view snippet for modal
         return view('user.therapist.clinic.employee_schedule', compact('employee'));
     }
 }

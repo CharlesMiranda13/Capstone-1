@@ -30,14 +30,16 @@
                     <tr>
                         <td>{{ $index + 1 }}</td>
                         <td>
-                            @if($employee->profile_picture)
-                                <img src="{{ asset('storage/' . $employee->profile_pictures) }}" alt="Profile Picture" class="profile-pic">
-                            @else
-                                <img src="{{ asset('images/logo1.png') }}" alt="Default Profile Picture" class="profile-pic">
-                            @endif
+                            <img 
+                                src="{{ $employee->profile_picture 
+                                    ? asset('storage/' . $employee->profile_picture) 
+                                    : asset('images/logo1.png') }}" 
+                                alt="Profile Picture" 
+                                class="profile-pic">
+                        </td>
                         <td>{{ $employee->name }}</td>
                         <td>{{ $employee->email }}</td>
-                        <td>{{ $employee->role }}</td>
+                        <td>{{ $employee->position }}</td>
                         <td class="actions">
                             <button class="edit-btn" data-id="{{ $employee->id }}">Edit</button>
                             <button class="delete-btn" data-id="{{ $employee->id }}">Delete</button>
@@ -59,7 +61,8 @@
             <span class="close">&times;</span>
             <h3>Add New Employee</h3>
 
-            <form id="addEmployeeForm" method="POST" action="{{ route('clinic.employees.store') }}">
+            <!-- enctype is required for file uploads -->
+            <form id="addEmployeeForm" method="POST" action="{{ route('clinic.employees.store') }}" enctype="multipart/form-data">
                 @csrf   
                 <label for="name">Full Name</label>
                 <input type="text" id="name" name="name" required>
@@ -71,7 +74,7 @@
                 <input type="text" id="position" name="position" required>
 
                 <label for="profile_picture">Profile</label>
-                <input type="file" id="profile_picture" name="profile_picture" required>
+                <input type="file" id="profile_picture" name="profile_picture">
 
                 <button type="submit" class="submit-btn">Save Employee</button>
             </form>
