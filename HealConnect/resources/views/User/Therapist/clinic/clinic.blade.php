@@ -9,12 +9,12 @@
 
 @section('content')
 <div class="welcome-header">
-    <h2>Welcome, {{ Auth::user()->name ?? 'Therapist' }}!</h2>
+    <h2>Welcome, {{ $clinic->name ?? 'Clinic' }}!</h2>
     <a href="{{ route('therapist.settings') }}">
-        <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) 
-        : asset('images/logo1.png') }}"
-        alt="Profile Picture"
-        class="pic">
+        <img src="{{ $clinic->profile_picture ? asset('storage/' . $clinic->profile_picture) 
+            : asset('images/logo1.png') }}"
+            alt="Profile Picture"
+            class="pic">
     </a>
 </div>
 
@@ -22,22 +22,27 @@
     <div class="dashboard-cards">
         <div class="card">
             <i class="fa-solid fa-user-doctor" style="color:#007bff;"></i>
-            <h3>{{ $totalTherapists ?? 0 }}</h3>
+            <h3>{{ $totalTherapists }}</h3>
             <p>Therapists</p>
         </div>
         <div class="card">
+            <i class="fa-solid fa-users" style="color:#28a745;"></i>
+            <h3>{{ $totalEmployees }}</h3>
+            <p>Employees</p>
+        </div>
+        <div class="card">
             <i class="fa-solid fa-users"></i>
-            <h3>{{ $totalPatients ?? 0 }}</h3>
+            <h3>{{ $totalPatients }}</h3>
             <p>Patients</p>
         </div>
         <div class="card">
             <i class="fa-solid fa-calendar-check"></i>
-            <h3>{{ $totalAppointments ?? 0 }}</h3>
+            <h3>{{ $totalAppointments }}</h3>
             <p>Total Appointments</p>
         </div>
         <div class="card">
             <i class="fa-solid fa-hourglass-half" style="color:orange;"></i>
-            <h3>{{ $pendingAppointments ?? 0 }}</h3>
+            <h3>{{ $pendingAppointments }}</h3>
             <p>Pending Appointments</p>
         </div>
     </div>
@@ -59,6 +64,7 @@
         </div>
     </div>
 
+    <!-- Analytics Overview -->
     <div class="analytics-overview card">
         <h3>Analytics Overview</h3>
         <div class="analytics-section">
@@ -81,7 +87,7 @@
     window.dashboardData = {
         therapistData: {
             labels: {!! json_encode($therapistNames ?? []) !!},
-            values: {!! json_encode($therapistAppointments ?? []) !!}
+            values: {!! json_encode($therapistAppointmentsCount ?? []) !!}
         },
         appointmentTypeData: {
             labels: {!! json_encode($appointmentTypes->keys() ?? []) !!},

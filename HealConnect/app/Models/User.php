@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Carbon\Carbon;
+use App\Models\Appointment;
 
 class User extends Authenticatable
 {
@@ -99,6 +100,11 @@ class User extends Authenticatable
     public function receiver()
     {
         return $this->hasMany(\App\Models\Message::class, 'receiver_id');
+    }
+
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class, 'provider_id');
     }
 
 }
