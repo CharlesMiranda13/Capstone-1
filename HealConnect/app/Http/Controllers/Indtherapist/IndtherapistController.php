@@ -41,7 +41,7 @@ class IndtherapistController extends ptController
 
         $existingServices = $services ? explode(',', $services) : [];
 
-        return view('user.therapist.independent.availability', compact(
+        return view('user.therapist.independent.services', compact(
             'user', 'availabilities', 'calendarAvailabilities', 'existingServices'
         ));
     }

@@ -153,7 +153,7 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
 
     Route::get('/services', [IndtherapistController::class, 'services'])->name('services');
     Route::post('/services', [IndtherapistController::class, 'storeServices'])->name('services.store');
-    Route::get('/availability', [IndtherapistController::class, 'availability'])->name('availability');   
+    Route::get('/availability', [IndtherapistController::class, 'availability'])->name('services');   
     Route::post('/availability', [IndtherapistController::class, 'store'])->name('availability.store');
     Route::patch('/availability/{id}/toggle', [IndtherapistController::class, 'toggleAvailability'])->name('availability.toggle');
     Route::delete('/appointments/{id}', [IndtherapistController::class, 'destroy'])->name('availability.destroy');
