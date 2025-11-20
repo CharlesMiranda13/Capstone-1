@@ -77,32 +77,40 @@
                     @if($therapist->availability && count($therapist->availability) > 0)
                         <ul class="availability">
                             @foreach($therapist->availability as $slot)
-                                <li>
+                            <li>
+                                @if(isset($slot['day_of_week']) && is_numeric($slot['day_of_week']) && $slot['day_of_week'] >= 0 && $slot['day_of_week'] <= 6)
+                                    <span class="date">{{ ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][$slot['day_of_week']] }}</span>
+                                @elseif(isset($slot['date']))
                                     <span class="date">{{ \Carbon\Carbon::parse($slot['date'])->format('F j, Y') }}</span>
+                                @else
+                                    <span class="date">N/A</span>
+                                @endif
+
+                                @if(isset($slot['start_time']) && isset($slot['end_time']))
                                     <span class="time">
                                         {{ \Carbon\Carbon::parse($slot['start_time'])->format('g:i A') }} - 
                                         {{ \Carbon\Carbon::parse($slot['end_time'])->format('g:i A') }}
                                     </span>
-                                </li>
+                                @endif
+                            </li>
                             @endforeach
                         </ul>
                     @else
                         <p>No availability set.</p>
                     @endif
                 </div>
-
-                <div class="services-offered">
-                    <h4><i class="fa-solid fa-concierge-bell"></i> Services Offered</h4>
-                    @if(!empty($servicesList))
+                {{-- SERVICES --}}
+                <div class="card-section">
+                    <h4><i class="fa-solid fa-list"></i> Services Offered</h4>
+                    @if($servicesList && count($servicesList) > 0)
                         <ul class="services-list">
-                            @foreach ($servicesList as $service)
-                                <li>{{ trim($service) }}</li>
+                            @foreach($servicesList as $service)
+                                <li>{{ ucfirst(trim($service)) }}</li>
                             @endforeach
                         </ul>
                     @else
-                        <p>No appointment types added yet.</p>
+                        <p>No services added yet.</p>
                     @endif
-
             </div>
         </section>
     </div>

@@ -39,7 +39,7 @@
                 
                 <div class="service-price">
                     <label>Price / Fee</label>
-                    <input type="text" name="price" value="{{ $existingPrice ?? '' }}" placeholder="Free / ₱500 / Donation-based">
+                    <input type="text" name="price" value="{{ $existingPrice ?? '' }}" placeholder="Enter your price/fee" style=margin-top:10px;>
                 </div>
 
                     <button type="submit" class="btn btn-success">Save Services</button>

@@ -134,6 +134,7 @@
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script>
     window.availabilities = @json($calendarSchedules ?? []);
+    window.userRole = 'clinic'; 
 </script>
 <script src="{{ asset('js/availability.js') }}"></script>
 @endsection

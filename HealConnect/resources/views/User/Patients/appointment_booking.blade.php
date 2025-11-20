@@ -10,14 +10,17 @@
 <main class="therapist-profile">
     <div class="container">
         <div class="header">
-            <h2>Book an Appointment</h2>
+            <h2>Book an Appointment with {{ $therapist->name }}</h2>
         </div>
 
         <section class="profile-card">
+
             {{-- LEFT: Therapist Info --}}
             <div class="profile-left">
                 <div class="profile-pic">
-                    <img src="{{ $therapist->profile_picture ? asset('storage/' . $therapist->profile_picture) : asset('images/default-therapist.png') }}" 
+                    <img src="{{ $therapist->profile_picture 
+                        ? asset('storage/' . $therapist->profile_picture) 
+                        : asset('images/default-therapist.png') }}" 
                         alt="{{ $therapist->name }}">
                 </div>
 
@@ -32,11 +35,11 @@
                 </div>
 
                 <div class="card-section">
-                    <h4><i class="fa-solid fa-hand-holding-medical"></i> Offered Service Types</h4>
+                    <h4><i class="fa-solid fa-hand-holding-medical"></i> Offered Services</h4>
                     @if(!empty($servicesList))
                         <ul class="services-list">
                             @foreach($servicesList as $service)
-                                <li>{{ trim($service) }}</li>
+                                <li>{{ ucfirst(trim($service)) }}</li>
                             @endforeach
                         </ul>
                     @else
@@ -63,44 +66,52 @@
                             @endforeach
                         </select>
 
-                        {{-- Available Date --}}
+                        {{-- Available Dates --}}
                         <label for="appointment_date">Select Available Date:</label>
                         <select name="appointment_date" id="appointment_date" required>
                             <option value="">-- Choose Date --</option>
-                            @foreach($availabilities as $availability)
-                                <option value="{{ $availability['date'] }}">
-                                    {{ \Carbon\Carbon::parse($availability['date'])->format('F j, Y (l)') }}
+                            @foreach($therapistAvailability as $slot)
+                                <option value="{{ $slot['date'] }}">
+                                    {{ \Carbon\Carbon::parse($slot['date'])->format('F j, Y (l)') }} 
+                                    ({{ \Carbon\Carbon::parse($slot['start_time'])->format('g:i A') }} - 
+                                     {{ \Carbon\Carbon::parse($slot['end_time'])->format('g:i A') }})
                                 </option>
                             @endforeach
                         </select>
 
-
+                        {{-- Appointment Time --}}
                         <label for="appointment_time">Select Available Time:</label>
                         <select name="appointment_time" id="appointment_time" required>
                             <option value="">-- Select Date First --</option>
                         </select>
 
+                        {{-- Notes --}}
                         <label for="notes">Notes (Optional):</label>
                         <textarea name="notes" placeholder="Add any details or requests..."></textarea>
 
-                        <label for="referral">Referral:</label>
+                        {{-- Referral Upload --}}
+                        <label for="referral">Referral (Optional):</label>
                         <input type="file" name="referral" accept=".pdf,.doc,.docx,.jpg,.png">
 
                         <button type="submit" class="btn-submit">Book Appointment</button>
                     </form>
                 </div>
             </div>
+
         </section>
     </div>
 </main>
+
+{{-- Pass availability & booked times to JS --}}
 <script id="availabilities-data" type="application/json">
-    {!! json_encode($availabilities) !!}
+    {!! json_encode($therapistAvailability) !!}
 </script>
 <script id="booked-times-data" type="application/json">
-    {!! json_encode($bookedTimes) !!}
+    {!! json_encode($bookedTimes ?? []) !!}
 </script>
+
 @endsection
+
 @section('scripts')
 <script src="{{ asset('js/booking.js') }}"></script>
 @endsection
-
