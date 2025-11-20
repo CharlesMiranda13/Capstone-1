@@ -9,7 +9,6 @@ use App\Models\Appointment;
 use App\Models\User;
 use App\Models\Availability;
 use App\Models\TherapistService;
-use Carbon\Carbon;
 
 class ClinicController extends ptController
 {
@@ -22,15 +21,15 @@ class ClinicController extends ptController
         $totalTherapists = User::where('clinic_id', $clinic->id)->where('role', 'therapist')->count();
         $totalEmployees = User::where('clinic_id', $clinic->id)->where('role', 'employee')->count();
 
-        $totalPatients = Appointment::whereHas('provider', function($q) use ($clinic) {
+        $totalPatients = Appointment::whereHas('provider', function ($q) use ($clinic) {
             $q->where('clinic_id', $clinic->id)->where('role', 'therapist');
         })->with('patient')->get()->pluck('patient')->unique('id')->count();
 
-        $totalAppointments = Appointment::whereHas('provider', function($q) use ($clinic) {
+        $totalAppointments = Appointment::whereHas('provider', function ($q) use ($clinic) {
             $q->where('clinic_id', $clinic->id)->where('role', 'therapist');
         })->count();
 
-        $pendingAppointments = Appointment::whereHas('provider', function($q) use ($clinic) {
+        $pendingAppointments = Appointment::whereHas('provider', function ($q) use ($clinic) {
             $q->where('clinic_id', $clinic->id)->where('role', 'therapist');
         })->where('status', 'pending')->count();
 
@@ -89,9 +88,9 @@ class ClinicController extends ptController
         $calendarSchedules = $schedules->map(function($s) {
             return [
                 'title' => 'Available',
-                'start' => $s->date ? $s->date.' '.$s->start_time : null,
-                'end' => $s->date ? $s->date.' '.$s->end_time : null,
-                'dow' => [(int)$s->day_of_week],
+                'daysOfWeek' => [(int)$s->day_of_week], 
+                'startTime' => $s->start_time,
+                'endTime' => $s->end_time,
                 'extendedProps' => [
                     'is_active' => $s->is_active,
                 ],
@@ -181,9 +180,11 @@ class ClinicController extends ptController
         $calendarSchedules = $schedules->map(function($s) {
             return [
                 'title' => 'Available',
-                'start' => $s->date ? $s->date.' '.$s->start_time : null,
-                'end' => $s->date ? $s->date.' '.$s->end_time : null,
-                'dow' => [(int)$s->day_of_week],
+                'day_of_week' => (int) $s->day_of_week,
+                'start_time' => $s->start_time,
+                'end_time' => $s->end_time,
+                'is_active' => $s->is_active,
+                'color' => $s->is_active ? '#4c8bf5' : '#e0e0e0',
                 'extendedProps' => [
                     'is_active' => $s->is_active,
                 ],
@@ -201,7 +202,6 @@ class ClinicController extends ptController
             'day_of_week' => 'required|integer|between:0,6',
             'start_time' => 'required',
             'end_time' => 'required|after:start_time',
-            'is_active' => 'nullable|boolean',
         ]);
 
         Availability::create([
@@ -210,7 +210,7 @@ class ClinicController extends ptController
             'day_of_week' => $request->day_of_week,
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
-            'is_active' => $request->has('is_active') ? true : false,
+            'is_active' => true,
         ]);
 
         return back()->with('success', 'Availability added successfully!');

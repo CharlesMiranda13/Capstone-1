@@ -17,7 +17,6 @@ class User extends Authenticatable
     const ROLE_THERAPIST = 'therapist';
     const ROLE_CLINIC = 'clinic';
     
-    
     protected $fillable = [
         'name',
         'email',
@@ -35,23 +34,14 @@ class User extends Authenticatable
         'valid_id_path',
         'license_path',
         'clinic_id',
-        'position',];
+        'position',
+    ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -60,13 +50,16 @@ class User extends Authenticatable
         ];
     }
 
+    /** ---------------- SCOPES ---------------- */
     public function scopeVerifiedTherapists($query)
     {
-        return $query->whereIn('role', ['therapist', 'clinic'])
-                ->where('is_verified_by_admin', true)
-                ->where('status', 'Active');
+        return $query->whereIn('role', [self::ROLE_THERAPIST, self::ROLE_CLINIC])
+                     ->where('is_verified_by_admin', true)
+                     ->where('status', 'Active');
     }
 
+    /** ---------------- RELATIONSHIPS ---------------- */
+    // Availability (polymorphic)
     public function availability()
     {
         return $this->morphMany(\App\Models\Availability::class, 'provider');
@@ -75,23 +68,28 @@ class User extends Authenticatable
     public function activeAvailability()
     {
         return $this->morphMany(\App\Models\Availability::class, 'provider')
-            ->where('is_active', true);
+                    ->where('is_active', true);
     }
+
+    // Services (polymorphic)
     public function services()
     {
-         return $this->morphMany(\App\Models\TherapistService::class, 'serviceable');
+        return $this->morphMany(\App\Models\TherapistService::class, 'serviceable');
     }
-    
-    public function getExperienceYearsAttribute()
+
+    // Appointments where user is the provider
+    public function appointments()
     {
-        if (!$this->start_year) {
-            return null;
-        }
-
-        return Carbon::parse($this->start_year)->diffInYears(Carbon::now());
+        return $this->hasMany(Appointment::class, 'provider_id');
     }
 
-    //message
+    // Appointments where user is the patient
+    public function patientAppointments()
+    {
+        return $this->hasMany(Appointment::class, 'patient_id');
+    }
+
+    // Messaging
     public function sender()
     {
         return $this->hasMany(\App\Models\Message::class, 'sender_id');
@@ -102,9 +100,57 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\Message::class, 'receiver_id');
     }
 
-    public function appointments()
+    /** ---------------- ACCESSORS ---------------- */
+    public function getExperienceYearsAttribute()
     {
-        return $this->hasMany(Appointment::class, 'provider_id');
+        if (!$this->start_year) {
+            return null;
+        }
+
+        return Carbon::parse($this->start_year)->diffInYears(Carbon::now());
     }
 
+    /** ---------------- HELPERS ---------------- */
+    /**
+     * Get upcoming availability for the therapist or clinic.
+     * For clinics: expand weekly schedule to upcoming dates.
+     * For independent therapists: date-specific availability.
+     *
+     * @param int $weeks Number of weeks to expand for clinics
+     * @return \Illuminate\Support\Collection
+     */
+    public function upcomingAvailability($weeks = 2)
+    {
+        if ($this->role === self::ROLE_CLINIC) {
+            // Clinic weekly schedule
+            $dates = [];
+            $schedule = $this->availability()->where('is_active', true)->get();
+            $period = [];
+            for ($i = 0; $i < $weeks * 7; $i++) {
+                $period[] = Carbon::today()->addDays($i);
+            }
+
+            foreach ($period as $day) {
+                foreach ($schedule as $slot) {
+                    if ($day->dayOfWeek == (int)$slot->day_of_week) {
+                        $dates[] = [
+                            'date' => $day->toDateString(),
+                            'start_time' => $slot->start_time,
+                            'end_time' => $slot->end_time,
+                            'is_active' => $slot->is_active,
+                        ];
+                    }
+                }
+            }
+
+            return collect($dates);
+        } else {
+            // Independent therapist: date-specific availability
+            return $this->availability()
+                ->where('is_active', true)
+                ->whereDate('date', '>=', Carbon::today())
+                ->orderBy('date')
+                ->get(['date', 'start_time', 'end_time', 'is_active']);
+        }
+    }
 }

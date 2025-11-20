@@ -16,7 +16,9 @@ class Availability extends Model
         'start_time',
         'end_time',
         'date',
-        'is_active'
+        'is_active',
+        'status'
+
     ];
 
     public function provider()

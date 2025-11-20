@@ -8,148 +8,69 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Appointment;
-use App\Models\Record;
 use App\Models\Referral;
-use App\Models\Notification;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
 
 class PatientController extends Controller
 {
-    private function getTherapists()
-    {
-        return User::verifiedTherapists()->get();
-    }
-
-    // Patient Dashboard
+    /** ---------------- DASHBOARD ---------------- */
     public function dashboard()
     {
         $user = Auth::user();
-        $now = Carbon::now();
-
         $appointments = Appointment::where('patient_id', $user->id)
-            ->whereDate('appointment_date', '>=', $now->toDateString())
+            ->whereDate('appointment_date', '>=', Carbon::today())
             ->with('provider')
-            ->orderBy('appointment_date', 'asc')
+            ->orderBy('appointment_date')
             ->take(3)
             ->get();
 
-        $therapists = $this->getTherapists();
+        $therapists = User::verifiedTherapists()->get();
 
         return view('user.patients.patient', compact('user', 'appointments', 'therapists'));
     }
 
-    // List of Therapists (for logged-in patients)
+    /** ---------------- LIST OF THERAPISTS ---------------- */
     public function listOfTherapist(Request $request)
     {
-        $query = User::verifiedTherapists()
-            ->with('availability')
-            ->with('activeAvailability')
-            ->with('services'); // eager load services
-
-        if ($request->filled('category')) {
-            if ($request->category == 'independent') {
-                $query->where('role', 'therapist');
-            } elseif ($request->category == 'clinic') {
-                $query->where('role', 'clinic');
-            }
-        }
-
-        if ($request->filled('service')) {
-            // filter by appointment type using polymorphic relationship
-            $query->whereHas('services', function ($q) use ($request) {
-                $q->where('appointment_type', 'like', '%' . $request->service . '%');
-            });
-        }
-
-        $therapists = $query->paginate(10);
+        $therapists = $this->filterTherapists($request);
 
         $patientHasApprovedReferral = Referral::where('patient_id', Auth::id())
             ->where('status', 'approved')
             ->exists();
 
-        return view('user.patients.listoftherapist', compact('therapists','patientHasApprovedReferral'));
+        return view('user.patients.listoftherapist', compact('therapists', 'patientHasApprovedReferral'));
     }
 
-    // Show therapist/clinic profile
-    public function showProfile($id)
-    {
-        $therapist = User::verifiedTherapists()
-            ->with(['availability' => function ($query) {
-                $query->whereDate('date', '>=', Carbon::today())
-                ->orderBy('date', 'asc');
-            }])
-            ->with('services') 
-            ->findOrFail($id);
-
-        // Get all appointment types from services
-        $servicesList = $therapist->services
-            ->pluck('appointment_type')
-            ->map(fn($s) => explode(',', $s))
-            ->flatten()
-            ->all();
-
-        return view('user.patients.therapist_profile', compact('therapist', 'servicesList'));
-    }
-
-    // Public Therapist List (for non-logged-in users)
     public function publicTherapists(Request $request)
     {
-        $query = User::verifiedTherapists()
-            ->with('availability')
-            ->with('activeAvailability')
-            ->with('services');
-
-        if ($request->filled('category')) {
-            if ($request->category == 'independent') {
-                $query->where('role', 'therapist');
-            } elseif ($request->category == 'clinic') {
-                $query->where('role', 'clinic');
-            }
-        }
-
-        if ($request->filled('service')) {
-            // filter by appointment type using polymorphic relationship
-            $query->whereHas('services', function ($q) use ($request) {
-                $q->where('appointment_type', 'like', '%' . $request->service . '%');
-            });
-        }
-
-        $therapists = $query->paginate(10);
-
+        $therapists = $this->filterTherapists($request);
         return view('ptlist', compact('therapists'));
+    }
+
+    /** ---------------- THERAPIST PROFILE ---------------- */
+    public function showProfile($id)
+    {
+        $therapist = $this->loadTherapist($id);
+        return view('user.patients.therapist_profile', $therapist);
     }
 
     public function publicTherapistProfile($id)
     {
-        $therapist = User::verifiedTherapists()
-            ->with('availability')
-            ->with('services')
-            ->findOrFail($id);
-
-        $servicesList = $therapist->services
-            ->pluck('appointment_type')
-            ->map(fn($s) => explode(',', $s))
-            ->flatten()
-            ->all();
-
-        return view('view_profile', compact('therapist', 'servicesList'));
+        $therapist = $this->loadTherapist($id);
+        return view('view_profile', $therapist);
     }
 
-    // Settings Page
+    /** ---------------- SETTINGS ---------------- */
     public function settings()
     {
         $user = Auth::user();
         return view('shared.settings', compact('user'));
     }
 
-    // Update Settings (Profile + Info + Password)
     public function updateProfile(Request $request)
     {
-        $user = auth()->user();
-
+        $user = Auth::user();
         $request->validate([
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
@@ -160,44 +81,60 @@ class PatientController extends Controller
         }
 
         $user->save();
-
         return back()->with('success', 'Profile updated successfully!');
     }
 
     public function updateInfo(Request $request)
     {
-        $user = auth()->user();
-
+        $user = Auth::user();
         $request->validate([
             'address' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20',
             'email' => ['required','email', Rule::unique('users')->ignore($user->id)],
             'dob' => 'required|date',
-            'Gender' => 'required|string|in:male,female',
+            'gender' => 'required|string|in:male,female',
         ]);
 
-        $user->address = $request->address;
-        $user->phone = $request->phone;
-        $user->email = $request->email;
-        $user->dob = $request->dob;
-        $user->gender = $request->Gender;
-
-        $user->save();
-
+        $user->update($request->only('address','phone','email','dob','gender'));
         return back()->with('success', 'Info updated successfully!');
     }
 
     public function updatePassword(Request $request)
     {
-        $user = auth()->user();
-
-        $request->validate([
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
-        $user->password = Hash::make($request->password);
-        $user->save();
-
+        $request->validate(['password' => 'required|string|min:8|confirmed']);
+        Auth::user()->update(['password' => Hash::make($request->password)]);
         return back()->with('success', 'Password updated successfully!');
+    }
+
+    /** ---------------- PRIVATE HELPERS ---------------- */
+
+    private function filterTherapists(Request $request)
+    {
+        $query = User::verifiedTherapists()->with('services');
+
+        if ($request->filled('category')) {
+            $query->where('role', $request->category === 'independent' ? 'therapist' : 'clinic');
+        }
+
+        if ($request->filled('service')) {
+            $query->whereHas('services', fn($q) => $q->where('appointment_type', 'like', '%' . $request->service . '%'));
+        }
+
+        return $query->paginate(10);
+    }
+
+    private function loadTherapist($id)
+    {
+        $therapist = User::verifiedTherapists()->with('services')->findOrFail($id);
+
+        $servicesList = $therapist->services
+            ->pluck('appointment_type')
+            ->map(fn($s) => explode(',', $s))
+            ->flatten()
+            ->all();
+
+        $therapistAvailability = $therapist->upcomingAvailability();
+
+        return compact('therapist', 'servicesList', 'therapistAvailability');
     }
 }
