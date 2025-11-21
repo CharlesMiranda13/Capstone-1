@@ -98,11 +98,27 @@ class PatientController extends Controller
         $user->update($request->only('address','phone','email','dob','gender'));
         return back()->with('success', 'Info updated successfully!');
     }
-
+    
     public function updatePassword(Request $request)
     {
-        $request->validate(['password' => 'required|string|min:8|confirmed']);
-        Auth::user()->update(['password' => Hash::make($request->password)]);
+        $request->validate([
+            'current_password' => ['required'],
+            'new_password' => ['required', 'min:8', 'confirmed'],
+        ]);
+
+        $user = Auth::user();
+
+        // Check if current password matches
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors([
+                'current_password' => 'Current password is incorrect.'
+            ]);
+        }
+
+        // Update password
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
         return back()->with('success', 'Password updated successfully!');
     }
 

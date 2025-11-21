@@ -9,6 +9,7 @@ use App\Models\Appointment;
 use App\Models\User;
 use App\Models\Availability;
 use App\Models\TherapistService;
+use Carbon\Carbon;
 
 class ClinicController extends ptController
 {
@@ -17,39 +18,63 @@ class ClinicController extends ptController
     {
         $clinic = Auth::user();
 
-        $totalTherapists = User::where('clinic_id', $clinic->id)->where('role', 'therapist')->count();
-        $totalEmployees = User::where('clinic_id', $clinic->id)->where('role', 'employee')->count();
+        // Counts
+        $totalTherapists = User::where('clinic_id', $clinic->id)
+            ->where('role', 'therapist')->count();
 
-        $totalPatients = Appointment::whereHas('provider', function ($q) use ($clinic) {
-            $q->where('clinic_id', $clinic->id)->where('role', 'therapist');
-        })->with('patient')->get()->pluck('patient')->unique('id')->count();
+        $totalEmployees = User::where('clinic_id', $clinic->id)
+            ->where('role', 'employee')->count();
 
-        $totalAppointments = Appointment::whereHas('provider', function ($q) use ($clinic) {
-            $q->where('clinic_id', $clinic->id)->where('role', 'therapist');
-        })->count();
+        // Total unique patients across clinic therapists
+        $therapistIds = User::where('clinic_id', $clinic->id)
+            ->where('role', 'therapist')
+            ->pluck('id')
+            ->toArray();
 
-        $pendingAppointments = Appointment::whereHas('provider', function ($q) use ($clinic) {
-            $q->where('clinic_id', $clinic->id)->where('role', 'therapist');
-        })->where('status', 'pending')->count();
+        $totalPatients = Appointment::whereIn('provider_id', $therapistIds)
+            ->where('provider_type', User::class)
+            ->with('patient')
+            ->get()
+            ->pluck('patient')
+            ->unique('id')
+            ->count();
 
-        $therapists = User::where('clinic_id', $clinic->id)->where('role','therapist')->get();
-        $employees = User::where('clinic_id', $clinic->id)->where('role','employee')->get();
+        $totalAppointments = Appointment::whereIn('provider_id', $therapistIds)
+            ->where('provider_type', User::class)
+            ->count();
 
-        $therapistAppointments = $therapists->map(function($therapist) {
-            $total = $therapist->appointments()->where('status','!=','cancelled')->count();
+        $pendingAppointments = Appointment::whereIn('provider_id', $therapistIds)
+            ->where('provider_type', User::class)
+            ->where('status', 'pending')
+            ->count();
+
+        // Per-therapist appointment totals (exclude cancelled)
+        $therapists = User::where('clinic_id', $clinic->id)
+            ->where('role', 'therapist')
+            ->get();
+
+        $therapistAppointments = $therapists->map(function ($therapist) {
+            $total = $therapist->appointments()->where('status', '!=', 'cancelled')->count();
             return ['name' => $therapist->name, 'total_appointments' => $total];
         });
 
         $therapistNames = $therapistAppointments->pluck('name');
         $therapistAppointmentsCount = $therapistAppointments->pluck('total_appointments');
 
-        $appointmentTypes = Appointment::whereHas('provider', function($q) use ($clinic){
-            $q->where('clinic_id', $clinic->id)->where('role','therapist');
-        })->get()->groupBy('appointment_type')->map->count();
+        // Appointment types distribution
+        $appointmentTypes = Appointment::whereIn('provider_id', $therapistIds)
+            ->where('provider_type', User::class)
+            ->get()
+            ->groupBy('appointment_type')
+            ->map->count();
 
-        $appointments = Appointment::whereHas('provider', function($q) use ($clinic){
-            $q->where('clinic_id', $clinic->id)->where('role','therapist');
-        })->with(['patient','therapist'])->where('appointment_date', '>=', now())->orderBy('appointment_date')->get();
+        // Upcoming appointments for clinic (therapists)
+        $appointments = Appointment::whereIn('provider_id', $therapistIds)
+            ->where('provider_type', User::class)
+            ->with(['patient', 'therapist'])
+            ->where('appointment_date', '>=', now())
+            ->orderBy('appointment_date')
+            ->get();
 
         return view('user.therapist.clinic.clinic', compact(
             'clinic',
@@ -59,7 +84,6 @@ class ClinicController extends ptController
             'totalAppointments',
             'pendingAppointments',
             'therapists',
-            'employees',
             'therapistNames',
             'therapistAppointmentsCount',
             'appointmentTypes',
@@ -72,31 +96,18 @@ class ClinicController extends ptController
     {
         $clinic = Auth::user();
 
-        $service = TherapistService::where('serviceable_id', $clinic->id)
+        $existingServices = $this->getServices($clinic);
+
+        $existingPrice = TherapistService::where('serviceable_id', $clinic->id)
             ->where('serviceable_type', get_class($clinic))
-            ->first();
-
-        $existingServices = [];
-        if ($service && $service->appointment_type) {
-            $existingServices = explode(',', $service->appointment_type); // convert string to array
-        }
-
-        $existingPrice = $service->price ?? '';
+            ->value('price') ?? '';
 
         $schedules = Availability::where('provider_id', $clinic->id)
             ->where('provider_type', get_class($clinic))
             ->orderBy('day_of_week')
             ->get();
 
-        $calendarSchedules = $schedules->map(function($s) {
-            return [
-                'title' => 'Available',
-                'daysOfWeek' => [(int)$s->day_of_week],
-                'startTime' => $s->start_time,
-                'endTime' => $s->end_time,
-                'extendedProps' => ['is_active' => $s->is_active],
-            ];
-        });
+        $calendarSchedules = $this->getCalendarSchedules($schedules);
 
         return view('user.therapist.clinic.services', compact(
             'clinic',
@@ -118,16 +129,7 @@ class ClinicController extends ptController
 
         $appointmentTypes = $request->appointment_types ?? [];
 
-        TherapistService::updateOrCreate(
-            [
-                'serviceable_id' => $clinic->id,
-                'serviceable_type' => get_class($clinic),
-            ],
-            [
-                'appointment_type' => implode(',', $appointmentTypes),
-                'price' => $request->price,
-            ]
-        );
+        $this->saveServices($clinic, $appointmentTypes, $request->price);
 
         return back()->with('success', 'Appointment types updated!');
     }
@@ -149,7 +151,7 @@ class ClinicController extends ptController
         $appointmentTypes = $request->appointment_types ?? [];
 
         $service->update([
-            'appointment_type' => json_encode($appointmentTypes),
+            'appointment_type' => implode(',', $appointmentTypes),
             'price' => $request->price,
         ]);
 
@@ -175,28 +177,14 @@ class ClinicController extends ptController
     {
         $clinic = Auth::user();
 
-        $services = TherapistService::where('serviceable_id', $clinic->id)
-            ->where('serviceable_type', get_class($clinic))
-            ->get();
+        $services = $this->getServices($clinic);
 
         $schedules = Availability::where('provider_id', $clinic->id)
             ->where('provider_type', get_class($clinic))
             ->orderBy('day_of_week')
             ->get();
 
-        $calendarSchedules = $schedules->map(function($s) {
-            return [
-                'title' => 'Available',
-                'day_of_week' => (int) $s->day_of_week,
-                'start_time' => $s->start_time,
-                'end_time' => $s->end_time,
-                'is_active' => $s->is_active,
-                'color' => $s->is_active ? '#4c8bf5' : '#e0e0e0',
-                'extendedProps' => [
-                    'is_active' => $s->is_active,
-                ],
-            ];
-        });
+        $calendarSchedules = $this->getCalendarSchedules($schedules);
 
         return view('user.therapist.clinic.availability', compact('clinic', 'services', 'schedules', 'calendarSchedules'));
     }
@@ -226,14 +214,7 @@ class ClinicController extends ptController
     public function toggleSchedule($id)
     {
         $clinic = Auth::user();
-
-        $schedule = Availability::where('id', $id)
-            ->where('provider_id', $clinic->id)
-            ->where('provider_type', get_class($clinic))
-            ->firstOrFail();
-
-        $schedule->is_active = !$schedule->is_active;
-        $schedule->save();
+        $this->toggleAvailabilityById($id, $clinic);
 
         return back()->with('success', 'Schedule updated successfully!');
     }
@@ -241,13 +222,7 @@ class ClinicController extends ptController
     public function destroySchedule($id)
     {
         $clinic = Auth::user();
-
-        $schedule = Availability::where('id', $id)
-            ->where('provider_id', $clinic->id)
-            ->where('provider_type', get_class($clinic))
-            ->firstOrFail();
-
-        $schedule->delete();
+        $this->destroyAvailabilityById($id, $clinic);
 
         return back()->with('success', 'Schedule deleted successfully!');
     }
@@ -259,22 +234,18 @@ class ClinicController extends ptController
 
         $therapistIds = User::where('role', 'therapist')
             ->where('clinic_id', $clinic->id)
-            ->pluck('id');
+            ->pluck('id')
+            ->toArray();
 
-        $appointments = Appointment::whereIn('provider_id', $therapistIds)
-            ->where('provider_type', User::class)
-            ->with('patient')
-            ->get();
-
-        $patients = $appointments->pluck('patient')->unique('id');
+        $patients = $this->getPatientsFor($therapistIds, User::class);
 
         if ($request->filled('search')) {
             $search = strtolower($request->search);
-            $patients = $patients->filter(fn($p) => str_contains(strtolower($p->name), $search));
+            $patients = $patients->filter(fn ($p) => str_contains(strtolower($p->name), $search));
         }
 
         if ($request->filled('gender')) {
-            $patients = $patients->filter(fn($p) => $p->gender === $request->gender);
+            $patients = $patients->filter(fn ($p) => $p->gender === $request->gender);
         }
 
         return view('user.therapist.clients', compact('clinic', 'patients'));
@@ -287,31 +258,14 @@ class ClinicController extends ptController
 
         $therapistIds = User::where('role', 'therapist')
             ->where('clinic_id', $clinic->id)
-            ->pluck('id');
+            ->pluck('id')
+            ->toArray();
 
         $query = Appointment::whereIn('provider_id', $therapistIds)
             ->where('provider_type', User::class)
             ->with(['patient', 'provider']);
 
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->whereHas('patient', fn($subQuery) => $subQuery->where('name', 'like', "%$search%"))
-                  ->orWhere('appointment_type', 'like', "%$search%");
-            });
-        }
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        if ($request->filled('type')) {
-            $query->where('appointment_type', $request->type);
-        }
-
-        if ($request->filled('provider_id')) {
-            $query->where('provider_id', $request->provider_id);
-        }
+        $query = $this->applyAppointmentFilters($query, $request);
 
         $appointments = $query->orderBy('appointment_date', 'desc')->get();
 
