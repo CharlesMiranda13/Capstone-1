@@ -30,7 +30,25 @@
     <div class="settings-content">
         <h2 class="settings-title">Account Settings</h2>
 
-        {{-- Profile Picture --}}
+        {{-- SUCCESS & ERROR MESSAGES --}}
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul style="margin: 0; padding-left: 18px;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
+
+        {{-- PROFILE PICTURE --}}
         <div class="scard">
             <h4 class="section-title">Profile Picture</h4>
             <form action="{{ route($role . '.update.profile') }}" method="POST" enctype="multipart/form-data">
@@ -42,7 +60,7 @@
                          alt="Profile Picture" class="profile-image" style="width: 100px; height: 100px;">
 
                     <div class="upload-controls">
-                        <input type="file" name="profile_picture" accept="image/*" required>
+                        <input type="file" name="profile_picture" accept="image/*">
                         @error('profile_picture')
                             <small class="error-message">{{ $message }}</small>
                         @enderror
@@ -52,48 +70,83 @@
             </form>
         </div>
 
-        {{-- Update Personal Information --}}
+        {{-- PERSONAL INFORMATION --}}
         <div class="scard">
             <h4 class="section-title">Personal Information</h4>
             <form action="{{ route($role . '.update.info') }}" method="POST">
                 @csrf
                 @method('PUT')
 
-                {{-- Full Name / Clinic Name --}}
+                {{-- NAME --}}
                 <div class="form-group">
                     <label for="name">{{ $role === 'clinic' ? 'Clinic Name' : 'Full Name' }}</label>
                     <input type="text"
-                        name="name"
-                        id="name"
-                        value="{{ old('name', Auth::user()->name) }}"
-                        placeholder="{{ $role === 'clinic' ? 'Enter Clinic Name' : 'Enter Full Name' }}"
-                        required>
+                           name="name"
+                           id="name"
+                           value="{{ old('name', Auth::user()->name) }}"
+                           required>
                 </div>
 
+                {{-- PHONE --}}
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
-                    <input type="tel" name="phone" id="phone"
+                    <input type="tel"
+                           name="phone"
+                           id="phone"
                            value="{{ old('phone', Auth::user()->phone) }}"
                            pattern="^(09\d{9}|\+639\d{9})$"
-                           placeholder="09XXXXXXXXX or +639XXXXXXXXX" required>
+                           placeholder="09XXXXXXXXX or +639XXXXXXXXX"
+                           required>
                 </div>
 
+                {{-- ADDRESS --}}
                 <div class="form-group">
                     <label for="address">Address</label>
-                    <input type="text" name="address" id="address" value="{{ old('address', Auth::user()->address) }}" required>
+                    <input type="text"
+                           name="address"
+                           id="address"
+                           value="{{ old('address', Auth::user()->address) }}"
+                           required>
                 </div>
 
-                {{-- Extra Fields Based on Role --}}
+                {{-- PATIENT SPECIFIC FIELDS --}}
+                @if($role === 'patient')
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email"
+                               name="email"
+                               id="email"
+                               value="{{ old('email', Auth::user()->email) }}"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select name="gender" id="gender" required>
+                            <option value="male" {{ Auth::user()->gender === 'male' ? 'selected' : '' }}>Male</option>
+                            <option value="female" {{ Auth::user()->gender === 'female' ? 'selected' : '' }}>Female</option>
+                        </select>
+                    </div>
+                @endif
+
+                {{-- THERAPIST SPECIFIC FIELDS --}}
                 @if($role === 'therapist')
                     <div class="form-group">
                         <label for="specialization">Specialization</label>
-                        <input type="text" name="specialization" id="specialization"
+                        <input type="text"
+                               name="specialization"
+                               id="specialization"
                                value="{{ old('specialization', Auth::user()->specialization) }}">
                     </div>
-                @elseif($role === 'clinic')
+                @endif
+
+                {{-- CLINIC SPECIFIC FIELDS --}}
+                @if($role === 'clinic')
                     <div class="form-group">
                         <label for="clinic_license">Clinic License Number</label>
-                        <input type="text" name="clinic_license" id="clinic_license"
+                        <input type="text"
+                               name="clinic_license"
+                               id="clinic_license"
                                value="{{ old('clinic_license', Auth::user()->clinic_license) }}">
                     </div>
                 @endif
@@ -102,7 +155,7 @@
             </form>
         </div>
 
-        {{-- Change Password --}}
+        {{-- CHANGE PASSWORD --}}
         <div class="scard">
             <h4 class="section-title">Change Password</h4>
             <form action="{{ route($role . '.update.password') }}" method="POST">
@@ -127,6 +180,7 @@
                 <button type="submit" class="submit-button warning-button">Update Password</button>
             </form>
         </div>
+
     </div>
 </main>
 @endsection
