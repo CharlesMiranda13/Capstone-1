@@ -75,6 +75,20 @@
             </div>
         @endif
 
+        {{-- Clinic Employees Section --}}
+        @if($user->role === 'clinic' && isset($employees) && $employees->count())
+            <div class="form-group" style="margin-top:25px;">
+                <label><strong>Clinic Employees</strong></label>
+                <ul style="list-style:none; padding:0; margin-top:10px;">
+                    @foreach($employees as $emp)
+                        <li>
+                            {{ $emp->name }} ({{ $emp->email }}) 
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         {{-- Created Date --}}
         <div class="form-group">
             <label><strong>Created At</strong></label>
@@ -118,7 +132,6 @@
 
         {{-- Actions --}}
         <div class="form-actions" style="margin-top: 25px; display:flex; justify-content:center; gap:15px;">
-
             {{-- APPROVE --}}
             <form action="{{ route('admin.users.verify', $user->id) }}" method="POST">
                 @csrf
@@ -126,8 +139,8 @@
                 <button type="submit" class="btn-success">Approve</button>
             </form>
 
-            {{-- DECLINE BUTTON (OPEN MODAL) --}}
-            <button type="button" class="btn-warning" onclick="openDeclineModal()">Decline</button>
+            {{-- DECLINE BUTTON --}}
+            <button type="button" class="btn-warning openDeclineBtn">Decline</button>
         </div>
     </div>
 </div>

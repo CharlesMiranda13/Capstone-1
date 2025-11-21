@@ -12,21 +12,26 @@ use App\Mail\AccountApprovedMail;
 class UserController extends Controller
 {
     // Show all users
+
     public function index(Request $request)
     {
-        $query = User::where('role', '!=', 'admin'); 
+        $query = User::query();
 
-   
+        // Only clinics and independent therapists
+        $query->whereIn('role', ['patient','clinic', 'therapist'])
+          ->whereNull('clinic_id'); // exclude clinic employees
+
+        // Apply dropdown role filter
         if ($request->has('role') && $request->role != 'all') {
             $query->where('role', $request->role);
         }
 
-   
+        // Apply search filter
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -34,6 +39,7 @@ class UserController extends Controller
 
         return view('User.Admin.manage_users', compact('users'));
     }
+
 
     // Verify user
     public function verify($id)
@@ -140,7 +146,13 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::findOrFail($id);
-        return view('User.Admin.user_details', compact('user'));
+        $employees = [];
+
+        if ($user->role === 'clinic') {
+            $employees = User::where('clinic_id', $user->id)->get();
+        }
+
+        return view('User.Admin.user_details', compact('user', 'employees'));
     }
     
 }
