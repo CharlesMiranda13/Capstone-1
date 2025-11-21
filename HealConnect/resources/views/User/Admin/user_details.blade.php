@@ -3,6 +3,17 @@
 @section('title', 'User Details')
 
 @section('content')
+
+@if (session('success') || session('error'))
+    <div class="flash-message-wrapper">
+        <div class="flash-message 
+                    {{ session('success') ? 'flash-success' : '' }} 
+                    {{ session('error') ? 'flash-error' : '' }}">
+            {{ session('success') ?? session('error') }}
+        </div>
+    </div>
+@endif
+
 <div class="user-details">
     <h2 style="margin-bottom: 25px; text-align:center;">User Details</h2>
 
