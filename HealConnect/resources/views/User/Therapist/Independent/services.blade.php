@@ -27,7 +27,7 @@
                     </label>
 
                     <label>
-                        <input type="checkbox" name="appointment_types[]" value="In-person" {{ in_array('In-person', $existingServices ?? []) ? 'checked' : '' }}> In-Clinic
+                        <input type="checkbox" name="appointment_types[]" value="In-Clinic" {{ in_array('In-Clinic', $existingServices ?? []) ? 'checked' : '' }}> In-Clinic
                     </label>
 
                     <label>

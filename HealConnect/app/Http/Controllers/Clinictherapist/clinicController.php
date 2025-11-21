@@ -17,7 +17,6 @@ class ClinicController extends ptController
     {
         $clinic = Auth::user();
 
-        // Total counts
         $totalTherapists = User::where('clinic_id', $clinic->id)->where('role', 'therapist')->count();
         $totalEmployees = User::where('clinic_id', $clinic->id)->where('role', 'employee')->count();
 
@@ -33,11 +32,9 @@ class ClinicController extends ptController
             $q->where('clinic_id', $clinic->id)->where('role', 'therapist');
         })->where('status', 'pending')->count();
 
-        // Fetch staff
         $therapists = User::where('clinic_id', $clinic->id)->where('role','therapist')->get();
         $employees = User::where('clinic_id', $clinic->id)->where('role','employee')->get();
 
-        // Chart data
         $therapistAppointments = $therapists->map(function($therapist) {
             $total = $therapist->appointments()->where('status','!=','cancelled')->count();
             return ['name' => $therapist->name, 'total_appointments' => $total];
@@ -50,7 +47,6 @@ class ClinicController extends ptController
             $q->where('clinic_id', $clinic->id)->where('role','therapist');
         })->get()->groupBy('appointment_type')->map->count();
 
-        // Upcoming appointments
         $appointments = Appointment::whereHas('provider', function($q) use ($clinic){
             $q->where('clinic_id', $clinic->id)->where('role','therapist');
         })->with(['patient','therapist'])->where('appointment_date', '>=', now())->orderBy('appointment_date')->get();
@@ -76,9 +72,16 @@ class ClinicController extends ptController
     {
         $clinic = Auth::user();
 
-        $services = TherapistService::where('serviceable_id', $clinic->id)
+        $service = TherapistService::where('serviceable_id', $clinic->id)
             ->where('serviceable_type', get_class($clinic))
-            ->get();
+            ->first();
+
+        $existingServices = [];
+        if ($service && $service->appointment_type) {
+            $existingServices = explode(',', $service->appointment_type); // convert string to array
+        }
+
+        $existingPrice = $service->price ?? '';
 
         $schedules = Availability::where('provider_id', $clinic->id)
             ->where('provider_type', get_class($clinic))
@@ -88,16 +91,20 @@ class ClinicController extends ptController
         $calendarSchedules = $schedules->map(function($s) {
             return [
                 'title' => 'Available',
-                'daysOfWeek' => [(int)$s->day_of_week], 
+                'daysOfWeek' => [(int)$s->day_of_week],
                 'startTime' => $s->start_time,
                 'endTime' => $s->end_time,
-                'extendedProps' => [
-                    'is_active' => $s->is_active,
-                ],
+                'extendedProps' => ['is_active' => $s->is_active],
             ];
         });
 
-        return view('user.therapist.clinic.services', compact('clinic', 'services', 'schedules', 'calendarSchedules'));
+        return view('user.therapist.clinic.services', compact(
+            'clinic',
+            'schedules',
+            'calendarSchedules',
+            'existingServices',
+            'existingPrice'
+        ));
     }
 
     public function storeService(Request $request)
@@ -105,22 +112,24 @@ class ClinicController extends ptController
         $clinic = Auth::user();
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'duration' => 'required|integer|min:1',
-            'price' => 'required|numeric|min:0',
+            'appointment_types' => 'array|nullable',
+            'price' => 'nullable|string|max:255',
         ]);
 
-        TherapistService::create([
-            'serviceable_id' => $clinic->id,
-            'serviceable_type' => get_class($clinic),
-            'appointment_type' => $request->name,
-            'description' => $request->description,
-            'duration' => $request->duration,
-            'price' => $request->price,
-        ]);
+        $appointmentTypes = $request->appointment_types ?? [];
 
-        return back()->with('success', 'Service added successfully!');
+        TherapistService::updateOrCreate(
+            [
+                'serviceable_id' => $clinic->id,
+                'serviceable_type' => get_class($clinic),
+            ],
+            [
+                'appointment_type' => implode(',', $appointmentTypes),
+                'price' => $request->price,
+            ]
+        );
+
+        return back()->with('success', 'Appointment types updated!');
     }
 
     public function updateService(Request $request, $id)
@@ -133,16 +142,14 @@ class ClinicController extends ptController
             ->firstOrFail();
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'duration' => 'required|integer|min:1',
-            'price' => 'required|numeric|min:0',
+            'appointment_types' => 'array|nullable',
+            'price' => 'nullable|string|max:255',
         ]);
 
+        $appointmentTypes = $request->appointment_types ?? [];
+
         $service->update([
-            'appointment_type' => $request->name,
-            'description' => $request->description,
-            'duration' => $request->duration,
+            'appointment_type' => json_encode($appointmentTypes),
             'price' => $request->price,
         ]);
 

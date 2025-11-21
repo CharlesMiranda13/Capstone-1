@@ -42,7 +42,7 @@
                     </p>
                 </div>
                 
-                <div class ="app"> 
+                <div class="app"> 
                     <a href="{{ route('patient.appointments.create', $therapist->id) }}" class="btn-book">
                         <i class="fa-solid fa-calendar-check"></i> Book Appointment
                     </a>
@@ -99,6 +99,7 @@
                         <p>No availability set.</p>
                     @endif
                 </div>
+
                 {{-- SERVICES --}}
                 <div class="card-section">
                     <h4><i class="fa-solid fa-list"></i> Services Offered</h4>
@@ -111,6 +112,7 @@
                     @else
                         <p>No services added yet.</p>
                     @endif
+                </div>
             </div>
         </section>
     </div>

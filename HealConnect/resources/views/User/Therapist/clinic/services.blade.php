@@ -32,8 +32,8 @@
                     </label>
 
                     <label>
-                        <input type="checkbox" name="appointment_types[]" value="In-person"
-                            {{ in_array('In-person', $existingServices ?? []) ? 'checked' : '' }}>
+                        <input type="checkbox" name="appointment_types[]" value="In-Clinic"
+                            {{ in_array('In-Clinic', $existingServices ?? []) ? 'checked' : '' }}>
                         In-Clinic
                     </label>
 
@@ -42,12 +42,12 @@
                             {{ in_array('In-home', $existingServices ?? []) ? 'checked' : '' }}>
                         In-home
                     </label>
-                </div>
+                </div>  
 
                 <!-- Price Input  -->
                 <div class="service-price">
                     <label>Price / Fee</label>
-                    <input type="text" name="price" value="{{ $existingPrice ?? '' }}" placeholder="Free / ₱500 / Donation-based">
+                    <input type="text" name="price" value="{{ $existingPrice ?? '' }}" placeholder="Enter your price/fee" style="margin-top:10px;">
                 </div>
 
                 <button type="submit" class="btn btn-success">Save Services</button>
