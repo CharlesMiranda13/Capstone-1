@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const { usergrowth, appointmentTypeData } = window.dashboardData;
+    const { usergrowth, userRoleData} = window.dashboardData;
 
     // USER GROWTH CHART
     const ctxUser = document.getElementById("monthlyChart");
@@ -38,16 +38,19 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // APPOINTMENT TYPE CHART
-    const ctxAppt = document.getElementById("appointmentChart");
-    if (ctxAppt) {
-        new Chart(ctxAppt, {
-            type: "doughnut",
+    // USER ROLES DISTRIBUTION CHART
+    const ctxRoles = document.getElementById("userRolesChart");
+    if (ctxRoles) {
+        new Chart(ctxRoles, {
+            type: "pie",
             data: {
-                labels: appointmentTypeData.labels,
+                labels: ["Patients", "Therapists", "Clinics"],
                 datasets: [{
-                    data: appointmentTypeData.values,
-                    backgroundColor: ["#4CAF50", "#FF9800", "#03A9F4"]
+                    data: [
+                        userRoleData.patients,
+                        userRoleData.therapists,
+                        userRoleData.clinics,
+                    ]
                 }]
             },
             options: {

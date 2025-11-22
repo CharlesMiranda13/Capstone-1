@@ -40,8 +40,8 @@
                 <canvas id="monthlyChart"></canvas>
             </div>
             <div class="analytics-card">
-                <h4>Appointments by Type</h4>
-                <canvas id="appointmentChart"></canvas>
+                <h4>User Roles Distribution</h4>
+                <canvas id="userRolesChart"></canvas>
             </div>
         </div>
     </div>
@@ -53,7 +53,7 @@
 <script>
     window.dashboardData = {
         usergrowth: @json($monthlyData),
-        appointmentTypeData: @json($appointmentTypes)
+        userRoleData: @json($userRoleData)
     };
 </script>
 <script src="{{ asset('js/admin_dashboard.js') }}"></script>   

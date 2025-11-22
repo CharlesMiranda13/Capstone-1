@@ -102,7 +102,7 @@ class UserController extends Controller
         $totalClinics = User::where('role', 'clinic')->count();
         $pendingUsers = User::where('status', 'pending')->count();
 
-    // Monthly user growth
+        // Monthly user growth
         $userData = User::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as count')
             ->where('role', '!=', 'admin')
             ->groupBy('month')
@@ -122,24 +122,21 @@ class UserController extends Controller
             'values' => $monthlyCounts
         ];
 
-    // Appointment types
-        $appointmentData = \App\Models\Appointment::selectRaw('appointment_type, COUNT(*) as count')
-            ->groupBy('appointment_type')
-            ->get();
-
-        $appointmentTypes = [
-            'labels' => $appointmentData->pluck('appointment_type'),
-            'values' => $appointmentData->pluck('count')
+        // User Role Distribution
+        $userRoleData = [
+            'patients' => $totalPatients,
+            'therapists' => $totalTherapists,
+            'clinics' => $totalClinics,
         ];
 
         return view('User.Admin.admin', compact(
-            'totalUsers', 
-            'totalPatients', 
-            'totalTherapists', 
+            'totalUsers',
+            'totalPatients',
+            'totalTherapists',
             'totalClinics',
             'pendingUsers',
             'monthlyData',
-            'appointmentTypes'
+            'userRoleData'
         ));
     }
 
