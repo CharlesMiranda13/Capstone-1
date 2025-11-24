@@ -33,6 +33,10 @@ class IndtherapistController extends ptController
             ->simplePaginate(3);
 
         $calendarAvailabilities = Availability::where('provider_id', $user->id)->get();
+        
+        $existingPrice = \App\Models\TherapistService::where('serviceable_id', $user->id)
+            ->where('serviceable_type', get_class($user))
+            ->value('price');
 
         $existingServices = $this->getServices($user);
 
@@ -40,7 +44,8 @@ class IndtherapistController extends ptController
             'user',
             'availabilities',
             'calendarAvailabilities',
-            'existingServices'
+            'existingServices',
+            'existingPrice'
         ));
     }
 
@@ -48,10 +53,16 @@ class IndtherapistController extends ptController
     {
         $request->validate([
             'appointment_types' => 'required|array',
+            'price' => 'nullable|string|max:50',
         ]);
 
         $user = Auth::user();
-        $this->saveServices($user, $request->appointment_types);
+        $this->saveServices(
+            $user,
+            $request->input('appointment_types', []),
+            $request->input('price') 
+        );
+
 
         return back()->with('success', 'Your offered services have been updated successfully!');
     }
@@ -157,10 +168,15 @@ class IndtherapistController extends ptController
 
         $services = $this->getServices($user);
 
+        $existingPrice = \App\Models\TherapistService::where('serviceable_id', $user->id)
+            ->where('serviceable_type', get_class($user))
+            ->value('price');
+
         return view('user.therapist.independent.profile', [
             'user' => $user,
             'availability' => $availability,
             'servicesList' => $services,
+            'price'=> $existingPrice,
         ]);
     }
 

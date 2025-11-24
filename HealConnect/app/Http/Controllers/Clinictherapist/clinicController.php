@@ -114,7 +114,8 @@ class ClinicController extends ptController
             'schedules',
             'calendarSchedules',
             'existingServices',
-            'existingPrice'
+            'existingPrice',
+            'price'
         ));
     }
 

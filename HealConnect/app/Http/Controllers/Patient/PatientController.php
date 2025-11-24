@@ -148,9 +148,20 @@ class PatientController extends Controller
             ->map(fn($s) => explode(',', $s))
             ->flatten()
             ->all();
+    
+        // Full services data with price/fee
+        $servicesData = $therapist->services
+            ->map(function($service) {
+                return [
+                    'appointment_types' => explode(',', $service->appointment_type),
+                    'price' => $service->price ?? 'Please inquire',
+                ];
+            });
 
         $therapistAvailability = $therapist->upcomingAvailability();
+        $price = $therapist->services->first()?->price ?? null;
 
-        return compact('therapist', 'servicesList', 'therapistAvailability');
+        return compact('therapist', 'servicesList', 'servicesData', 'therapistAvailability', 'price');
     }
+
 }
