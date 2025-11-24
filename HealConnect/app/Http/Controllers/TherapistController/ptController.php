@@ -58,48 +58,51 @@ class ptController extends Controller
     }
 
     /**
-     * Shared dashboard data for a provider (independent therapists).
-     * Clinic controllers may call this for provider-level metrics or reuse parts as needed.
+     * Shared dashboard data for a provider 
      */
+
     protected function getDashboardData()
     {
         $user = Auth::user();
         $now = Carbon::now();
 
-        // Build Appointment query for this provider type and id
-        $providerType = $user->role === 'clinic' ? \App\Models\Clinic::class : \App\Models\User::class;
+        $isClinic = $user->role === 'clinic';
+
+        // Get provider IDs to query appointments
+        $providerIds = $isClinic
+            ? User::where('clinic_id', $user->id)->where('role', 'therapist')->pluck('id')->toArray()
+            : [$user->id];
+
+    
         $appointmentsQuery = Appointment::where('provider_id', $user->id)
-                                    ->where('provider_type', $providerType);
+                                    ->where('provider_type', User::class);
 
         // Upcoming appointments (next 3)
-        $appointments = $appointmentsQuery->with('patient')
+        $appointments = (clone $appointmentsQuery)->with('patient')
             ->get()
-            ->filter(function ($a) use ($now) {
-                $dt = Carbon::parse($a->appointment_date . ' ' . $a->appointment_time);
-                return $dt->greaterThan($now);
-            })
+            ->filter(fn($a) => Carbon::parse($a->appointment_date . ' ' . $a->appointment_time)->greaterThan($now))
             ->sortBy('appointment_date')
             ->take(3);
 
         // Total unique clients
-        $appointmentCount = $appointmentsQuery->distinct('patient_id')->count('patient_id');
+        $appointmentCount = (clone $appointmentsQuery)->distinct('patient_id')->count('patient_id');
 
         // Completed sessions
-        $completedSessions = $appointmentsQuery->where('status', 'completed')->count();
+        $completedSessions = (clone $appointmentsQuery)->where('status', 'completed')->count();
 
         // Cancellations
-        $cancellations = $appointmentsQuery->where('status', 'cancelled')->count();
+        $cancellations = (clone $appointmentsQuery)->where('status', 'cancelled')->count();
 
-        // Monthly appointments data (for line chart) - counts per day of current month
-        $nowCopy = $now->copy(); // avoid mutating original $now
-        $daysInMonth = $nowCopy->daysInMonth;
-        $monthlyData = collect(range(1, $daysInMonth))->map(function ($d) use ($nowCopy, $appointmentsQuery) {
-            $date = $nowCopy->copy()->startOfMonth()->addDays($d - 1)->toDateString();
-            return $appointmentsQuery->whereDate('appointment_date', $date)->count();
+        // Monthly appointments data
+        $daysInMonth = $now->daysInMonth;
+        $monthlyData = collect(range(1, $daysInMonth))->map(function ($day) use ($now, $appointmentsQuery) {
+            $date = $now->copy()->startOfMonth()->addDays($day - 1)->toDateString();
+            return (clone $appointmentsQuery)->whereDate('appointment_date', $date)->count();
         });
 
         // Appointments by type
-        $appointmentTypes = $appointmentsQuery->selectRaw('appointment_type, COUNT(*) as count')
+        $appointmentTypes = (clone $appointmentsQuery)
+            ->selectRaw('appointment_type, COUNT(*) as count')
             ->groupBy('appointment_type')
             ->pluck('count', 'appointment_type');
 
@@ -113,6 +116,7 @@ class ptController extends Controller
             'appointmentTypes' => $appointmentTypes,
         ];
     }
+
 
     /**
      * Shared settings page
