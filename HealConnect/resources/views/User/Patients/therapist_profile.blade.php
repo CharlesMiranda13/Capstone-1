@@ -116,11 +116,11 @@
 
                 {{-- FEES --}}
                 <div class="card-section">
-                    <h4><i class="fa-solid fa-dollar-sign"></i> Fees</h4>
-                    @if($servicesData && count($servicesData) > 0)
+                    <h4><i class="fa-solid fa-money-bill"></i> Fees</h4>
+                    @if(!empty($price))
                         <ul class="fees-list">
                             @foreach($servicesData as $service)
-                                <li>{{ $service['price'] }}</li>
+                                <li>{{ $price }}</li>
                             @endforeach
                         </ul>
                     @else

@@ -35,7 +35,7 @@
                     </label>
                 </div>
 
-            <!-- Price Input  -->
+                <!-- Price Input  -->
                 
                 <div class="service-price">
                     <label>Price / Fee</label>

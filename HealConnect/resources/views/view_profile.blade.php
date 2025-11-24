@@ -101,6 +101,19 @@
                     @else
                         <p>No appointment types added yet.</p>
                     @endif
+                </div>
+
+                {{-- FEES --}}
+                <div class="card-section">
+                    <h4><i class="fa-solid fa-money-bill"></i> Fees</h4>
+                    @if(!empty($price))
+                        <ul class="fees-list">
+                            <li>{{ $price }}</li>
+                        </ul>
+                    @else
+                        <p>N/A</p>
+                    @endif 
+                </div>
 
             </div>
         </section>
