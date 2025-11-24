@@ -31,8 +31,7 @@
                         <th>Therapist</th>
                         <th>Type</th>
                         <th>Date</th>
-                        <th>Time</th>
-                        <th>Notes</th>
+                        <th>Time</th>     
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -45,14 +44,6 @@
                         <td>{{ ucfirst($appointment->appointment_type) }}</td>
                         <td>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</td>
                         <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</td>
-
-                        <td>
-                            @if ($appointment->notes)
-                                {{ $appointment->notes }}
-                            @else
-                                <em>No notes</em>
-                            @endif
-                        </td>
 
                         <td>
                             <span class="status {{ strtolower($appointment->status) }}">
