@@ -8,8 +8,6 @@
 
 @section('content')
 <main class="employee-main">
-
-    <!-- Header -->
     <section class="employee-header">
         <div class="employee-header-left">
             <h2>Clinic Employees</h2>
@@ -17,7 +15,6 @@
         </div>
 
         <div class="employee-header-right">
-
             <!-- FILTER FORM -->
             <form method="GET" action="{{ route('clinic.employees') }}" class="filter-form">
                 <input type="text" name="search"
@@ -29,21 +26,19 @@
                     <option value="Therapist">Therapist</option>
                     <option value="Assistant">Staff</option>
                 </select>
-
-                <button type="submit" class="btn apply-btn">Apply</button>
             </form>
-
-            <button id="addEmployeeBtn" class="btn add-btn">
-                Add Employee
-            </button>
-
-        </div> >
-    </section> 
-
+        </div>
+    </section>
 
     <!-- TABLE SECTION -->
     <section class="employee-table-section">
         <div class="table-card">
+            <div class="table-top">
+                <button id="addEmployeeBtn" class="btn add-btn">
+                    + Add Employee
+                </button>
+            </div>
+
             <table class="employee-table">
                 <thead>
                     <tr>
@@ -55,26 +50,21 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-
                 <tbody>
                     @forelse($employees as $index => $employee)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-
                             <td>
                                 <img 
                                     src="{{ $employee->profile_picture 
                                         ? asset('storage/' . $employee->profile_picture)
                                         : asset('images/logo1.png') }}"
                                     alt="Profile Picture"
-                                    class="profile-pic"
-                                >
+                                    class="profile-pic">
                             </td>
-
                             <td>{{ $employee->name }}</td>
                             <td>{{ $employee->email }}</td>
                             <td>{{ $employee->position }}</td>
-
                             <td class="actions">
                                 <button class="edit-btn" data-id="{{ $employee->id }}">Edit</button>
                                 <button class="delete-btn" data-id="{{ $employee->id }}">Delete</button>
@@ -87,23 +77,20 @@
                         </tr>
                     @endforelse
                 </tbody>
-
             </table>
+
         </div>
     </section>
 
-</main> 
-<!--  ADD EMPLOYEE MODAL    -->
+</main>
 
+<!-- ADD EMPLOYEE MODAL -->
 <div id="addEmployeeModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-
         <h3>Add New Employee</h3>
-
         <form id="addEmployeeForm" method="POST" action="{{ route('clinic.employees.store') }}" enctype="multipart/form-data">
             @csrf
-
             <div class="form-group">
                 <label>Full Name</label>
                 <input type="text" name="name" required>
@@ -128,7 +115,6 @@
         </form>
     </div>
 </div>
-
 
 <!-- EDIT MODAL -->
 <div id="employeeModal" class="modal">
