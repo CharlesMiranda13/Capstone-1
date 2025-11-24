@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
   // ---------- GENERIC MODAL SETUP ----------
-  function setupModal(modalId, openBtnSelector, closeBtnSelector, displayType = "block") {
+  function setupModal(modalId, openBtnSelector, closeBtnSelector, displayType = "flex") {
     const modal = document.getElementById(modalId);
     if (!modal) return;
 
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
           .then(res => res.text())
           .then(html => {
             body.innerHTML = html;
-            modal.style.display = "block";
+            modal.style.display = "flex";
           })
           .catch(err => console.error("Error loading modal content:", err));
       });

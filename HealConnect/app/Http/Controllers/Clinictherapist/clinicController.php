@@ -115,7 +115,6 @@ class ClinicController extends ptController
             'calendarSchedules',
             'existingServices',
             'existingPrice',
-            'price'
         ));
     }
 
@@ -276,4 +275,70 @@ class ClinicController extends ptController
 
         return view('user.therapist.clinic.appointment', compact('appointments', 'providers'));
     }
+
+    /** ---------------- EMPLOYEES ---------------- */
+    public function employees(Request $request)
+    {
+        $clinic = Auth::user();
+
+        $query = User::where('clinic_id', $clinic->id)
+                 ->where('role', 'employee');
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('position')) {
+            $query->where('position', $request->position);
+        }
+
+        $employees = $query->get();
+
+        return view('user.therapist.clinic.employees', compact('employees'));
+    }
+
+    public function storeEmployee(Request $request)
+    {
+        $clinic = Auth::user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'position' => 'required|string|max:255',
+            'profile_picture' => 'nullable|image|max:2048',
+        ]);
+
+        // Handle image upload
+        $profilePicture = null;
+        if ($request->hasFile('profile_picture')) {
+            $profilePicture = $request->file('profile_picture')->store('profile_pictures', 'public');
+        }
+
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt('password123'), // default password
+            'position' => $request->position,
+            'role' => 'employee',
+            'clinic_id' => $clinic->id,
+            'profile_picture' => $profilePicture,
+        ]);
+
+        return back()->with('success', 'Employee added successfully!');
+    }
+
+    public function deleteEmployee($id)
+    {
+        $clinic = Auth::user();
+
+        $employee = User::where('id', $id)
+            ->where('clinic_id', $clinic->id)
+            ->where('role', 'employee')
+            ->firstOrFail();
+
+        $employee->delete();
+
+        return response()->json(['success' => true]);
+    }
+
 }

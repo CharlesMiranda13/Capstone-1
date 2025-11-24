@@ -143,12 +143,17 @@ class User extends Authenticatable
                 }
             }
 
-            return collect($dates);
+            return collect($dates)->filter(function($slot) {
+                return !Carbon::parse($slot['date'])->isPast();
+            })->values();
+
         } else {
             // Independent therapist: date-specific availability
             return $this->availability()
                 ->where('is_active', true)
-                ->whereDate('date', '>=', Carbon::today())
+                ->where(function ($query) {
+                    $query->whereDate('date', '>=', Carbon::today());
+                })
                 ->orderBy('date')
                 ->get(['date', 'start_time', 'end_time', 'is_active']);
         }
