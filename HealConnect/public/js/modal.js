@@ -21,6 +21,11 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("click", (e) => {
       if (e.target === modal) modal.style.display = "none";
     });
+
+    const hasSuccess = modal.querySelector(".success-msg");
+      if (hasSuccess && hasSuccess.textContent.trim() !== "") {
+          modal.style.display = displayType; 
+        }
   }
 
   // ---------- DYNAMIC MODAL SETUP ----------

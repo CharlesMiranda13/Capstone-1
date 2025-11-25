@@ -3,7 +3,7 @@
 @section('title', 'HealConnect - login & register')
 
 @section('content')
-    <link rel="stylesheet" href="{{ asset('css/Logandreg.css') }}">
+<link rel="stylesheet" href="{{ asset('css/Logandreg.css') }}">
 
 <main>
     @php
@@ -82,22 +82,25 @@
         <span class="close">&times;</span>
         <h2>Reset Password</h2>
 
-        <form method="POST" action="{{ route('password.email') }}">
-            @csrf
+        {{-- If password reset email sent --}}
+        @if (session('status'))
+            <p class="success-msg">{{ session('status') }}</p>
+        {{-- If password has been successfully reset --}}
+        @elseif (session('password_reset_success'))
+            <p class="success-msg">{{ session('password_reset_success') }}</p>
+        {{-- Show the form if nothing is sent yet --}}
+        @else
+            <form method="POST" action="{{ route('password.email') }}">
+                @csrf
 
-            <div class="form-group">
-                <label for="forgot-email">Enter your email:</label>
-                <input type="email" id="forgot-email" name="email" required placeholder="Email@gmail.com" >
-            </div>
+                <div class="form-group">
+                    <label for="forgot-email">Enter your email:</label>
+                    <input type="email" id="forgot-email" name="email" required placeholder="Email@gmail.com">
+                </div>
 
-            <p>Please check your email for the password reset link after submitting.</p>
-
-            <button type="submit" class="modal-submit-btn">Send Reset Link</button>
-
-            @if (session('status'))
-                <p class="success-msg">{{ session('status') }}</p>
-            @endif
-        </form>
+                <button type="submit" class="modal-submit-btn">Send Reset Link</button>
+            </form>
+        @endif
     </div>
 </div>
 
