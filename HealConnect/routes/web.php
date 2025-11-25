@@ -16,6 +16,8 @@ use App\Http\Controllers\ChatController;
 //use App\Http\Controllers\Patient\ReferralController;
 use App\Http\Controllers\Patient\AppointmentController;
 use Illuminate\Support\Facades\Broadcast;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 
 /*Public Pages*/
@@ -41,6 +43,20 @@ Route::prefix('auth')->group(function () {
     Route::post('/logout', [UserAuthController::class, 'logout'])->name('logout');
 });
 
+/* Forgot Password */
+Route::prefix('password')->group(function () {
+    Route::get('/forgot', [ForgotPasswordController::class, 'showLinkRequestForm'])
+        ->name('password.request');
+
+    Route::post('/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+        ->name('password.email');
+
+    Route::get('/reset/{token}', [ResetPasswordController::class, 'showResetForm'])
+        ->name('password.reset');
+
+    Route::post('/reset', [ResetPasswordController::class, 'reset'])
+        ->name('password.update');
+});
 
 Route::view('/logandsign', 'logandsign')->name('user.auth');
 
