@@ -90,6 +90,13 @@ class ClinicController extends ptController
             'appointments'
         ));
     }
+    /** ---------------- PROFILE ---------------- */
+    public function profile()
+    {
+        $data = $this->getProfileData();
+        return view('user.therapist.clinic.profile', $data);
+    }
+
 
     /** ---------------- SERVICES ---------------- */
     public function services()

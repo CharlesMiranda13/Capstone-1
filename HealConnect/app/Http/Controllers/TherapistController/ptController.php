@@ -11,6 +11,7 @@ use App\Models\Appointment;
 use App\Models\Availability;
 use App\Models\TherapistService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
 use App\Mail\AppointmentStatusMail;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
@@ -33,6 +34,92 @@ class ptController extends Controller
             'provider_id' => $user->id,
             'provider_type' => $providerType,
         ];
+    }
+
+    /** PROFILE SECTION */
+    protected function getProfileData()
+    {
+        $user = Auth::user();
+
+        $availability = Availability::where('provider_id', $user->id)
+            ->where('provider_type', get_class($user))
+            ->whereDate('date', '>=', Carbon::today())
+            ->orderBy('date', 'asc')
+            ->get();
+
+        $services = $this->getServices($user);
+
+        $existingPrice = TherapistService::where('serviceable_id', $user->id)
+            ->where('serviceable_type', get_class($user))
+            ->value('price');
+
+        return [
+            'user' => $user,
+            'availability' => $availability,
+            'servicesList' => $services,
+            'price' => $existingPrice,
+        ];
+    }
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            'profile_picture' => 'nullable|image|max:2048',
+        ]);
+
+        $user = Auth::user();
+
+        if ($request->hasFile('profile_picture')) {
+            // store in storage/app/public/profile_pictures
+            $path = $request->file('profile_picture')
+                    ->store('profile_pictures', 'public');
+
+            $user->profile_picture = $path;
+        }
+
+        $user->save();
+
+        return back()->with('success', 'Profile picture updated successfully.');
+    }
+    
+
+    public function updateInfo(Request $request)
+    {
+        $user = Auth::user();
+
+        $rules = [
+            'full_name' => 'required|string|max:255',
+            'phone'     => 'nullable|string|max:20',
+            'address'   => 'nullable|string|max:255',
+        ];
+
+        $validated = $request->validate($rules);
+
+        $user->update([
+            'full_name' => $validated['full_name'],
+            'phone'     => $validated['phone'] ?? $user->phone,
+            'address'   => $validated['address'] ?? $user->address,
+        ]);
+
+        return back()->with('success', 'Profile updated successfully.');
+    }
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password'=> 'required',
+            'new_password'=> 'required|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Current password is incorrect']);
+        }
+
+        $user->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        return back()->with('success', 'Password updated successfully.');
     }
 
     /**

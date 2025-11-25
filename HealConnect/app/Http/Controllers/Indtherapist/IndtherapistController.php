@@ -159,83 +159,9 @@ class IndtherapistController extends ptController
     /** ---------------- PROFILE ---------------- */
     public function profile()
     {
-        $user = Auth::user();
+        $data = $this->getProfileData();
+        return view('user.therapist.independent.profile', $data);
 
-        $availability = Availability::where('provider_id', $user->id)
-            ->whereDate('date', '>=', Carbon::today())
-            ->orderBy('date', 'asc')
-            ->get();
-
-        $services = $this->getServices($user);
-
-        $existingPrice = \App\Models\TherapistService::where('serviceable_id', $user->id)
-            ->where('serviceable_type', get_class($user))
-            ->value('price');
-
-        return view('user.therapist.independent.profile', [
-            'user' => $user,
-            'availability' => $availability,
-            'servicesList' => $services,
-            'price'=> $existingPrice,
-        ]);
-    }
-
-    public function updateProfile(Request $request)
-    {
-        $user = Auth::user();
-
-        $request->validate([
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-
-        if ($request->hasFile('profile_picture')) {
-            $path = $request->file('profile_picture')->store('profile_pictures', 'public');
-            $user->profile_picture = $path;
-        }
-
-        $user->save();
-
-        return back()->with('success', 'Profile updated successfully!');
-    }
-
-    public function updateInfo(Request $request)
-    {
-        $user = Auth::user();
-
-        $validated = $request->validate([
-            'address' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
-            'dob' => 'required|date',
-            'gender' => 'required|string|in:male,female',
-        ]);
-
-        $user->update($validated);
-
-        return back()->with('success', 'Information updated successfully!');
-    }
-
-    public function updatePassword(Request $request)
-    {
-        $request->validate([
-            'current_password' => ['required'],
-            'new_password' => ['required', 'min:8', 'confirmed'],
-        ]);
-
-        $user = Auth::user();
-
-        // Check if current password matches
-        if (!Hash::check($request->current_password, $user->password)) {
-            return back()->withErrors([
-                'current_password' => 'Current password is incorrect.'
-            ]);
-        }
-
-        // Update password
-        $user->password = Hash::make($request->new_password);
-        $user->save();
-
-        return back()->with('success', 'Password updated successfully!');
     }
 
     /** ---------------- PATIENT PROFILE ---------------- */
