@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeBtn = modal.querySelector(closeBtnSelector);
 
     openBtns.forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", (e) => {
+         e.preventDefault();
         modal.style.display = displayType;
       });
     });
@@ -143,5 +144,8 @@ document.addEventListener("DOMContentLoaded", function () {
   setupImageModal();
   setupImageView("viewValidIdBtn", "validIdModal", "validIdImage", "closeModalBtn", "data-valid-id");
   setupImageView("viewLicenseBtn", "licenseModal", "licenseImage", "closeLicenseBtn", "data-license");
+  // Initialize Forgot Password Modal
+  setupModal("forgotModal", ".openForgotBtn", ".close");
+
 
 });
