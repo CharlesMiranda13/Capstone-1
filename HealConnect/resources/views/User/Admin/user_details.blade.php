@@ -101,13 +101,29 @@
 
             {{-- Valid ID --}}
             @if ($user->valid_id_path)
-                <a href="#" id="viewValidIdBtn" class="btn btn-primary" data-valid-id="{{ asset('storage/' . $user->valid_id_path) }}">
-                    View Valid ID
-                </a>
+                @php
+                    $validIds = json_decode($user->valid_id_path, true);
+                    if (!is_array($validIds)) {
+                        $validIds = ['front' => $user->valid_id_path, 'back' => $user->valid_id_path];
+                    }
+                @endphp
+                <div class="form-group">
+                    <label><strong>Valid ID</strong></label><br>
+                    @if(isset($validIds['front']))
+                        <a href="#" id="viewValidIdBtn" class="btn btn-primary" data-valid-id="{{ asset('storage/' . $validIds['front']) }}">
+                            View Front
+                        </a>
+                    @endif
+                    @if(isset($validIds['back']))
+                        <a href="#" id="viewValidIdBackBtn" class="btn btn-primary" data-valid-id="{{ asset('storage/' . $validIds['back']) }}">
+                            View Back
+                        </a>
+                    @endif
 
-                <div id="validIdModal" class="modal">
-                    <span class="close" id="closeModalBtn">&times;</span>
-                    <img class="modal-content" id="validIdImage" alt="Valid ID">
+                    <div id="validIdModal" class="modal">
+                        <span class="close" id="closeModalBtn">&times;</span>
+                        <img class="modal-content" id="validIdImage" alt="Valid ID">
+                    </div>
                 </div>
             @else
                 <p><em>No Valid ID submitted.</em></p>
@@ -116,20 +132,22 @@
             {{-- License --}}
             @if (in_array($user->role, ['therapist','clinic']))
                 @if ($user->license_path)
-                    <a href="#" id="viewLicenseBtn" class="btn btn-primary" data-license="{{ asset('storage/' . $user->license_path) }}">
-                        View License
-                    </a>
+                    <div class="form-group">
+                        <label><strong>License</strong></label><br>
+                        <a href="#" id="viewLicenseBtn" class="btn btn-primary" data-license="{{ asset('storage/' . $user->license_path) }}">
+                            View License
+                        </a>
 
-                    <div id="licenseModal" class="modal">
-                        <span class="close" id="closeLicenseBtn">&times;</span>
-                        <img class="modal-content" id="licenseImage" alt="License">
+                        <div id="licenseModal" class="modal">
+                            <span class="close" id="closeLicenseBtn">&times;</span>
+                            <img class="modal-content" id="licenseImage" alt="License">
+                        </div>
                     </div>
                 @else
                     <p><em>No License submitted.</em></p>
                 @endif
             @endif
-        </div>
-
+            
         {{-- Actions --}}
         <div class="form-actions" style="margin-top: 25px; display:flex; justify-content:center; gap:15px;">
             {{-- APPROVE --}}
@@ -155,7 +173,7 @@
                 box-shadow:0 8px 20px rgba(0,0,0,0.2); position:relative;">
 
         {{-- Close Button --}}
-        <span onclick="closeDeclineModal()" 
+        <span class="closeDeclineModal" 
               style="position:absolute; top:12px; right:15px; font-size:22px; cursor:pointer; color:#888;">
             &times;
         </span>
@@ -188,15 +206,5 @@
         </form>
     </div>
 </div>
-
-<script>
-function openDeclineModal() {
-    document.getElementById('declineModal').style.display = 'block';
-}
-
-function closeDeclineModal() {
-    document.getElementById('declineModal').style.display = 'none';
-}
-</script>
 
 @endsection

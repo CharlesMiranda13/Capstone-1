@@ -148,9 +148,11 @@ document.addEventListener("DOMContentLoaded", function () {
   setupDeleteHandler(".delete-btn", (id) => `/clinic/employees/${id}`);
   setupImageModal();
   setupImageView("viewValidIdBtn", "validIdModal", "validIdImage", "closeModalBtn", "data-valid-id");
+  setupImageView("viewValidIdBackBtn", "validIdModal", "validIdImage", "closeModalBtn", "data-valid-id");
+
   setupImageView("viewLicenseBtn", "licenseModal", "licenseImage", "closeLicenseBtn", "data-license");
   // Initialize Forgot Password Modal
-  setupModal("forgotModal", ".openForgotBtn", ".close");
+  setupModal("declineModal", ".openDeclineBtn", ".closeDeclineBtn", "block");
 
 
 });

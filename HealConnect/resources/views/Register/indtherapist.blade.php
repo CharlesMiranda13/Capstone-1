@@ -78,18 +78,26 @@
 
         <div class="form-group">
             <label for="start_year" class="form-label">Year Started Practicing</label>
-            <input type="date" id="start_year" name="start_year" max="{{ date('Y-m-d') }}" required>
+            <input type="number" id="start_year" name="start_year" min="1900" max="{{ date('Y') }}" required>
         </div>
 
         <div class="file-section">
             <div class="file-group">
                 <div>
-                    <label for="ValidID">Valid ID:</label>
-                    <input type="file" id="ValidID" name="ValidID" accept=".jpg, .jpeg, .png, .pdf" required />
-                    @error('ValidID')
+                    <label for="ValidIDFront">  Valid ID (Front Side):</label>
+                    <input type="file" id="ValidIDFront" name="ValidIDFront" accept=".jpg, .jpeg, .png, .pdf" required />
+                    @error('ValidIDFront')
                         <small style="color:red;">{{ $message }}</small>    
                     @enderror
                 </div>
+                <div>
+                    <label for="ValidIDBack">Valid ID (Back Side):</label>
+                    <input type="file" id="ValidIDBack" name="ValidIDBack" accept=".jpg, .jpeg, .png, .pdf" required />
+                    @error('ValidIDBack')
+                        <small style="color:red;">{{ $message }}</small>    
+                    @enderror
+                </div>
+
                 <div>
                     <label for="license">License: </label>
                     <input type="file" id="license" name="license" accept=".jpg, .jpeg, .png, .pdf" required />
