@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 scales: {
                     y: { 
                         beginAtZero: true,
+                        suggestedMax: Math.max(...usergrowth.values) + 2,
                         ticks: {
                             stepSize: 1,
                             precision: 0,

@@ -44,7 +44,7 @@
             <i class="fa-solid fa-users"></i> Clients
         </a>
 
-        <a href="{{ route('therapist.services') }}" class="{{ request()->routeIs('therapist.availability') ? 'active' : '' }}">
+        <a href="{{ route('therapist.services') }}" class="{{ request()->routeIs('therapist.services') ? 'active' : '' }}">
             <i class="fa-solid fa-clock"></i> Services & Schedule
         </a>
 

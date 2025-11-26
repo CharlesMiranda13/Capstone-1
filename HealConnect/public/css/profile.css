@@ -24,6 +24,8 @@
     color: #777;
     font-size: 0.95rem;
 }
+
+/* PROFILE CARD GRID */
 .profile-card {
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -34,6 +36,7 @@
     transition: transform 0.2s ease;
 }
 
+/* LEFT SIDE */
 .profile-left {
     background-color: #faf3ee;
     padding: 30px;
@@ -77,6 +80,7 @@
     margin-right: 8px;
 }
 
+/* BUTTONS */
 .app {
     display: flex;
     gap: 10px;
@@ -110,6 +114,7 @@
     background-color: #519ed4;
 }
 
+/* RIGHT SIDE */
 .profile-right {
     padding: 30px;
 }
@@ -126,28 +131,25 @@
     gap: 10px;
     font-weight: 600;
 }
+
+/* SPECIALIZATIONS */
 .specializations {
     list-style: none;
     padding-left: 0;
 }
+
 .specializations li {
     background-color: #fff7f2;
     border-radius: 10px;
     margin-bottom: 8px;
-    padding: 10px 15px;
+    padding: 12px 15px;
     color: #333;
     font-weight: 500;
     display: block;
-}
-.availability li {
-    background: #fef6f0;
-    padding: 10px 15px;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-    color: #444;
-    display: flex;
-    justify-content: space-between;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 .specializations li::before {
@@ -155,10 +157,34 @@
     color: #ff9f50;
     margin-right: 10px;
 }
+
+/* AVAILABILITY */
 .availability li {
     background: #e0f7fa;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #444;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
-@media (max-width: 768px) {
+
+/* SERVICES & FEES LONG TEXT FIX */
+.services-list li,
+.fees-list li {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
+/* --- RESPONSIVENESS --- */
+@media (max-width: 992px) {
     .profile-card {
         grid-template-columns: 1fr;
     }
@@ -166,5 +192,37 @@
     .profile-left {
         border-right: none;
         border-bottom: 1px solid #eee;
+    }
+}
+
+@media (max-width: 768px) {
+    .therapist-profile {
+        padding: 20px;
+    }
+
+    .profile-left,
+    .profile-right {
+        padding: 20px;
+    }
+
+    .app {
+        flex-direction: column;
+    }
+
+    .specializations li,
+    .services-list li,
+    .availability li {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .profile-pic img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .header h2 {
+        font-size: 1.5rem;
     }
 }
