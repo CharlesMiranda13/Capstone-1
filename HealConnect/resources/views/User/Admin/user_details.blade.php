@@ -25,7 +25,7 @@
                  alt="Profile Picture" 
                  style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #ccc;">
             <h3 style="margin-top: 10px;">{{ $user->name }}</h3>
-            <p style="color: #666;">{{ ucfirst($user->role) }}</p>
+            <p style="color: #666;">{{ ucfirst($user->role_display) }}</p>
         </div>
 
         {{-- Basic Details --}}
@@ -49,10 +49,12 @@
             <input type="text" class="form-control" value="{{ $user->phone ?? 'Not Specified' }}" readonly>
         </div>
 
-        <div class="form-group">
-            <label><strong>Gender</strong></label>
-            <input type="text" class="form-control" value="{{ $user->gender ?? 'Not specified' }}" readonly>
-        </div>
+        @if ($user->role !== 'clinic')
+            <div class="form-group">
+                <label><strong>Gender</strong></label>
+                <input type="text" class="form-control" value="{{ $user->gender ?? 'Not specified' }}" readonly>
+            </div>
+        @endif
 
         {{-- Therapist / Clinic Details --}}
         @if (in_array($user->role, ['therapist','clinic']))

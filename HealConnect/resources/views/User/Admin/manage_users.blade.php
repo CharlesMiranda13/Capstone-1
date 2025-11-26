@@ -36,7 +36,7 @@
                         <td>{{ $user->id }}</td>
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
-                        <td>{{ ucfirst($user->role) }}</td>
+                        <td>{{ ucfirst($user->role_display) }}</td>
                         <td>{{ $user->status ?? 'Pending' }}</td>   
                         <td>
                         {{-- View --}}

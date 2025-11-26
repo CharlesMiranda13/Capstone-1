@@ -77,7 +77,7 @@
                     </div>
 
                     <h3 class="therapist-name">{{ $therapist->name }}</h3>
-                    <p class="therapist-role">{{ ucfirst($therapist->role) }}</p>
+                    <p class="therapist-role">{{ ucfirst($therapist->role_display) }}</p>
 
                     <p class="therapist-description">
                         {{ $therapist->description ?? 'A compassionate and dedicated therapist ready to assist you.' }}

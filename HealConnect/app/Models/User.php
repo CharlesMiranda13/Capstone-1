@@ -107,7 +107,17 @@ class User extends Authenticatable
             return null;
         }
 
-        return Carbon::parse($this->start_year)->diffInYears(Carbon::now());
+        return Carbon::now()->year - (int) $this->start_year;
+    }
+
+    public function getRoleDisplayAttribute()
+    {
+        return match($this->role) {
+            'therapist' => 'Independent Therapist', 
+            'clinic' => 'Clinic',
+            'patient' => 'Patient',
+            default => ucfirst($this->role),
+        };
     }
 
     /** ---------------- HELPERS ---------------- */

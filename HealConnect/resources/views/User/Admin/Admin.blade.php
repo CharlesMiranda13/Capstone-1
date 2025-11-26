@@ -19,7 +19,7 @@
         <a href="{{ route('admin.manage-users', ['role' => 'therapist']) }}" class="card">
             <i class="fa-solid fa-user-doctor"></i>
             <h3>{{ $totalTherapists }}</h3>
-            <p>Therapists</p>
+            <p>Independent Therapists</p>
         </a>
         <a href="{{ route('admin.manage-users', ['role' => 'clinic']) }}" class="card">
             <i class="fa-solid fa-circle-h" style="color:red;"></i>
