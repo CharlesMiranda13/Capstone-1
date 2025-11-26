@@ -1,11 +1,7 @@
-/* ===============================
-   CLIENTS / PATIENTS PAGE STYLING
-   =============================== */
-
 .therapist-patients {
-    background: #f9fafc;
     min-height: 100vh;
     padding: 2rem 1rem;
+    margin-left: 250px;
 }
 
 .container {
@@ -358,11 +354,4 @@ textarea.form-control {
 
 .text-muted {
     color: #9ca3af;
-}
-
-/* === HR Divider === */
-hr {
-    border: none;
-    border-top: 1px solid #e5e7eb;
-    margin: 2.5rem 0;
 }
