@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Register - Independent Therapist')
+@section('title', 'Register - Patient-Register')
 @section('styles') 
 <link rel="stylesheet" href="{{ asset('css/register.css') }}">
 
@@ -66,10 +66,19 @@
 
         <div class="file-section">
             <div class="file-group">
+                <!-- Front ID Upload -->
                 <div>
-                    <label for="ValidID">Valid ID:</label>
-                    <input type="file" id="ValidID" name="ValidID" accept=".jpg, .jpeg, .png, .pdf" required />
-                    @error('ValidID')
+                    <label for="ValidID">Valid ID (Front Side):</label>
+                    <input type="file" id="ValidIDFront" name="ValidIDFront" accept=".jpg, .jpeg, .png, .pdf" required />
+                    @error('ValidIDFront')
+                        <small style="color:red;">{{ $message }}</small>    
+                    @enderror
+                </div>
+                <!-- Back ID Upload -->
+                <div>
+                    <label for="ValidIDBack">Valid ID (Back Side):</label>
+                    <input type="file" id="ValidIDBack" name="ValidIDBack" accept=".jpg, .jpeg, .png, .pdf" required />
+                    @error('ValidIDBack')
                         <small style="color:red;">{{ $message }}</small>    
                     @enderror
                 </div>
