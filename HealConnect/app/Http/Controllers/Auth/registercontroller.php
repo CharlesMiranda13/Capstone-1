@@ -34,7 +34,8 @@ class RegisterController extends Controller
             'password' => 'required|string|min:6|confirmed',
             'address' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
-            'ValidID' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'ValidIDFront' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'ValidIDBack' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ];
 
         // Type-based additional validation
@@ -46,11 +47,10 @@ class RegisterController extends Controller
                 'dob' => 'required|date',
                 'Gender' => 'required|string',
             ]);
-        } elseif ($type == 'clinic' || $type == "therapist") {
-            $rules = array_merge($rules, [
-                'Fname' => 'required|string|max:255', 
-                'license' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            ]);
+        } 
+        if ($type == 'clinic' || $type == "therapist") {
+            $rules['license'] = 'required|file|mimes:jpg,jpeg,png,pdf|max:2048';
+            $rules['start_year'] = 'required|integer|min:1900|max:' . date('Y');
         }
         if ($type == 'therapist' || $type == 'clinic') {
             $rules['specialization'] = 'nullable|array';
@@ -70,7 +70,15 @@ class RegisterController extends Controller
         $verificationCode = Str::upper(Str::random(6));
 
         // Handle file uploads
-        $validIdPath = $request->file('ValidID')->store('valid_ids', 'public');
+        $front = $request->file('ValidIDFront')->store('valid_ids', 'public');
+        $back  = $request->file('ValidIDBack')->store('valid_ids', 'public');
+
+        $validIdPath = json_encode([
+            'front' => $front,
+            'back' => $back
+        ]);
+
+
         $licensePath = ($type === 'clinic' || $type === 'therapist')
             ? $request->file('license')->store('licenses', 'public')
             : null;

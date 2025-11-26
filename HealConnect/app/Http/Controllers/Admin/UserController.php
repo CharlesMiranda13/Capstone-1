@@ -148,6 +148,7 @@ class UserController extends Controller
         if ($user->role === 'clinic') {
             $employees = User::where('clinic_id', $user->id)->get();
         }
+        $validIds = $user->valid_id_path ? json_decode($user->valid_id_path, true) : null;
 
         return view('User.Admin.user_details', compact('user', 'employees'));
     }

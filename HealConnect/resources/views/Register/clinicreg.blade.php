@@ -47,9 +47,6 @@
                 <small style="color:red;">{{ $message }}</small>
             @enderror
 
-        <label for="operating_hours">Operating Hours:</label>
-        <input type="text" id="operating_hours" name="operating_hours" placeholder="Mon-Fri 9AM - 6PM" value="{{ old('operating_hours') }}" />
-
         <div class="form-group">
             <label class="form-label">Areas of Specialization</label>
             <div class="checkbox-group">
@@ -65,16 +62,29 @@
             <small class="mess">You may select more than one specialization.</small>
         </div>
 
+        <div class="form-group">
+            <label for="start_year" class="form-label">Year Started Practicing</label>
+            <input type="number" id="start_year" name="start_year" min="1900" max="{{ date('Y') }}" required>
+        </div>
+
         {{-- File Upload Section --}}
         <div class="file-section">
             <div class="file-group">
                 <div>
-                    <label for="ValidID">Valid ID (Owner/Representative):</label>
-                    <input type="file" id="ValidID" name="ValidID" accept=".jpg, .jpeg, .png, .pdf" required />
-                @error('ValidID')
+                    <label for="ValidIDFront">Valid ID (Front Side) (Owner/Representative):</label>
+                    <input type="file" id="ValidIDFront" name="ValidIDFront" accept=".jpg, .jpeg, .png, .pdf" required />
+                @error('ValidIDFront')
                     <small style="color:red;">{{ $message }}</small>
                 @enderror
                 </div>
+                <div>
+                    <label for="ValidIDBack">Valid ID (Back Side) (Owner/Representative):</label>
+                    <input type="file" id="ValidIDBack" name="ValidIDBack" accept=".jpg, .jpeg, .png, .pdf" required />
+                @error('ValidIDFront')
+                    <small style="color:red;">{{ $message }}</small>
+                @enderror
+                </div>
+
                 <div>
                     <label for="license">Clinic License / DOH Accreditation:</label>
                     <input type="file" id="license" name="license" accept=".jpg, .jpeg, .png, .pdf" required />
