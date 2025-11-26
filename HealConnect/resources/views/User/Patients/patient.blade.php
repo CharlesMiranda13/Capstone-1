@@ -11,7 +11,7 @@
         <h2>Hello, {{ Auth::user()->name ?? 'Patient' }}!</h2>
         <a href="{{ route('patient.settings') }}">
             <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) 
-            : asset('images/default-profile.png') }}"
+            : asset('images/logo1.png') }}"
             alt="Profile Picture"
             class="pic">
         </a>

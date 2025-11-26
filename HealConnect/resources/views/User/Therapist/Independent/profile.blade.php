@@ -25,7 +25,7 @@
                     <img 
                         src="{{ Auth::user()->profile_picture 
                             ? asset('storage/' . Auth::user()->profile_picture) 
-                            : asset('images/default-therapist.png') }}" 
+                            : asset('images/logo1.png') }}" 
                         alt="Profile Picture">
                 </div>
 

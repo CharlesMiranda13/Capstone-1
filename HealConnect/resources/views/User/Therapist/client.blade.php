@@ -62,7 +62,7 @@
                                 @if($patient->profile_picture)
                                     <img src="{{ asset('storage/' . $patient->profile_picture) }}" alt="{{ $patient->name }}">
                                 @else
-                                    <img src="{{ asset('images/default-patient.png') }}" alt="Default Patient">
+                                    <img src="{{ asset('images/logo1.png') }}" alt="Default Patient">
                                 @endif
                                 {{ $patient->name }}
                             </td>

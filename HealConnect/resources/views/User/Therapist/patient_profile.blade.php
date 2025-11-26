@@ -20,7 +20,7 @@
             {{-- LEFT SIDE --}}
             <div class="profile-left">
                 <div class="profile-pic">
-                    <img src="{{ $patient->profile_picture ? asset('storage/' . $patient->profile_picture) : asset('images/default-patient.png') }}" 
+                    <img src="{{ $patient->profile_picture ? asset('storage/' . $patient->profile_picture) : asset('images/logo1.png') }}" 
                         alt="{{ $patient->name }}">
                 </div>
 

@@ -21,7 +21,7 @@
 
         {{-- Profile Picture --}}
         <div style="margin-bottom: 20px;">
-            <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('images/default-profile.png') }}" 
+            <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('images/logo1.png') }}" 
                  alt="Profile Picture" 
                  style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #ccc;">
             <h3 style="margin-top: 10px;">{{ $user->name }}</h3>

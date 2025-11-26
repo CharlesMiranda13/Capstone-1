@@ -20,7 +20,7 @@
                 <div class="profile-pic">
                     <img src="{{ $therapist->profile_picture 
                         ? asset('storage/' . $therapist->profile_picture) 
-                        : asset('images/default-therapist.png') }}" 
+                        : asset('images/logo1.png') }}" 
                         alt="{{ $therapist->name }}">
                 </div>
 
