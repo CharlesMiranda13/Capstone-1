@@ -121,11 +121,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="gender">Gender</label>
-                        <select name="gender" id="gender" required>
-                            <option value="male" {{ Auth::user()->gender === 'male' ? 'selected' : '' }}>Male</option>
-                            <option value="female" {{ Auth::user()->gender === 'female' ? 'selected' : '' }}>Female</option>
-                        </select>
+                        <label for="gender">Sex</label>
+                        <input type="text" value="{{ Auth::user()->gender }}" disabled>
                     </div>
                 @endif
 

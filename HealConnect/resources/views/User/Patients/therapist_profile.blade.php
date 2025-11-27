@@ -2,9 +2,7 @@
 
 @section('title', 'PT - Profile')
 
-@section('styles')
-<link rel="stylesheet" href="{{ asset('css/profile.css') }}">
-@endsection
+
 
 @section('content')
 <main class="therapist-profile">
@@ -27,11 +25,15 @@
                 </div>
 
                 <h3>{{ $therapist->name }}</h3>
-                <p class="role">{{ ucfirst($therapist->role_display) }}</p>
+                <div class = role-display>
+                    <p class="role">{{ ucfirst($therapist->role_display) }}</p>
+                </div>
 
-                <p class="bio">
-                    {{ $therapist->description ?? 'A compassionate and dedicated therapist ready to assist you.' }}
-                </p>
+                <div class=bio-section>
+                    <p class="bio">
+                        {{ $therapist->description ?? 'A compassionate and dedicated therapist ready to assist you.' }}
+                    </p>
+                </div>
 
                 <div class="contact-info">
                     <p><i class="fa-solid fa-location-dot"></i> {{ $therapist->address ?? 'Location not specified' }}</p>
@@ -40,6 +42,13 @@
                     <p><i class="fa-solid fa-briefcase"></i> 
                         {{ $therapist->experience_years ? round($therapist->experience_years) . ' years experience' : 'Experience not specified' }}
                     </p>
+
+                    @if(str_contains(strtolower($therapist->role_display), 'independent'))
+                    <p class="therapist-gender">
+                        <i class="fa-solid fa-venus-mars"></i> {{ ucfirst($therapist->gender) ?? 'Not specified' }}
+                    </p>
+                    @endif
+
                 </div>
                 
                 <div class="app"> 

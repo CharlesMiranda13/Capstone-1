@@ -230,17 +230,18 @@
     color: #000000;
     font-size: 0.95rem;
     margin-bottom: 10px;
+    font-weight: 500;
 }
 
 .therapist-description {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: #000000;
     margin-bottom: 15px;
     min-height: 50px;
 }
 
 .therapist-location {
-    font-size: 0.9rem;
+    font-size: 1.2rem;
     color: #050505;
     margin-bottom: 15px;
 }
@@ -248,6 +249,12 @@
 .therapist-location i {
     color: #e63946;
     margin-right: 5px;
+}
+
+.therapist-gender i {
+    color: #000000;
+    margin-right: 5px;
+    margin-bottom: 10px;
 }
 
 .availability-status {

@@ -34,6 +34,7 @@
                     <p><i class="fa-solid fa-calendar"></i> 
                         Date of Birth: {{ $patient->dob ? \Carbon\Carbon::parse($patient->dob)->format('F j, Y') : 'Not provided' }}
                     </p>
+                    <p><i class="fa-solid fa-venus-mars"></i> Gender: {{ ucfirst($patient->gender) ?? 'Not specified' }}</p>
                 </div>
 
                 <div class="app">

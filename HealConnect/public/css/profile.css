@@ -57,15 +57,16 @@
     color: #333;
 }
 
-.role {
-    color: #888;
-    font-size: 0.9rem;
+.role-display .role {
+    color: #000000;
+    font-size: 20px;
     margin-bottom: 10px;
+    font-weight: 500;
 }
 
-.bio {
-    font-size: 0.9rem;
-    color: #555;
+.bio-section .bio {
+    font-size: 1.2rem;
+    color: #1a1616;
     margin: 10px 0 20px;
 }
 
@@ -73,6 +74,7 @@
     font-size: 0.9rem;
     color: #444;
     margin: 8px 0;
+    margin-bottom: 15px;
 }
 
 .contact-info i {

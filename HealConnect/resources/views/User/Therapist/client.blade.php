@@ -53,6 +53,7 @@
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Records</th>
+                        <th>View Profile
                     </tr>
                 </thead>
                 <tbody>
@@ -72,10 +73,21 @@
                                 <a href="{{ route('therapist.patients_records', ['patientId' => $patient->id]) }}" class="btn-view-records">
                                     Medical Records
                                 </a>
-
+                            </td>
+                            <td>
+                                <button class="openModalBtn btn-view-profile" data-link="{{route('therapist.patients.profile',  $patient->id)}}">
+                                   <i class="fa fa-user"></i>
+                                </button>
                             </td>
                         </tr>
                     @endforeach
+                    <div id="patientModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+                            <div id="modal-body"></div>
+                            </div>
+                        </div>
+                    </div>
                 </tbody>
             </table>
         @else
