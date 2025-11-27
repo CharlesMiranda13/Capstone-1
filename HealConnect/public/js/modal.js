@@ -137,6 +137,43 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // ================= TAB SWITCH WITH MODAL =================
+  let pendingTab = null;
+
+  function setupTabSwitchModal() {
+    const tabs = document.querySelectorAll(".tab-link");
+    const contents = document.querySelectorAll(".tab-content");
+    const confirmBtn = document.getElementById("confirmTabSwitch");
+    const openTrigger = document.querySelector(".openTabSwitchModal");
+
+    if (!tabs.length || !confirmBtn || !openTrigger) return;
+
+    // When clicking a tab → open modal instead of switching
+    tabs.forEach(tab => {
+      tab.addEventListener("click", function (e) {
+        e.preventDefault();
+        pendingTab = this.dataset.tab;
+        openTrigger.click(); 
+      });
+    });
+    
+    confirmBtn.addEventListener("click", () => {
+      // deactivate tabs
+      document.querySelectorAll(".tab-link").forEach(t => t.classList.remove("active"));
+      document.querySelector(`.tab-link[data-tab="${pendingTab}"]`).classList.add("active");
+
+      // deactivate contents
+      document.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
+      document.getElementById(pendingTab).classList.add("active");
+
+      // close modal
+      document.getElementById("tabSwitchModal").style.display = "none";
+    });
+  }
+
+  setupTabSwitchModal();
+
+
   // ---------- INITIALIZE ALL ----------
   setupDynamicModal("patientModal", "modal-body", ".openModalBtn", (btn) => btn.getAttribute("data-link"));
   setupModal("addEmployeeModal", "#addEmployeeBtn", ".close");
@@ -145,6 +182,45 @@ document.addEventListener("DOMContentLoaded", function () {
     const action = btn.classList.contains("schedule-btn") ? "schedule" : "edit";
     return `/clinic/employees/${id}/${action}`;
   });
+
+  // ================== PASSWORD UPDATE CONFIRMATION ==================
+  (function () {
+    const form = document.querySelector("form");
+    const saveBtn = document.querySelector(".save-btn");
+    const modal = document.getElementById("passwordConfirmModal");
+    const confirmBtn = document.getElementById("confirmPasswordUpdate");
+
+    if (!form || !saveBtn || !modal || !confirmBtn) return;
+
+    // Flag to track if we should bypass modals
+    let bypassModals = false;
+
+    saveBtn.addEventListener("click", function (e) {
+        // If already confirmed, let it submit
+        if (bypassModals) return;
+
+        const current = document.getElementById("current_password")?.value;
+        const newPass = document.getElementById("new_password")?.value;
+        const confirm = document.getElementById("confirm_password")?.value;
+
+        // Only trigger modal when password fields are filled
+        if (current || newPass || confirm) {
+            e.preventDefault();
+            e.stopPropagation(); // Prevent other click handlers
+            modal.style.display = "flex";
+        }
+    });
+
+    // When user confirms → submit form
+    confirmBtn.addEventListener("click", function () {
+        modal.style.display = "none";
+        bypassModals = true;
+      
+        // Directly trigger form submission
+        form.requestSubmit ? form.requestSubmit(saveBtn) : form.submit();
+    });
+  })();
+
   setupDeleteHandler(".delete-btn", (id) => `/clinic/employees/${id}`);
   setupImageModal();
   setupImageView("viewValidIdBtn", "validIdModal", "validIdImage", "closeModalBtn", "data-valid-id");
@@ -153,6 +229,8 @@ document.addEventListener("DOMContentLoaded", function () {
   setupImageView("viewLicenseBtn", "licenseModal", "licenseImage", "closeLicenseBtn", "data-license");
   // Initialize Forgot Password Modal
   setupModal("declineModal", ".openDeclineBtn", ".closeDeclineBtn", "block");
-
+  // Admin setup modals
+  setupModal("tabSwitchModal", ".openTabSwitchModal", ".closeTabSwitch", "flex");
+  setupModal("passwordConfirmModal", ".openPasswordModal", ".closePasswordModal", "flex");
 
 });
