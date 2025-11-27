@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\AdminSettingsController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\UserAuthController;
@@ -76,43 +77,25 @@ Route::get('/account/pending', function () {
 /*Admin Authentication & Management*/
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    // Authentication
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-    Route::get('/dashboard', [UserController::class, 'dashboard'])
-        ->name('dashboard')
-        ->middleware('auth:admin');
-    Route::get('viewreports', [AuthController::class, 'reports'])
-        ->name('viewreports')
-        ->middleware('auth:admin');
-    Route::get('setting', [AuthController::class, 'setting'])
-        ->name('setting')
-        ->middleware('auth:admin');
-    
-    Route::post('/logout', function () {
-        auth()->guard('admin')->logout();   
-        return redirect()->route('admin.login');
-    })->name('logout');
 
-    // User Management
-    Route::get('/users', [UserController::class, 'index'])
-        ->name('manage-users')
-        ->middleware('auth:admin');
+    Route::middleware('auth:admin')->group(function () {
+        Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
+        Route::get('viewreports', [AuthController::class, 'reports'])->name('viewreports');
+        Route::get('/setting', [AdminSettingsController::class, 'setting'])->name('setting');
+        Route::post('/setting', [AdminSettingsController::class, 'update'])->name('setting.update');
+        Route::get('/users', [UserController::class, 'index'])->name('manage-users');
+        Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
+        Route::patch('/users/{id}/verify', [UserController::class, 'verify'])->name('users.verify');
+        Route::patch('/users/{id}/decline', [UserController::class, 'decline'])->name('users.decline');
+        Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
-    Route::get('/users/{id}',[UserController::class, 'show'])
-        ->name('users.show')
-        ->middleware('auth:admin');
-
-    Route::patch('/users/{id}/verify', [UserController::class, 'verify'])
-        ->name('users.verify')
-        ->middleware('auth:admin');
-    Route::patch('/users/{id}/decline', [UserController::class, 'decline'])
-        ->name('users.decline')
-        ->middleware('auth:admin');
-
-    Route::delete('/users/{id}', [UserController::class, 'destroy'])
-        ->name('users.destroy')
-        ->middleware('auth:admin');
+        Route::post('/logout', function () {
+            auth()->guard('admin')->logout();
+            return redirect()->route('admin.login');
+        })->name('logout');
+    });
 });
 
 /* Patient Routes */
