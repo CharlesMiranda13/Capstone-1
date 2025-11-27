@@ -1,4 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
+  function autoDismissAlerts() {
+    const alerts = document.querySelectorAll('.alerts-container .alert');
+    alerts.forEach(alert => {
+      setTimeout(() => {
+        alert.style.transition = 'opacity 0.5s ease';
+        alert.style.opacity = '0';
+        setTimeout(() => {
+          alert.remove();
+        }, 500);
+      }, 3000); // Dismiss after 3 seconds
+    });
+  }
+  autoDismissAlerts();
   // ---------- GENERIC MODAL SETUP ----------
   function setupModal(modalId, openBtnSelector, closeBtnSelector, displayType = "flex") {
     const modal = document.getElementById(modalId);
@@ -137,51 +150,116 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ================= TAB SWITCH WITH MODAL =================
-  let pendingTab = null;
-
+  // ================= TAB SWITCH WITH CHANGE DETECTION =================
   function setupTabSwitchModal() {
     const tabs = document.querySelectorAll(".tab-link");
-    const contents = document.querySelectorAll(".tab-content");
+    const form = document.getElementById("settingsForm");
     const confirmBtn = document.getElementById("confirmTabSwitch");
-    const openTrigger = document.querySelector(".openTabSwitchModal");
+    const tabSwitchModal = document.getElementById("tabSwitchModal");
 
-    if (!tabs.length || !confirmBtn || !openTrigger) return;
+    if (!tabs.length || !confirmBtn || !tabSwitchModal || !form) return;
 
-    // When clicking a tab → open modal instead of switching
+    let pendingTab = null;
+    let formChanged = false;
+    let originalFormData = {};
+
+    // Capture original form values on page load
+    function captureFormData() {
+      originalFormData = {};
+      
+      form.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], textarea, select').forEach(field => {
+        if (field.name) {
+          originalFormData[field.name] = field.value || '';
+        }
+      });
+    }
+
+    // Check if form has changed
+    function hasFormChanged() {
+      const currentFields = form.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], textarea, select');
+      
+      for (let field of currentFields) {
+        if (field.name) {
+          const originalValue = originalFormData[field.name] || '';
+          const currentValue = field.value || '';
+          
+          if (originalValue !== currentValue) {
+            return true;
+          }
+        }
+      }
+
+      // Check file inputs
+      const fileInputs = form.querySelectorAll('input[type="file"]');
+      for (let field of fileInputs) {
+        if (field.name && field.files.length > 0) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    // Capture initial form state
+    captureFormData();
+
+    // Listen to form changes
+    form.addEventListener('input', () => {
+      formChanged = hasFormChanged();
+    });
+
+    form.addEventListener('change', () => {
+      formChanged = hasFormChanged();
+    });
+
+    // Tab click handler
     tabs.forEach(tab => {
       tab.addEventListener("click", function (e) {
         e.preventDefault();
-        pendingTab = this.dataset.tab;
-        openTrigger.click(); 
+        const targetTab = this.dataset.tab;
+        
+        // If clicking the already active tab, do nothing
+        if (this.classList.contains('active')) {
+          return;
+        }
+
+        pendingTab = targetTab;
+
+        // Only show modal if form has changed
+        if (formChanged) {
+          tabSwitchModal.style.display = "flex";
+        } else {
+          switchTab(targetTab);
+        }
       });
     });
-    
+
+    // Confirm button - switch tabs and reset tracking
     confirmBtn.addEventListener("click", () => {
-      // deactivate tabs
+      switchTab(pendingTab);
+      tabSwitchModal.style.display = "none";
+      
+      // Reset form tracking after switching
+      setTimeout(() => {
+        captureFormData();
+        formChanged = false;
+      }, 100);
+    });
+
+    // Helper function to switch tabs
+    function switchTab(tabName) {
       document.querySelectorAll(".tab-link").forEach(t => t.classList.remove("active"));
-      document.querySelector(`.tab-link[data-tab="${pendingTab}"]`).classList.add("active");
+      document.querySelector(`.tab-link[data-tab="${tabName}"]`).classList.add("active");
 
-      // deactivate contents
       document.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
-      document.getElementById(pendingTab).classList.add("active");
+      document.getElementById(tabName).classList.add("active");
+    }
 
-      // close modal
-      document.getElementById("tabSwitchModal").style.display = "none";
+    // Reset form tracking after successful save
+    form.addEventListener('submit', () => {
+      formChanged = false;
     });
   }
-
-  setupTabSwitchModal();
-
-
-  // ---------- INITIALIZE ALL ----------
-  setupDynamicModal("patientModal", "modal-body", ".openModalBtn", (btn) => btn.getAttribute("data-link"));
-  setupModal("addEmployeeModal", "#addEmployeeBtn", ".close");
-  setupDynamicModal("employeeModal", "employeeModalBody", ".schedule-btn, .edit-btn", (btn) => {
-    const id = btn.getAttribute("data-id");
-    const action = btn.classList.contains("schedule-btn") ? "schedule" : "edit";
-    return `/clinic/employees/${id}/${action}`;
-  });
 
   // ================== PASSWORD UPDATE CONFIRMATION ==================
   (function () {
@@ -192,45 +270,48 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!form || !saveBtn || !modal || !confirmBtn) return;
 
-    // Flag to track if we should bypass modals
     let bypassModals = false;
 
     saveBtn.addEventListener("click", function (e) {
-        // If already confirmed, let it submit
         if (bypassModals) return;
 
         const current = document.getElementById("current_password")?.value;
         const newPass = document.getElementById("new_password")?.value;
         const confirm = document.getElementById("confirm_password")?.value;
 
-        // Only trigger modal when password fields are filled
         if (current || newPass || confirm) {
             e.preventDefault();
-            e.stopPropagation(); // Prevent other click handlers
+            e.stopPropagation();
             modal.style.display = "flex";
         }
     });
 
-    // When user confirms → submit form
     confirmBtn.addEventListener("click", function () {
         modal.style.display = "none";
         bypassModals = true;
-      
-        // Directly trigger form submission
         form.requestSubmit ? form.requestSubmit(saveBtn) : form.submit();
     });
   })();
+
+  // ---------- INITIALIZE ALL ----------
+  setupDynamicModal("patientModal", "modal-body", ".openModalBtn", (btn) => btn.getAttribute("data-link"));
+  setupModal("addEmployeeModal", "#addEmployeeBtn", ".close");
+  setupDynamicModal("employeeModal", "employeeModalBody", ".schedule-btn, .edit-btn", (btn) => {
+    const id = btn.getAttribute("data-id");
+    const action = btn.classList.contains("schedule-btn") ? "schedule" : "edit";
+    return `/clinic/employees/${id}/${action}`;
+  });
 
   setupDeleteHandler(".delete-btn", (id) => `/clinic/employees/${id}`);
   setupImageModal();
   setupImageView("viewValidIdBtn", "validIdModal", "validIdImage", "closeModalBtn", "data-valid-id");
   setupImageView("viewValidIdBackBtn", "validIdModal", "validIdImage", "closeModalBtn", "data-valid-id");
-
   setupImageView("viewLicenseBtn", "licenseModal", "licenseImage", "closeLicenseBtn", "data-license");
-  // Initialize Forgot Password Modal
+  
   setupModal("declineModal", ".openDeclineBtn", ".closeDeclineBtn", "block");
-  // Admin setup modals
   setupModal("tabSwitchModal", ".openTabSwitchModal", ".closeTabSwitch", "flex");
   setupModal("passwordConfirmModal", ".openPasswordModal", ".closePasswordModal", "flex");
 
+  // Initialize tab switch modal with change detection
+  setupTabSwitchModal();
 });

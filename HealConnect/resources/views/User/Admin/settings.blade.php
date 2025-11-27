@@ -44,7 +44,7 @@
         </div>
 
         {{-- Settings Form --}}
-        <form action="{{ route('admin.setting.update') }}" method="POST" enctype="multipart/form-data">
+        <form id="settingsForm" action="{{ route('admin.setting.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             {{-- General Tab --}}

@@ -16,8 +16,12 @@
                 </tr>
             </thead>
             <tbody>
-  
+                <h2 style="text-align: center; margin-top: 20px;">
+                    TEKA LANG WALA PA TO
+                </h2>
             </tbody>
         </table>
     </div>
+</main>
+@endsection
 
