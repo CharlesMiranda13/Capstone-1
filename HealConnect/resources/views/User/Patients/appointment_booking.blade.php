@@ -25,7 +25,14 @@
                 </div>
 
                 <h3>{{ $therapist->name }}</h3>
-                <p class="role">{{ ucfirst($therapist->role) }}</p>
+                <p class="role">{{ ucfirst($therapist->role_display) }}</p>
+
+                @if(str_contains(strtolower($therapist->role_display), 'independent'))
+                    <p class="therapist-gender">
+                        <i class="fa-solid fa-venus-mars"></i> {{ ucfirst($therapist->gender) ?? 'Not specified' }}
+                    </p>
+                @endif
+
                 <p class="bio">{{ $therapist->description ?? 'A compassionate and dedicated therapist ready to assist you.' }}</p>
 
                 <div class="contact-info">

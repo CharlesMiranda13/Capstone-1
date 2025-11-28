@@ -1,40 +1,46 @@
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 25px;
 }
+
 .header h2 {
     font-size: 28px;
-    margin-bottom: 10px;
-    color: #333;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 12px;
 }
 
-.header p {
-    font-size: 16px;
-    color: #666;
-}
-
+/* ===== PROFILE CARD LAYOUT ===== */
 .profile-card {
     display: flex;
-    gap: 30px;
-    background-color: #fff;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    gap: 40px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    transition: 0.3s ease-in-out;
 }
 
-.profile-left {
+.profile-card:hover {
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+.profile-left,
+.profile-right {
     flex: 1;
-    min-width: 250px;
+    margin: 0 auto 15px;
 }
 
+/* ===== PROFILE IMAGE ===== */
 .profile-left .profile-pic {
-    width: 150px;
-    height: 150px;
-    margin-bottom: 15px;
-    overflow: hidden;
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
-    border: 2px solid #0077cc;
+    overflow: hidden;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin: 0 auto 15px;
 }
 
 .profile-left .profile-pic img {
@@ -43,116 +49,152 @@
     object-fit: cover;
 }
 
+/* ===== TEXT SECTION ===== */
 .profile-left h3 {
-    font-size: 22px;
-    margin-bottom: 5px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #030303;
 }
 
 .profile-left .role {
-    font-size: 16px;
-    font-weight: 500;
-    color: #0077cc;
-    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 12px;
 }
 
 .profile-left .bio {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 15px;
+    font-size: 20px;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 18px;
 }
 
+/* ===== CONTACT INFO ===== */
 .contact-info p {
-    font-size: 14px;
-    color: #444;
-    margin: 4px 0;
+    font-size: 20px;
+    color: #333;
+    margin: 6px 0 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 15px;
 }
 
 .contact-info i {
-    color: #020202;
-    margin-right: 6px;
+    font-size: 20px;
+    color: #0d6efd;
+    margin: 0;
+    line-height: 1;
 }
 
+/* ===== CARD SECTIONS ===== */
 .card-section {
-    margin-top: 20px;
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #e5e5e5;
 }
 
 .card-section h4 {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
-    color: #212222;
-    margin-bottom: 10px;
+    color: #1a1a1a;
+    margin-bottom: 12px;
 }
 
 .services-list {
-    list-style-type: disc;
-    padding-left: 20px;
-    color: #555;
+    padding-left: 0;
+    margin: 0;
 }
 
 .services-list li {
-    margin-bottom: 5px;
+    list-style: none;
+    font-size: 20px;
+    color: #555;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.profile-right {
-    flex: 1;
-    min-width: 350px;
+.services-list li::before {
+    content: "•";
+    font-size: 18px;
+    color: #0d6efd;
+    line-height: 1;
 }
 
+/* ===== BOOKING FORM ===== */
 .booking-form {
     display: flex;
     flex-direction: column;
+    gap: 15px;
 }
 
 .booking-form label {
     font-size: 14px;
-    margin-top: 10px;
-    margin-bottom: 5px;
+    font-weight: 600;
     color: #333;
 }
 
 .booking-form select,
 .booking-form textarea,
 .booking-form input[type="file"] {
-    padding: 8px 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #d0d0d0;
     font-size: 14px;
+    background: #fdfdfd;
+    transition: border-color 0.2s;
+}
+
+.booking-form select:focus,
+.booking-form textarea:focus,
+.booking-form input[type="file"]:focus {
+    border-color: #0d6efd;
+    outline: none;
 }
 
 .booking-form textarea {
+    min-height: 100px;
     resize: vertical;
-    min-height: 80px;
 }
 
+/* BUTTON */
 .booking-form .btn-submit {
-    margin-top: 15px;
-    padding: 10px 15px;
-    background-color: #0077cc;
-    color: #fff;
+    padding: 12px;
+    background: #0d6efd;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
+    color: white;
     font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    transition: 0.3s;
+    transition: background 0.3s;
 }
 
 .booking-form .btn-submit:hover {
-    background-color: #161718;
+    background: #0b5ed7;
 }
 
-/* Card Sections */
-.card-section {
-    margin-bottom: 25px;
-}
-
-/* Responsive */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
     .profile-card {
         flex-direction: column;
+        padding: 20px;
     }
 
-    .profile-left,
-    .profile-right {
-        min-width: 100%;
+    .profile-left .profile-pic {
+        margin: 0 auto 15px;
+    }
+
+    .profile-left h3,
+    .profile-left .role,
+    .profile-left .bio {
+        text-align: center;
+    }
+
+    .contact-info p {
+        justify-content: center;
     }
 }
