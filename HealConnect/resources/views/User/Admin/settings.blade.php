@@ -78,6 +78,17 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="phone_number">Contact Phone</label>
+                    <input 
+                        type="text" 
+                        name="phone_number" 
+                        id="phone_number" 
+                        value="{{ old('phone_number', $settings->phone_number ?? '') }}"
+                        placeholder="+63 900 000 0000"
+                    >
+                </div>
+
+                <div class="form-group">
                     <label for="description">Platform Description / Tagline</label>
                     <textarea 
                         name="description" 
