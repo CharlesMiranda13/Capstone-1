@@ -164,6 +164,26 @@
     font-weight: 600;
 }
 
+.badge {
+    display: inline-block;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    color: #fff;
+    font-size: 0.8rem;
+}
+
+.bg-warning {
+    background-color: #f59e0b;
+}
+
+.bg-success {
+    background-color: #10b981;
+}
+
+.bg-danger {
+    background-color: #ef4444;
+}
+
 /*User Details ito ha*/
 .user-details {
     max-width: 700px;

@@ -83,6 +83,9 @@ class RegisterController extends Controller
             ? $request->file('license')->store('licenses', 'public')
             : null;
 
+        $startYear = $request->start_year;
+        $startDate = "{$startYear}-01-01";
+
         // Create user
         $user = User::create([
             'name' => $type === 'clinic'
@@ -102,7 +105,7 @@ class RegisterController extends Controller
             'specialization' => $request->has('specialization')
                 ? implode(',', $request->specialization)
                 : null,
-            'start_year' => $request->start_year,
+            'start_year' => $startDate,
         ]);
 
         // Send verification email

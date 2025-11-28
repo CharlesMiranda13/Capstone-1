@@ -37,7 +37,15 @@
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
                         <td>{{ ucfirst($user->role_display) }}</td>
-                        <td>{{ $user->status ?? 'Pending' }}</td>   
+                        <td>
+                            <span class="badge 
+                                @if($user->status == 'Pending') bg-warning
+                                @elseif($user->status == 'Active') bg-success
+                                @elseif($user->status == 'Declined') bg-danger
+                                @endif">
+                            {{ $user->status }}
+                            </span>
+                        </td>   
                         <td>
                         {{-- View --}}
                             <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-info btn-sm">View</a>
