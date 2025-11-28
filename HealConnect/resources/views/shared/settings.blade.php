@@ -47,137 +47,169 @@
         </div>
         @endif
 
-
-        {{-- PROFILE PICTURE --}}
-        <div class="scard">
-            <h4 class="section-title">Profile Picture</h4>
-            <form action="{{ route($role . '.update.profile') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('PUT')
-
-                <div class="profile-upload">
-                    <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : asset('images/default-avatar.png') }}"
-                         alt="Profile Picture" class="profile-image" style="width: 100px; height: 100px;">
-
-                    <div class="upload-controls">
-                        <input type="file" name="profile_picture" accept="image/*">
-                        @error('profile_picture')
-                            <small class="error-message">{{ $message }}</small>
-                        @enderror
-                        <button type="submit" class="submit-button primary-button">Upload</button>
-                    </div>
-                </div>
-            </form>
+        {{-- TAB NAVIGATION --}}
+        <div class="settings-tabs">
+            <button class="tab-link active" data-tab="profile">Profile</button>
+            <button class="tab-link" data-tab="personal">Personal Information</button>
+            <button class="tab-link" data-tab="security">Security</button>
         </div>
 
-        {{-- PERSONAL INFORMATION --}}
-        <div class="scard">
-            <h4 class="section-title">Personal Information</h4>
-            <form action="{{ route($role . '.update.info') }}" method="POST">
-                @csrf
-                @method('PUT')
+        {{-- PROFILE TAB --}}
+        <div id="profile" class="tab-content active">
+            <div class="scard">
+                <h4 class="section-title">Profile Picture</h4>
+                <form action="{{ route($role . '.update.profile') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
 
-                {{-- NAME --}}
-                <div class="form-group">
-                    <label for="name">{{ $role === 'clinic' ? 'Clinic Name' : 'Full Name' }}</label>
-                    <input type="text"
-                           name="name"
-                           id="name"
-                           value="{{ old('name', Auth::user()->name) }}"
-                           required>
-                </div>
+                    <div class="profile-upload">
+                        <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : asset('images/default-avatar.png') }}"
+                             alt="Profile Picture" class="profile-image" style="width: 100px; height: 100px;">
 
-                {{-- PHONE --}}
-                <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel"
-                           name="phone"
-                           id="phone"
-                           value="{{ old('phone', Auth::user()->phone) }}"
-                           pattern="^(09\d{9}|\+639\d{9})$"
-                           placeholder="09XXXXXXXXX or +639XXXXXXXXX"
-                           required>
-                </div>
+                        <div class="upload-controls">
+                            <input type="file" name="profile_picture" accept="image/*">
+                            @error('profile_picture')
+                                <small class="error-message">{{ $message }}</small>
+                            @enderror
+                            <button type="submit" class="submit-button primary-button">Upload</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
 
-                {{-- ADDRESS --}}
-                <div class="form-group">
-                    <label for="address">Address</label>
-                    <input type="text"
-                           name="address"
-                           id="address"
-                           value="{{ old('address', Auth::user()->address) }}"
-                           required>
-                </div>
+        {{-- PERSONAL INFORMATION TAB --}}
+        <div id="personal" class="tab-content">
+            <div class="scard">
+                <h4 class="section-title">Personal Information</h4>
+                <form action="{{ route($role . '.update.info') }}" method="POST">
+                    @csrf
+                    @method('PUT')
 
-                {{-- PATIENT SPECIFIC FIELDS --}}
-                @if($role === 'patient')
+                    {{-- NAME --}}
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email"
-                               name="email"
-                               id="email"
-                               value="{{ old('email', Auth::user()->email) }}"
+                        <label for="name">{{ $role === 'clinic' ? 'Clinic Name' : 'Full Name' }}</label>
+                        <input type="text"
+                               name="name"
+                               id="name"
+                               value="{{ old('name', Auth::user()->name) }}"
                                required>
                     </div>
 
+                    {{-- PHONE --}}
                     <div class="form-group">
-                        <label for="gender">Sex</label>
-                        <input type="text" value="{{ Auth::user()->gender }}" disabled>
+                        <label for="phone">Phone Number</label>
+                        <input type="tel"
+                               name="phone"
+                               id="phone"
+                               value="{{ old('phone', Auth::user()->phone) }}"
+                               pattern="^(09\d{9}|\+639\d{9})$"
+                               placeholder="09XXXXXXXXX or +639XXXXXXXXX"
+                               required>
                     </div>
-                @endif
 
-                {{-- THERAPIST SPECIFIC FIELDS --}}
-                @if($role === 'therapist')
+                    {{-- ADDRESS --}}
                     <div class="form-group">
-                        <label for="specialization">Specialization</label>
+                        <label for="address">Address</label>
                         <input type="text"
-                               name="specialization"
-                               id="specialization"
-                               value="{{ old('specialization', Auth::user()->specialization) }}">
+                               name="address"
+                               id="address"
+                               value="{{ old('address', Auth::user()->address) }}"
+                               required>
                     </div>
-                @endif
 
-                {{-- CLINIC SPECIFIC FIELDS --}}
-                @if($role === 'clinic')
-                    <div class="form-group">
-                        <label for="clinic_license">Clinic License Number</label>
-                        <input type="text"
-                               name="clinic_license"
-                               id="clinic_license"
-                               value="{{ old('clinic_license', Auth::user()->clinic_license) }}">
-                    </div>
-                @endif
+                    {{-- PATIENT SPECIFIC FIELDS --}}
+                    @if($role === 'patient')
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email"
+                                   name="email"
+                                   id="email"
+                                   value="{{ old('email', Auth::user()->email) }}"
+                                   required>
+                        </div>
 
-                <button type="submit" class="submit-button success-button">Save Changes</button>
-            </form>
+                        <div class="form-group">
+                            <label for="gender">Sex</label>
+                            <input type="text" value="{{ Auth::user()->gender }}" disabled>
+                        </div>
+                    @endif
+
+                    {{-- THERAPIST SPECIFIC FIELDS --}}
+                    @if($role === 'therapist')
+                        <div class="form-group">
+                            <label for="specialization">Specialization</label>
+                            <input type="text"
+                                   name="specialization"
+                                   id="specialization"
+                                   value="{{ old('specialization', Auth::user()->specialization) }}">
+                        </div>
+                    @endif
+
+                    {{-- CLINIC SPECIFIC FIELDS --}}
+                    @if($role === 'clinic')
+                        <div class="form-group">
+                            <label for="clinic_license">Clinic License Number</label>
+                            <input type="text"
+                                   name="clinic_license"
+                                   id="clinic_license"
+                                   value="{{ old('clinic_license', Auth::user()->clinic_license) }}">
+                        </div>
+                    @endif
+
+                    <button type="submit" class="submit-button success-button">Save Changes</button>
+                </form>
+            </div>
         </div>
 
-        {{-- CHANGE PASSWORD --}}
-        <div class="scard">
-            <h4 class="section-title">Change Password</h4>
-            <form action="{{ route($role . '.update.password') }}" method="POST">
-                @csrf
-                @method('PUT')
+        {{-- SECURITY TAB --}}
+        <div id="security" class="tab-content">
+            <div class="scard">
+                <h4 class="section-title">Change Password</h4>
+                <form action="{{ route($role . '.update.password') }}" method="POST">
+                    @csrf
+                    @method('PUT')
 
-                <div class="form-group">
-                    <label for="current_password">Current Password</label>
-                    <input type="password" name="current_password" id="current_password" required>
-                </div>
+                    <div class="form-group">
+                        <label for="current_password">Current Password</label>
+                        <input type="password" name="current_password" id="current_password" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="new_password">New Password</label>
-                    <input type="password" name="new_password" id="new_password" required>
-                </div>
+                    <div class="form-group">
+                        <label for="new_password">New Password</label>
+                        <input type="password" name="new_password" id="new_password" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="new_password_confirmation">Confirm New Password</label>
-                    <input type="password" name="new_password_confirmation" id="new_password_confirmation" required>
-                </div>
+                    <div class="form-group">
+                        <label for="new_password_confirmation">Confirm New Password</label>
+                        <input type="password" name="new_password_confirmation" id="new_password_confirmation" required>
+                    </div>
 
-                <button type="submit" class="submit-button warning-button">Update Password</button>
-            </form>
+                    <button type="submit" class="submit-button warning-button">Update Password</button>
+                </form>
+            </div>
         </div>
 
     </div>
 </main>
+
+{{-- Tab Switch Confirmation Modal --}}
+<div id="tabSwitchModal" class="modal">
+    <div class="modal-content">
+        <span class="close closeTabModal">&times;</span>
+        <h3>Switch Tab?</h3>
+        <p>You have unsaved changes. Are you sure you want to switch tabs?</p>
+        <div class="modal-actions">
+            <button id="confirmTabSwitch" class="confirm-btn">Continue</button>
+            <button type="button" class="closeTabSwitch cancel-btn">Cancel</button>
+        </div>
+    </div>
+</div>
+
+{{-- Hidden Modal Trigger --}}
+<button type="button" class="openTabSwitchModal" style="display:none;"></button>
+@endsection
+
+@section('scripts')
+    <script src="{{ asset('js/modal.js') }}"></script>
 @endsection

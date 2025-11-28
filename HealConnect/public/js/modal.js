@@ -150,14 +150,29 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ================= TAB SWITCH WITH CHANGE DETECTION =================
+  // ================= TAB SWITCH WITH CHANGE DETECTION  =================
   function setupTabSwitchModal() {
     const tabs = document.querySelectorAll(".tab-link");
-    const form = document.getElementById("settingsForm");
     const confirmBtn = document.getElementById("confirmTabSwitch");
     const tabSwitchModal = document.getElementById("tabSwitchModal");
 
-    if (!tabs.length || !confirmBtn || !tabSwitchModal || !form) return;
+    if (!tabs.length || !confirmBtn || !tabSwitchModal) return;
+
+    // Check if it's admin settings or shared settings 
+    const settingsForm = document.getElementById("settingsForm");
+    const formsInsideTabs = document.querySelectorAll(".tab-content form");
+    
+    // Determine which forms to track
+    let formsToTrack = [];
+    if (settingsForm) {
+      // Admin settings: track the single form
+      formsToTrack = [settingsForm];
+    } else if (formsInsideTabs.length > 0) {
+      // Shared settings: track all forms inside tabs
+      formsToTrack = Array.from(formsInsideTabs);
+    }
+    
+    if (formsToTrack.length === 0) return;
 
     let pendingTab = null;
     let formChanged = false;
@@ -167,49 +182,64 @@ document.addEventListener("DOMContentLoaded", function () {
     function captureFormData() {
       originalFormData = {};
       
-      form.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], textarea, select').forEach(field => {
-        if (field.name) {
-          originalFormData[field.name] = field.value || '';
-        }
+      formsToTrack.forEach(form => {
+        form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="password"], textarea, select').forEach(field => {
+          if (field.name && !field.disabled) {
+            originalFormData[field.name] = field.value || '';
+          }
+        });
       });
     }
 
-    // Check if form has changed
+    // Check if any form has changed
     function hasFormChanged() {
-      const currentFields = form.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], textarea, select');
+      let changed = false;
       
-      for (let field of currentFields) {
-        if (field.name) {
-          const originalValue = originalFormData[field.name] || '';
-          const currentValue = field.value || '';
-          
-          if (originalValue !== currentValue) {
-            return true;
+      formsToTrack.forEach(form => {
+        const currentFields = form.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="password"], textarea, select');
+        
+        for (let field of currentFields) {
+          if (field.name && !field.disabled) {
+            const originalValue = originalFormData[field.name] || '';
+            const currentValue = field.value || '';
+            
+            if (originalValue !== currentValue) {
+              changed = true;
+              break;
+            }
           }
         }
-      }
 
-      // Check file inputs
-      const fileInputs = form.querySelectorAll('input[type="file"]');
-      for (let field of fileInputs) {
-        if (field.name && field.files.length > 0) {
-          return true;
+        // Check file inputs
+        const fileInputs = form.querySelectorAll('input[type="file"]');
+        for (let field of fileInputs) {
+          if (field.name && field.files.length > 0) {
+            changed = true;
+            break;
+          }
         }
-      }
+      });
 
-      return false;
+      return changed;
     }
 
     // Capture initial form state
     captureFormData();
 
-    // Listen to form changes
-    form.addEventListener('input', () => {
-      formChanged = hasFormChanged();
-    });
+    // Listen to form changes in all forms
+    formsToTrack.forEach(form => {
+      form.addEventListener('input', () => {
+        formChanged = hasFormChanged();
+      });
 
-    form.addEventListener('change', () => {
-      formChanged = hasFormChanged();
+      form.addEventListener('change', () => {
+        formChanged = hasFormChanged();
+      });
+
+      // Reset form tracking after successful save
+      form.addEventListener('submit', () => {
+        formChanged = false;
+      });
     });
 
     // Tab click handler
@@ -249,16 +279,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // Helper function to switch tabs
     function switchTab(tabName) {
       document.querySelectorAll(".tab-link").forEach(t => t.classList.remove("active"));
-      document.querySelector(`.tab-link[data-tab="${tabName}"]`).classList.add("active");
+      document.querySelector(`.tab-link[data-tab="${tabName}"]`)?.classList.add("active");
 
       document.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
-      document.getElementById(tabName).classList.add("active");
+      document.getElementById(tabName)?.classList.add("active");
     }
-
-    // Reset form tracking after successful save
-    form.addEventListener('submit', () => {
-      formChanged = false;
-    });
   }
 
   // ================== PASSWORD UPDATE CONFIRMATION ==================
