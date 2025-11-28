@@ -122,7 +122,12 @@
 }
 
 .card-section {
-    margin-bottom: 30px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .card-section h4 {
@@ -183,6 +188,13 @@
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: normal;
+}
+
+.profile-right {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 30px;
 }
 
 /* --- RESPONSIVENESS --- */

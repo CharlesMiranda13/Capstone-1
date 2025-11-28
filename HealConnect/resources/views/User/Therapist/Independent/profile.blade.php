@@ -39,18 +39,7 @@
                     <p><i class="fa-solid fa-phone"></i> {{ Auth::user()->phone ?? 'Phone not specified' }}</p>
                 </div>
                               
-                <div class="card-section">
-                    <h4><i class="fa-solid fa-hand-holding-medical"></i> Offered Service Types</h4>
-                    @if(!empty($servicesList))
-                        <ul class="services-list">
-                            @foreach ($servicesList as $service)
-                                <li>{{ trim($service) }}</li>
-                            @endforeach
-                        </ul>
-                    @else
-                        <p>No appointment types added yet.</p>
-                    @endif
-                </div>
+
             </div>
 
             {{-- RIGHT: DETAILS --}}
@@ -69,7 +58,18 @@
                         <p>N/A</p>
                     @endif
                 </div>
-
+                <div class="card-section">
+                    <h4><i class="fa-solid fa-hand-holding-medical"></i> Offered Service Types</h4>
+                    @if(!empty($servicesList))
+                        <ul class="services-list">
+                            @foreach ($servicesList as $service)
+                                <li>{{ trim($service) }}</li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p>No appointment types added yet.</p>
+                    @endif
+                </div>
                 {{-- AVAILABILITY --}}
                 @if(isset($availability) && count($availability) > 0)
                 <div class="card-section">

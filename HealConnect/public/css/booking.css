@@ -1,7 +1,7 @@
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
+    max-width: 100%;
     padding: 25px;
+    margin-left: 275px;
 }
 
 .header h2 {
@@ -32,6 +32,13 @@
     margin: 0 auto 15px;
 }
 
+.profile-left {
+    background-color: #faf3ee;
+    padding: 30px;
+    text-align: center;
+    border-right: 1px solid #eee;
+}
+
 /* ===== PROFILE IMAGE ===== */
 .profile-left .profile-pic {
     width: 160px;
@@ -41,6 +48,7 @@
     margin-bottom: 15px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     margin: 0 auto 15px;
+    border: 4px solid #242220;
 }
 
 .profile-left .profile-pic img {
