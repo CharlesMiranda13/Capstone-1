@@ -24,29 +24,56 @@
   </div>
 </section>
 
+<section class="steps-section">
+  <div class="steps-content">
+      <h1>Find Care, Book Fast, Recover Confidently</h1>
+
+      <div class="steps-cards">
+          <div class="step-card">
+              <span class="step-number">1</span>
+              <h3>Find a Therapist</h3>
+              <p>Browse certified independent therapists and clinics that match your needs.</p>
+          </div>
+
+          <div class="step-card">
+              <span class="step-number">2</span>
+              <h3>Book Your Session</h3>
+              <p>Choose your preferred schedule and secure your appointment instantly.</p>
+          </div>
+
+          <div class="step-card">
+              <span class="step-number">3</span>
+              <h3>Start Your Recovery</h3>
+              <p>Join your virtual session and begin personalized physical therapy care.</p>
+          </div>
+      </div>
+  </div>
+</section>
+
+
 <section class="what-is-pt">
-  <div class="container">
-    <div class="pt-content">
-      <div class="pt-text">
-        <h2>What is Physical Therapy?</h2>
-        <p>
-          Physical Therapy, also called Physiotherapy, is a healthcare profession aimed at developing, maintaining, and restoring 
-          a person's maximum movement and functional ability throughout their lifespan. Through evidence-based interventions, 
-          it seeks to improve quality of life and address conditions where movement and function 
-          are limited or threatened due to injury, illness, disease, or aging.
-        </p>
-        <h2> Goals and Benefits of Physical Therapy </h2>
-        <ul>
-          <li> Restores physical function and mobility</li>
-          <li> Reduces pain through guided therapy</li>
-          <li> Prevents future injuries</li>
-          <li> Improves overall quality of life</li>
-        </ul>
-        <a href="{{ url('/More') }}" class="learn-more-btn">Learn More</a>
-      </div>
-      <div class="pt-image">
-        <img src="{{ asset('images/physicaltherapy.jpg') }}" alt="Physical Therapy session">
-      </div>
+  <div class="pt-wrapper">
+
+    <div class="pt-left">
+      <h2 class="section-title">What is Physical Therapy?</h2>
+
+      <p class="section-desc">
+        Physical Therapy, also called Physiotherapy, is a healthcare profession focused on restoring movement, reducing pain, and improving quality of life through guided therapeutic interventions.
+      </p>
+
+      <h3 class="section-subtitle">Goals & Benefits</h3>
+      <ul class="pt-list">
+        <li>Restore physical function and mobility</li>
+        <li>Reduce pain through guided therapy</li>
+        <li>Prevent future injuries</li>
+        <li>Improve overall quality of life</li>
+      </ul>
+
+      <a href="{{ url('/More') }}" class="pt-btn">Learn More</a>
+    </div>
+
+    <div class="pt-right">
+      <img src="{{ asset('images/physicaltherapy.jpg') }}" alt="Physical Therapy session">
     </div>
   </div>
 </section>

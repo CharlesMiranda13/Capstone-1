@@ -1,5 +1,5 @@
 <div class="footer-top-bar">
-    <p>Physical HEALTH PROFESSIONAL? ADD YOUR PRACTICE. 
+    <p>PHYSICAL HEALTH PROFESSIONAL? ADD YOUR PRACTICE. 
         <a href="{{url('logandsign') }}" class="get-listed-btn">GET LISTED</a>
     </p>
 </div>

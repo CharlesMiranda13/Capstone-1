@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/service.css') }}">
     <link rel="stylesheet" href="{{ asset('css/pricing.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/aboutus.css') }}">
     <link rel="stylesheet" href="{{ asset('css/tts.css') }}">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="@yield('body-class')">
