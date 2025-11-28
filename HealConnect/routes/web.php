@@ -19,7 +19,9 @@ use App\Http\Controllers\Patient\AppointmentController;
 use Illuminate\Support\Facades\Broadcast;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-
+use App\Models\Setting;
+use App\Http\Controllers\ContactMessageController;
+use App\Http\Controllers\Admin\AdminContactController;
 
 /*Public Pages*/
 
@@ -31,7 +33,13 @@ Route::get('/More', function () {
 });
 Route::view('/services', 'services')->name('services');
 Route::view('/pricing', 'pricing')->name('pricing');
-Route::view('/contact', 'contact')->name('contact');
+Route::get('/contact', function () {
+    $settings = Setting::first(); 
+    return view('contact', compact('settings'));
+})->name('contact');
+Route::post('/contact-submit', [ContactMessageController::class, 'store'])->name('contact.submit');
+
+
 Route::get('/ptlist', [PatientController::class, 'publicTherapists'])->name('ptlist');
 Route::get('/therapists/{id}/profile', [PatientController::class, 'publicTherapistProfile'])
     ->name('view_profile');
@@ -85,6 +93,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('viewreports', [AuthController::class, 'reports'])->name('viewreports');
         Route::get('/setting', [AdminSettingsController::class, 'setting'])->name('setting');
         Route::post('/setting', [AdminSettingsController::class, 'update'])->name('setting.update');
+        Route::get('/contact-messages', [AdminContactController::class, 'index'])->name('contact_messages');
+        Route::get('/contact-messages/{id}', [AdminContactController::class, 'show'])->name('contact_messages.show');
+        Route::post('/contact_messages/{id}/reply', [AdminContactController::class, 'reply'])->name('contact_messages.reply');
         Route::get('/users', [UserController::class, 'index'])->name('manage-users');
         Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
         Route::patch('/users/{id}/verify', [UserController::class, 'verify'])->name('users.verify');

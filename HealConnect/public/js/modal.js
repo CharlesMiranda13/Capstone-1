@@ -311,6 +311,8 @@ document.addEventListener("DOMContentLoaded", function () {
   setupModal("declineModal", ".openDeclineBtn", ".closeDeclineBtn", "block");
   setupModal("tabSwitchModal", ".openTabSwitchModal", ".closeTabSwitch", "flex");
   setupModal("passwordConfirmModal", ".openPasswordModal", ".closePasswordModal", "flex");
+  setupDynamicModal("concernViewModal", "concernModalBody", ".openConcernModal", (btn) => btn.getAttribute("data-link") 
+  );
 
   // Initialize tab switch modal with change detection
   setupTabSwitchModal();
