@@ -85,7 +85,7 @@
                     <h4><i class="fa-solid fa-calendar-days"></i> Availability</h4>
                     @if($therapist->availability && count($therapist->availability) > 0)
                         <ul class="availability">
-                            @foreach($therapist->availability as $slot)
+                            @foreach($therapistAvailability as $slot)
                             <li>
                                 @if(isset($slot['day_of_week']) && is_numeric($slot['day_of_week']) && $slot['day_of_week'] >= 0 && $slot['day_of_week'] <= 6)
                                     <span class="date">{{ ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][$slot['day_of_week']] }}</span>

@@ -38,7 +38,13 @@ class AppointmentController extends Controller
         // Availabilities
         $therapistAvailability = $therapist->availability()
             ->where('is_active', true)
-            ->whereDate('date', '>=', now())
+            ->where(function ($q) {
+                $q->whereDate('date', '>', now()->toDateString()) // future dates
+                ->orWhere(function ($q2) {
+                    $q2->whereDate('date', now()->toDateString()) // today
+                        ->whereTime('end_time', '>', now()->format('H:i:s')); // still upcoming
+                });
+            })
             ->orderBy('date', 'asc')
             ->orderBy('start_time', 'asc')
             ->get(['date', 'start_time', 'end_time'])
@@ -49,7 +55,6 @@ class AppointmentController extends Controller
                     'end_time' => $slot->end_time,
                 ];
             });
-
         // Booked times
         $bookedTimes = Appointment::where('provider_id', $therapistId)
             ->where('provider_type', get_class($therapist))

@@ -161,10 +161,15 @@ class User extends Authenticatable
             // Independent therapist: date-specific availability
             return $this->availability()
                 ->where('is_active', true)
-                ->where(function ($query) {
-                    $query->whereDate('date', '>=', Carbon::today());
+                ->where(function ($q) {
+                    $q->whereDate('date', '>', Carbon::today()) // future dates
+                    ->orWhere(function ($q2) {
+                        $q2->whereDate('date', Carbon::today())
+                            ->where('start_time', '>=', Carbon::now()->format('H:i:s')); 
+                    });
                 })
                 ->orderBy('date')
+                ->orderBy('start_time')
                 ->get(['date', 'start_time', 'end_time', 'is_active']);
         }
     }

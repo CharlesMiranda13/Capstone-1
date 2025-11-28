@@ -86,8 +86,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     timeSelect.appendChild(option);
                 }
 
-                // increment by 30 minutes
-                currentMinute += 30;
+                // increment by 60 minutes
+                currentMinute += 60;
                 if (currentMinute >= 60) {
                     currentMinute = 0;
                     currentHour++;
