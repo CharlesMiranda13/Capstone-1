@@ -67,7 +67,7 @@
             @foreach($therapists as $therapist)
                 <div class="therapist-card">
 
-                    {{-- Profile Picture --}}
+                    {{-- White Section: Profile Picture, Name, Role, Description, Location --}}
                     <div class="therapist-logo">
                         @if($therapist->profile_picture)
                             <img src="{{ asset('storage/' .$therapist->profile_picture) }}" alt="{{ $therapist->name }}">
@@ -88,20 +88,25 @@
                         {{ $therapist->address ?? 'Location not specified' }}
                     </p>
 
-                    {{-- Availability --}}
-                    @if($therapist->availability->where('is_active', true)->count() > 0)
-                        <span class="availability-status available">
-                            <i class="fa-solid fa-circle"></i> Has Availability
-                        </span>
-                    @else
-                        <span class="availability-status unavailable">
-                            <i class="fa-solid fa-circle"></i> No Availability
-                        </span>
-                    @endif
+                    {{-- Spacer to push footer to bottom --}}
+                    <div class="card-spacer"></div>
 
-                    <div class="therapist-actions">
-                        <a href="{{ route('patient.appointments.create', $therapist->id) }}" class="btn-book">Book Now</a>
-                        <a href="{{ route('patient.therapists.profile', $therapist->id) }}" class="btn-profile">View Profile</a>
+                    {{-- Blue Section Container: Availability and Action Buttons --}}
+                    <div class="therapist-card-footer">
+                        @if($therapist->availability->where('is_active', true)->count() > 0)
+                            <span class="availability-status available">
+                                <i class="fa-solid fa-circle"></i> Has Availability
+                            </span>
+                        @else
+                            <span class="availability-status unavailable">
+                                <i class="fa-solid fa-circle"></i> No Availability
+                            </span>
+                        @endif
+
+                        <div class="therapist-actions">
+                            <a href="{{ route('patient.appointments.create', $therapist->id) }}" class="btn-book">Book Now</a>
+                            <a href="{{ route('patient.therapists.profile', $therapist->id) }}" class="btn-profile">View Profile</a>
+                        </div>
                     </div>
 
                 </div>

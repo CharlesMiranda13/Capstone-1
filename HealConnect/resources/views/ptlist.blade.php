@@ -37,7 +37,7 @@
 
         {{-- Search Bar --}}
         <div class="search-container">
-            <form action="{{ route('patient.therapists') }}" method="GET" class="search-form">
+            <form action="{{ route('ptlist') }}" method="GET" class="search-form">
                 <input type="text" 
                        name="search" 
                        placeholder="Search therapists..." 
@@ -55,6 +55,8 @@
         <div class="therapist-cards-container">
             @foreach($therapists as $therapist)
                 <div class="therapist-card">
+                    
+                    {{-- White Section: Profile Picture, Name, Role, Description, Location --}}
                     <div class="therapist-logo">
                         @if($therapist->profile_picture)
                             <img src="{{ asset('storage/' .$therapist->profile_picture) }}" alt="{{ $therapist->name }}">
@@ -65,6 +67,7 @@
 
                     <h3 class="therapist-name">{{ $therapist->name }}</h3>
                     <p class="therapist-role">{{ ucfirst($therapist->role_display) }}</p>
+                    
                     <p class="therapist-description">
                         {{ $therapist->description ?? 'A compassionate and dedicated therapist ready to assist you.' }}
                     </p>
@@ -74,30 +77,33 @@
                         {{ $therapist->address ?? 'Location not specified' }}
                     </p>
 
+                    {{-- Blue Section Container: Availability and Action Buttons --}}
+                    <div class="therapist-card-footer">
+                        @if($therapist->availability && count($therapist->availability) > 0)
+                            <span class="availability-status available">
+                                <i class="fa-solid fa-circle"></i> Has Availability
+                            </span>
+                        @else
+                            <span class="availability-status unavailable">
+                                <i class="fa-solid fa-circle"></i> No Availability
+                            </span>
+                        @endif
 
-                    {{-- Availability --}}
-                    @if($therapist->availability && count($therapist->availability) > 0)
-                        <span class="availability-status available">
-                            <i class="fa-solid fa-circle"></i> Has Availability
-                        </span>
-                    @else
-                        <span class="availability-status unavailable">
-                            <i class="fa-solid fa-circle"></i> No Availability
-                        </span>
-                    @endif
-
-                    <div class="therapist-actions">
-                        <a href="{{ url('/logandsign') }}" class="btn-book">Book Now</a>
-                        <a href="{{ route('view_profile', $therapist->id) }}" class="btn-profile">View Profile</a>
+                        <div class="therapist-actions">
+                            <a href="{{ url('/logandsign') }}" class="btn-book">Book Now</a>
+                            <a href="{{ route('view_profile', $therapist->id) }}" class="btn-profile">View Profile</a>
+                        </div>
                     </div>
+
                 </div>
             @endforeach
+        </div>
 
         <div class="pagination">
             {{ $therapists->links() }}
         </div>
     @else
-        <p style="text-align: center;">No verified therapists or clinics registered at the moment.</p>
+        <p class="no-results">No verified therapists or clinics registered at the moment.</p>
     @endif
 </main>
 @endsection
