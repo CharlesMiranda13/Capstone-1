@@ -35,6 +35,7 @@ class User extends Authenticatable
         'license_path',
         'clinic_id',
         'position',
+        'description',
     ];
 
     protected $hidden = [

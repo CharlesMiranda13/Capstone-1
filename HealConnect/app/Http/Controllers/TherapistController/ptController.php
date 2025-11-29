@@ -86,18 +86,35 @@ class ptController extends Controller
     {
         $user = Auth::user();
 
+        if ($request->has('description') && !$request->has('name')) {
+            $request->validate([
+                'description' => 'nullable|string|max:2000',
+            ]);
+            
+            $user->description = $request->description;
+            $user->save();
+            
+            return back()->with('success', 'Bio updated successfully.');
+        }        
+
         $rules = [
-            'full_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'phone'     => 'nullable|string|max:20',
             'address'   => 'nullable|string|max:255',
+            'description'   => 'nullable|string|max:2000', 
+            'specialization' => 'nullable|string|max:255', 
+            'clinic_license' => 'nullable|string|max:255', 
         ];
 
         $validated = $request->validate($rules);
 
         $user->update([
-            'full_name' => $validated['full_name'],
+            'name' => $validated['name'],
             'phone'     => $validated['phone'] ?? $user->phone,
             'address'   => $validated['address'] ?? $user->address,
+            'description'   => $validated['description'] ?? $user->description,
+            'specialization' => $validated['specialization'] ?? $user->specialization,
+            'clinic_license' => $validated['clinic_license'] ?? $user->clinic_license,
         ]);
 
         return back()->with('success', 'Profile updated successfully.');

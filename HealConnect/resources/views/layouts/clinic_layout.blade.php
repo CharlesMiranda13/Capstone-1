@@ -44,9 +44,9 @@
             <i class="fa-regular fa-message"></i> Messages
         </a>
         <a href="{{ route('clinic.services') }}" class="{{request()->routeIs('clinic.services') ? 'active' : '' }}">
-            <i class="fa-regular fa-dumbbell"></i> Services
+            <i class="fa-solid fa-clock"></i> Services & Schedule
         </a>
-        <a href="{{ route('clinic.settings') }}" class="{{request()->routeIs('clinic.settings') ? 'active' : '' }}">
+        <a href="{{ route('clinic.profile') }}" class="{{request()->routeIs('clinic.profile') ? 'active' : '' }}">
             <i class="fa-solid fa-user-md"></i> Profile
         </a>
         

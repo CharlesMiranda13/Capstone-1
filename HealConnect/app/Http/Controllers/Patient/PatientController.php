@@ -91,8 +91,6 @@ class PatientController extends Controller
             'address' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20',
             'email' => ['required','email', Rule::unique('users')->ignore($user->id)],
-            'dob' => 'required|date',
-            'gender' => 'required|string|in:male,female',
         ]);
 
         $user->update($request->only('address','phone','email','dob','gender'));

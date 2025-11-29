@@ -58,13 +58,15 @@
         <div id="profile" class="tab-content active">
             <div class="scard">
                 <h4 class="section-title">Profile Picture</h4>
+
+                {{-- FORM 1: PROFILE PICTURE --}}
                 <form action="{{ route($role . '.update.profile') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
                     <div class="profile-upload">
                         <img src="{{ Auth::user()->profile_picture ? asset('storage/' . Auth::user()->profile_picture) : asset('images/default-avatar.png') }}"
-                             alt="Profile Picture" class="profile-image" style="width: 100px; height: 100px;">
+                            alt="Profile Picture" class="profile-image" style="width: 100px; height: 100px;">
 
                         <div class="upload-controls">
                             <input type="file" name="profile_picture" accept="image/*">
@@ -75,6 +77,22 @@
                         </div>
                     </div>
                 </form>
+
+                {{-- FORM 2: BIO / DESCRIPTION --}}
+                @if($role === 'therapist' || $role === 'clinic')
+                <form action="{{ route($role . '.update.info') }}" method="POST" style="margin-top: 20px;">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="form-group">
+                        <label for="description">Professional Bio / Description</label>
+                        <textarea name="description" id="description" rows="10">{{ old('description', Auth::user()->description) }}</textarea>
+                    </div>
+
+                    <button type="submit" class="submit-button success-button">Save Bio</button>
+                </form>
+                @endif
+
             </div>
         </div>
 
@@ -131,12 +149,12 @@
 
                         <div class="form-group">
                             <label for="gender">Sex</label>
-                            <input type="text" value="{{ Auth::user()->gender }}" disabled>
+                            <input type="text" id="gender" value="{{ Auth::user()->gender }}" disabled>
                         </div>
                     @endif
 
                     {{-- THERAPIST SPECIFIC FIELDS --}}
-                    @if($role === 'therapist')
+                    @if($role === 'therapist' || $role ==='clinic')
                         <div class="form-group">
                             <label for="specialization">Specialization</label>
                             <input type="text"
@@ -145,18 +163,6 @@
                                    value="{{ old('specialization', Auth::user()->specialization) }}">
                         </div>
                     @endif
-
-                    {{-- CLINIC SPECIFIC FIELDS --}}
-                    @if($role === 'clinic')
-                        <div class="form-group">
-                            <label for="clinic_license">Clinic License Number</label>
-                            <input type="text"
-                                   name="clinic_license"
-                                   id="clinic_license"
-                                   value="{{ old('clinic_license', Auth::user()->clinic_license) }}">
-                        </div>
-                    @endif
-
                     <button type="submit" class="submit-button success-button">Save Changes</button>
                 </form>
             </div>
