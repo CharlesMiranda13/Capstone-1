@@ -187,6 +187,7 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
 
 /* Clinic Routes */
 Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'check.status'])->group(function () {
+    Route::get('/profile', [ClinicController::class, 'profile'])->name('profile');
 
     // Dashboard
     Route::get('/home', [ClinicController::class, 'dashboard'])->name('home');
