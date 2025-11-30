@@ -120,6 +120,10 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
     Route::get('/appointments/{therapist}/book', [AppointmentController::class, 'create'])->name('appointments.create');
     Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
+    Route::patch('/appointments/{id}/cancel', [AppointmentController::class, 'cancel'])
+        ->name('appointments.cancel');
+
+
 
     // Settings 
     Route::get('/settings', [PatientController::class, 'settings'])->name('settings');

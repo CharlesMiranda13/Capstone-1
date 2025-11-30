@@ -53,9 +53,16 @@
 
                         <td>
                             @if ($appointment->status === 'pending')
-                                <button class="btn btn-sm btn-danger">
+                            <form action="{{ route('patient.appointments.cancel', $appointment->id) }}" 
+                                method="POST" 
+                                style="display:inline;">
+                                @csrf
+                                @method('PATCH')
+                                <button class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Cancel this appointment?');">
                                     <i class="fa-solid fa-ban"></i> Cancel
                                 </button>
+                            </form>
                             @else
                                 —
                             @endif
