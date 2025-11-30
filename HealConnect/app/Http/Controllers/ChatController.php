@@ -45,6 +45,12 @@ class ChatController extends Controller
                 $otherUser->latest_message = $latestMessage ? $latestMessage->message : null;
                 $otherUser->latest_message_time = $latestMessage ? $latestMessage->created_at : now()->subYears(10);
 
+                // Calculate unread count for this conversation
+                $otherUser->unread_count = Message::where('sender_id', $otherUser->id)
+                    ->where('receiver_id', $user->id)
+                    ->where('is_read', false)
+                    ->count();
+
                 return $otherUser;
             })
             // Sort by latest message time descending 
@@ -133,7 +139,7 @@ class ChatController extends Controller
             'receiver_id' => $request->receiver_id,
             'message' => $request->message,
             'message_type' => 'text',
-            'is_read' => false, // Make sure this is set
+            'is_read' => false,
         ]);
 
         $message->type = 'text';
@@ -189,7 +195,7 @@ class ChatController extends Controller
     {
         $request->validate([
             'receiver_id' => 'required|exists:users,id',
-            'file' => 'required|file|mimes:jpeg,png,jpg,gif,mp4,mov,avi,pdf,doc,docx|max:20480', // 20MB
+            'file' => 'required|file|mimes:jpeg,png,jpg,gif,mp4,mov,avi,pdf,doc,docx|max:20480',
         ]);
 
         $storagePath = storage_path('app/public/chat_files');
@@ -264,6 +270,24 @@ class ChatController extends Controller
         return response()->json(['success' => true]);
     }
 
+    // ------------------ MARK AS READ ------------------
+    public function markAsRead($userId)
+    {
+        Message::where('sender_id', $userId)
+            ->where('receiver_id', Auth::id())
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+
+        $unreadCount = Message::where('receiver_id', Auth::id())
+            ->where('is_read', false)
+            ->count();
+
+        // Broadcast updated notification count
+        broadcast(new NewMessageEvent(Auth::id(), $unreadCount));
+
+        return response()->json(['success' => true, 'unread_count' => $unreadCount]);
+    }
+
     // ------------------ HELPER METHOD ------------------
     /**
      * Broadcast the updated unread message count to a user
@@ -274,12 +298,6 @@ class ChatController extends Controller
             ->where('is_read', false)
             ->count();
 
-        \Log::info('Broadcasting unread count', [
-            'user_id' => $userId,
-            'unread_count' => $unreadCount,
-            'channel' => 'user.' . $userId
-        ]);
-
-        broadcast(new NewMessageEvent($userId, $unreadCount))->toOthers();
+        broadcast(new NewMessageEvent($userId, $unreadCount));
     }
 }

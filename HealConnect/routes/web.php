@@ -247,6 +247,7 @@ Route::middleware(['auth', 'check.status'])->group(function () {
     Route::post('/messages/send-file', [ChatController::class, 'sendFile'])->name('messages.sendFile');
     Route::put('/messages/{id}/edit', [ChatController::class, 'update'])->name('messages.update');
     Route::delete('/messages/{id}', [ChatController::class, 'destroy'])->name('messages.destroy');
+    Route::post('/messages/mark-as-read/{userId}', [ChatController::class, 'markAsRead'])->name('messages.markAsRead');
 
 });
 

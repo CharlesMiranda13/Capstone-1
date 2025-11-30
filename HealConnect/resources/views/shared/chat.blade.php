@@ -37,15 +37,28 @@
             <div class="sidebar-search">
                 <input type="text" id="chat-search" placeholder="Search conversations..." autocomplete="off">
             </div>
-
+            
             <div class="chat-list" id="chat-list">
                 @forelse ($conversations as $conversation)
-                    <div class="chat-item" data-user-id="{{ $conversation->id }}">
-                        <img src="{{ $conversation->profile_picture ? asset('storage/' . $conversation->profile_picture) : asset('images/logo1.png') }}" class="avatar" alt="User">
+                    <div class="chat-item {{ $conversation->unread_count > 0 ? 'has-unread' : '' }}" 
+                        data-user-id="{{ $conversation->id }}"
+                        data-unread="{{ $conversation->unread_count }}">
+                        <img src="{{ $conversation->profile_picture ? asset('storage/' . $conversation->profile_picture) : asset('images/logo1.png') }}" 
+                            class="avatar" alt="User">
                         <div class="chat-info">
-                            <h4>{{ $conversation->name }}</h4>
-                            <p>{{ Str::limit($conversation->latest_message ?? 'Start a conversation...', 35) }}</p>
+                            <div class="chat-info-header">
+                                <h4>{{ $conversation->name }}</h4>
+                                @if($conversation->unread_count > 0)
+                                    <span class="unread-badge">{{ $conversation->unread_count > 99 ? '99+' : $conversation->unread_count }}</span>
+                                @endif
+                            </div>
+                            <p class="{{ $conversation->unread_count > 0 ? 'unread-message' : '' }}">
+                                {{ Str::limit($conversation->latest_message ?? 'Start a conversation...', 35) }}
+                            </p>
                         </div>
+                        @if($conversation->unread_count > 0)
+                            <span class="unread-dot"></span>
+                        @endif
                     </div>
                 @empty
                     <p class="no-chats">No conversations yet.</p>

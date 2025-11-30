@@ -62,6 +62,7 @@
     cursor: pointer;
     transition: background 0.2s ease;
     border-bottom: 1px solid #edf0f5;
+    position: relative;
 }
 
 .chat-item:hover {
@@ -73,11 +74,33 @@
     border-left: 4px solid #4b8df8;
 }
 
+/* Chat item with unread messages */
+.chat-item.has-unread {
+    background-color: #f0f7ff;
+    border-left: 3px solid #007bff;
+}
+
+.chat-item.has-unread:hover {
+    background-color: #e3f2fd;
+}
+
 .chat-item .avatar {
     width: 45px;
     height: 45px;
     border-radius: 50%;
     object-fit: cover;
+}
+
+.chat-info {
+    flex: 1;
+}
+
+/* Chat info header (name + badge) */
+.chat-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
 }
 
 .chat-info h4 {
@@ -91,6 +114,52 @@
     margin: 0.2rem 0 0;
     font-size: 0.85rem;
     color: #7f8c8d;
+}
+
+/* Unread message text - make it bold */
+.unread-message {
+    font-weight: 600 !important;
+    color: #000 !important;
+}
+
+/* Unread message badge */
+.unread-badge {
+    background-color: #007bff;
+    color: white;
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
+    display: inline-block;
+}
+
+/* Blue dot indicator */
+.unread-dot {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    background-color: #007bff;
+    border-radius: 50%;
+    animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+    }
+
+    50% {
+        opacity: 0.7;
+        transform: translateY(-50%) scale(1.1);
+    }
 }
 
 /* === MAIN CHAT AREA === */

@@ -92,6 +92,68 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    /** ------------------ Update Unread Count in Chat List ------------------ */
+    function updateChatListUnread(userId, unreadCount) {
+        const chatItem = document.querySelector(`.chat-item[data-user-id="${userId}"]`);
+        if (!chatItem) return;
+
+        // Update data attribute
+        chatItem.setAttribute('data-unread', unreadCount);
+
+        // Update or remove badge
+        let badge = chatItem.querySelector('.unread-badge');
+        let dot = chatItem.querySelector('.unread-dot');
+        const messagePreview = chatItem.querySelector('.chat-info p');
+        const chatInfoHeader = chatItem.querySelector('.chat-info-header');
+
+        if (unreadCount > 0) {
+            // Add unread styling
+            chatItem.classList.add('has-unread');
+            
+            // Update or create badge
+            if (!badge) {
+                badge = document.createElement('span');
+                badge.className = 'unread-badge';
+                if (chatInfoHeader) {
+                    chatInfoHeader.appendChild(badge);
+                } else {
+                    // Create header wrapper if it doesn't exist
+                    const h4 = chatItem.querySelector('.chat-info h4');
+                    if (h4) {
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'chat-info-header';
+                        h4.parentNode.insertBefore(wrapper, h4);
+                        wrapper.appendChild(h4);
+                        wrapper.appendChild(badge);
+                    }
+                }
+            }
+            badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+
+            // Add dot if not exists
+            if (!dot) {
+                dot = document.createElement('span');
+                dot.className = 'unread-dot';
+                chatItem.appendChild(dot);
+            }
+
+            // Bold the message preview
+            if (messagePreview) {
+                messagePreview.classList.add('unread-message');
+            }
+        } else {
+            // Remove unread styling
+            chatItem.classList.remove('has-unread');
+            
+            if (badge) badge.remove();
+            if (dot) dot.remove();
+            
+            if (messagePreview) {
+                messagePreview.classList.remove('unread-message');
+            }
+        }
+    }
+
     /** ------------------ Load Messages ------------------ */
     function loadMessages(receiverId) {
         fetch(`/messages/fetch?receiver_id=${receiverId}`)
@@ -108,16 +170,38 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
+    /** ------------------ Mark Messages as Read ------------------ */
+    function markMessagesAsRead(userId) {
+        fetch(`/messages/mark-as-read/${userId}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update chat list to show 0 unread
+            updateChatListUnread(userId, 0);
+        })
+        .catch(error => console.error('Error marking as read:', error));
+    }
+
     /** ------------------ Chat Sidebar Selection ------------------ */
     chatList.addEventListener('click', e => {
         const chatItem = e.target.closest('.chat-item');
         if (!chatItem) return;
+        
         document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
         chatItem.classList.add('active');
+        
         currentReceiverId = chatItem.dataset.userId;
         chatUsername.textContent = chatItem.querySelector('h4').textContent;
         chatUserImage.src = chatItem.querySelector('img').src;
-        chatItem.classList.remove('unread');
+        
+        // Mark messages as read
+        markMessagesAsRead(currentReceiverId);
+        
         loadMessages(currentReceiverId);
     });
 
@@ -219,87 +303,99 @@ document.addEventListener('DOMContentLoaded', function () {
         auth: { headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content } }
     });
     const channel = pusher.subscribe(`private-healconnect-chat.${window.userId}`);
+    
     channel.bind('message.sent', data => {
         const msg = data.message;
         if (msg.sender_id === window.userId) return;
 
-        if (currentReceiverId == msg.sender_id) renderMessage(msg, false);
-        else {
+        // If currently chatting with this person, show message immediately
+        if (currentReceiverId == msg.sender_id) {
+            renderMessage(msg, false);
+            markMessagesAsRead(msg.sender_id);
+        } else {
+            // Not currently viewing this chat - increment unread count
             const chatItem = document.querySelector(`.chat-item[data-user-id="${msg.sender_id}"]`);
-            if (chatItem) chatItem.classList.add('unread');
+            if (chatItem) {
+                const currentUnread = parseInt(chatItem.getAttribute('data-unread') || '0');
+                updateChatListUnread(msg.sender_id, currentUnread + 1);
+            }
         }
-        moveChatToTop(msg.sender_id, msg.type === 'file' ? "[File]" : msg.message);
+        
+        // Move chat to top with preview
+        const preview = msg.type === 'file' ? "[File]" : 
+                       msg.type === 'voice' ? "[Voice Message]" : 
+                       msg.message;
+        moveChatToTop(msg.sender_id, preview);
     });
 
-/** ------------------ Edit/Delete Menu ------------------ */
-chatMessages.addEventListener('click', e => {
-    const target = e.target;
+    /** ------------------ Edit/Delete Menu ------------------ */
+    chatMessages.addEventListener('click', e => {
+        const target = e.target;
 
-    // Toggle menu display
-    if (target.classList.contains('menu-toggle')) {
-        const menu = target.nextElementSibling;
-        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-        return;
-    }
+        // Toggle menu display
+        if (target.classList.contains('menu-toggle')) {
+            const menu = target.nextElementSibling;
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            return;
+        }
 
-    // Close all menus if clicked outside
-    if (!target.classList.contains('edit-message') && !target.classList.contains('delete-message')) {
-        document.querySelectorAll('.menu-options').forEach(menu => menu.style.display = 'none');
-    }
+        // Close all menus if clicked outside
+        if (!target.classList.contains('edit-message') && !target.classList.contains('delete-message')) {
+            document.querySelectorAll('.menu-options').forEach(menu => menu.style.display = 'none');
+        }
 
-    /** ------------------ EDIT MESSAGE ------------------ */
-    if (target.classList.contains('edit-message')) {
-        const messageId = target.dataset.messageId;
-        const wrapper = chatMessages.querySelector(`.message[data-message-id="${messageId}"]`);
-        const textElement = wrapper.querySelector('.text');
-        const currentText = textElement.textContent.replace(' (edited)', '');
-        const newMessage = prompt('Edit your message:', currentText);
-        if (!newMessage) return;
-
-        fetch(`/messages/${messageId}/edit`, {  // Correct route
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ message: newMessage })
-        })
-        .then(res => res.json())
-        .then(data => {
-            textElement.textContent = data.message.message + ' (edited)';
-            target.parentElement.style.display = 'none';
-        })
-        .catch(err => console.error('Edit failed:', err));
-    }
-
-    /** ------------------ DELETE MESSAGE ------------------ */
-    if (target.classList.contains('delete-message')) {
-        const messageId = target.dataset.messageId;
-        if (!confirm('Are you sure you want to delete this message?')) return;
-
-        fetch(`/messages/${messageId}`, {  // Correct route
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                'Accept': 'application/json'
-            }
-        })
-        .then(() => {
+        /** ------------------ EDIT MESSAGE ------------------ */
+        if (target.classList.contains('edit-message')) {
+            const messageId = target.dataset.messageId;
             const wrapper = chatMessages.querySelector(`.message[data-message-id="${messageId}"]`);
-            const bubble = wrapper.querySelector('.bubble');
+            const textElement = wrapper.querySelector('.text');
+            const currentText = textElement.textContent.replace(' (edited)', '');
+            const newMessage = prompt('Edit your message:', currentText);
+            if (!newMessage) return;
 
-            // Determine type to show proper deleted text
-            let deletedText = 'This message was deleted.';
-            if (wrapper.querySelector('audio')) deletedText = 'This voice message was deleted.';
-            else if (wrapper.querySelector('img, video, a')) deletedText = 'This file was deleted.';
+            fetch(`/messages/${messageId}/edit`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ message: newMessage })
+            })
+            .then(res => res.json())
+            .then(data => {
+                textElement.textContent = data.message.message + ' (edited)';
+                target.parentElement.style.display = 'none';
+            })
+            .catch(err => console.error('Edit failed:', err));
+        }
 
-            bubble.innerHTML = `<p class="text">${deletedText}</p>`;
-        })
-        .catch(err => console.error('Delete failed:', err));
-    }
-});
+        /** ------------------ DELETE MESSAGE ------------------ */
+        if (target.classList.contains('delete-message')) {
+            const messageId = target.dataset.messageId;
+            if (!confirm('Are you sure you want to delete this message?')) return;
 
+            fetch(`/messages/${messageId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            })
+            .then(() => {
+                const wrapper = chatMessages.querySelector(`.message[data-message-id="${messageId}"]`);
+                const bubble = wrapper.querySelector('.bubble');
+
+                // Determine type to show proper deleted text
+                let deletedText = 'This message was deleted.';
+                if (wrapper.querySelector('audio')) deletedText = 'This voice message was deleted.';
+                else if (wrapper.querySelector('img, video, a')) deletedText = 'This file was deleted.';
+
+                bubble.innerHTML = `<p class="text">${deletedText}</p>`;
+            })
+            .catch(err => console.error('Delete failed:', err));
+        }
+    });
 
     // Close menus when clicking outside
     document.addEventListener('click', e => {
@@ -322,10 +418,13 @@ chatMessages.addEventListener('click', e => {
                     const newChat = document.createElement('div');
                     newChat.classList.add('chat-item', 'active');
                     newChat.dataset.userId = user.id;
+                    newChat.dataset.unread = '0';
                     newChat.innerHTML = `
                         <img src="${user.profile_picture ?? '/images/logo1.png'}" class="avatar" alt="User">
                         <div class="chat-info">
-                            <h4>${user.name}</h4>
+                            <div class="chat-info-header">
+                                <h4>${user.name}</h4>
+                            </div>
                             <p>Start a conversation...</p>
                         </div>
                     `;
