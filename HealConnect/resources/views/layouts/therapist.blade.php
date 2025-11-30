@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="pusher-key" content="{{ config('broadcasting.connections.pusher.key') }}">
+    <meta name="pusher-cluster" content="{{ config('broadcasting.connections.pusher.options.cluster') }}">
+    <meta name="user-id" content="{{ auth()->id() }}">
+    <meta name="unread-counts-url" content="{{ route('therapist.unread.counts') }}">
 
     <title>@yield('title', 'Therapist Dashboard')</title>
 
@@ -34,10 +38,12 @@
 
         <a href="{{ route('therapist.appointments') }}" class="{{ request()->routeIs('therapist.appointments') ? 'active' : '' }}">
             <i class="fa-regular fa-calendar"></i> Appointment
+            <span class="notification-badge" id="appointments-badge">0</span>
         </a>
 
         <a href="{{ route('messages') }}" class="{{ request()->routeIs('messages') ? 'active' : '' }}">
             <i class="fa-regular fa-message"></i> Messages
+            <span class="notification-badge" id="messages-badge">0</span>
         </a>
 
         <a href="{{ route('therapist.client') }}" class="{{ request()->routeIs('therapist.client') ? 'active' : '' }}">
@@ -63,9 +69,12 @@
     <div class="main-content">
         @yield('content')
     </div>
+    
+    {{-- Scripts --}}
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script src="{{ asset('js/include.js') }}"></script>
     <script src="{{ asset('js/modal.js') }}"></script>
+    <script src="{{ asset('js/notifications.js') }}"></script>
     @yield('scripts')
 </body>
 </html>

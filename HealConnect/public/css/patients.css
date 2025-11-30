@@ -35,6 +35,7 @@
     padding: 15px 20px;
     display: block;
     transition: background 0.3s ease, color 0.3s ease;
+    position: relative;
 }
 
 .sidebar a:hover,
@@ -75,6 +76,39 @@
 .sidebar .logout-btn:hover {
     background: linear-gradient(90deg, #4b8df8, #4ad0a9);
     color: white;
+}
+
+
+.notification-badge {
+    position: absolute;
+    top: 8px;
+    right: 15px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    min-width: 18px;
+    text-align: center;
+    display: none;
+    animation: pulse 2s infinite;
+}
+
+.notification-badge.show {
+    display: inline-block;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
 }
 
 /* Main Layout */
@@ -225,6 +259,7 @@
         margin-left: 200px;
         padding: 15px;
     }
+
     .welcome-header {
         flex-direction: column;
         align-items: flex-start;
@@ -239,6 +274,7 @@
         width: 60px;
         height: 60px;
     }
+
     .patient-main {
         flex-direction: column;
         margin-left: 0;

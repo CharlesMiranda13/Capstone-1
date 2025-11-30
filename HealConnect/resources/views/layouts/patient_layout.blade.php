@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="pusher-key" content="{{ config('broadcasting.connections.pusher.key') }}">
+    <meta name="pusher-cluster" content="{{ config('broadcasting.connections.pusher.options.cluster') }}">
+    <meta name="user-id" content="{{ auth()->id() }}">
+    <meta name="unread-counts-url" content="{{ route('patient.unread.counts') }}">
 
     <title>@yield('title', 'Patient Dashboard')</title>
 
@@ -30,12 +34,13 @@
             </div>
         </div>
         <hr>
-        <a href="{{ route('patient.home') }}"class="{{ request()->routeIs('patient.home') ? 'active' : '' }}">
+        <a href="{{ route('patient.home') }}" class="{{ request()->routeIs('patient.home') ? 'active' : '' }}">
             <i class="fa-solid fa-house"></i> Home
         </a>
 
         <a href="{{ route('patient.appointments.index') }}" class="{{ request()->routeIs('patient.appointments.index') ? 'active' : '' }}">
             <i class="fa-regular fa-calendar"></i> Appointment
+            <span class="notification-badge" id="appointments-badge">0</span>
         </a>
 
         <a href="{{ route('patient.records') }}" class="{{ request()->routeIs('patients.records') ? 'active' : '' }}">
@@ -44,6 +49,7 @@
 
         <a href="{{ route('messages') }}" class="{{ request()->routeIs('messages') ? 'active' : '' }}">
             <i class="fa-regular fa-message"></i> Messages
+            <span class="notification-badge" id="messages-badge">0</span>
         </a>
 
         <a href="{{ route('patient.therapists') }}" class="{{ request()->routeIs('patient.therapists') ? 'active' : '' }}">
@@ -63,8 +69,10 @@
         @yield('content')
     </div>
     
+    {{-- Scripts --}}
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script src="{{ asset('js/modal.js') }}"></script>
-     @yield('scripts')
+    <script src="{{ asset('js/notifications.js') }}"></script>
+    @yield('scripts')
 </body>
 </html>

@@ -266,4 +266,16 @@ Route::prefix('subscribe')->name('subscribe.')->group(function () {
     Route::post('/{plan}', [SubscriptionController::class, 'store'])->name('store');
 });
 
+
+/*Unread Counts for Notifications*/
+Route::middleware('auth')->group(function () {
+    Route::get('/patient/unread-counts', [App\Http\Controllers\Patient\PatientController::class, 'getUnreadCounts'])
+        ->name('patient.unread.counts');
+    
+    Route::get('/therapist/unread-counts', [App\Http\Controllers\Indtherapist\IndtherapistController::class, 'getUnreadCounts'])
+        ->name('therapist.unread.counts');
+    
+    Route::get('/clinic/unread-counts', [App\Http\Controllers\Clinictherapist\ClinicController::class, 'getUnreadCounts'])
+        ->name('clinic.unread.counts');
+});
 Broadcast::routes(['middleware' => ['auth:web,admin']]);
