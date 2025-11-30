@@ -180,4 +180,22 @@ class IndtherapistController extends ptController
 
         return view('user.therapist.patient_profile', compact('patient', 'appointments'));
     }
+    public function getUnreadCounts()
+    {
+        $unreadMessages = \App\Models\Message::where('receiver_id', auth()->id())
+            ->where('is_read', false)
+            ->count();
+        
+        // For therapists: show pending appointments that need their attention
+        $pendingAppointments = \App\Models\Appointment::where('provider_id', auth()->id())
+            ->where('provider_type', \App\Models\User::class)
+            ->where('status', 'pending')
+            ->whereDate('appointment_date', '>=', now())
+            ->count();
+        
+        return response()->json([
+            'messages' => $unreadMessages,
+            'appointments' => $pendingAppointments
+        ]);
+    }
 }

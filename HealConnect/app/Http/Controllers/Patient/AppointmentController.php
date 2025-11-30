@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Appointment;
 use Carbon\Carbon;
+use App\Events\AppointmentUpdateEvent; 
 
 class AppointmentController extends Controller
 {
@@ -109,7 +110,23 @@ class AppointmentController extends Controller
             'status' => 'pending',
         ]);
 
+        // Notify the therapist about new appointment request
+        $this->broadcastAppointmentNotification($therapist->id);
+
         return redirect()->route('patient.appointments.index')
             ->with('success', 'Appointment request submitted successfully!');
+    }
+
+    /**
+     * Broadcast appointment notification to a user
+     */
+
+    private function broadcastAppointmentNotification($userId)
+    {
+        $appointmentCount = Appointment::where('provider_id', $userId)
+            ->where('status', 'pending')
+            ->whereDate('appointment_date', '>=', now())
+            ->count();
+        broadcast(new AppointmentUpdateEvent($userId, $appointmentCount));
     }
 }

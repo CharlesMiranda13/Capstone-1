@@ -15,6 +15,8 @@ class Message extends Model
         'receiver_id',
         'message',
         'message_type',
+        'is_read',
+        'edited',
     ];
 
     /**

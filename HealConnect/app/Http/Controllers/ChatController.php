@@ -9,6 +9,7 @@ use App\Events\MessageSent;
 use App\Models\User;
 use App\Events\MessageUpdated;
 use App\Events\MessageDeleted;
+use App\Events\NewMessageEvent; 
 
 class ChatController extends Controller
 {
@@ -53,6 +54,17 @@ class ChatController extends Controller
         $receiverId = $request->query('receiver_id');
         $receiver = $receiverId ? User::find($receiverId) : null;
 
+        // Mark messages from this receiver as read when opening the chat
+        if ($receiver) {
+            Message::where('sender_id', $receiver->id)
+                ->where('receiver_id', $user->id)
+                ->where('is_read', false)
+                ->update(['is_read' => true]);
+
+            // Broadcast updated unread count to current user
+            $this->broadcastUnreadCount($user->id);
+        }
+
         return view('shared.chat', compact('user', 'conversations', 'receiver'));
     }
 
@@ -66,13 +78,20 @@ class ChatController extends Controller
         return response()->json($user);
     }
 
-
-
     // Fetch messages between current user and selected user
     public function fetch(Request $request)
     {
         $userId = Auth::id();
         $receiverId = $request->receiver_id;
+
+        // Mark messages as read when fetching
+        Message::where('sender_id', $receiverId)
+            ->where('receiver_id', $userId)
+            ->where('is_read', false)
+            ->update(['is_read' => true]);
+
+        // Broadcast updated unread count
+        $this->broadcastUnreadCount($userId);
 
         $messages = Message::where(function ($query) use ($userId, $receiverId) {
             $query->where('sender_id', $userId)
@@ -114,17 +133,20 @@ class ChatController extends Controller
             'receiver_id' => $request->receiver_id,
             'message' => $request->message,
             'message_type' => 'text',
+            'is_read' => false, // Make sure this is set
         ]);
 
         $message->type = 'text';
 
         broadcast(new MessageSent($message))->toOthers();
 
+        // Broadcast notification to receiver
+        $this->broadcastUnreadCount($request->receiver_id);
+
         return response()->json(['success' => true, 'message' => $message]);
     }
 
     // Voice Message
-
     public function sendVoice(Request $request)
     {
         $request->validate([
@@ -148,6 +170,7 @@ class ChatController extends Controller
             'receiver_id' => $request->receiver_id,
             'message' => $path,
             'message_type' => 'voice',
+            'is_read' => false,
         ]);
 
         $message->message_url = $url;
@@ -155,11 +178,13 @@ class ChatController extends Controller
 
         broadcast(new MessageSent($message))->toOthers();
 
+        // Broadcast notification to receiver
+        $this->broadcastUnreadCount($request->receiver_id);
+
         return response()->json(['success' => true, 'message' => $message]);
     }
 
     // File Message
-
     public function sendFile(Request $request)
     {
         $request->validate([
@@ -182,12 +207,16 @@ class ChatController extends Controller
             'receiver_id' => $request->receiver_id,
             'message' => $path,
             'message_type' => 'file',
+            'is_read' => false,
         ]);
 
         $message->file_url = $url;
         $message->type = 'file';
 
         broadcast(new MessageSent($message))->toOthers();
+
+        // Broadcast notification to receiver
+        $this->broadcastUnreadCount($request->receiver_id);
 
         return response()->json(['success' => true, 'message' => $message]);
     }
@@ -213,7 +242,6 @@ class ChatController extends Controller
         return response()->json(['success' => true, 'message' => $message]);
     }
 
-
     // ------------------ DELETE MESSAGE ------------------
     public function destroy($id)
     {
@@ -230,8 +258,28 @@ class ChatController extends Controller
         $message->delete();
         broadcast(new MessageDeleted($messageId, $receiverId))->toOthers();
 
+        // Update notification count after deletion
+        $this->broadcastUnreadCount($receiverId);
+
         return response()->json(['success' => true]);
     }
 
+    // ------------------ HELPER METHOD ------------------
+    /**
+     * Broadcast the updated unread message count to a user
+     */
+    private function broadcastUnreadCount($userId)
+    {
+        $unreadCount = Message::where('receiver_id', $userId)
+            ->where('is_read', false)
+            ->count();
 
+        \Log::info('Broadcasting unread count', [
+            'user_id' => $userId,
+            'unread_count' => $unreadCount,
+            'channel' => 'user.' . $userId
+        ]);
+
+        broadcast(new NewMessageEvent($userId, $unreadCount))->toOthers();
+    }
 }

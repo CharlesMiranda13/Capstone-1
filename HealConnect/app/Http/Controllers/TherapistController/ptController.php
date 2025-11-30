@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Mail\AppointmentStatusMail;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
+use App\Events\AppointmentUpdateEvent;
 
 class ptController extends Controller
 {
@@ -447,6 +448,8 @@ class ptController extends Controller
         ]);
 
         $appointment = Appointment::findOrFail($id);
+        $patientId = $appointment->patient_id; // Store patient ID before updating
+        
         $appointment->status = $request->input('status');
         $appointment->save();
 
@@ -481,6 +484,23 @@ class ptController extends Controller
             Log::error("Failed to send appointment email: " . $e->getMessage());
         }
 
+        // Broadcast notification to patient about appointment status change
+        $this->broadcastAppointmentNotification($patientId);
+
         return back()->with('success', 'Appointment status updated and patient notified!');
     }
+
+    /**
+     * Broadcast appointment notification to a user
+     */
+    private function broadcastAppointmentNotification($userId)
+    {
+        $appointmentCount = Appointment::where('patient_id', $userId)
+            ->where('status', 'pending')
+            ->whereDate('appointment_date', '>=', now())
+            ->count();
+        broadcast(new AppointmentUpdateEvent($userId, $appointmentCount));
+    }
+
 }
+
