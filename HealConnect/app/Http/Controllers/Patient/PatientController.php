@@ -18,8 +18,11 @@ class PatientController extends Controller
     public function dashboard()
     {
         $user = Auth::user();
+        
+        // Filter out cancelled appointments
         $appointments = Appointment::where('patient_id', $user->id)
             ->whereDate('appointment_date', '>=', Carbon::today())
+            ->whereIn('status', ['pending','approved' ,'confirmed', 'completed'])
             ->with('provider')
             ->orderBy('appointment_date')
             ->take(3)
@@ -168,8 +171,9 @@ class PatientController extends Controller
             ->where('is_read', false)
             ->count();
         
+        // Also exclude cancelled appointments from notification count
         $upcomingAppointments = \App\Models\Appointment::where('patient_id', auth()->id())
-            ->where('status', 'pending')
+            ->whereIn('status', ['pending', 'confirmed']) 
             ->whereDate('appointment_date', '>=', now())
             ->count();
         
