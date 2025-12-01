@@ -154,15 +154,30 @@
                     @endif
 
                     {{-- THERAPIST SPECIFIC FIELDS --}}
-                    @if($role === 'therapist' || $role ==='clinic')
-                        <div class="form-group">
-                            <label for="specialization">Specialization</label>
-                            <input type="text"
-                                   name="specialization"
-                                   id="specialization"
-                                   value="{{ old('specialization', Auth::user()->specialization) }}">
+                    <div class="form-group">
+                        <label>Specializations</label>
+
+                        <div id="specialization-wrapper">
+
+                            @php
+                                $specializations = Auth::user()->specialization
+                                    ? explode(',', Auth::user()->specialization)
+                                    : [];
+                            @endphp
+
+                            @foreach($specializations as $spec)
+                                <div class="specialization-item" style="display:flex; gap:10px; margin-bottom:8px;">
+                                    <input type="text" name="specialization[]" class="specialization-input" value="{{ $spec }}">
+                                    <button type="button" class="remove-spec" style="background:#dc3545;color:white;border:none;padding:6px 10px;border-radius:6px;">X</button>
+                                </div>
+                            @endforeach
                         </div>
-                    @endif
+
+                        <button type="button" id="add-specialization" 
+                            style="margin-top:8px;background:#198754;color:white;border:none;padding:7px 15px;border-radius:6px;">
+                            + Add Specialization
+                        </button>
+                    </div>
                     <button type="submit" class="submit-button success-button">Save Changes</button>
                 </form>
             </div>
@@ -218,4 +233,5 @@
 
 @section('scripts')
     <script src="{{ asset('js/modal.js') }}"></script>
+    <script src="{{ asset('js/specialization.js') }}"></script>
 @endsection

@@ -103,18 +103,21 @@ class ptController extends Controller
             'phone'     => 'nullable|string|max:20',
             'address'   => 'nullable|string|max:255',
             'description'   => 'nullable|string|max:2000', 
-            'specialization' => 'nullable|string|max:255', 
+            'specialization' => 'nullable|array',
+            'specialization.*' => 'nullable|string|max:255',
             'clinic_license' => 'nullable|string|max:255', 
         ];
 
         $validated = $request->validate($rules);
+        $specializations = $validated['specialization'] ?? [];
+        $specializationString = $specializations ? implode(',', $specializations) : null;
 
         $user->update([
             'name' => $validated['name'],
             'phone'     => $validated['phone'] ?? $user->phone,
             'address'   => $validated['address'] ?? $user->address,
             'description'   => $validated['description'] ?? $user->description,
-            'specialization' => $validated['specialization'] ?? $user->specialization,
+            'specialization' => $specializationString,
             'clinic_license' => $validated['clinic_license'] ?? $user->clinic_license,
         ]);
 
