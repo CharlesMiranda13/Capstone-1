@@ -24,35 +24,37 @@
     </div>
     <div class="sidebar">
         <div class="logo">
-            <div class="logo-circle">
-                <img src="{{ asset('images/logo.jpg') }}" alt="HealConnect Logo">
-            </div>
-            <div class="logo-text">
-                <span class="heal-blue">Heal</span><span class="connect-green">Connect</span>
-            </div>
+            <a href="{{ route('clinic.home') }}">
+                <div class="logo-circle">
+                    <img src="{{ asset('images/logo.jpg') }}" alt="HealConnect Logo">
+                </div>
+                <div class="logo-text">
+                    <span class="heal-blue">Heal</span><span class="connect-green">Connect</span>
+                </div>
+            </a>
         </div>
         <hr>
-        <a href="{{ route('clinic.home') }}" class="{{request()->routeIs('clinic.home') ? 'active' : '' }}">
+        <a href="{{ route('clinic.home') }}" class="sidebar-item {{request()->routeIs('clinic.home') ? 'active' : '' }}">
             <i class="fa-solid fa-house"></i> Home
         </a>
-        <a href="{{ route('clinic.employees') }}" class="{{request()->routeIs('clinic.employees') ? 'active' : '' }}">
+        <a href="{{ route('clinic.employees') }}" class="sidebar-item {{request()->routeIs('clinic.employees') ? 'active' : '' }}">
             <i class="fa-solid fa-user-md"></i> Employees
         </a>        
-        <a href="{{ route('therapist.client') }}" class="{{ request()->routeIs('therapist.client') ? 'active' : '' }}">
+        <a href="{{ route('therapist.client') }}" class="sidebar-item {{ request()->routeIs('therapist.client') ? 'active' : '' }}">
             <i class="fa-solid fa-users"></i> Clients
         </a>
-        <a href="{{ route('clinic.appointments') }}" class="{{request()->routeIs('clinic.appointments') ? 'active' : '' }}">
+        <a href="{{ route('clinic.appointments') }}" class="sidebar-item {{request()->routeIs('clinic.appointments') ? 'active' : '' }}">
             <i class="fa-regular fa-calendar"></i> Appointment
             <span class="notification-badge" id="appointments-badge">0</span>
         </a>
-        <a href="{{ route('messages') }}" class="{{ request()->routeIs('messages') ? 'active' : '' }}">
+        <a href="{{ route('messages') }}" class="sidebar-item {{ request()->routeIs('messages') ? 'active' : '' }}">
             <i class="fa-regular fa-message"></i> Messages
             <span class="notification-badge" id="messages-badge">0</span>
         </a>
-        <a href="{{ route('clinic.services') }}" class="{{request()->routeIs('clinic.services') ? 'active' : '' }}">
+        <a href="{{ route('clinic.services') }}" class="sidebar-item {{request()->routeIs('clinic.services') ? 'active' : '' }}">
             <i class="fa-solid fa-clock"></i> Services & Schedule
         </a>
-        <a href="{{ route('clinic.profile') }}" class="{{request()->routeIs('clinic.profile') ? 'active' : '' }}">
+        <a href="{{ route('clinic.profile') }}" class="sidebar-item {{request()->routeIs('clinic.profile') ? 'active' : '' }}">
             <i class="fa-solid fa-user-md"></i> Profile
         </a>
         

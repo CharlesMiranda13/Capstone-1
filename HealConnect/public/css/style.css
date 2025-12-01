@@ -82,6 +82,20 @@ body {
     display: block;
 }
 
+.header-logo a{
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo a{
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 /* Header */
 header {
     border-bottom: 1px solid #ddd;

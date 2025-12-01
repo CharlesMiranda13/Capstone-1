@@ -21,7 +21,7 @@
     font-size: 30px;
 }
 
-.sidebar a {
+.sidebar .sidebar-item {
     color: #1f2d3d;
     font-weight: 500;
     text-decoration: none;
@@ -30,20 +30,20 @@
     transition: background 0.3s ease, color 0.3s ease;
 }
 
-.sidebar a:hover,
-.sidebar a.active {
+.sidebar .sidebar-item:hover,
+.sidebar .sidebar-item.active {
     background: linear-gradient(90deg, #4b8df8, #4ad0a9);
     color: #ffffff;
     box-shadow: 0 4px 12px rgba(75, 141, 248, 0.25);
 }
 
-.sidebar a i {
+.sidebar .sidebar-item i {
     font-size: 18px;
     transition: color 0.3s ease;
 }
 
-.sidebar a:hover i,
-.sidebar a.active i {
+.sidebar .sidebar-item:hover i,
+.sidebar .sidebar-item.active i {
     color: #ffffff;
 }
 

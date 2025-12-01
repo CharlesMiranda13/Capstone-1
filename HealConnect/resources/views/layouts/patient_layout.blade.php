@@ -26,33 +26,35 @@
 
     <div class="sidebar">
         <div class="logo">
-            <div class="logo-circle">
-                <img src="{{ asset('images/logo.jpg') }}" alt="HealConnect Logo">
-            </div>
-            <div class="logo-text">
-                <span class="heal-blue">Heal</span><span class="connect-green">Connect</span>
-            </div>
+            <a href="{{ route('patient.home') }}">
+                <div class="logo-circle">
+                    <img src="{{ asset('images/logo.jpg') }}" alt="HealConnect Logo">
+                </div>
+                <div class="logo-text">
+                    <span class="heal-blue">Heal</span><span class="connect-green">Connect</span>
+                </div>
+            </a>
         </div>
         <hr>
-        <a href="{{ route('patient.home') }}" class="{{ request()->routeIs('patient.home') ? 'active' : '' }}">
+        <a href="{{ route('patient.home') }}" class="sidebar-item {{ request()->routeIs('patient.home') ? 'active' : '' }}">
             <i class="fa-solid fa-house"></i> Home
         </a>
 
-        <a href="{{ route('patient.appointments.index') }}" class="{{ request()->routeIs('patient.appointments.index') ? 'active' : '' }}">
+        <a href="{{ route('patient.appointments.index') }}" class="sidebar-item {{ request()->routeIs('patient.appointments.index') ? 'active' : '' }}">
             <i class="fa-regular fa-calendar"></i> Appointment
             <span class="notification-badge" id="appointments-badge">0</span>
         </a>
 
-        <a href="{{ route('patient.records') }}" class="{{ request()->routeIs('patients.records') ? 'active' : '' }}">
+        <a href="{{ route('patient.records') }}" class="sidebar-item {{ request()->routeIs('patients.records') ? 'active' : '' }}">
             <i class="fa-regular fa-file-lines"></i> Records
         </a>
 
-        <a href="{{ route('messages') }}" class="{{ request()->routeIs('messages') ? 'active' : '' }}">
+        <a href="{{ route('messages') }}" class="sidebar-item {{ request()->routeIs('messages') ? 'active' : '' }}">
             <i class="fa-regular fa-message"></i> Messages
             <span class="notification-badge" id="messages-badge">0</span>
         </a>
 
-        <a href="{{ route('patient.therapists') }}" class="{{ request()->routeIs('patient.therapists') ? 'active' : '' }}">
+        <a href="{{ route('patient.therapists') }}" class="sidebar-item {{ request()->routeIs('patient.therapists') ? 'active' : '' }}">
             <i class="fa-solid fa-user-md"></i> Therapists
         </a>
         

@@ -24,37 +24,39 @@
     </div>
     <div class="sidebar">
         <div class="logo">
-            <div class="logo-circle">
-                <img src="{{ asset('images/logo.jpg') }}" alt="HealConnect Logo">
-            </div>
-            <div class="logo-text">
-                <span class="heal-blue">Heal</span><span class="connect-green">Connect</span>
-            </div>
+            <a href="{{ route('therapist.home') }}">
+                <div class="logo-circle">
+                    <img src="{{ asset('images/logo.jpg') }}" alt="HealConnect Logo">
+                </div>
+                <div class="logo-text">
+                    <span class="heal-blue">Heal</span><span class="connect-green">Connect</span>
+                </div>
+            </a>
         </div>
         <hr>
-        <a href="{{ route('therapist.home') }}"class="{{ request()->routeIs('therapist.home') ? 'active' : '' }}">
+        <a href="{{ route('therapist.home') }}"class="sidebar-item {{ request()->routeIs('therapist.home') ? 'active' : '' }}">
             <i class="fa-solid fa-house"></i> Home
         </a>
 
-        <a href="{{ route('therapist.appointments') }}" class="{{ request()->routeIs('therapist.appointments') ? 'active' : '' }}">
+        <a href="{{ route('therapist.appointments') }}" class="sidebar-item {{ request()->routeIs('therapist.appointments') ? 'active' : '' }}">
             <i class="fa-regular fa-calendar"></i> Appointment
             <span class="notification-badge" id="appointments-badge">0</span>
         </a>
 
-        <a href="{{ route('messages') }}" class="{{ request()->routeIs('messages') ? 'active' : '' }}">
+        <a href="{{ route('messages') }}" class="sidebar-item {{ request()->routeIs('messages') ? 'active' : '' }}">
             <i class="fa-regular fa-message"></i> Messages
             <span class="notification-badge" id="messages-badge">0</span>
         </a>
 
-        <a href="{{ route('therapist.client') }}" class="{{ request()->routeIs('therapist.client') ? 'active' : '' }}">
+        <a href="{{ route('therapist.client') }}" class="sidebar-item {{ request()->routeIs('therapist.client') ? 'active' : '' }}">
             <i class="fa-solid fa-users"></i> Clients
         </a>
 
-        <a href="{{ route('therapist.services') }}" class="{{ request()->routeIs('therapist.services') ? 'active' : '' }}">
+        <a href="{{ route('therapist.services') }}" class="sidebar-item {{ request()->routeIs('therapist.services') ? 'active' : '' }}">
             <i class="fa-solid fa-clock"></i> Services & Schedule
         </a>
 
-        <a href="{{ route('therapist.profile') }}" class="{{ request()->routeIs('therapist.profile') ? 'active' : '' }}">
+        <a href="{{ route('therapist.profile') }}" class="sidebar-item {{ request()->routeIs('therapist.profile') ? 'active' : '' }}">
             <i class="fa-solid fa-user-md"></i>  Profile
         </a>        
         <form action="{{ route('therapist.logout') }}" method="POST" style="display:inline;">

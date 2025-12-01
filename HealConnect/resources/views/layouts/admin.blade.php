@@ -12,23 +12,25 @@
 <body>
     <div class="sidebar">
         <div class="logo">
-            <div class="logo-circle">
-                <img src="{{ asset('images/logo.jpg') }}" alt="HealConnect Logo">
-            </div>
-            <div class="logo-text">
-                <span class="heal-blue">Heal</span><span class="connect-green">Connect</span>
-            </div>
+            <a href="{{ route('admin.dashboard') }}">
+                <div class="logo-circle">
+                    <img src="{{ asset('images/logo.jpg') }}" alt="HealConnect Logo">
+                </div>
+                <div class="logo-text">
+                    <span class="heal-blue">Heal</span><span class="connect-green">Connect</span>
+                </div>
+            </a>
         </div>
         <hr>
-        <a href="{{ route('admin.dashboard') }}" class ="{{ request()->routeIs('admin.dashboard') ? 'active' :'' }}" >
+        <a href="{{ route('admin.dashboard') }}" class ="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' :'' }}" >
             <i class="fa-solid fa-gauge"></i> Dashboard</a>
-        <a href="{{ route('admin.manage-users') }}" class = "{{ request()->routeIs('admin.manage-users') ? 'active' : ''}}">
+        <a href="{{ route('admin.manage-users') }}" class = "sidebar-item {{ request()->routeIs('admin.manage-users') ? 'active' : ''}}">
             <i class="fa-solid fa-users"></i> Manage Users</a>
-        <a href="{{ route('admin.viewreports') }}"class = "{{ request()->routeIs('admin.viewreports') ? 'active' : ''}}">
+        <a href="{{ route('admin.viewreports') }}"class = "sidebar-item {{ request()->routeIs('admin.viewreports') ? 'active' : ''}}">
             <i class="fa-solid fa-chart-bar"></i> View Reports</a>
-        <a href="{{ route('admin.contact_messages') }}"class = "{{ request()->routeIs('admin.contact_messages') ? 'active' : ''}}">
+        <a href="{{ route('admin.contact_messages') }}"class = "sidebar-item {{ request()->routeIs('admin.contact_messages') ? 'active' : ''}}">
             <i class="fa-solid fa-area-chart"></i> User Concern</a>
-        <a href="{{ route('admin.setting') }}" class = "{{ request()->routeIs('admin.setting') ? 'active' : ''}}">
+        <a href="{{ route('admin.setting') }}" class = "sidebar-item {{ request()->routeIs('admin.setting') ? 'active' : ''}}">
             <i class="fa-solid fa-cog"></i> Settings</a>
 
         <form action="{{ route('admin.logout') }}" method="POST" style="display:inline;">

@@ -83,8 +83,9 @@ class RegisterController extends Controller
             ? $request->file('license')->store('licenses', 'public')
             : null;
 
-        $startYear = $request->start_year;
-        $startDate = "{$startYear}-01-01";
+        $startDate = ($type === 'clinic' || $type === 'therapist')
+            ? $request->start_year . '-01-01'
+            : null;
 
         // Create user
         $user = User::create([

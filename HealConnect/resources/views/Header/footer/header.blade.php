@@ -1,10 +1,12 @@
 <header id="homepage">
   <div class="homepage-header">
     <div class="header-logo">
-      <img src="{{ asset('images/logo.jpg') }}" alt="HealConnect Logo" />
-      <h2>
-        <span class="heal-blue">Heal</span><span class="connect-green">Connect</span>
-      </h2>
+      <a href="{{ url('/') }}">
+        <img src="{{ asset('images/logo.jpg') }}" alt="HealConnect Logo" />
+        <h2>
+          <span class="heal-blue">Heal</span><span class="connect-green">Connect</span>
+        </h2>
+      </a>
     </div>
 
     <nav id="navbar">
