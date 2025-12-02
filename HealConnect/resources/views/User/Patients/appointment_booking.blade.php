@@ -97,7 +97,7 @@
                         <textarea name="notes" placeholder="Add any details or requests..."></textarea>
 
                         {{-- Referral Upload --}}
-                        <label for="referral">Referral (Optional):</label>
+                        <label for="referral">Doctor Prescription/Referral (Optional):</label>
                         <input type="file" name="referral" accept=".pdf,.doc,.docx,.jpg,.png">
 
                         <button type="submit" class="btn-submit">Book Appointment</button>

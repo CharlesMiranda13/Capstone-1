@@ -29,6 +29,10 @@
 @section('content')
 <main class="therapist-patient-records">
     <div class="container">
+        {{-- Success Message --}}
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
 
         {{-- Header --}}
         <div class="header">
@@ -36,7 +40,7 @@
             <p class="subtitle">Review and manage electronic health information below.</p>
         </div>
 
-        {{-- === EHR SECTION === --}}
+        {{-- EHR Section --}}
         <section class="record-section">
             <div class="section-header">
                 <h3>🩺 Electronic Health Record (EHR)</h3>
@@ -64,21 +68,33 @@
                 @csrf
                 @method('PUT')
                 <h4>Update EHR</h4>
+
+                {{-- Validation Errors --}}
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <div class="form-grid">
                     <label>Diagnosis</label>
-                    <input type="text" name="diagnosis" value="{{ $ehr->diagnosis ?? '' }}" class="form-control">
+                    <input type="text" name="diagnosis" value="{{ old('diagnosis', $ehr->diagnosis ?? '') }}" class="form-control">
 
                     <label>Allergies</label>
-                    <input type="text" name="allergies" value="{{ $ehr->allergies ?? '' }}" class="form-control">
+                    <input type="text" name="allergies" value="{{ old('allergies', $ehr->allergies ?? '') }}" class="form-control">
 
                     <label>Medications</label>
-                    <textarea name="medications" rows="2" class="form-control">{{ $ehr->medications ?? '' }}</textarea>
+                    <textarea name="medications" rows="2" class="form-control">{{ old('medications', $ehr->medications ?? '') }}</textarea>
 
                     <label>Medical History</label>
-                    <textarea name="medical_history" rows="2" class="form-control">{{ $ehr->medical_history ?? '' }}</textarea>
+                    <textarea name="medical_history" rows="2" class="form-control">{{ old('medical_history', $ehr->medical_history ?? '') }}</textarea>
 
                     <label>Additional Notes</label>
-                    <textarea name="notes" rows="3" class="form-control">{{ $ehr->notes ?? '' }}</textarea>
+                    <textarea name="notes" rows="3" class="form-control">{{ old('notes', $ehr->notes ?? '') }}</textarea>
                 </div>
                 <button type="submit" class="btn btn-primary mt-3">Save / Update EHR</button>
             </form>

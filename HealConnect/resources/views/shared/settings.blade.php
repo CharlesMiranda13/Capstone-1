@@ -154,6 +154,7 @@
                     @endif
 
                     {{-- THERAPIST SPECIFIC FIELDS --}}
+                    @if($role === 'therapist' || $role === 'clinic')
                     <div class="form-group">
                         <label>Specializations</label>
 
@@ -178,6 +179,7 @@
                             + Add Specialization
                         </button>
                     </div>
+                    @endif
                     <button type="submit" class="submit-button success-button">Save Changes</button>
                 </form>
             </div>
