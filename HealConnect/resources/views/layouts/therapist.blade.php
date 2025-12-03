@@ -59,7 +59,7 @@
         <a href="{{ route('therapist.profile') }}" class="sidebar-item {{ request()->routeIs('therapist.profile') ? 'active' : '' }}">
             <i class="fa-solid fa-user-md"></i>  Profile
         </a>        
-        <form action="{{ route('therapist.logout') }}" method="POST" style="display:inline;">
+        <form action="{{ route('logout') }}" method="POST" style="display:inline;">
             @csrf
             <button type="submit" class="logout-btn">
                 <i class="fa-solid fa-right-from-bracket"></i> Logout

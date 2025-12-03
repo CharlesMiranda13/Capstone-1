@@ -18,20 +18,17 @@ class ClinicController extends ptController
     {
         $clinic = Auth::user();
 
-        // Counts
+        // Count therapists under the clinic
         $totalTherapists = User::where('clinic_id', $clinic->id)
-            ->where('role', 'therapist')->count();
+            ->whereIn('role', ['therapist', 'independent_therapist'])
+            ->count();
 
+        // Counts for employees
         $totalEmployees = User::where('clinic_id', $clinic->id)
             ->where('role', 'employee')->count();
 
-        // Total unique patients across clinic therapists
-        $therapistIds = User::where('clinic_id', $clinic->id)
-            ->where('role', 'therapist')
-            ->pluck('id')
-            ->toArray();
-
-        $totalPatients = Appointment::whereIn('provider_id', $therapistIds)
+        // Total unique patients for clinic
+        $totalPatients = Appointment::where('provider_id', $clinic->id)
             ->where('provider_type', User::class)
             ->with('patient')
             ->get()
@@ -39,64 +36,49 @@ class ClinicController extends ptController
             ->unique('id')
             ->count();
 
-        $totalAppointments = Appointment::whereIn('provider_id', $therapistIds)
+        $totalAppointments = Appointment::where('provider_id', $clinic->id)
             ->where('provider_type', User::class)
             ->count();
 
-        $pendingAppointments = Appointment::whereIn('provider_id', $therapistIds)
+        $pendingAppointments = Appointment::where('provider_id', $clinic->id)
             ->where('provider_type', User::class)
             ->where('status', 'pending')
             ->count();
 
-        // Per-therapist appointment totals (exclude cancelled)
-        $therapists = User::where('clinic_id', $clinic->id)
-            ->where('role', 'therapist')
-            ->get();
-
-        $therapistAppointments = $therapists->map(function ($therapist) {
-            $total = $therapist->appointments()->where('status', '!=', 'cancelled')->count();
-            return ['name' => $therapist->name, 'total_appointments' => $total];
-        });
-
-        $therapistNames = $therapistAppointments->pluck('name');
-        $therapistAppointmentsCount = $therapistAppointments->pluck('total_appointments');
-
         // Appointment types distribution
-        $appointmentTypes = Appointment::whereIn('provider_id', $therapistIds)
+        $appointmentTypes = Appointment::where('provider_id', $clinic->id)
             ->where('provider_type', User::class)
             ->get()
             ->groupBy('appointment_type')
             ->map->count();
 
-        // Upcoming appointments for clinic (therapists)
-        $appointments = Appointment::whereIn('provider_id', $therapistIds)
+        // Upcoming appointments
+        $appointments = Appointment::where('provider_id', $clinic->id)
             ->where('provider_type', User::class)
-            ->with(['patient', 'therapist'])
+            ->with(['patient'])
             ->where('appointment_date', '>=', now())
             ->orderBy('appointment_date')
             ->get();
 
         return view('user.therapist.clinic.clinic', compact(
             'clinic',
-            'totalTherapists',
             'totalEmployees',
             'totalPatients',
             'totalAppointments',
             'pendingAppointments',
-            'therapists',
-            'therapistNames',
-            'therapistAppointmentsCount',
             'appointmentTypes',
-            'appointments'
+            'appointments',
+            'totalTherapists'
         ));
     }
+
+
     /** ---------------- PROFILE ---------------- */
     public function profile()
     {
         $data = $this->getProfileData();
         return view('user.therapist.clinic.profile', $data);
     }
-
 
     /** ---------------- SERVICES ---------------- */
     public function services()
@@ -239,12 +221,8 @@ class ClinicController extends ptController
     {
         $clinic = Auth::user();
 
-        $therapistIds = User::where('role', 'therapist')
-            ->where('clinic_id', $clinic->id)
-            ->pluck('id')
-            ->toArray();
-
-        $patients = $this->getPatientsFor($therapistIds, User::class);
+        // Get patients who have appointments with THIS clinic
+        $patients = $this->getPatientsFor($clinic->id, User::class);
 
         if ($request->filled('search')) {
             $search = strtolower($request->search);
@@ -255,7 +233,7 @@ class ClinicController extends ptController
             $patients = $patients->filter(fn ($p) => $p->gender === $request->gender);
         }
 
-        return view('user.therapist.clients', compact('clinic', 'patients'));
+        return view('user.therapist.client', compact('clinic', 'patients'));
     }
 
     /** ---------------- APPOINTMENTS ---------------- */
@@ -263,25 +241,28 @@ class ClinicController extends ptController
     {
         $clinic = Auth::user();
 
-        $therapistIds = User::where('role', 'therapist')
-            ->where('clinic_id', $clinic->id)
-            ->pluck('id')
-            ->toArray();
-
-        $query = Appointment::whereIn('provider_id', $therapistIds)
+        $query = Appointment::where('provider_id', $clinic->id)
             ->where('provider_type', User::class)
             ->with(['patient', 'provider']);
 
         $query = $this->applyAppointmentFilters($query, $request);
+        $appointments = $query->orderBy('appointment_date', 'desc')
+        ->orderBy('appointment_time', 'desc')
+        ->get();
 
-        $appointments = $query->orderBy('appointment_date', 'desc')->get();
+    // Get unique patients (latest appointment for each patient)
+    $appointments = $appointments->unique('patient_id')->values();
 
-        $providers = User::where('role', 'therapist')
-            ->where('clinic_id', $clinic->id)
-            ->get();
-
-        return view('user.therapist.clinic.appointment', compact('appointments', 'providers'));
+    // Add record count for each patient
+    foreach ($appointments as $appointment) {
+        $appointment->record_count = Appointment::where('provider_id', $clinic->id)
+            ->where('patient_id', $appointment->patient_id)
+            ->where('status', 'completed')
+            ->count();
     }
+
+    return view('user.therapist.clinic.appointment', compact('appointments'));
+}
 
     /** ---------------- EMPLOYEES ---------------- */
     public function employees(Request $request)
@@ -289,7 +270,7 @@ class ClinicController extends ptController
         $clinic = Auth::user();
 
         $query = User::where('clinic_id', $clinic->id)
-                 ->where('role', 'employee');
+                ->where('role', 'employee');
 
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');
@@ -315,7 +296,6 @@ class ClinicController extends ptController
             'profile_picture' => 'nullable|image|max:2048',
         ]);
 
-        // Handle image upload
         $profilePicture = null;
         if ($request->hasFile('profile_picture')) {
             $profilePicture = $request->file('profile_picture')->store('profile_pictures', 'public');
@@ -324,7 +304,7 @@ class ClinicController extends ptController
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt('password123'), // default password
+            'password' => bcrypt('password123'),
             'position' => $request->position,
             'role' => 'employee',
             'clinic_id' => $clinic->id,
@@ -354,13 +334,7 @@ class ClinicController extends ptController
             ->where('is_read', false)
             ->count();
         
-        // For clinics: show pending appointments for all their therapists
-        $clinicTherapistIds = \App\Models\User::where('clinic_id', auth()->id())
-            ->where('role', 'therapist')
-            ->pluck('id')
-            ->toArray();
-        
-        $pendingAppointments = \App\Models\Appointment::whereIn('provider_id', $clinicTherapistIds)
+        $pendingAppointments = \App\Models\Appointment::where('provider_id', auth()->id())
             ->where('provider_type', \App\Models\User::class)
             ->where('status', 'pending')
             ->whereDate('appointment_date', '>=', now())
@@ -372,4 +346,8 @@ class ClinicController extends ptController
         ]);
     }
 
+    public function updateAppointmentStatus(Request $request, $id)
+    {
+        return parent::updateAppointmentStatus($request, $id);
+    }
 }

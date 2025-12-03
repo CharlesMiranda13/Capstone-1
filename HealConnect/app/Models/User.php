@@ -81,7 +81,7 @@ class User extends Authenticatable
     // Appointments where user is the provider
     public function appointments()
     {
-        return $this->hasMany(Appointment::class, 'provider_id');
+        return $this->hasMany(Appointment::class, 'provider');
     }
 
     // Appointments where user is the patient

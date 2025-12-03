@@ -69,12 +69,12 @@
         <h3>Analytics Overview</h3>
         <div class="analytics-section">
             <div class="analytics-card">
-                <h4>Appointments by Therapist</h4>
-                <canvas id="therapistChart"></canvas>
+                <h4>Appointments This Month</h4>
+                <canvas id="monthlyChart"></canvas>
             </div>
             <div class="analytics-card">
                 <h4>Appointments by Type</h4>
-                <canvas id="typeChart"></canvas>
+                <canvas id="appointmentChart"></canvas>
             </div>
         </div>
     </div>
@@ -85,9 +85,9 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     window.dashboardData = {
-        therapistData: {
-            labels: {!! json_encode($therapistNames ?? []) !!},
-            values: {!! json_encode($therapistAppointmentsCount ?? []) !!}
+        usergrowth: {
+            labels: {!! json_encode(range(1, now()->daysInMonth)) !!},
+            values: {!! json_encode($monthlyData ?? []) !!}
         },
         appointmentTypeData: {
             labels: {!! json_encode($appointmentTypes->keys() ?? []) !!},

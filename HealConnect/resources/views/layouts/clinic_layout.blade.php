@@ -58,7 +58,7 @@
             <i class="fa-solid fa-user-md"></i> Profile
         </a>
         
-        <form action="{{ route('clinic.logout') }}" method="POST" style="display:inline;">
+        <form action="{{ route('logout') }}" method="POST" style="display:inline;">
             @csrf
             <button type="submit" class="logout-btn">
                 <i class="fa-solid fa-right-from-bracket"></i> Logout

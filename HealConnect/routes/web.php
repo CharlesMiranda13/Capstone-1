@@ -22,6 +22,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Models\Setting;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\Admin\AdminContactController;
+use App\Http\Controllers\VideoCallController;
 
 /*Public Pages*/
 
@@ -32,7 +33,7 @@ Route::get('/More', function () {
     return view('more');
 });
 Route::view('/services', 'services')->name('services');
-Route::view('/pricing', 'pricing')->name('pricing');
+Route::get('/pricing', [SubscriptionController::class, 'index'])->name('pricing');
 Route::get('/contact', function () {
     $settings = Setting::first(); 
     return view('contact', compact('settings'));
@@ -149,7 +150,7 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
 
 /*Therapist Routes*/
 
-Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.status'])->group(function () {
+Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.status', 'check.subscription'])->group(function () {
     Route::get('/home', [IndtherapistController::class, 'dashboard'])->name('home');
     
 
@@ -175,7 +176,7 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
     Route::get('/profile', [IndtherapistController::class, 'profile'])->name('profile');
 
     // Patient Profile
-    Route::get('/patients/{id}/profile', [IndtherapistController::class, 'patientProfile'])->name('patients.profile');
+    Route::get('/patients/{id}/profile', [ptController::class, 'patientProfile'])->name('patients.profile');
 
     //settings
     Route::get('/settings', [IndtherapistController::class, 'settings'])->name('settings');
@@ -183,14 +184,10 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
     Route::put('/settings/info', [IndtherapistController::class, 'updateInfo'])->name('update.info');
     Route::put('/settings/password', [IndtherapistController::class, 'updatePassword'])->name('update.password');
 
-
-    Route::post('/logout', [App\Http\Controllers\Auth\UserAuthController::class, 'logout'])
-    ->name('logout');
-
 });
 
 /* Clinic Routes */
-Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'check.status'])->group(function () {
+Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'check.status', 'check.subscription'])->group(function () {
     Route::get('/profile', [ClinicController::class, 'profile'])->name('profile');
 
     // Dashboard
@@ -212,8 +209,10 @@ Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'check.status'])->
 
     // Appointments (appointments of clinic's therapists)
     Route::get('/appointments', [ClinicController::class, 'appointments'])->name('appointments');
+    Route::patch('/appointments/{id}/status', [ClinicController::class, 'updateAppointmentStatus'])->name('appointments.updateStatus');
 
     // Patient Records 
+    Route::get('/patients/{id}/profile', [ptController::class, 'patientProfile'])->name('patients.profile');
     Route::get('/patients/{patientId}/records', [ptController::class, 'patient_records'])->name('patients_records');
     Route::put('/patients/{id}/ehr', [ptController::class, 'updateEHR'])->name('ehr.update');
     Route::put('/patients/{id}/treatment', [ptController::class, 'updateTreatment'])->name('treatment.update');
@@ -231,18 +230,18 @@ Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'check.status'])->
     Route::put('/settings/profile', [ClinicController::class, 'updateProfile'])->name('update.profile');
     Route::put('/settings/info', [ClinicController::class, 'updateInfo'])->name('update.info');
     Route::put('/settings/password', [ClinicController::class, 'updatePassword'])->name('update.password');
-
-    // Logout
-    Route::post('/logout', [App\Http\Controllers\Auth\UserAuthController::class, 'logout'])->name('logout');
 });
-
+//logout
+Route::middleware(['auth'])->group(function () {
+    Route::post('/logout', [UserAuthController::class, 'logout'])->name('logout');
+});
 
 Route::get('/check-status', function () {
     return response()->json(['status' => Auth::user()->status]);
 })->middleware('auth')->name('check.status');
 
-/* Messages */
-Route::middleware(['auth', 'check.status'])->group(function () {
+/* Messages and Video Call  */
+Route::middleware(['auth', 'check.status', 'check.subscription'])->group(function () {
     Route::get('/messages', [ChatController::class, 'index'])->name('messages');
     Route::get('/messages/user-info/{id}', [ChatController::class, 'getUserInfo']);
     Route::get('/messages/fetch', [ChatController::class, 'fetch'])->name('messages.fetch');
@@ -252,6 +251,7 @@ Route::middleware(['auth', 'check.status'])->group(function () {
     Route::put('/messages/{id}/edit', [ChatController::class, 'update'])->name('messages.update');
     Route::delete('/messages/{id}', [ChatController::class, 'destroy'])->name('messages.destroy');
     Route::post('/messages/mark-as-read/{userId}', [ChatController::class, 'markAsRead'])->name('messages.markAsRead');
+    Route::post('/start-video-call', [VideoCallController::class, 'start'])->name('video.start');
 
 });
 
@@ -270,7 +270,10 @@ Route::prefix('subscribe')->name('subscribe.')->group(function () {
     Route::get('/{plan}', [SubscriptionController::class, 'show'])->name('show');
     Route::post('/{plan}', [SubscriptionController::class, 'store'])->name('store');
 });
-
+// Subscription required page
+Route::get('/subscription/required', function() {
+    return view('subscription.required');
+})->name('subscription.required');
 
 /*Unread Counts for Notifications*/
 Route::middleware('auth')->group(function () {

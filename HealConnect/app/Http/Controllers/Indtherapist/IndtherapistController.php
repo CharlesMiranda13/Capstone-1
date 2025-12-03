@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Indtherapist;
 
 use App\Http\Controllers\TherapistController\ptController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Appointment;
 use App\Models\User;
 use App\Models\Availability;
-use Illuminate\Support\Facades\DB;
+use App\Models\TherapistService;
 use Carbon\Carbon;
 
 class IndtherapistController extends ptController
@@ -22,49 +22,89 @@ class IndtherapistController extends ptController
         return view('user.therapist.independent.independent', $data);
     }
 
-    /** ---------------- AVAILABILITY ---------------- */
-    public function availability()
+    /** ---------------- PROFILE ---------------- */
+    public function profile()
     {
-        $user = Auth::user();
+        $data = $this->getProfileData();
+        return view('user.therapist.independent.profile', $data);
+    }
 
-        $availabilities = Availability::with('appointments')
-            ->where('provider_id', $user->id)
-            ->orderBy('date', 'asc')
-            ->simplePaginate(3);
+    /** ---------------- SERVICES ---------------- */
+    public function services()
+    {
+        $therapist = Auth::user();
 
-        $calendarAvailabilities = Availability::where('provider_id', $user->id)->get();
-        
-        $existingPrice = \App\Models\TherapistService::where('serviceable_id', $user->id)
-            ->where('serviceable_type', get_class($user))
-            ->value('price');
+        $existingServices = $this->getServices($therapist);
 
-        $existingServices = $this->getServices($user);
+        $existingPrice = TherapistService::where('serviceable_id', $therapist->id)
+            ->where('serviceable_type', get_class($therapist))
+            ->value('price') ?? '';
+
+        $schedules = Availability::where('provider_id', $therapist->id)
+            ->where('provider_type', get_class($therapist))
+            ->orderBy('date')
+            ->get();
+
+        $calendarSchedules = $this->getCalendarSchedules($schedules);
 
         return view('user.therapist.independent.services', compact(
-            'user',
-            'availabilities',
-            'calendarAvailabilities',
+            'therapist',
+            'schedules',
+            'calendarSchedules',
             'existingServices',
-            'existingPrice'
+            'existingPrice',
         ));
     }
 
     public function storeServices(Request $request)
     {
+        $therapist = Auth::user();
+
         $request->validate([
             'appointment_types' => 'required|array',
             'price' => 'nullable|string|max:50',
         ]);
+        $appointmentTypes = $request->appointment_types;
 
-        $user = Auth::user();
-        $this->saveServices(
-            $user,
-            $request->input('appointment_types', []),
-            $request->input('price') 
-        );
+        if (!is_array($appointmentTypes)) {
+            $appointmentTypes = json_decode($appointmentTypes, true);
+        }
 
+        $this->saveServices($therapist, $appointmentTypes, $request->price);
 
-        return back()->with('success', 'Your offered services have been updated successfully!');
+        return back()->with('success', 'Appointment types updated!');
+    }
+    
+    
+
+    /** ---------------- AVAILABILITY / SCHEDULE ---------------- */
+    public function availability()
+    {
+        $therapist = Auth::user();
+
+        $services = $this->getServices($therapist);
+
+        // For table (paginated)
+        $availabilities = Availability::where('provider_id', $therapist->id)
+            ->where('provider_type', get_class($therapist))
+            ->orderBy('date')
+            ->paginate(10); 
+
+        // For calendar (non-paginated list)
+        $calendarAvailabilities = Availability::where('provider_id', $therapist->id)
+            ->where('provider_type', get_class($therapist))
+            ->orderBy('date')
+            ->get();
+
+        // Convert to calendar format
+        $calendarAvailabilities = $this->getCalendarSchedules($calendarAvailabilities);
+
+        return view('user.therapist.independent.services', compact(
+            'therapist',
+            'services',
+            'availabilities',
+            'calendarAvailabilities'
+        ));
     }
 
     public function store(Request $request)
@@ -88,19 +128,42 @@ class IndtherapistController extends ptController
             'is_active' => true,
         ]);
 
-        return back()->with('success', 'Availability added successfully.');
-    }
-
-    public function destroy($id)
-    {
-        $this->destroyAvailabilityById($id, Auth::user());
-        return back()->with('success', 'Availability deleted successfully.');
+        return back()->with('success', 'Availability added successfully!');
     }
 
     public function toggleAvailability($id)
     {
-        $this->toggleAvailabilityById($id, Auth::user());
-        return back()->with('success', 'Availability status updated successfully.');
+        $therapist = Auth::user();
+        $this->toggleAvailabilityById($id, $therapist);
+
+        return back()->with('success', 'Schedule updated successfully!');
+    }
+
+    public function destroy($id)
+    {
+        $therapist = Auth::user();
+        $this->destroyAvailabilityById($id, $therapist);
+
+        return back()->with('success', 'Schedule deleted successfully!');
+    }
+
+    /** ---------------- CLIENTS ---------------- */
+    public function clients(Request $request)
+    {
+        $therapist = Auth::user();
+
+        $patients = $this->getPatientsFor($therapist->id, User::class);
+
+        if ($request->filled('search')) {
+            $search = strtolower($request->search);
+            $patients = $patients->filter(fn ($p) => str_contains(strtolower($p->name), $search));
+        }
+
+        if ($request->filled('gender')) {
+            $patients = $patients->filter(fn ($p) => $p->gender === $request->gender);
+        }
+
+        return view('user.therapist.client', compact('therapist', 'patients'));
     }
 
     /** ---------------- APPOINTMENTS ---------------- */
@@ -118,9 +181,10 @@ class IndtherapistController extends ptController
             ->orderBy('appointment_time', 'desc')
             ->get();
 
-        // keep unique patient listing if desired by view (original did this)
+        // Get unique patients (latest appointment for each patient)
         $appointments = $appointments->unique('patient_id')->values();
 
+        // Add record count for each patient
         foreach ($appointments as $appointment) {
             $appointment->record_count = Appointment::where('provider_id', $appointment->provider_id)
                 ->where('patient_id', $appointment->patient_id)
@@ -131,71 +195,4 @@ class IndtherapistController extends ptController
         return view('user.therapist.independent.appointment', compact('appointments'));
     }
 
-    public function updateAppointmentStatus(Request $request, $id)
-    {
-        return parent::updateAppointmentStatus($request, $id);
-    }
-
-    /** ---------------- CLIENTS ---------------- */
-    public function clients(Request $request)
-    {
-        $user = Auth::user();
-
-        $patients = $this->getPatientsFor($user->id, User::class);
-
-        if ($request->filled('search')) {
-            $patients = $patients->filter(fn ($p) =>
-                str_contains(strtolower($p->name), strtolower($request->search))
-            );
-        }
-
-        if ($request->filled('gender')) {
-            $patients = $patients->filter(fn ($p) => $p->gender === $request->gender);
-        }
-
-        return view('User.Therapist.client', compact('user', 'patients'));
-    }
-
-    /** ---------------- PROFILE ---------------- */
-    public function profile()
-    {
-        $data = $this->getProfileData();
-        return view('user.therapist.independent.profile', $data);
-
-    }
-
-    /** ---------------- PATIENT PROFILE ---------------- */
-    public function patientProfile($id)
-    {
-        $therapist = Auth::user();
-
-        $patient = User::where('role', 'patient')->findOrFail($id);
-
-        $appointments = Appointment::where('patient_id', $patient->id)
-            ->where('provider_id', $therapist->id)
-            ->where('provider_type', User::class)
-            ->orderBy('appointment_date', 'desc')
-            ->orderBy('appointment_time', 'desc')
-            ->get();
-
-        return view('user.therapist.patient_profile', compact('patient', 'appointments'));
-    }
-    public function getUnreadCounts()
-    {
-        $unreadMessages = \App\Models\Message::where('receiver_id', auth()->id())
-            ->where('is_read', false)
-            ->count();
-        
-        // For therapists: show pending appointments that need their attention
-        $pendingAppointments = \App\Models\Appointment::where('provider_id', auth()->id())
-            ->where('provider_type', \App\Models\User::class)
-            ->where('status', 'pending')
-            ->whereDate('appointment_date', '>=', now())
-            ->count();
-        
-        return response()->json([
-            'messages' => $unreadMessages,
-            'appointments' => $pendingAppointments
-        ]);
-    }
 }

@@ -27,13 +27,9 @@ class ptController extends Controller
     {
         $user = Auth::user();
 
-        $providerType = $user->role === 'clinic'
-            ? \App\Models\Clinic::class
-            : \App\Models\User::class;
-
         return [
             'provider_id' => $user->id,
-            'provider_type' => $providerType,
+            'provider_type' => User::class,
         ];
     }
 
@@ -61,6 +57,7 @@ class ptController extends Controller
             'price' => $existingPrice,
         ];
     }
+
     public function updateProfile(Request $request)
     {
         $request->validate([
@@ -70,7 +67,6 @@ class ptController extends Controller
         $user = Auth::user();
 
         if ($request->hasFile('profile_picture')) {
-            // store in storage/app/public/profile_pictures
             $path = $request->file('profile_picture')
                     ->store('profile_pictures', 'public');
 
@@ -81,7 +77,6 @@ class ptController extends Controller
 
         return back()->with('success', 'Profile picture updated successfully.');
     }
-    
 
     public function updateInfo(Request $request)
     {
@@ -123,6 +118,7 @@ class ptController extends Controller
 
         return back()->with('success', 'Profile updated successfully.');
     }
+
     public function updatePassword(Request $request)
     {
         $request->validate([
@@ -168,7 +164,6 @@ class ptController extends Controller
     /**
      * Shared dashboard data for a provider 
      */
-
     protected function getDashboardData()
     {
         $user = Auth::user();
@@ -225,7 +220,6 @@ class ptController extends Controller
         ];
     }
 
-
     /**
      * Shared settings page
      */
@@ -238,13 +232,15 @@ class ptController extends Controller
     /**
      * Fetch therapist/clinic services as array
      */
-    protected function getServices($provider)
+    public function getServices($therapist)
     {
-        $raw = TherapistService::where('serviceable_id', $provider->id)
-            ->where('serviceable_type', get_class($provider))
-            ->value('appointment_type');
+        $service = TherapistService::where('serviceable_id', $therapist->id)
+            ->where('serviceable_type', get_class($therapist))
+            ->first();
 
-        return $raw ? array_filter(array_map('trim', explode(',', $raw))) : [];
+        if (!$service) return [];
+
+        return json_decode($service->appointment_type, true) ?? [];
     }
 
     /**
@@ -255,10 +251,10 @@ class ptController extends Controller
         TherapistService::updateOrCreate(
             [
                 'serviceable_id' => $provider->id,
-                'serviceable_type' => get_class($provider),
+                'serviceable_type' => User::class,
             ],
             [
-                'appointment_type' => implode(',', $types),
+                'appointment_type' => json_encode($types),
                 'price' => $price,
             ]
         );
@@ -368,15 +364,44 @@ class ptController extends Controller
     }
 
     /**
+     * View patient profile 
+     */
+    public function patientProfile($patientId)
+    {
+        $user = Auth::user();
+        $patient = User::findOrFail($patientId);
+
+        // Restrict access to only patients under this provider
+        $isLinked = Appointment::where('provider_id', $user->id)
+            ->where('provider_type', User::class)
+            ->where('patient_id', $patientId)
+            ->exists();
+
+        if (!$isLinked) {
+            abort(403, 'Unauthorized access to this patient.');
+        }
+
+        // Get appointment history for this patient with this provider
+        $appointments = Appointment::where('provider_id', $user->id)
+            ->where('provider_type', User::class)
+            ->where('patient_id', $patientId)
+            ->orderBy('appointment_date', 'desc')
+            ->get();
+
+        return view('user.therapist.patient_profile', compact('patient', 'appointments'));
+    }
+
+    /**
      * Patient medical records view
      */
     public function patient_records($patientId)
     {
+        $user = Auth::user();
         $patient = User::findOrFail($patientId);
 
-        // restrict access to only patients under this provider
-        $provider = $this->getProviderQuery();
-        $isLinked = Appointment::where($provider)
+        // Restrict access to only patients under this provider
+        $isLinked = Appointment::where('provider_id', $user->id)
+            ->where('provider_type', User::class)
             ->where('patient_id', $patientId)
             ->exists();
 
@@ -451,7 +476,7 @@ class ptController extends Controller
         ]);
 
         $appointment = Appointment::findOrFail($id);
-        $patientId = $appointment->patient_id; // Store patient ID before updating
+        $patientId = $appointment->patient_id;
         
         $appointment->status = $request->input('status');
         $appointment->save();
@@ -504,6 +529,4 @@ class ptController extends Controller
             ->count();
         broadcast(new AppointmentUpdateEvent($userId, $appointmentCount));
     }
-
 }
-
