@@ -7,54 +7,72 @@ use Illuminate\Support\Facades\Auth;
 
 class SubscriptionController extends Controller
 {
-    // Show subscription details
+    // Define plans once
+    protected $plans = [
+        'pro solo' => [
+            'name' => 'Pro Solo',
+            'price' => '₱499 /month',
+            'description' => 'For Independent Physical Therapists',
+            'features' => [
+                'Profile listing in HealConnect',
+                'Access to all features',
+                'Individual client management tools',
+            ],
+        ],
+        'pro clinic' => [
+            'name' => 'Pro Clinic',
+            'price' => '₱999 /month',
+            'description' => 'For Clinics or Therapy Teams',
+            'features' => [
+                'Profile listing in HealConnect',
+                'Multiple therapist profiles',
+                'Access to all features',
+                'Team management & scheduling tools',
+            ],
+        ],
+    ];
+
+    // Show pricing page with all plans
+    public function index()
+    {
+        return view('pricing', ['plans' => $this->plans]);
+    }
+
+    // Show single plan details
     public function show($plan)
     {
-        $plans = [
-            'basic' => [
-                'name' => 'Basic Plan',
-                'price' => '₱0', // or monthly fee later
-                'features' => [
-                    'Profile listing in HealConnect',
-                    'Access to all features',
-                    'Priority support',
-                    'Individual client management tools',
-                ],
-            ],
-            'premium' => [
-                'name' => 'Premium Plan',
-                'price' => '₱0', // or monthly fee later
-                'features' => [
-                    'Profile listing in HealConnect',
-                    'Multiple therapist profiles',
-                    'Access to all features',
-                    'Priority support',
-                    'Team management & scheduling tools',
-                ],
-            ],
-        ];
-
-        if (!array_key_exists($plan, $plans)) {
+        if (!array_key_exists($plan, $this->plans)) {
             abort(404, 'Plan not found.');
         }
 
-        return view('subscriptions.show', [
+        return view('subscription.show', [
             'planKey' => $plan,
-            'plan' => $plans[$plan],
+            'plan' => $this->plans[$plan],
         ]);
     }
 
-    // Store subscription choice
+    // Activate subscription
     public function store(Request $request, $plan)
     {
         if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'Please log in to subscribe.');
         }
 
+        if (!array_key_exists($plan, $this->plans)) {
+            abort(404, 'Plan not found.');
+        }
+
         $user = Auth::user();
-        $user->plan = $plan; 
+        $user->plan = $plan;
+        $user->subscription_status = 'active';
         $user->save();
 
-        return redirect()->route('dashboard')->with('success', 'You have subscribed to the ' . ucfirst($plan) . ' plan!');
+        if ($user->role === 'clinic') {
+            return redirect()->route('clinic.home')
+                             ->with('success', 'You have activated the ' . ucfirst($plan) . ' plan!');
+        }
+
+        return redirect()->route('therapist.home')
+                         ->with('success', 'You have activated the ' . ucfirst($plan) . ' plan!');
     }
 }

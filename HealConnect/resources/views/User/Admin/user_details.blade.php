@@ -75,6 +75,11 @@
                 <label><strong>Experience (Years)</strong></label>
                 <input type="text" class="form-control" value="{{ round($user->experience_years ?? 0) }}" readonly>
             </div>
+            <div class="form-group">
+                <label><strong>Subscription Status</strong></label>
+                <input type="text" class="form-control" 
+                    value="{{ ucfirst($user->subscription_status ?? 'Not Subscribed') }}" readonly>
+            </div>
         @endif
 
         {{-- Clinic Employees Section --}}

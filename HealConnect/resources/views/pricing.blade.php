@@ -55,33 +55,19 @@
                 </p>
             </section>
 
-            <div class="pricing-card basic">
-                <h2>Basic Plan</h2>
-                <p class="price">₱50,000 /month</p>
-                <h4>For Independent Physical Therapists</h4>
-                <ul>
-                    <li>Profile listing in HealConnect</li>
-                    <li>Access to appointment and patient management tools</li>
-                    <li>Track patient progress and therapy sessions</li>
-                    <li>Secure messaging and file sharing</li>
-                    <li>Standard support</li>
-                </ul>
-                <a href="{{ url('/logandsign') }}?plan=basic" class="btn btn-primary">Get Started</a>
-            </div>
-
-            <div class="pricing-card premium">
-                <h2>Premium Plan</h2>
-                <p class="price">₱100,000/month</p>
-                <h4>For Clinics or Therapy Teams</h4>
-                <ul>
-                    <li>Profile listing in HealConnect</li>
-                    <li>Multiple therapist profiles under one account</li>
-                    <li>Team and schedule management dashboard</li>
-                    <li>Advanced analytics and patient reports</li>
-                    <li>Priority support with dedicated account manager</li>
-                </ul>
-                <a href="{{ url('/logandsign') }}?plan=premium" class="btn btn-primary">Get Started</a>
-            </div>
+            @foreach ($plans as $key => $plan)
+                <div class="pricing-card {{ $key }}">
+                    <h2>{{ $plan['name'] }}</h2>
+                    <p class="price">{{ $plan['price'] }}</p>
+                    <h4>{{ $plan['description'] }}</h4>
+                    <ul>
+                        @foreach ($plan['features'] as $feature)
+                            <li>{{ $feature }}</li>
+                        @endforeach
+                    </ul>
+                    <a href="{{ url('/logandsign') }}?plan={{ $key }}" class="btn btn-primary">Get Started</a>
+                </div>
+            @endforeach
         </div>
         <p class="pricing-note">
             <em>Note: Each therapist on HealConnect sets their own session rates. 

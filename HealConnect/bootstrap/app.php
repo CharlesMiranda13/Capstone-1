@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // admin middleware
         $middleware->alias([
             'check.status' => \App\Http\Middleware\CheckUserStatus::class,
+            'check.subscription' => \App\Http\Middleware\CheckSubscription::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
