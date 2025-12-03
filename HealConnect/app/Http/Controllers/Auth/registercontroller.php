@@ -84,7 +84,7 @@ class RegisterController extends Controller
             : null;
 
         $startDate = ($type === 'clinic' || $type === 'therapist')
-            ? $request->start_year . '-01-01'
+            ? $request->start_year 
             : null;
 
         // Create user
@@ -107,6 +107,8 @@ class RegisterController extends Controller
                 ? implode(',', $request->specialization)
                 : null,
             'start_year' => $startDate,
+            'plan'=> null,
+            'subscription_status' => 'inactive',
         ]);
 
         // Send verification email

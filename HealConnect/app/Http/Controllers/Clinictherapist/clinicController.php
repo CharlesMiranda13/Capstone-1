@@ -17,6 +17,8 @@ class ClinicController extends ptController
     public function dashboard()
     {
         $clinic = Auth::user();
+        $now = Carbon::now();
+        $daysInMonth = $now->daysInMonth;
 
         // Count therapists under the clinic
         $totalTherapists = User::where('clinic_id', $clinic->id)
@@ -56,9 +58,16 @@ class ClinicController extends ptController
         $appointments = Appointment::where('provider_id', $clinic->id)
             ->where('provider_type', User::class)
             ->with(['patient'])
-            ->where('appointment_date', '>=', now())
+           ->whereDate('appointment_date', '>=', today())
             ->orderBy('appointment_date')
             ->get();
+        $appointmentsQuery = Appointment::where('provider_id', $clinic->id)
+            ->where('provider_type', User::class);
+
+        $monthlyData = collect(range(1, $daysInMonth))->map(function ($day) use ($now, $appointmentsQuery) {
+            $date = $now->copy()->startOfMonth()->addDays($day - 1)->toDateString();
+            return (clone $appointmentsQuery)->whereDate('appointment_date', $date)->count();
+        });
 
         return view('user.therapist.clinic.clinic', compact(
             'clinic',
@@ -68,7 +77,8 @@ class ClinicController extends ptController
             'pendingAppointments',
             'appointmentTypes',
             'appointments',
-            'totalTherapists'
+            'totalTherapists',
+            'monthlyData'
         ));
     }
 
