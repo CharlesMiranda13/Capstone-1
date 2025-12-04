@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{ asset('css/tts.css') }}">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    @yield('styles')
 </head>
 <body class="@yield('body-class')">
     @yield('loading')
@@ -20,12 +21,24 @@
         @include('header/footer.header')
 
         <main>
+            @if(session('success'))
+                <div class="alert alert-success" style="text-align:center; margin:20px auto;">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger" style="text-align:center; margin:20px auto;">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             @yield('content')
         </main>
 
         @include('header/footer.footer')
     </div>
-
+    <script src="https://meet.jit.si/external_api.js"></script>
     <script src="{{ asset('js/include.js') }}"></script>
     <script src="{{ asset('js/loading.js') }}"></script>
     <script src="{{ asset('js/tts.js') }}"></script>

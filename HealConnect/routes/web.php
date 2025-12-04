@@ -45,6 +45,16 @@ Route::get('/ptlist', [PatientController::class, 'publicTherapists'])->name('ptl
 Route::get('/therapists/{id}/profile', [PatientController::class, 'publicTherapistProfile'])
     ->name('view_profile');
 
+Route::get('/terms', function () {
+    $settings = \App\Models\Setting::first();
+    return view('legal.term&conditions', compact('settings'));
+})->name('terms');
+
+Route::get('/privacy-policy', function () {
+    $settings = \App\Models\Setting::first();
+    return view('legal.privacy_policy', compact('settings'));
+})->name('privacy');
+
 /* User Authentication (Patients, Therapists, Clinics)*/
 
 Route::prefix('auth')->group(function () {

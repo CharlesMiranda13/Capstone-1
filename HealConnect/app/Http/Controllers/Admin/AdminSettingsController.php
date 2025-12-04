@@ -52,7 +52,7 @@ class AdminSettingsController extends Controller
         $settings->system_name = $request->input('system_name', $settings->system_name);
         $settings->description = $request->input('description', $settings->description);
         $settings->contact_email = $request->input('contact_email', $settings->contact_email);
-        $settings->phone_number = $request->input('phone_number', $settings->phone_number);
+       // $settings->phone_number = $request->input('phone_number', $settings->phone_number);
         $settings->terms = $request->input('terms', $settings->terms);
         $settings->privacy = $request->input('privacy', $settings->privacy);
 
