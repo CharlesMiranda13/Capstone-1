@@ -19,16 +19,17 @@
 
 @section('title', 'Subscription Required')
 
+
 @section('content')
 <div class="subscription-warning" style="text-align:center; margin-top:50px;">
     <h2>Your Plan is Inactive</h2>
 
     @if($user->role === 'clinic')
         <p>You must activate your subscription to continue using Clinic features.</p>
-        <a href="{{ route('subscribe.show', 'pro clinic') }}" class="btn btn-primary btn-lg">Choose Plan</a>
+        <a href="{{ route('subscribe.show', 'pro clinic') }}" class="btn btn-primary btn-lg">Activate Now</a>
     @elseif($user->role === 'therapist')
         <p>You must activate your subscription to continue offering therapy services.</p>
-        <a href="{{ route('subscribe.show', 'pro solo') }}" class="btn btn-primary btn-lg">Choose Plan</a>
+        <a href="{{ route('subscribe.show', 'pro solo') }}" class="btn btn-primary btn-lg">Activate Now</a>
     @endif
 </div>
 @endsection

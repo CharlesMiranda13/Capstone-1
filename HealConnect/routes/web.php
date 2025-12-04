@@ -33,7 +33,7 @@ Route::get('/More', function () {
     return view('more');
 });
 Route::view('/services', 'services')->name('services');
-Route::get('/pricing', [SubscriptionController::class, 'index'])->name('pricing');
+Route::get('/pricing', [SubscriptionController::class, 'index'])->name('pricing.index');
 Route::get('/contact', function () {
     $settings = Setting::first(); 
     return view('contact', compact('settings'));
@@ -102,6 +102,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::patch('/users/{id}/verify', [UserController::class, 'verify'])->name('users.verify');
         Route::patch('/users/{id}/decline', [UserController::class, 'decline'])->name('users.decline');
         Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
+        // Subscription Management Routes
+        Route::get('/subscriptions', [\App\Http\Controllers\Admin\SubscriptionManagementController::class, 'index'])
+            ->name('subscriptions.index');
+        Route::get('/subscriptions/{id}', [\App\Http\Controllers\Admin\SubscriptionManagementController::class, 'show'])
+            ->name('subscriptions.show');
+        Route::patch('/subscriptions/{id}/status', [\App\Http\Controllers\Admin\SubscriptionManagementController::class, 'updateStatus'])
+            ->name('subscriptions.updateStatus');
+        Route::post('/subscriptions/{id}/activate', [\App\Http\Controllers\Admin\SubscriptionManagementController::class, 'manualActivate'])
+            ->name('subscriptions.manualActivate');
+        Route::delete('/subscriptions/{id}/cancel', [\App\Http\Controllers\Admin\SubscriptionManagementController::class, 'cancel'])
+            ->name('subscriptions.cancel');
 
         Route::post('/logout', function () {
             auth()->guard('admin')->logout();
@@ -270,6 +282,15 @@ Route::prefix('subscribe')->name('subscribe.')->group(function () {
     Route::get('/{plan}', [SubscriptionController::class, 'show'])->name('show');
     Route::post('/{plan}', [SubscriptionController::class, 'store'])->name('store');
 });
+
+// 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/payment', [SubscriptionController::class, 'showPayment'])->name('payment.show');
+    Route::post('/payment/checkout', [SubscriptionController::class, 'createCheckoutSession'])->name('payment.checkout');
+    Route::get('/payment/success', [SubscriptionController::class, 'paymentSuccess'])->name('payment.success');
+    Route::get('/payment/cancel', [SubscriptionController::class, 'paymentCancel'])->name('payment.cancel');
+});
+
 // Subscription required page
 Route::get('/subscription/required', function() {
     return view('subscription.required');
