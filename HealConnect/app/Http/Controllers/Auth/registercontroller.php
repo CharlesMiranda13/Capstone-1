@@ -48,6 +48,11 @@ class RegisterController extends Controller
                 'Gender' => 'required|string',
             ]);
         } 
+        
+        if ($type == 'clinic') {
+            $rules['clinic_type'] = 'required|in:public,private';
+        }
+        
         if ($type == 'clinic' || $type == "therapist") {
             $rules['license'] = 'required|file|mimes:jpg,jpeg,png,pdf|max:2048';
             $rules['start_year'] = 'required|integer|min:1900|max:' . date('Y');
@@ -62,6 +67,8 @@ class RegisterController extends Controller
             'password.confirmed' => 'The password confirmation does not match.',
             'ValidID.mimes' => 'The Valid ID must be a file of type: jpg, jpeg, png, pdf.',
             'License.mimes' => 'The License must be a file of type: jpg, jpeg, png, pdf.',
+            'clinic_type.required' => 'Please select the clinic type.',
+            'clinic_type.in' => 'Invalid clinic type selected.',
         ];
 
         $request->validate($rules, $messages);
@@ -77,7 +84,6 @@ class RegisterController extends Controller
             'front' => $front,
             'back' => $back
         ]);
-
 
         $licensePath = ($type === 'clinic' || $type === 'therapist')
             ? $request->file('license')->store('licenses', 'public')
@@ -107,6 +113,7 @@ class RegisterController extends Controller
                 ? implode(',', $request->specialization)
                 : null,
             'start_year' => $startDate,
+            'clinic_type' => $type === 'clinic' ? $request->clinic_type : null, 
             'plan'=> null,
             'subscription_status' => 'inactive',
         ]);

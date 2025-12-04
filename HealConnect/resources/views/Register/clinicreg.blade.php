@@ -21,9 +21,20 @@
 
     <form action="{{ route('register.store', ['type' => 'clinic']) }}" method="POST" class="register-form" enctype="multipart/form-data">
         @csrf
-
         <label for="Fname">Clinic Name:</label>
         <input type="text" id="Fname" name="Fname" required value="{{ old('Fname') }}"/>
+
+        <div class="form-group">
+            <label for="clinic_type" class="form-label">Clinic Type:</label>
+            <select id="clinic_type" name="clinic_type" required>
+                <option value="">Select Clinic Type</option>
+                <option value="public" {{ old('clinic_type') == 'public' ? 'selected' : '' }}>Public</option>
+                <option value="private" {{ old('clinic_type') == 'private' ? 'selected' : '' }}>Private</option>
+            </select>
+            @error('clinic_type')
+                <small style="color:red;">{{ $message }}</small>
+            @enderror
+        </div>
 
         <label for="address">Clinic Address:</label>
         <input type="text" id="address" name="address" required value="{{ old('address') }}"/>

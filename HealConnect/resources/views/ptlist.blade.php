@@ -64,6 +64,12 @@
                             <img src="{{ asset('images/logo1.png') }}" alt="Default Therapist">
                         @endif
                     </div>
+                    
+                    @if($therapist->role === 'clinic' && $therapist->clinic_type)
+                        <span class="clinic-type-badge {{ $therapist->clinic_type }}">
+                            {{ ucfirst($therapist->clinic_type) }}
+                        </span>
+                    @endif
 
                     <h3 class="therapist-name">{{ $therapist->name }}</h3>
                     <p class="therapist-role">{{ ucfirst($therapist->role_display) }}</p>

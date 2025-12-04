@@ -1,6 +1,9 @@
 @extends('layouts.admin')
 
 @section('title', 'User Details')
+@section('styles')
+<link rel="stylesheet" href="{{ asset('Css/user_details.css') }}">
+@endsection
 
 @section('content')
 
@@ -15,17 +18,24 @@
 @endif
 
 <div class="user-details">
-    <h2 style="margin-bottom: 25px; text-align:center;">User Details</h2>
+    <h2 class="user-details-title">User Details</h2>
 
-    <div class="user-form" style="text-align: center;">
+    <div class="user-form">
 
         {{-- Profile Picture --}}
-        <div style="margin-bottom: 20px;">
+        <div class="profile-section">
             <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('images/logo1.png') }}" 
                  alt="Profile Picture" 
-                 style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #ccc;">
-            <h3 style="margin-top: 10px;">{{ $user->name }}</h3>
-            <p style="color: #666;">{{ ucfirst($user->role_display) }}</p>
+                 class="profile-picture">
+            <h3 class="profile-name">{{ $user->name }}</h3>
+            <p class="profile-role">{{ ucfirst($user->role_display) }}</p>
+            
+            {{-- Clinic Type Badge --}}
+            @if($user->role === 'clinic' && $user->clinic_type)
+                <span class="clinic-type-badge {{ $user->clinic_type }}">
+                    {{ ucfirst($user->clinic_type) }} Clinic
+                </span>
+            @endif
         </div>
 
         {{-- Basic Details --}}
@@ -56,18 +66,32 @@
             </div>
         @endif
 
+        {{-- Clinic Type as Field --}}
+        @if($user->role === 'clinic')
+            <div class="form-group">
+                <label><strong>Clinic Type</strong></label>
+                <input type="text" class="form-control" 
+                       value="{{ $user->clinic_type ? ucfirst($user->clinic_type) : 'Not Specified' }}" 
+                       readonly>
+            </div>
+        @endif
+
         {{-- Therapist / Clinic Details --}}
         @if (in_array($user->role, ['therapist','clinic']))
             <div class="form-group">
                 <label><strong>Specialization</strong></label>
                 @if ($user->specialization)
-                    <ul style="list-style: none; padding: 0;">
-                        @foreach(explode(',', $user->specialization) as $spec)
-                            <li>• {{ trim($spec) }}</li>
-                        @endforeach
-                    </ul>
+                    <div class="specialization-container">
+                        <ul class="specialization-list">
+                            @foreach(explode(',', $user->specialization) as $spec)
+                                <li class="specialization-badge">
+                                    {{ trim($spec) }}
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
                 @else
-                    <p>N/A</p>
+                    <p class="text-muted">N/A</p>
                 @endif
             </div>
 
@@ -84,15 +108,30 @@
 
         {{-- Clinic Employees Section --}}
         @if($user->role === 'clinic' && isset($employees) && $employees->count())
-            <div class="form-group" style="margin-top:25px;">
+            <div class="form-group employees-section">
                 <label><strong>Clinic Employees</strong></label>
-                <ul style="list-style:none; padding:0; margin-top:10px;">
-                    @foreach($employees as $emp)
-                        <li>
-                            {{ $emp->name }} ({{ $emp->email }}) 
-                        </li>
-                    @endforeach
-                </ul>
+                <div class="employees-container">
+                    <ul class="employees-list">
+                        @foreach($employees as $emp)
+                            <li class="employee-card">
+                                <div class="employee-info">
+                                    <div class="employee-name">{{ $emp->name }}</div>
+                                    <div class="employee-email">
+                                        <i class="fa fa-envelope"></i>
+                                        {{ $emp->email }}
+                                    </div>
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        @elseif($user->role === 'clinic')
+            <div class="form-group employees-section">
+                <label><strong>Clinic Employees</strong></label>
+                <div class="employees-empty">
+                    <p class="text-muted">No employees registered yet</p>
+                </div>
             </div>
         @endif
 
@@ -154,9 +193,10 @@
                     <p><em>No License submitted.</em></p>
                 @endif
             @endif
+        </div>
             
         {{-- Actions --}}
-        <div class="form-actions" style="margin-top: 25px; display:flex; justify-content:center; gap:15px;">
+        <div class="form-actions">
             {{-- APPROVE --}}
             <form action="{{ route('admin.users.verify', $user->id) }}" method="POST">
                 @csrf
@@ -171,42 +211,24 @@
 </div>
 
 {{-- DECLINE MODAL --}}
-<div id="declineModal" 
-     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
-            background:rgba(0,0,0,0.4); backdrop-filter:blur(3px); z-index:9999;">
+<div id="declineModal" class="decline-modal-overlay">
+    <div class="decline-modal-content">
+        <span class="closeDeclineModal decline-modal-close">&times;</span>
 
-    <div style="background:white; padding:25px; width:420px; 
-                margin:120px auto; border-radius:12px; 
-                box-shadow:0 8px 20px rgba(0,0,0,0.2); position:relative;">
-
-        {{-- Close Button --}}
-        <span class="closeDeclineModal" 
-              style="position:absolute; top:12px; right:15px; font-size:22px; cursor:pointer; color:#888;">
-            &times;
-        </span>
-
-        <h2 style="margin-bottom:15px; font-size:22px; font-weight:600; text-align:center;">
-            Decline User Verification
-        </h2>
+        <h2 class="decline-modal-title">Decline User Verification</h2>
+        
         <form action="{{ route('admin.users.decline', $user->id) }}" method="POST">
             @csrf
             @method('PATCH')
 
-            <textarea name="reason" rows="4" class="form-control" placeholder="Enter reason..." 
-                      required
-                      style="width:400px; padding:10px; border:1px solid #ccc; 
-                             border-radius:8px; resize:none; font-size:14px;"></textarea>
+            <textarea name="reason" rows="4" class="form-control decline-textarea" 
+                      placeholder="Enter reason..." required></textarea>
 
-            <div style="margin-top:20px; display:flex; justify-content:flex-end; gap:10px;">
-                <button type="button" onclick="closeDeclineModal()" 
-                        style="background:#ccc; border:none; padding:8px 14px; 
-                               border-radius:6px; font-size:14px; cursor:pointer;">
+            <div class="decline-modal-actions">
+                <button type="button" onclick="closeDeclineModal()" class="btn-cancel">
                     Cancel
                 </button>
-
-                <button type="submit" 
-                        style="background:#e74c3c; color:white; border:none; padding:8px 14px; 
-                               border-radius:6px; font-size:14px; cursor:pointer;">
+                <button type="submit" class="btn-decline">
                     Submit
                 </button>
             </div>

@@ -31,6 +31,7 @@ class User extends Authenticatable
         'specialization',
         'address',
         'start_year',
+        'clinic_type',
         'valid_id_path',
         'license_path',
         'clinic_id',

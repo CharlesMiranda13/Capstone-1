@@ -1,0 +1,278 @@
+/* User Details Page Styles */
+
+.user-details-title {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.user-form {
+    text-align: center;
+}
+
+/* Profile Section */
+.profile-section {
+    margin-bottom: 20px;
+}
+
+.profile-picture {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ccc;
+}
+
+.profile-name {
+    margin-top: 10px;
+}
+
+.profile-role {
+    color: #666;
+}
+
+/* Clinic Type Badge */
+.clinic-type-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 8px;
+}
+
+.clinic-type-badge.public {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.clinic-type-badge.private {
+    background-color: #cce5ff;
+    color: #004085;
+    border: 1px solid #b8daff;
+}
+
+/* Specialization Styles */
+.specialization-container {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 4px solid #0077b6;
+    margin-top: 10px;
+}
+
+.specialization-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.specialization-badge {
+    background: linear-gradient(135deg, #0077b6, #023e8a);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba(0, 119, 182, 0.3);
+    transition: transform 0.2s ease;
+}
+
+.specialization-badge:hover {
+    transform: translateY(-2px);
+}
+
+/* Clinic Employees Styles */
+.employees-section {
+    margin-top: 25px;
+}
+
+.employees-container {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid #28a745;
+    margin-top: 10px;
+}
+
+.employees-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.employee-card {
+    background: white;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.employee-card:last-child {
+    margin-bottom: 0;
+}
+
+.employee-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+.employee-info {
+    flex: 1;
+    text-align: left;
+}
+
+.employee-name {
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+}
+
+.employee-email {
+    color: #666;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.employee-email i {
+    margin-right: 5px;
+    color: #0077b6;
+}
+
+.employees-empty {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Text Muted */
+.text-muted {
+    color: #999;
+    font-style: italic;
+    margin: 0;
+}
+
+/* Form Actions */
+.form-actions {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* Decline Modal Styles */
+.decline-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(3px);
+    z-index: 9999;
+}
+
+.decline-modal-content {
+    background: white;
+    padding: 25px;
+    width: 420px;
+    margin: 120px auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.decline-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    font-size: 22px;
+    cursor: pointer;
+    color: #888;
+}
+
+.decline-modal-title {
+    margin-bottom: 15px;
+    font-size: 22px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.decline-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    resize: none;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.decline-modal-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-cancel {
+    background: #ccc;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-decline {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-cancel:hover {
+    background: #b3b3b3;
+}
+
+.btn-decline:hover {
+    background: #c0392b;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .specialization-list {
+        justify-content: flex-start;
+    }
+
+    .employee-info {
+        text-align: center;
+    }
+
+    .decline-modal-content {
+        width: 90%;
+        margin: 60px auto;
+    }
+
+    .decline-textarea {
+        width: 100%;
+    }
+}

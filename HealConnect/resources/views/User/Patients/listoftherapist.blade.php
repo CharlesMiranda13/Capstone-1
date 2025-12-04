@@ -66,8 +66,6 @@
 
             @foreach($therapists as $therapist)
                 <div class="therapist-card">
-
-                    {{-- White Section: Profile Picture, Name, Role, Description, Location --}}
                     <div class="therapist-logo">
                         @if($therapist->profile_picture)
                             <img src="{{ asset('storage/' .$therapist->profile_picture) }}" alt="{{ $therapist->name }}">
@@ -75,6 +73,12 @@
                             <img src="{{ asset('images/logo1.png') }}" alt="Default Therapist">
                         @endif
                     </div>
+
+                    @if($therapist->role === 'clinic' && $therapist->clinic_type)
+                        <span class="clinic-type-badge {{ $therapist->clinic_type }}">
+                            {{ ucfirst($therapist->clinic_type) }}
+                        </span>
+                    @endif
 
                     <h3 class="therapist-name">{{ $therapist->name }}</h3>
                     <p class="therapist-role">{{ ucfirst($therapist->role_display) }}</p>
@@ -88,10 +92,8 @@
                         {{ $therapist->address ?? 'Location not specified' }}
                     </p>
 
-                    {{-- Spacer to push footer to bottom --}}
                     <div class="card-spacer"></div>
-
-                    {{-- Blue Section Container: Availability and Action Buttons --}}
+                    
                     <div class="therapist-card-footer">
                         @if($therapist->availability->where('is_active', true)->count() > 0)
                             <span class="availability-status available">

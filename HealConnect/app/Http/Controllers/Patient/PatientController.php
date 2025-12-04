@@ -127,19 +127,22 @@ class PatientController extends Controller
 
     private function filterTherapists(Request $request)
     {
-        $query = User::verifiedTherapists()->with('services');
+        $query = User::verifiedTherapists()
+            ->where('subscription_status', 'active') 
+            ->with('services');
 
         if ($request->filled('category')) {
             $query->where('role', $request->category === 'independent' ? 'therapist' : 'clinic');
         }
 
         if ($request->filled('service')) {
-            $query->whereHas('services', fn($q) => $q->where('appointment_type', 'like', '%' . $request->service . '%'));
+            $query->whereHas('services', fn($q) =>
+                $q->where('appointment_type', 'like', '%' . $request->service . '%')
+            );
         }
 
         return $query->paginate(10);
     }
-
     private function loadTherapist($id)
     {
         $therapist = User::verifiedTherapists()->with('services')->findOrFail($id);

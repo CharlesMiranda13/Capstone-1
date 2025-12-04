@@ -27,7 +27,7 @@
         <a href="{{ route('admin.manage-users') }}" class = "sidebar-item {{ request()->routeIs('admin.manage-users') ? 'active' : ''}}">
             <i class="fa-solid fa-users"></i> Manage Users</a>
         <a href="{{ route('admin.viewreports') }}"class = "sidebar-item {{ request()->routeIs('admin.viewreports') ? 'active' : ''}}">
-            <i class="fa-solid fa-chart-bar"></i> View Reports</a>
+            <i class="fa-solid fa-chart-bar"></i> System Reports</a>
         <a href="{{ route('admin.contact_messages') }}"class = "sidebar-item {{ request()->routeIs('admin.contact_messages') ? 'active' : ''}}">
             <i class="fa-solid fa-area-chart"></i> User Concern</a>
         <a href="{{ route('admin.setting') }}" class = "sidebar-item {{ request()->routeIs('admin.setting') ? 'active' : ''}}">
