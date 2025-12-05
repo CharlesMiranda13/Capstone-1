@@ -58,6 +58,61 @@
             <label><strong>Phone</strong></label>
             <input type="text" class="form-control" value="{{ $user->phone ?? 'Not Specified' }}" readonly>
         </div>
+        
+        <div class="form-group">
+            <label><strong>Address</strong></label>
+            @if($user->street || $user->city)
+                {{-- If structured address components exist, display them nicely --}}
+                <div class="address-details">
+                    @if($user->street)
+                        <div class="address-line">
+                            <small class="address-label">Street:</small>
+                            <span>{{ $user->street }}</span>
+                        </div>
+                    @endif
+                    
+                    @if($user->barangay)
+                        <div class="address-line">
+                            <small class="address-label">Barangay:</small>
+                            <span>{{ $user->barangay }}</span>
+                        </div>
+                    @endif
+                    
+                    @if($user->city)
+                        <div class="address-line">
+                            <small class="address-label">City/Municipality:</small>
+                            <span>{{ $user->city }}</span>
+                        </div>
+                    @endif
+                    
+                    @if($user->province)
+                        <div class="address-line">
+                            <small class="address-label">Province:</small>
+                            <span>{{ $user->province }}</span>
+                        </div>
+                    @endif
+                    
+                    @if($user->region)
+                        <div class="address-line">
+                            <small class="address-label">Region:</small>
+                            <span>{{ $user->region }}</span>
+                        </div>
+                    @endif
+                    
+                    @if($user->postal_code)
+                        <div class="address-line">
+                            <small class="address-label">Postal Code:</small>
+                            <span>{{ $user->postal_code }}</span>
+                        </div>
+                    @endif
+                </div>
+            @elseif($user->address)
+                {{-- Fallback to single address field if components don't exist --}}
+                <textarea class="form-control" readonly rows="3">{{ $user->address }}</textarea>
+            @else
+                <input type="text" class="form-control" value="Not Specified" readonly>
+            @endif
+        </div>
 
         @if ($user->role !== 'clinic')
             <div class="form-group">
