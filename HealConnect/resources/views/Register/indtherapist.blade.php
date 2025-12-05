@@ -39,8 +39,88 @@
             </div>
         </div>
 
-        <label for="address">Address:</label>
-        <input type="text" id="address" name="address" required />
+        <div class="form-row">
+            <div class="form-col">
+                <label for="street">Street Address:</label>
+                <input type="text" id="street" name="street" required 
+                    placeholder="House No., Street Name" 
+                    value="{{ old('street') }}" />
+                @error('street')
+                    <small style="color:red;">{{ $message }}</small>
+                @enderror
+            </div>
+            <div class="form-col">
+                <label for="barangay">Barangay:</label>
+                <input type="text" id="barangay" name="barangay" required 
+                    value="{{ old('barangay') }}" />
+                @error('barangay')
+                    <small style="color:red;">{{ $message }}</small>
+                @enderror
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col">
+                <label for="city">City/Municipality:</label>
+                <input type="text" id="city" name="city" required 
+                    value="{{ old('city') }}" />
+                @error('city')
+                    <small style="color:red;">{{ $message }}</small>
+                @enderror
+            </div>
+            <div class="form-col">
+                <label for="province">Province:</label>
+                <input type="text" id="province" name="province" required 
+                    value="{{ old('province') }}" />
+                @error('province')
+                    <small style="color:red;">{{ $message }}</small>
+                @enderror
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col">
+                <label for="postal_code">Postal/ZIP Code:</label>
+                <input type="text" id="postal_code" name="postal_code" 
+                    pattern="^\d{4}$" 
+                    maxlength="4" 
+                    placeholder="1234"
+                    value="{{ old('postal_code') }}" />
+                @error('postal_code')
+                    <small style="color:red;">{{ $message }}</small>
+                @enderror
+            </div>
+            <div class="form-col">
+                <label for="region">Region:</label>
+                <select id="region" name="region" required>
+                    <option value="">--Select Region--</option>
+                    <option value="NCR" {{ old('region') == 'NCR' ? 'selected' : '' }}>NCR - National Capital Region</option>
+                    <option value="CAR" {{ old('region') == 'CAR' ? 'selected' : '' }}>CAR - Cordillera Administrative Region</option>
+                    <option value="Region I" {{ old('region') == 'Region I' ? 'selected' : '' }}>Region I - Ilocos Region</option>
+                    <option value="Region II" {{ old('region') == 'Region II' ? 'selected' : '' }}>Region II - Cagayan Valley</option>
+                    <option value="Region III" {{ old('region') == 'Region III' ? 'selected' : '' }}>Region III - Central Luzon</option>
+                    <option value="Region IV-A" {{ old('region') == 'Region IV-A' ? 'selected' : '' }}>Region IV-A - CALABARZON</option>
+                    <option value="Region IV-B" {{ old('region') == 'Region IV-B' ? 'selected' : '' }}>Region IV-B - MIMAROPA</option>
+                    <option value="Region V" {{ old('region') == 'Region V' ? 'selected' : '' }}>Region V - Bicol Region</option>
+                    <option value="Region VI" {{ old('region') == 'Region VI' ? 'selected' : '' }}>Region VI - Western Visayas</option>
+                    <option value="Region VII" {{ old('region') == 'Region VII' ? 'selected' : '' }}>Region VII - Central Visayas</option>
+                    <option value="Region VIII" {{ old('region') == 'Region VIII' ? 'selected' : '' }}>Region VIII - Eastern Visayas</option>
+                    <option value="Region IX" {{ old('region') == 'Region IX' ? 'selected' : '' }}>Region IX - Zamboanga Peninsula</option>
+                    <option value="Region X" {{ old('region') == 'Region X' ? 'selected' : '' }}>Region X - Northern Mindanao</option>
+                    <option value="Region XI" {{ old('region') == 'Region XI' ? 'selected' : '' }}>Region XI - Davao Region</option>
+                    <option value="Region XII" {{ old('region') == 'Region XII' ? 'selected' : '' }}>Region XII - SOCCSKSARGEN</option>
+                    <option value="Region XIII" {{ old('region') == 'Region XIII' ? 'selected' : '' }}>Region XIII - Caraga</option>
+                    <option value="BARMM" {{ old('region') == 'BARMM' ? 'selected' : '' }}>BARMM - Bangsamoro Autonomous Region</option>
+                </select>
+                @error('region')
+                    <small style="color:red;">{{ $message }}</small>
+                @enderror
+            </div>
+        </div>
+
+        <small style="font-size: 12px; color: gray; display: block; margin-bottom: 15px;">
+            Please provide your complete and accurate address for verification purposes.
+        </small>
 
         <label for="phone">Phone Number:</label>
         <input type="tel" id="phone" name="phone" 

@@ -32,7 +32,12 @@ class RegisterController extends Controller
         $rules = [
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
-            'address' => 'required|string|max:255',
+            'street' => 'required|string|max:255',
+            'barangay' => 'required|string|max:100',
+            'city' => 'required|string|max:100',
+            'province' => 'required|string|max:100',
+            'region' => 'required|string|max:50',
+            'postal_code' => 'nullable|digits:4',
             'phone' => 'required|string|max:20',
             'ValidIDFront' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'ValidIDBack' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
@@ -57,6 +62,7 @@ class RegisterController extends Controller
             $rules['license'] = 'required|file|mimes:jpg,jpeg,png,pdf|max:2048';
             $rules['start_year'] = 'required|integer|min:1900|max:' . date('Y');
         }
+        
         if ($type == 'therapist' || $type == 'clinic') {
             $rules['specialization'] = 'nullable|array';
             $rules['specialization.*'] = 'string|max:255'; 
@@ -65,10 +71,17 @@ class RegisterController extends Controller
         $messages = [
             'email.unique' => 'The email has already been taken.',
             'password.confirmed' => 'The password confirmation does not match.',
-            'ValidID.mimes' => 'The Valid ID must be a file of type: jpg, jpeg, png, pdf.',
-            'License.mimes' => 'The License must be a file of type: jpg, jpeg, png, pdf.',
+            'ValidIDFront.mimes' => 'The Valid ID must be a file of type: jpg, jpeg, png, pdf.',
+            'ValidIDBack.mimes' => 'The Valid ID must be a file of type: jpg, jpeg, png, pdf.',
+            'license.mimes' => 'The License must be a file of type: jpg, jpeg, png, pdf.',
             'clinic_type.required' => 'Please select the clinic type.',
             'clinic_type.in' => 'Invalid clinic type selected.',
+            'street.required' => 'Street address is required.',
+            'barangay.required' => 'Barangay is required.',
+            'city.required' => 'City/Municipality is required.',
+            'province.required' => 'Province is required.',
+            'region.required' => 'Region is required.',
+            'postal_code.digits' => 'Postal code must be exactly 4 digits.',
         ];
 
         $request->validate($rules, $messages);
@@ -93,6 +106,9 @@ class RegisterController extends Controller
             ? $request->start_year 
             : null;
 
+        // Combine address fields into a structured format
+        $fullAddress = $this->formatAddress($request);
+
         // Create user
         $user = User::create([
             'name' => $type === 'clinic'
@@ -106,9 +122,16 @@ class RegisterController extends Controller
             'license_path' => $licensePath,
             'status' => 'Pending',
             'phone' => $request->phone,
-            'address' => $request->address,
-            'dob' => $request->dob,
-            'gender' => $request->Gender,
+            'address' => $fullAddress, // Using formatted address for backward compatibility
+            // Store individual address components
+            'street' => $request->street,
+            'barangay' => $request->barangay,
+            'city' => $request->city,
+            'province' => $request->province,
+            'region' => $request->region,
+            'postal_code' => $request->postal_code,
+            'dob' => $request->dob ?? null,
+            'gender' => $request->Gender ?? null,
             'specialization' => $request->has('specialization')
                 ? implode(',', $request->specialization)
                 : null,
@@ -125,5 +148,25 @@ class RegisterController extends Controller
         return redirect()->route('verification.notice')
                          ->with('email', $user->email)
                          ->with('info', 'A verification code has been sent to your gmail.');
+    }
+
+    /**
+     * Format address components into a single string
+     */
+    private function formatAddress(Request $request)
+    {
+        $addressParts = [
+            $request->street,
+            $request->barangay,
+            $request->city,
+            $request->province,
+            $request->region
+        ];
+
+        if ($request->filled('postal_code')) {
+            $addressParts[] = $request->postal_code;
+        }
+
+        return implode(', ', array_filter($addressParts));
     }
 }

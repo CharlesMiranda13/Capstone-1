@@ -30,6 +30,12 @@ class User extends Authenticatable
         'phone',
         'specialization',
         'address',
+        'street',
+        'barangay',
+        'city',
+        'province',
+        'region',
+        'postal_code',
         'start_year',
         'clinic_type',
         'valid_id_path',
@@ -51,6 +57,32 @@ class User extends Authenticatable
             'password' => 'hashed',
             'subscription_started_at' => 'datetime',
         ];
+    }
+
+    public function getFullAddressAttribute()
+    {
+        $parts = array_filter([
+            $this->street,
+            $this->barangay,
+            $this->city,
+            $this->province,
+            $this->region,
+            $this->postal_code
+        ]);
+
+        return implode(', ', $parts);
+    }
+    public function scopeInCity($query, $city)
+    {
+        return $query->where('city', $city);
+    }
+
+    /**
+     * Scope a query to filter by region
+     */
+    public function scopeInRegion($query, $region)
+    {
+        return $query->where('region', $region);
     }
 
     /** ---------------- SCOPES ---------------- */
