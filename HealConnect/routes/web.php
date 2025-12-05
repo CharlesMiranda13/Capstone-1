@@ -190,7 +190,6 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
 
     Route::get('/services', [IndtherapistController::class, 'services'])->name('services');
     Route::post('/services', [IndtherapistController::class, 'storeServices'])->name('services.store');
-    Route::get('/availability', [IndtherapistController::class, 'availability'])->name('services');   
     Route::post('/availability', [IndtherapistController::class, 'store'])->name('availability.store');
     Route::patch('/availability/{id}/toggle', [IndtherapistController::class, 'toggleAvailability'])->name('availability.toggle');
     Route::delete('/appointments/{id}', [IndtherapistController::class, 'destroy'])->name('availability.destroy');
@@ -221,7 +220,6 @@ Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'check.status', 'c
     Route::put('/services/{id}', [ClinicController::class, 'updateService'])->name('services.update');
     Route::delete('/services/{id}', [ClinicController::class, 'destroyService'])->name('services.destroy');
 
-    Route::get('/availability', [ClinicController::class, 'availability'])->name('availability');
     Route::post('/availability', [ClinicController::class, 'storeSchedule'])->name('schedules.store');
     Route::patch('/availability/{id}/toggle', [ClinicController::class, 'toggleSchedule'])->name('schedules.toggle');
     Route::delete('/availability/{id}', [ClinicController::class, 'destroySchedule'])->name('schedules.destroy');

@@ -88,39 +88,24 @@
                         <td>{{ date('h:i A', strtotime($availability->start_time)) }}</td>
                         <td>{{ date('h:i A', strtotime($availability->end_time)) }}</td>
                         <td>
-                            @if($availability->status === 'active')
+                            @if($availability->is_active)
                                 <span class="status-active">Active</span>
-                            @elseif($availability->status === 'cancelled')
-                                <span class="status-inactive">Cancelled</span>
-                            @elseif($availability->status === 'completed')
-                                <span class="status-completed">Completed</span>
-                            @endif
-
-                            @if($bookedCount > 0)
-                                <div class="text-danger font-weight-bold mt-1">
-                                    Booked by
-                                    @foreach($availability->appointments as $appointment)
-                                        {{ $appointment->patient->name }}@if(!$loop->last), @endif
-                                    @endforeach
-                                </div>
+                            @else
+                                <span class="status-inactive">Inactive</span>
                             @endif
                         </td>
                         <td>
-                            @if($bookedCount > 0)
-                                <button class="btn btn-secondary" disabled>Locked</button>
-                            @else
-                                <form action="{{ route('therapist.availability.toggle', $availability->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="btn btn-warning">{{ $availability->is_active ? 'Cancel' : 'Reactivate' }}</button>
-                                </form>
+                            <!-- Toggle Active/Inactive -->
+                            <form action="{{ route('therapist.availability.toggle', $availability->id) }}" method="POST" class="action-form">
+                                @csrf @method('PATCH')
+                                <button class="btn btn-warning">{{ $availability->is_active ? 'Disable' : 'Enable' }}</button>
+                            </form>
 
-                                <form action="{{ route('therapist.availability.destroy', $availability->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">Delete</button>
-                                </form>
-                            @endif
+                            <!-- Delete -->
+                            <form action="{{ route('therapist.availability.destroy', $availability->id) }}" method="POST" class="action-form">
+                                @csrf @method('DELETE')
+                                <button class="btn btn-danger">Delete</button>
+                            </form>
                         </td>
                     </tr>
                 @empty

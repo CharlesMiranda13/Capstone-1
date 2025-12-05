@@ -40,22 +40,26 @@ class IndtherapistController extends ptController
             ->where('serviceable_type', get_class($therapist))
             ->value('price') ?? '';
 
-        $schedules = Availability::where('provider_id', $therapist->id)
+        $availabilities = Availability::where('provider_id', $therapist->id)
+            ->where('provider_type', get_class($therapist))
+            ->orderBy('date')
+            ->paginate(10);
+
+        $calendarAvailabilitiesQuery = Availability::where('provider_id', $therapist->id)
             ->where('provider_type', get_class($therapist))
             ->orderBy('date')
             ->get();
 
-        $calendarSchedules = $this->getCalendarSchedules($schedules);
+        $calendarAvailabilities = $this->getCalendarSchedules($calendarAvailabilitiesQuery);
 
         return view('user.therapist.independent.services', compact(
             'therapist',
-            'schedules',
-            'calendarSchedules',
             'existingServices',
             'existingPrice',
+            'availabilities',           
+            'calendarAvailabilities'     
         ));
     }
-
     public function storeServices(Request $request)
     {
         $therapist = Auth::user();
@@ -74,38 +78,8 @@ class IndtherapistController extends ptController
 
         return back()->with('success', 'Appointment types updated!');
     }
-    
-    
 
     /** ---------------- AVAILABILITY / SCHEDULE ---------------- */
-    public function availability()
-    {
-        $therapist = Auth::user();
-
-        $services = $this->getServices($therapist);
-
-        // For table (paginated)
-        $availabilities = Availability::where('provider_id', $therapist->id)
-            ->where('provider_type', get_class($therapist))
-            ->orderBy('date')
-            ->paginate(10); 
-
-        // For calendar (non-paginated list)
-        $calendarAvailabilities = Availability::where('provider_id', $therapist->id)
-            ->where('provider_type', get_class($therapist))
-            ->orderBy('date')
-            ->get();
-
-        // Convert to calendar format
-        $calendarAvailabilities = $this->getCalendarSchedules($calendarAvailabilities);
-
-        return view('user.therapist.independent.services', compact(
-            'therapist',
-            'services',
-            'availabilities',
-            'calendarAvailabilities'
-        ));
-    }
 
     public function store(Request $request)
     {

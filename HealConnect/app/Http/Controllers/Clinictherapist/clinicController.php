@@ -101,11 +101,13 @@ class ClinicController extends ptController
             ->where('serviceable_type', get_class($clinic))
             ->value('price') ?? '';
 
+        // For table display
         $schedules = Availability::where('provider_id', $clinic->id)
             ->where('provider_type', get_class($clinic))
             ->orderBy('day_of_week')
             ->get();
 
+        // For calendar display
         $calendarSchedules = $this->getCalendarSchedules($schedules);
 
         return view('user.therapist.clinic.services', compact(
@@ -172,22 +174,6 @@ class ClinicController extends ptController
     }
 
     /** ---------------- AVAILABILITY / SCHEDULE ---------------- */
-    public function availability()
-    {
-        $clinic = Auth::user();
-
-        $services = $this->getServices($clinic);
-
-        $schedules = Availability::where('provider_id', $clinic->id)
-            ->where('provider_type', get_class($clinic))
-            ->orderBy('day_of_week')
-            ->get();
-
-        $calendarSchedules = $this->getCalendarSchedules($schedules);
-
-        return view('user.therapist.clinic.availability', compact('clinic', 'services', 'schedules', 'calendarSchedules'));
-    }
-
     public function storeSchedule(Request $request)
     {
         $clinic = Auth::user();

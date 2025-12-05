@@ -96,8 +96,18 @@
 
             <tbody>
                 @forelse($schedules as $schedule)
+                    @php
+                        // Handle both numeric (0-6) and string ("Monday") formats
+                        $days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+                        
+                        if (is_numeric($schedule->day_of_week)) {
+                            $dayName = $days[$schedule->day_of_week];
+                        } else {
+                            $dayName = $schedule->day_of_week;
+                        }
+                    @endphp
                     <tr>
-                        <td>{{ ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][$schedule->day_of_week] }}</td>
+                        <td>{{ $dayName }}</td>
                         <td>{{ date('h:i A', strtotime($schedule->start_time)) }} - {{ date('h:i A', strtotime($schedule->end_time)) }}</td>
                         <td>
                             @if($schedule->is_active)

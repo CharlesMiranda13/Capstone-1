@@ -538,3 +538,15 @@ table tr:hover {
     margin-top: 10px;
     display: block;
 }
+
+.action-form {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.action-form button {
+    margin: 0;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    min-width: 80px;
+}
