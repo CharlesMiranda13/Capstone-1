@@ -332,7 +332,7 @@ document.addEventListener("DOMContentLoaded", function () {
   setupImageView("viewValidIdBtn", "validIdModal", "validIdImage", "closeModalBtn", "data-valid-id");
   setupImageView("viewValidIdBackBtn", "validIdModal", "validIdImage", "closeModalBtn", "data-valid-id");
   setupImageView("viewLicenseBtn", "licenseModal", "licenseImage", "closeLicenseBtn", "data-license");
-  
+  setupModal("forgotModal", ".openForgotBtn", ".close", "flex");
   setupModal("declineModal", ".openDeclineBtn", ".closeDeclineBtn", "block");
   setupModal("tabSwitchModal", ".openTabSwitchModal", ".closeTabSwitch", "flex");
   setupModal("passwordConfirmModal", ".openPasswordModal", ".closePasswordModal", "flex");
