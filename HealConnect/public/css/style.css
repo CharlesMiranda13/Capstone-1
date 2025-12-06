@@ -82,14 +82,14 @@ body {
     display: block;
 }
 
-.header-logo a{
+.header-logo a {
     text-decoration: none;
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.logo a{
+.logo a {
     text-decoration: none;
     display: flex;
     align-items: center;
