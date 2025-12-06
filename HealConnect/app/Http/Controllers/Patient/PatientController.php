@@ -128,8 +128,19 @@ class PatientController extends Controller
     private function filterTherapists(Request $request)
     {
         $query = User::verifiedTherapists()
-            ->where('subscription_status', 'active') 
-            ->with('services');
+            ->where('subscription_status', 'active')
+            ->with(['services', 'availability']); 
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%")
+                ->orWhereHas('services', fn($s) =>
+                    $s->where('appointment_type', 'like', "%{$search}%")
+                );
+            });
+        }
 
         if ($request->filled('category')) {
             $query->where('role', $request->category === 'independent' ? 'therapist' : 'clinic');
@@ -137,12 +148,25 @@ class PatientController extends Controller
 
         if ($request->filled('service')) {
             $query->whereHas('services', fn($q) =>
-                $q->where('appointment_type', 'like', '%' . $request->service . '%')
+                $q->where('appointment_type', 'like', "%{$request->service}%")
             );
         }
+        
+        if ($request->filled('city')) {
+            $query->where('city', 'like', "%{$request->city}%");
+        }
 
-        return $query->paginate(10);
+        if ($request->filled('province')) {
+            $query->where('province', 'like', "%{$request->province}%");
+        }
+
+        if ($request->filled('region')) {
+            $query->where('region', $request->region);
+        }
+
+        return $query->paginate(10)->withQueryString();
     }
+
     private function loadTherapist($id)
     {
         $therapist = User::verifiedTherapists()->with('services')->findOrFail($id);

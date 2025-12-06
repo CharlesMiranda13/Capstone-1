@@ -584,7 +584,7 @@ nav {
 
 /* Footer */
 .footer-top-bar {
-    background-color: #194a77;
+    background: linear-gradient(135deg, #222936, #3b82f6);
     color: #ffffff;
     text-align: center;
     padding: 10px 0;
@@ -608,7 +608,7 @@ nav {
 
 /* Footer */
 .healconnect-footer {
-    background-color: #13a360;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
     color: #ffffff;
     padding: 30px 0;
     font-size: 14px;
