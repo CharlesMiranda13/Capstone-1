@@ -65,7 +65,21 @@
                             <li>{{ $feature }}</li>
                         @endforeach
                     </ul>
-                    <a href="{{ url('/logandsign') }}?plan={{ $key }}" class="btn btn-primary">Get Started</a>
+                    
+                    @auth
+                        {{-- If logged in, go directly to subscription --}}
+                        @if(auth()->user()->role === 'therapist' || auth()->user()->role === 'clinic')
+                            <a href="{{ route('subscribe.show', $key) }}" class="btn btn-primary">Get Started</a>
+                        @else
+                            <span class="btn btn-disabled">For Therapists & Clinics Only</span>
+                        @endif
+                    @else
+                        {{-- If not logged in, route to correct registration type --}}
+                        @php
+                            $registrationType = ($key === 'pro clinic') ? 'clinic' : 'therapist';
+                        @endphp
+                        <a href="{{ route('register.form', $registrationType) }}?plan={{ $key }}" class="btn btn-primary">Get Started</a>
+                    @endauth
                 </div>
             @endforeach
         </div>

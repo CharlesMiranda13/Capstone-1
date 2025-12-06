@@ -110,6 +110,7 @@
     margin-bottom: 6px;
     font-weight: 600;
 }
+
 /* File Input Group */
 .file-group {
     display: grid;
@@ -117,11 +118,13 @@
     gap: 15px;
     margin-bottom: 16px;
 }
+
 .file-group label {
     font-size: 14px;
     font-weight: 500;
     color: #000000;
 }
+
 .file-group input {
     width: 100%;
     padding: 12px 14px;
@@ -139,6 +142,7 @@
     text-align: center;
     color: #555;
 }
+
 .register-main h1 {
     margin-bottom: 20px;
     font-size: 26px;
@@ -215,11 +219,48 @@
     display: block;
 }
 
+.selected-plan-notice {
+    background: #e7f3ff;
+    border-left: 4px solid #007bff;
+    padding: 15px 20px;
+    margin: 0 auto 25px auto;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    max-width: 800px;
+    animation: slideIn 0.3s ease-out;
+}
+
+.selected-plan-notice i {
+    color: #007bff;
+    margin-right: 10px;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.selected-plan-notice strong {
+    color: #007bff;
+    text-transform: capitalize;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Responsive for smaller screens */
 @media (max-width: 768px) {
     .clinic-group {
         grid-template-columns: 1fr;
     }
+
     .register-main {
         max-width: 50%;
     }
@@ -230,11 +271,13 @@
         opacity: 0;
         transform: translateY(-8px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
+
 @media (max-width: 768px) {
     .name-group {
         grid-template-columns: 1fr;

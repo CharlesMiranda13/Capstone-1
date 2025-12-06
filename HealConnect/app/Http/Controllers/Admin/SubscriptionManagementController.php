@@ -60,15 +60,33 @@ class SubscriptionManagementController extends Controller
         if ($user->stripe_subscription_id) {
             try {
                 Stripe::setApiKey(config('services.stripe.secret'));
-                $subscriptionDetails = \Stripe\Subscription::retrieve($user->stripe_subscription_id);
+                
+                // Retrieve the full subscription
+                $subscription = \Stripe\Subscription::retrieve($user->stripe_subscription_id);
+                
+                // Get the subscription item (contains period dates)
+                $subscriptionItem = $subscription->items->data[0] ?? null;
+                
+                // Create a custom object with all needed data
+                $subscriptionDetails = (object) [
+                    'id' => $subscription->id,
+                    'status' => $subscription->status,
+                    'current_period_start' => $subscriptionItem->current_period_start ?? null,
+                    'current_period_end' => $subscriptionItem->current_period_end ?? null,
+                    'cancel_at_period_end' => $subscription->cancel_at_period_end,
+                    'created' => $subscription->created,
+                    'currency' => $subscription->currency,
+                    'plan_amount' => $subscriptionItem->plan->amount ?? null,
+                ];
+                
             } catch (\Exception $e) {
-                // Handle error silently
+                \Log::error('Stripe subscription retrieval error: ' . $e->getMessage());
+                $subscriptionDetails = null;
             }
         }
 
         return view('user.admin.subscriptions.show', compact('user', 'subscriptionDetails'));
     }
-
     public function updateStatus(Request $request, $id)
     {
         $request->validate([

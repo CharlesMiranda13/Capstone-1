@@ -79,9 +79,30 @@
         </div>
         <div class="detail-card-body">
             <p><strong>Subscription ID:</strong> <code>{{ $subscriptionDetails->id }}</code></p>
-            <p><strong>Status:</strong> <span class="badge badge-info">{{ $subscriptionDetails->status }}</span></p>
-            <p><strong>Current Period Start:</strong> {{ date('M d, Y', $subscriptionDetails->current_period_start) }}</p>
-            <p><strong>Current Period End:</strong> {{ date('M d, Y', $subscriptionDetails->current_period_end) }}</p>
+            <p><strong>Status:</strong> <span class="badge badge-info">{{ ucfirst($subscriptionDetails->status) }}</span></p>
+            
+            @if($subscriptionDetails->current_period_start)
+                <p><strong>Current Period Start:</strong> 
+                    {{ date('M d, Y h:i A', $subscriptionDetails->current_period_start) }}
+                </p>
+            @endif
+            
+            @if($subscriptionDetails->current_period_end)
+                <p><strong>Current Period End:</strong> 
+                    {{ date('M d, Y h:i A', $subscriptionDetails->current_period_end) }}
+                </p>
+            @endif
+            
+            @if($subscriptionDetails->current_period_start && $subscriptionDetails->current_period_end)
+                <p><strong>Billing Cycle:</strong> 
+                    {{ round(($subscriptionDetails->current_period_end - $subscriptionDetails->current_period_start) / 86400) }} days
+                </p>
+            @endif
+            
+            @if($subscriptionDetails->plan_amount)
+                <p><strong>Amount:</strong> ₱{{ number_format($subscriptionDetails->plan_amount / 100, 2) }}</p>
+            @endif
+            
             <p><strong>Cancel at Period End:</strong> {{ $subscriptionDetails->cancel_at_period_end ? 'Yes' : 'No' }}</p>
         </div>
     </div>

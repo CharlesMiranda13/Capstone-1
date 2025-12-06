@@ -25,9 +25,22 @@ class UserAuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-
             $user = Auth::user();
 
+            // Check if user needs to be redirected to subscription
+            if (session('redirect_to_subscription')) {
+                $plan = session('redirect_to_subscription');
+                
+                // Clear sessions
+                session()->forget(['redirect_to_subscription', 'selected_plan_for_registration']);
+                
+                // Only redirect therapists and clinics to subscription
+                if ($user->role === 'therapist' || $user->role === 'clinic') {
+                    return redirect()->route('subscribe.show', $plan);
+                }
+            }
+
+            // Normal login redirects based on role
             switch ($user->role) {
                 case 'patient':
                     return redirect()->route('patient.home');
@@ -37,9 +50,7 @@ class UserAuthController extends Controller
                     return redirect()->route('clinic.home');
                 default:
                     return redirect()->route('home');
-                    
             }
-
         }
 
         return back()->withErrors([

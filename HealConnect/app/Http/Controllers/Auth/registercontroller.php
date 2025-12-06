@@ -14,6 +14,16 @@ class RegisterController extends Controller
 {
     public function showRegistrationForm($type)
     {
+        // Validate type
+        if (!in_array($type, ['patient', 'therapist', 'clinic'])) {
+            abort(404);
+        }
+
+        // Store selected plan in session if provided
+        if (request()->has('plan')) {
+            session(['selected_plan_for_registration' => request('plan')]);
+        }
+
         switch ($type) {
             case 'therapist':
                 return view('register.indtherapist');
@@ -122,8 +132,7 @@ class RegisterController extends Controller
             'license_path' => $licensePath,
             'status' => 'Pending',
             'phone' => $request->phone,
-            'address' => $fullAddress, // Using formatted address for backward compatibility
-            // Store individual address components
+            'address' => $fullAddress,
             'street' => $request->street,
             'barangay' => $request->barangay,
             'city' => $request->city,
@@ -143,6 +152,16 @@ class RegisterController extends Controller
 
         // Send verification email
         Mail::to($user->email)->send(new VerificationCodeMail($user));
+
+        // Check if user selected a plan during registration
+        if (session('selected_plan_for_registration') && ($type === 'therapist' || $type === 'clinic')) {
+            $plan = session('selected_plan_for_registration');
+            
+            // Store plan to redirect after login/verification
+            session(['redirect_to_subscription' => $plan]);
+            
+            // Keep the registration plan in session for display on verification page
+        }
 
         // Redirect to verification page
         return redirect()->route('verification.notice')

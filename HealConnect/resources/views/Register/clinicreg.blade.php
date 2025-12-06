@@ -8,6 +8,15 @@
 <main class="register-main clinic">
     <h1 class="register-title">Clinic Registration</h1>
 
+    {{-- Show selected plan notice --}}
+    @if(session('selected_plan_for_registration'))
+        <div class="selected-plan-notice">
+            <i class="fa fa-info-circle"></i>
+            You've selected the <strong>{{ ucfirst(str_replace(' ', ' ', session('selected_plan_for_registration'))) }}</strong> plan. 
+            Complete registration to continue to payment.
+        </div>
+    @endif
+
     {{-- Display Validation Errors --}}
     @if ($errors->any())
     <div style="background-color: #f8d7da; padding: 10px; border-radius: 8px; margin-bottom: 15px;">

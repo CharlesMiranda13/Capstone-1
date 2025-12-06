@@ -7,6 +7,15 @@
 <main class="register-main therapist">
     <h1 class="register-title">Independent Therapist Registration</h1>
 
+    {{-- Show selected plan notice --}}
+    @if(session('selected_plan_for_registration'))
+        <div class="selected-plan-notice">
+            <i class="fa fa-info-circle"></i>
+            You've selected the <strong>{{ ucfirst(str_replace(' ', ' ', session('selected_plan_for_registration'))) }}</strong> plan. 
+            Complete registration to continue to payment.
+        </div>
+    @endif
+
     <form action="{{ route('register.store', ['type' => 'therapist']) }}" method="POST" class="register-form" enctype="multipart/form-data">
         @csrf
 
