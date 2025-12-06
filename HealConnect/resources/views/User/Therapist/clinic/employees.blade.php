@@ -68,7 +68,6 @@
                             <td class="actions">
                                 <button class="edit-btn" data-id="{{ $employee->id }}">Edit</button>
                                 <button class="delete-btn" data-id="{{ $employee->id }}">Delete</button>
-                                <button class="schedule-btn" data-id="{{ $employee->id }}">Schedule</button>
                             </td>
                         </tr>
                     @empty

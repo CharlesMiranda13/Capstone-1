@@ -109,10 +109,11 @@ class EmployeeController extends Controller
         return back()->with('success', 'Employee deleted successfully!');
     }
 
-    /** ---------------- MANAGE EMPLOYEE SCHEDULE ---------------- */
-    public function manageSchedule($id)
-    {
-        $employee = User::findOrFail($id);
-        return view('user.therapist.clinic.employee_schedule', compact('employee'));
-    }
+    /** ---------------- MANAGE EMPLOYEE SCHEDULE ---------------- 
+    *public function manageSchedule($id)
+    *{
+    *    $employee = User::findOrFail($id);
+    *    return view('user.therapist.clinic.employee_schedule', compact('employee'));
+    *}
+    */
 }

@@ -241,10 +241,13 @@ Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'check.status', 'c
     // Employees
     Route::get('/employees', [App\Http\Controllers\Clinictherapist\EmployeeController::class, 'index'])->name('employees');
     Route::post('/employees', [App\Http\Controllers\Clinictherapist\EmployeeController::class, 'store'])->name('employees.store');
+    Route::get('/employees/{id}/edit', [App\Http\Controllers\Clinictherapist\EmployeeController::class, 'edit'])->name('employees.edit');
     Route::put('/employees/{id}', [App\Http\Controllers\Clinictherapist\EmployeeController::class, 'update'])->name('employees.update');
+   
     Route::delete('/employees/{id}', [App\Http\Controllers\Clinictherapist\EmployeeController::class, 'destroy'])->name('employees.destroy');
-    Route::get('/employees/{id}/schedule', [App\Http\Controllers\Clinictherapist\EmployeeController::class, 'manageSchedule'])->name('employees.schedule');
-
+    //Route::get('/employees/{id}/schedule', [App\Http\Controllers\Clinictherapist\EmployeeController::class, 'manageSchedule'])->name('employees.schedule');
+    //Route::post('/employees/{id}/schedule', [App\Http\Controllers\Clinictherapist\EmployeeController::class, 'storeSchedule'])->name('employees.schedule.store');
+    //Route::delete('/employees/schedule/{scheduleId}', [App\Http\Controllers\Clinictherapist\EmployeeController::class, 'destroySchedule'])->name('employees.schedule.destroy');
     // Settings
     Route::get('/settings', [ClinicController::class, 'settings'])->name('settings');
     Route::put('/settings/profile', [ClinicController::class, 'updateProfile'])->name('update.profile');
