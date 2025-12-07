@@ -135,7 +135,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 /* Patient Routes */
 Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])->group(function () {
     Route::get('/home', [PatientController::class, 'dashboard'])->name('home');
-    Route::view('/records', 'user.patients.records')->name('records');
 
 
 
@@ -159,6 +158,14 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
     ->name('therapists');
     Route::get('/therapists/{id}/profile', [PatientController::class, 'showProfile'])
     ->name('therapists.profile');
+
+    // Patient - View list of medical records
+    Route::get('/records', [PatientController::class, 'records'])
+        ->name('records');
+    
+    // Patient - View detailed medical records
+    Route::get('/my-records', [PatientController::class, 'myRecords'])
+        ->name('my_records');
 
 
     // Referral Routes

@@ -16,6 +16,7 @@ use App\Mail\AppointmentStatusMail;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use App\Events\AppointmentUpdateEvent;
+use App\Models\MedicalRecord;
 
 class ptController extends Controller
 {
@@ -416,19 +417,40 @@ class ptController extends Controller
             'exercises' => $patient->exercises ?? null,
         ]);
     }
-
+//
     /**
      * Update Electronic Health Record (EHR)
      */
     public function updateEHR(Request $request, $patientId)
     {
         $request->validate([
-            'ehr' => 'required|string',
+            'diagnosis' => 'nullable|string',
+            'allergies' => 'nullable|string',
+            'medications' => 'nullable|string',
+            'medical_history' => 'nullable|string',
+            'notes' => 'nullable|string',
         ]);
 
         $patient = User::findOrFail($patientId);
-        $patient->ehr = $request->ehr;
+        
+        // Build the EHR string from form fields
+        $ehrData = "Diagnosis: " . ($request->diagnosis ?? '—') . "\n";
+        $ehrData .= "Allergies: " . ($request->allergies ?? '—') . "\n";
+        $ehrData .= "Medications: " . ($request->medications ?? '—') . "\n";
+        $ehrData .= "Medical History: " . ($request->medical_history ?? '—') . "\n";
+        $ehrData .= "Notes: " . ($request->notes ?? '—');
+        
+        $patient->ehr = $ehrData;
         $patient->save();
+
+        // Create a medical record entry
+        MedicalRecord::create([
+            'patient_id' => $patientId,
+            'therapist_id' => Auth::id(),
+            'record_date' => now(),
+            'description' => 'Electronic Health Record Updated',
+            'record_type' => 'EHR',
+        ]);
 
         return redirect()->back()->with('success', 'EHR updated successfully!');
     }
@@ -439,12 +461,29 @@ class ptController extends Controller
     public function updateTreatment(Request $request, $patientId)
     {
         $request->validate([
-            'treatment_plan' => 'required|string',
+            'session_date' => 'required|date',
+            'description' => 'required|string',
         ]);
 
         $patient = User::findOrFail($patientId);
-        $patient->therapies = $request->treatment_plan;
+        
+        // Format with date from the form
+        $formattedDate = Carbon::parse($request->session_date)->format('M d, Y');
+        $newTreatment = $formattedDate . ": " . $request->description;
+        
+        $patient->therapies = $patient->therapies 
+            ? $patient->therapies . "\n\n" . $newTreatment 
+            : $newTreatment;
         $patient->save();
+
+        // Create a medical record entry with TODAY'S date (when therapist made the change)
+        MedicalRecord::create([
+            'patient_id' => $patientId,
+            'therapist_id' => Auth::id(),
+            'record_date' => now()->toDateString(),  // Changed: Use today's date instead of session_date
+            'description' => 'Treatment Plan Updated ',
+            'record_type' => 'Treatment Plan',
+        ]);
 
         return redirect()->back()->with('success', 'Treatment plan updated successfully!');
     }
@@ -455,12 +494,26 @@ class ptController extends Controller
     public function updateProgress(Request $request, $patientId)
     {
         $request->validate([
-            'progress_note' => 'required|string',
+            'notes' => 'required|string',
         ]);
 
         $patient = User::findOrFail($patientId);
-        $patient->exercises = $request->progress_note;
+        
+        // Append new progress note with timestamp
+        $newProgress = now()->format('M d, Y') . ": " . $request->notes;
+        $patient->exercises = $patient->exercises 
+            ? $patient->exercises . "\n\n" . $newProgress 
+            : $newProgress;
         $patient->save();
+
+        // Create a medical record entry
+        MedicalRecord::create([
+            'patient_id' => $patientId,
+            'therapist_id' => Auth::id(),
+            'record_date' => now(),
+            'description' => 'Progress Note Updated',
+            'record_type' => 'Progress Note',
+        ]);
 
         return redirect()->back()->with('success', 'Progress note updated successfully!');
     }

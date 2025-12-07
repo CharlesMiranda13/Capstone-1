@@ -11,6 +11,7 @@ use App\Models\Appointment;
 use App\Models\Referral;
 use App\Models\User;
 use Carbon\Carbon;
+use App\Models\MedicalRecord;
 
 class PatientController extends Controller
 {
@@ -207,6 +208,44 @@ class PatientController extends Controller
         return response()->json([
             'messages' => $unreadMessages,
             'appointments' => $upcomingAppointments
+        ]);
+    }
+
+    public function records()
+    {
+        $user = Auth::user();
+        
+        // Ensure only patients can access
+        if ($user->role !== 'patient') {
+            abort(403, 'Unauthorized access');
+        }
+
+        // Get all medical records for this patient
+        $records = MedicalRecord::where('patient_id', $user->id)
+            ->with('therapist:id,name')
+            ->orderBy('record_date', 'desc')
+            ->get();
+        
+        return view('user.patients.records', compact('records'));
+    }
+
+    public function myRecords()
+    {
+        $user = Auth::user();
+        
+        // Ensure only patients can access
+        if ($user->role !== 'patient') {
+            abort(403, 'Unauthorized access');
+        }
+
+        // Get the patient's own records
+        $patient = $user;
+        
+        return view('user.patients.my_records', [
+            'patient' => $patient,
+            'ehr' => $patient->ehr ?? null,
+            'therapies' => $patient->therapies ?? null,
+            'exercises' => $patient->exercises ?? null,
         ]);
     }
 

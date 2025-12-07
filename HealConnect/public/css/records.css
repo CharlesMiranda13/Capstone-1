@@ -1,0 +1,111 @@
+.records-main{
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    margin-left: 250px;
+}
+
+.records-content{
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 2rem;
+}
+
+.records-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.records-header h2{
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.records-table{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+}
+
+.records-table th,
+.records-table td{
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.records-table th{
+    background: #f3f4f6;
+    font-weight: 600;
+    color: #374151;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.records-table tr{
+    background: #f9fafb;
+    transition: 0.2s;
+}
+
+/* Search & Filter Section */
+.search-filter {
+    margin-bottom: 1.5rem;
+}
+
+.search-filter-form {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 220px;
+    padding: 0.6rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: 0.3s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.filter-select {
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.filter-select:hover {
+    border-color: #4f46e5;
+}
+
+.btn-search {
+    background: #4f46e5;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1rem;
+    position: relative;
+    top: -9px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-search:hover {
+    background: #4338ca;
+}

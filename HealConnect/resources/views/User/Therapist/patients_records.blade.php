@@ -50,15 +50,26 @@
             {{-- EHR Display --}}
             <div class="record-display card">
                 @if (!empty($ehr))
+                    @php
+                        // Parse the EHR text into individual fields
+                        $ehrLines = explode("\n", $ehr);
+                        $ehrData = [];
+                        foreach ($ehrLines as $line) {
+                            $parts = explode(": ", $line, 2);
+                            if (count($parts) == 2) {
+                                $ehrData[trim($parts[0])] = trim($parts[1]);
+                            }
+                        }
+                    @endphp
                     <div class="ehr-grid">
-                        <div><strong>Diagnosis:</strong> {{ $ehr->diagnosis ?? '—' }}</div>
-                        <div><strong>Allergies:</strong> {{ $ehr->allergies ?? '—' }}</div>
-                        <div><strong>Medications:</strong> {{ $ehr->medications ?? '—' }}</div>
-                        <div><strong>Medical History:</strong> {{ $ehr->medical_history ?? '—' }}</div>
-                        <div><strong>Notes:</strong> {{ $ehr->notes ?? '—' }}</div>
+                        <div><strong>Diagnosis:</strong> {{ $ehrData['Diagnosis'] ?? '—' }}</div>
+                        <div><strong>Allergies:</strong> {{ $ehrData['Allergies'] ?? '—' }}</div>
+                        <div><strong>Medications:</strong> {{ $ehrData['Medications'] ?? '—' }}</div>
+                        <div><strong>Medical History:</strong> {{ $ehrData['Medical History'] ?? '—' }}</div>
+                        <div><strong>Notes:</strong> {{ $ehrData['Notes'] ?? '—' }}</div>
                     </div>
                 @else
-                    <p class="text-muted">No EHR record found for this patient.</p>
+                    <p class="text-muted">No EHR record found. Your therapist will add information during your sessions.</p>
                 @endif
             </div>
 
@@ -106,20 +117,24 @@
         {{-- === TREATMENT PLAN === --}}
         <section class="record-section">
             <div class="section-header">
-                <h3>Treatment Plan</h3>
+                <h3>💊 Treatment Plan</h3>
                 <p class="text-muted">Track and update ongoing treatment strategies.</p>
             </div>
 
             {{-- Display --}}
             <div class="record-display card">
                 @if (!empty($therapies))
+                    @php
+                        // Split by double newlines to get individual entries
+                        $therapyEntries = array_filter(explode("\n\n", $therapies));
+                    @endphp
                     <ul class="treatment-list">
-                        @foreach ($therapies as $therapy)
-                            <li><strong>{{ $therapy->session_date }}:</strong> {{ $therapy->description }}</li>
+                        @foreach ($therapyEntries as $therapy)
+                            <li>{{ $therapy }}</li>
                         @endforeach
                     </ul>
                 @else
-                    <p class="text-muted">No treatment plan recorded for this patient yet.</p>
+                    <p class="text-muted">No treatment plan recorded yet. Your therapist will add this information.</p>
                 @endif
             </div>
 
@@ -153,13 +168,17 @@
             {{-- Display --}}
             <div class="record-display card">
                 @if (!empty($exercises))
+                    @php
+                        // Split by double newlines to get individual entries
+                        $progressEntries = array_filter(explode("\n\n", $exercises));
+                    @endphp
                     <ul class="progress-list">
-                        @foreach ($exercises as $progress)
-                            <li><strong>{{ $progress->created_at->format('M d, Y') }}:</strong> {{ $progress->notes }}</li>
+                        @foreach ($progressEntries as $progress)
+                            <li>{{ $progress }}</li>
                         @endforeach
                     </ul>
                 @else
-                    <p class="text-muted">No progress notes recorded yet.</p>
+                    <p class="text-muted">No progress notes recorded yet. Your therapist will document your progress during sessions.</p>
                 @endif
             </div>
 
