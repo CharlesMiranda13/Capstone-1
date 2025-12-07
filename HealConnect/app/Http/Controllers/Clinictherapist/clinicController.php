@@ -324,22 +324,9 @@ class ClinicController extends ptController
         return response()->json(['success' => true]);
     }
 
-    public function getUnreadCounts()
+    public function unreadCounts()
     {
-        $unreadMessages = \App\Models\Message::where('receiver_id', auth()->id())
-            ->where('is_read', false)
-            ->count();
-        
-        $pendingAppointments = \App\Models\Appointment::where('provider_id', auth()->id())
-            ->where('provider_type', \App\Models\User::class)
-            ->where('status', 'pending')
-            ->whereDate('appointment_date', '>=', now())
-            ->count();
-        
-        return response()->json([
-            'messages' => $unreadMessages,
-            'appointments' => $pendingAppointments
-        ]);
+        return $this->getUnreadCounts();
     }
 
     public function updateAppointmentStatus(Request $request, $id)

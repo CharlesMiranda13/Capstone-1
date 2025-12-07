@@ -168,5 +168,9 @@ class IndtherapistController extends ptController
 
         return view('user.therapist.independent.appointment', compact('appointments'));
     }
+    public function unreadCounts()
+    {
+        return $this->getUnreadCounts();
+    }
 
 }

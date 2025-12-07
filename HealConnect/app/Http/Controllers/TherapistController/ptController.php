@@ -529,4 +529,24 @@ class ptController extends Controller
             ->count();
         broadcast(new AppointmentUpdateEvent($userId, $appointmentCount));
     }
+
+    public function getUnreadCounts()
+    {
+        $userId = auth()->id();
+
+        $unreadMessages = \App\Models\Message::where('receiver_id', $userId)
+            ->where('is_read', false)
+            ->count();
+
+        $pendingAppointments = \App\Models\Appointment::where('provider_id', $userId)
+            ->where('provider_type', \App\Models\User::class)
+            ->where('status', 'pending')
+            ->whereDate('appointment_date', '>=', now())
+            ->count();
+
+        return response()->json([
+            'messages' => $unreadMessages,
+            'appointments' => $pendingAppointments
+        ]);
+    }
 }
