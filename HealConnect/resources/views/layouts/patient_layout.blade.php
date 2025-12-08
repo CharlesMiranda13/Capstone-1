@@ -58,7 +58,7 @@
             <i class="fa-solid fa-user-md"></i> Therapists
         </a>
         
-        <form action="{{ route('patient.logout') }}" method="POST" style="display:inline;">
+        <form action="{{ route('logout') }}" method="POST" style="display:inline;">
             @csrf
             <button type="submit" class="logout-btn">
                 <i class="fa-solid fa-right-from-bracket"></i> Logout
