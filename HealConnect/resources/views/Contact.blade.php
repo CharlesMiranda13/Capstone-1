@@ -7,10 +7,6 @@
 
     <p>{{ $settings->contact_message ?? 'If you have any questions, please reach out to us.' }}</p>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
     <form action="{{ route('contact.submit') }}" method="POST" class="contact-form">
         @csrf
 
