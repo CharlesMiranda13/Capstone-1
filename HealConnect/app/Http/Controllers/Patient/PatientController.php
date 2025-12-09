@@ -22,13 +22,14 @@ class PatientController extends Controller
         
         // Filter out cancelled appointments
         $appointments = Appointment::where('patient_id', $user->id)
-            ->whereDate('appointment_date', '>=', Carbon::today())
-            ->whereIn('status', ['pending','approved' ,'confirmed', 'completed'])
+            ->whereRaw("STR_TO_DATE(CONCAT(appointment_date, ' ', appointment_time), '%Y-%m-%d %H:%i:%s') >= NOW()")
+            ->whereIn('status', ['pending','approved','confirmed','completed'])
             ->with('provider')
             ->orderBy('appointment_date')
+            ->orderBy('appointment_time')
             ->take(3)
             ->get();
-
+            
         $therapists = User::verifiedTherapists()->get();
 
         $recentRecords = MedicalRecord::where('patient_id', $user->id)
