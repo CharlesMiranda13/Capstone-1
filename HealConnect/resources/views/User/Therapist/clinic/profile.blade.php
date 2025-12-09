@@ -87,6 +87,38 @@
                     </ul>
                 </div>
                 @endif
+                {{--Therapist--}}
+                <div class="card-section">
+                    <h4><i class="fa-solid fa-users"></i> Staff Members</h4>
+                    @if(isset($employees) && $employees->count() > 0)
+                    <div class="employees-list">
+                        @foreach($employees as $employee)
+                            <div class="employee-item">
+
+                                <div class="employee-avatar">
+                                    <img src="{{ $employee->profile_picture 
+                                        ? asset('storage/' . $employee->profile_picture) 
+                                        : asset('images/logo1.png') }}"
+                                        alt="{{ $employee->name }}">
+                                </div>
+
+                                <div class="employee-info">
+                                    <p class="employee-name">{{ $employee->name }}</p>
+                                    <p class="employee-position">{{ $employee->position }}</p>
+
+                                    @if($employee->gender)
+                                        <p class="employee-gender">
+                                            {{ ucfirst($employee->gender) }}
+                                        </p>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    @else
+                        <p>No staff members added yet.</p>
+                    @endif 
+                </div>
             </div>
         </section>
     </div>

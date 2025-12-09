@@ -86,7 +86,18 @@ class ClinicController extends ptController
     /** ---------------- PROFILE ---------------- */
     public function profile()
     {
-        $data = $this->getProfileData();
+        $clinic = Auth::user();
+
+        $data = $this->getProfileData(); // existing profile data
+
+        // Fetch employees
+        $employees = User::where('clinic_id', $clinic->id)
+                        ->where('role', 'employee')
+                        ->get();
+
+        // Merge employees into the data array
+        $data['employees'] = $employees;
+
         return view('user.therapist.clinic.profile', $data);
     }
 
