@@ -95,7 +95,7 @@
                     <tr>
                         <td>{{ $subscription->name }}</td>
                         <td>{{ $subscription->email }}</td>
-                        <td><span class="badge badge-secondary">{{ ucfirst($subscription->role) }}</span></td>
+                        <td><span class="badge badge-secondary">{{ ucfirst($subscription->role_display) }}</span></td>
                         <td><span class="badge badge-primary">{{ ucfirst($subscription->plan) }}</span></td>
                         <td>
                             @if($subscription->subscription_status == 'active')

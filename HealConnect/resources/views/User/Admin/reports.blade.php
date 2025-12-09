@@ -70,7 +70,7 @@
                 </div>
                 <div class="report-stat">
                     <h3 class="text-success">{{ $userStats['therapists'] }}</h3>
-                    <p class="text-muted">Therapists</p>
+                    <p class="text-muted">Independent Therapists</p>
                 </div>
                 <div class="report-stat">
                     <h3 class="text-info">{{ $userStats['clinics'] }}</h3>

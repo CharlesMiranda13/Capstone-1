@@ -32,7 +32,7 @@
             <div class="detail-card-body">
                 <p><strong>Name:</strong> {{ $user->name }}</p>
                 <p><strong>Email:</strong> {{ $user->email }}</p>
-                <p><strong>Role:</strong> <span class="badge badge-secondary">{{ ucfirst($user->role) }}</span></p>
+                <p><strong>Role:</strong> <span class="badge badge-secondary">{{ ucfirst($user->role_display) }}</span></p>
                 <p><strong>Account Status:</strong> 
                     @if($user->status == 'verified')
                         <span class="badge badge-success">Verified</span>
