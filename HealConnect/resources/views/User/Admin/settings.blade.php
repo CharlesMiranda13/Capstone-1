@@ -48,25 +48,6 @@
             @csrf
 
             {{-- General Tab --}}
-            <div id="general" class="tab-content active">
-                <div class="form-group">
-                    <label for="system_name">System Name</label>
-                    <input 
-                        type="text" 
-                        name="system_name" 
-                        id="system_name" 
-                        value="{{ old('system_name', $settings->system_name ?? 'HealConnect') }}"
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="logo">System Logo</label>
-                    <input type="file" name="logo" id="logo" accept="image/*">
-                    @if(isset($settings->logo))
-                        <small class="form-text text-muted">Current logo uploaded</small>
-                    @endif
-                </div>
-
                 <div class="form-group">
                     <label for="contact_email">Contact Email</label>
                     <input 
@@ -116,33 +97,6 @@
                         id="privacy" 
                         rows="8"
                     >{{ old('privacy', $settings->privacy ?? '') }}</textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="telehealth_consent">Telehealth Consent Form</label>
-                    <input 
-                        type="file" 
-                        name="telehealth_consent" 
-                        id="telehealth_consent" 
-                        accept=".pdf,.doc,.docx"
-                    >
-                    @if(isset($settings->telehealth_consent))
-                        <small class="form-text text-muted">Current consent form uploaded</small>
-                    @endif
-                </div>
-
-                <div class="form-group">
-                    <label for="compliance_docs">PRC / DOH Compliance Documents</label>
-                    <input 
-                        type="file" 
-                        name="compliance_docs[]" 
-                        id="compliance_docs" 
-                        multiple 
-                        accept=".pdf,.doc,.docx"
-                    >
-                    @if(isset($settings->compliance_docs))
-                        <small class="form-text text-muted">Current compliance documents uploaded</small>
-                    @endif
                 </div>
             </div>
 
