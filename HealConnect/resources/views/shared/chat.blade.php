@@ -73,8 +73,15 @@
                     <img src="{{ asset('images/logo1.png') }}" id="chat-user-avatar" class="avatar" alt="User">
                     <h2 id="chat-username">Select a conversation</h2>
                 </div>
+                @if($user->role == 'therapist' || $user->role == 'clinic')
+                    <button id="start-video-call" class="video-call-btn" title="Start Video Call">
+                        <i class="fas fa-video"></i> 
+                        <span>Start Call</span>
+                    </button>
+                @endif
             </header>
 
+            {{-- Chat Messages --}}
             <div class="chat-messages" id="chat-messages">
                 <div class="no-chat-selected">
                     <p>Select a chat to start messaging.</p>
@@ -106,17 +113,44 @@
         </section>
     </div>
 </div>
+
+{{-- Image Modal --}}
 <div id="imageModal" class="image-modal" style="display:none;">
     <span class="close">&times;</span>
     <img class="modal-content" id="modalImage">
 </div>
+
+{{-- Incoming Call Notification --}}
+<div id="incoming-call" class="incoming-call" style="display:none;">
+    <div class="call-box">
+        <h3 id="caller-name"></h3>
+        <p>is calling you...</p>
+        <button id="join-call-btn" class="join-btn">Join Call</button>
+        <button id="decline-call-btn" class="decline-btn">Decline</button>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
+{{-- Pusher Library --}}
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+
+{{-- Pass PHP variables to JavaScript --}}
 <script>
+    // User Information
+    window.authUserRole = "{{ auth()->user()->role }}";
     window.userId = {{ auth()->user()->id }};
+    window.authUserId = {{ auth()->id() }};
+    window.authUserName = "{{ auth()->user()->name }}";
+    
+    // Pusher Configuration
     window.pusherKey = "{{ config('broadcasting.connections.pusher.key') }}";
     window.pusherCluster = "{{ config('broadcasting.connections.pusher.options.cluster') }}";
+
 </script>
+<script src="https://unpkg.com/@daily-co/daily-js"></script>
 <script src="{{ asset('js/chat.js') }}"></script>
+
 @endsection

@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const recordBtn = document.getElementById('record-btn');
     const fileBtn = document.getElementById('file-btn');
     const fileInput = document.getElementById('file-input');
+    const startVideoCall = document.getElementById("start-video-call");
 
     let currentReceiverId = null;
     let lastMessageDate = null;
@@ -77,7 +78,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
             `;
         }
-
         wrapper.innerHTML = `<div class="bubble">${bubbleContent}${actions}<span class="timestamp">${time}</span></div>`;
         chatMessages.appendChild(wrapper);
         chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -100,24 +100,19 @@ document.addEventListener('DOMContentLoaded', function () {
         // Update data attribute
         chatItem.setAttribute('data-unread', unreadCount);
 
-        // Update or remove badge
         let badge = chatItem.querySelector('.unread-badge');
         let dot = chatItem.querySelector('.unread-dot');
         const messagePreview = chatItem.querySelector('.chat-info p');
         const chatInfoHeader = chatItem.querySelector('.chat-info-header');
 
         if (unreadCount > 0) {
-            // Add unread styling
             chatItem.classList.add('has-unread');
-            
-            // Update or create badge
             if (!badge) {
                 badge = document.createElement('span');
                 badge.className = 'unread-badge';
                 if (chatInfoHeader) {
                     chatInfoHeader.appendChild(badge);
                 } else {
-                    // Create header wrapper if it doesn't exist
                     const h4 = chatItem.querySelector('.chat-info h4');
                     if (h4) {
                         const wrapper = document.createElement('div');
@@ -130,47 +125,35 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
 
-            // Add dot if not exists
             if (!dot) {
                 dot = document.createElement('span');
                 dot.className = 'unread-dot';
                 chatItem.appendChild(dot);
             }
 
-            // Bold the message preview
             if (messagePreview) {
                 messagePreview.classList.add('unread-message');
             }
         } else {
-            // Remove unread styling
             chatItem.classList.remove('has-unread');
-            
             if (badge) badge.remove();
             if (dot) dot.remove();
-            
-            if (messagePreview) {
-                messagePreview.classList.remove('unread-message');
-            }
+            if (messagePreview) messagePreview.classList.remove('unread-message');
         }
     }
 
-    /** ------------------ Load Messages ------------------ */
     function loadMessages(receiverId) {
         fetch(`/messages/fetch?receiver_id=${receiverId}`)
             .then(res => res.json())
             .then(data => {
                 chatMessages.innerHTML = '';
                 lastMessageDate = null;
-                if (data.length === 0) {
-                    chatMessages.innerHTML = `<p class="no-messages">No messages yet. Start the conversation!</p>`;
-                } else {
-                    data.forEach(msg => renderMessage(msg, msg.sender_id === window.userId));
-                }
+                if (data.length === 0) chatMessages.innerHTML = `<p class="no-messages">No messages yet. Start the conversation!</p>`;
+                else data.forEach(msg => renderMessage(msg, msg.sender_id === window.userId));
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             });
     }
 
-    /** ------------------ Mark Messages as Read ------------------ */
     function markMessagesAsRead(userId) {
         fetch(`/messages/mark-as-read/${userId}`, {
             method: 'POST',
@@ -181,31 +164,87 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => response.json())
         .then(data => {
-            // Update chat list to show 0 unread
             updateChatListUnread(userId, 0);
         })
         .catch(error => console.error('Error marking as read:', error));
     }
 
-    /** ------------------ Chat Sidebar Selection ------------------ */
+    // ---------------- Chat selection ----------------
     chatList.addEventListener('click', e => {
         const chatItem = e.target.closest('.chat-item');
         if (!chatItem) return;
         
         document.querySelectorAll('.chat-item').forEach(item => item.classList.remove('active'));
         chatItem.classList.add('active');
-        
+
         currentReceiverId = chatItem.dataset.userId;
+        window.currentRecipientId = currentReceiverId;
         chatUsername.textContent = chatItem.querySelector('h4').textContent;
         chatUserImage.src = chatItem.querySelector('img').src;
-        
-        // Mark messages as read
+
+        // Show/hide video call button based on selection
+        if (startVideoCall) {
+            startVideoCall.style.display = 'flex';
+        }
+
         markMessagesAsRead(currentReceiverId);
-        
         loadMessages(currentReceiverId);
     });
 
-    /** ------------------ File Upload ------------------ */
+    // ---------------- VIDEO CALL INITIATION ----------------
+    if (startVideoCall) {
+        startVideoCall.addEventListener('click', async () => {
+            if (!currentReceiverId) {
+                alert('Please select a conversation first.');
+                return;
+            }
+
+            startVideoCall.disabled = true;
+            const originalHTML = startVideoCall.innerHTML;
+            startVideoCall.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Connecting...</span>';
+
+            try {
+                const response = await fetch('/video/create-room', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ receiver_id: currentReceiverId })
+                });
+
+                if (!response.ok) throw new Error('Server error: ' + response.status);
+
+                const data = await response.json();
+
+                if (data.success && data.redirect) {
+                    const width = 1280, height = 720;
+                    const left = (screen.width - width) / 2;
+                    const top = (screen.height - height) / 2;
+                    
+                    const popup = window.open(
+                        data.redirect,
+                        'HealConnect_VideoCall',
+                        `width=${width},height=${height},left=${left},top=${top},toolbar=no,menubar=no`
+                    );
+
+                    if (!popup) {
+                        alert('Please allow popups and try again.');
+                    }
+                } else {
+                    throw new Error(data.message || 'Failed to create room');
+                }
+            } catch (error) {
+                alert('Failed to start video call: ' + error.message);
+            } finally {
+                startVideoCall.disabled = false;
+                startVideoCall.innerHTML = originalHTML;
+            }
+        });
+    }
+
+    // ---------------- File upload ----------------
     fileBtn.addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', async () => {
         if (!currentReceiverId || fileInput.files.length === 0) return;
@@ -226,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } finally { fileInput.value = ''; }
     });
 
-    /** ------------------ Send Text Message ------------------ */
+    // ---------------- Send text message ----------------
     chatForm.addEventListener('submit', async e => {
         e.preventDefault();
         const message = messageInput.value.trim();
@@ -248,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } catch (err) { console.error("Text message send failed:", err); }
     });
 
-    /** ------------------ Voice Recording ------------------ */
+    // ---------------- Voice recording ----------------
     if (recordBtn) {
         recordBtn.addEventListener('click', async () => {
             if (!currentReceiverId) return alert('Select a chat first.');
@@ -261,14 +300,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     mediaRecorder.onstop = async () => {
                         const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
                         const audioFile = new File([audioBlob], `voice_${Date.now()}.webm`, { type: 'audio/webm' });
-
                         const formData = new FormData();
                         formData.append("voice_message", audioFile);
                         formData.append("receiver_id", currentReceiverId);
                         formData.append("_token", document.querySelector('meta[name="csrf-token"]').content);
-
                         recordBtn.disabled = true;
-
                         try {
                             const res = await fetch("/messages/send-voice", { method: "POST", body: formData, headers: { 'Accept': 'application/json' } });
                             const data = await res.json();
@@ -279,7 +315,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             alert("Voice message failed.");
                         } finally { recordBtn.disabled = false; }
                     };
-
                     mediaRecorder.start();
                     recordBtn.classList.add("recording");
                     recordBtn.innerHTML = '<i class="fas fa-stop"></i>';
@@ -295,25 +330,41 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    /** ------------------ Real-time Updates (Pusher) ------------------ */
+    /** ------------------ PUSHER SETUP ------------------ */
+    console.log('=== INITIALIZING PUSHER ===');
+    Pusher.logToConsole = true;
+
     const pusher = new Pusher(window.pusherKey, {
         cluster: window.pusherCluster,
         forceTLS: true,
         authEndpoint: '/broadcasting/auth',
-        auth: { headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content } }
+        auth: { 
+            headers: { 
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content 
+            } 
+        }
     });
-    const channel = pusher.subscribe(`private-healconnect-chat.${window.userId}`);
-    
+
+    pusher.connection.bind('connected', () => console.log(' Pusher connected'));
+    pusher.connection.bind('error', err => console.error(' Pusher error:', err));
+
+    const channelName = `private-healconnect-chat.${window.userId}`;
+    const channel = pusher.subscribe(channelName);
+
+    channel.bind('pusher:subscription_succeeded', () => {
+        console.log('Subscribed to:', channelName);
+    });
+
+    // Message sent event
     channel.bind('message.sent', data => {
+        console.log('📨 Message received:', data);
         const msg = data.message;
         if (msg.sender_id === window.userId) return;
 
-        // If currently chatting with this person, show message immediately
         if (currentReceiverId == msg.sender_id) {
             renderMessage(msg, false);
             markMessagesAsRead(msg.sender_id);
         } else {
-            // Not currently viewing this chat - increment unread count
             const chatItem = document.querySelector(`.chat-item[data-user-id="${msg.sender_id}"]`);
             if (chatItem) {
                 const currentUnread = parseInt(chatItem.getAttribute('data-unread') || '0');
@@ -321,30 +372,61 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         
-        // Move chat to top with preview
         const preview = msg.type === 'file' ? "[File]" : 
                        msg.type === 'voice' ? "[Voice Message]" : 
                        msg.message;
         moveChatToTop(msg.sender_id, preview);
     });
 
-    /** ------------------ Edit/Delete Menu ------------------ */
+    // ---------------- INCOMING VIDEO CALL EVENT ----------------
+    channel.bind('video.call.started', data => {
+        const incomingCallDiv = document.getElementById('incoming-call');
+        const callerNameSpan = document.getElementById('caller-name');
+        const joinBtn = document.getElementById('join-call-btn');
+        const declineBtn = document.getElementById('decline-call-btn');
+
+        if (incomingCallDiv && callerNameSpan) {
+            callerNameSpan.textContent = data.caller.name;
+            incomingCallDiv.style.display = 'flex';
+
+            const newJoinBtn = joinBtn.cloneNode(true);
+            const newDeclineBtn = declineBtn.cloneNode(true);
+            joinBtn.parentNode.replaceChild(newJoinBtn, joinBtn);
+            declineBtn.parentNode.replaceChild(newDeclineBtn, declineBtn);
+
+            newJoinBtn.addEventListener('click', () => {
+                incomingCallDiv.style.display = 'none';
+                
+                const width = 1280, height = 720;
+                const left = (screen.width - width) / 2;
+                const top = (screen.height - height) / 2;
+                const roomUrl = `/video/room/${data.room}${data.token ? '?token=' + data.token : ''}`;
+                
+                const popup = window.open(
+                    roomUrl,
+                    'HealConnect_VideoCall',
+                    `width=${width},height=${height},left=${left},top=${top},toolbar=no,menubar=no`
+                );
+
+                if (!popup) {
+                    alert('Please allow popups.');
+                    window.location.href = roomUrl;
+                }
+            });
+
+            newDeclineBtn.addEventListener('click', () => {
+                incomingCallDiv.style.display = 'none';
+            });
+        }
+    });
+    // ---------------- Edit/Delete message ----------------
     chatMessages.addEventListener('click', e => {
         const target = e.target;
-
-        // Toggle menu display
-        if (target.classList.contains('menu-toggle')) {
-            const menu = target.nextElementSibling;
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-            return;
-        }
-
-        // Close all menus if clicked outside
-        if (!target.classList.contains('edit-message') && !target.classList.contains('delete-message')) {
+        if (target.classList.contains('menu-toggle')) 
+            { const menu = target.nextElementSibling; menu.style.display = menu.style.display === 'block' ? 'none' : 'block'; return; }
+        if (!target.classList.contains('edit-message') && !target.classList.contains('delete-message')) 
             document.querySelectorAll('.menu-options').forEach(menu => menu.style.display = 'none');
-        }
 
-        /** ------------------ EDIT MESSAGE ------------------ */
         if (target.classList.contains('edit-message')) {
             const messageId = target.dataset.messageId;
             const wrapper = chatMessages.querySelector(`.message[data-message-id="${messageId}"]`);
@@ -385,29 +467,23 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(() => {
                 const wrapper = chatMessages.querySelector(`.message[data-message-id="${messageId}"]`);
                 const bubble = wrapper.querySelector('.bubble');
-
-                // Determine type to show proper deleted text
                 let deletedText = 'This message was deleted.';
                 if (wrapper.querySelector('audio')) deletedText = 'This voice message was deleted.';
                 else if (wrapper.querySelector('img, video, a')) deletedText = 'This file was deleted.';
-
                 bubble.innerHTML = `<p class="text">${deletedText}</p>`;
             })
-            .catch(err => console.error('Delete failed:', err));
+            .catch(err => console.error('Delete failed:',err));
         }
     });
 
-    // Close menus when clicking outside
-    document.addEventListener('click', e => {
-        if (!e.target.classList.contains('menu-toggle')) {
-            document.querySelectorAll('.menu-options').forEach(menu => menu.style.display = 'none');
-        }
+    document.addEventListener('click', e => { 
+        if (!e.target.classList.contains('menu-toggle')) 
+            document.querySelectorAll('.menu-options').forEach(menu => menu.style.display='none'); 
     });
 
-    /** ------------------ Auto-open chat via URL ------------------ */
+    // ---------------- Auto-open chat via URL ----------------
     const urlParams = new URLSearchParams(window.location.search);
     const receiverIdFromUrl = urlParams.get('receiver_id');
-
     if (receiverIdFromUrl) {
         let chatItem = document.querySelector(`.chat-item[data-user-id="${receiverIdFromUrl}"]`);
         if (chatItem) chatItem.click();

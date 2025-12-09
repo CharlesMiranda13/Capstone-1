@@ -37,6 +37,11 @@ return [
     'stripe' =>[
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
-    ]
+    ],
+    
+    'daily' => [
+        'api_key' => env('DAILY_API_KEY'),
+        'domain' => env('DAILY_DOMAIN', 'project-healconnect'),
+    ],
 
 ];

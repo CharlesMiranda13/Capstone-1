@@ -22,7 +22,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Models\Setting;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\Admin\AdminContactController;
-use App\Http\Controllers\VideoCallController;
+use App\Http\Controllers\VideoController;
 
 /*Public Pages*/
 
@@ -136,17 +136,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])->group(function () {
     Route::get('/home', [PatientController::class, 'dashboard'])->name('home');
 
-
-
     //Appointment
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
     Route::get('/appointments/{therapist}/book', [AppointmentController::class, 'create'])->name('appointments.create');
     Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
     Route::patch('/appointments/{id}/cancel', [AppointmentController::class, 'cancel'])
         ->name('appointments.cancel');
-
-
-
+        
     // Settings 
     Route::get('/settings', [PatientController::class, 'settings'])->name('settings');
     Route::put('/settings/profile', [PatientController::class, 'updateProfile'])->name('update.profile');
@@ -172,8 +168,6 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
     //Route::get('/referral/upload', [ReferralController::class, 'create'])->name('referral.upload');
     //Route::post('/referral/upload', [ReferralController::class, 'store'])->name('referral.store');
 
-    // Logout
-    Route::post('/logout', [App\Http\Controllers\Auth\UserAuthController::class, 'logout'])->name('logout');
 });
 
 
@@ -270,7 +264,7 @@ Route::get('/check-status', function () {
     return response()->json(['status' => Auth::user()->status]);
 })->middleware('auth')->name('check.status');
 
-/* Messages and Video Call  */
+/* Messages  */
 Route::middleware(['auth', 'check.status', 'check.subscription'])->group(function () {
     Route::get('/messages', [ChatController::class, 'index'])->name('messages');
     Route::get('/messages/user-info/{id}', [ChatController::class, 'getUserInfo']);
@@ -281,7 +275,6 @@ Route::middleware(['auth', 'check.status', 'check.subscription'])->group(functio
     Route::put('/messages/{id}/edit', [ChatController::class, 'update'])->name('messages.update');
     Route::delete('/messages/{id}', [ChatController::class, 'destroy'])->name('messages.destroy');
     Route::post('/messages/mark-as-read/{userId}', [ChatController::class, 'markAsRead'])->name('messages.markAsRead');
-    Route::post('/start-video-call', [VideoCallController::class, 'start'])->name('video.start');
 
 });
 
@@ -301,7 +294,6 @@ Route::prefix('subscribe')->name('subscribe.')->group(function () {
     Route::post('/{plan}', [SubscriptionController::class, 'store'])->name('store');
 });
 
-// 
 Route::middleware(['auth'])->group(function () {
     Route::get('/payment', [SubscriptionController::class, 'showPayment'])->name('payment.show');
     Route::post('/payment/checkout', [SubscriptionController::class, 'createCheckoutSession'])->name('payment.checkout');
@@ -326,3 +318,11 @@ Route::middleware('auth')->group(function () {
         ->name('clinic.unread.counts');
 });
 Broadcast::routes(['middleware' => ['auth:web,admin']]);
+
+    // Start video call
+Route::middleware(['auth'])->group(function () {
+    Route::post('/video/create-room', [VideoController::class, 'createRoom'])->name('video.create');
+    Route::get('/video/room/{room}', [VideoController::class, 'showRoom'])->name('video.room');
+    Route::delete('/video/room/{room}', [VideoController::class, 'deleteRoom'])->name('video.delete');
+    
+});

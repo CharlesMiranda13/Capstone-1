@@ -17,3 +17,8 @@ Broadcast::channel('healconnect-chat.{userId}', function ($user, $userId) {
     return (int) $user->id === (int) $userId;
 }, ['guards' => ['web', 'admin']]);
 
+
+Broadcast::channel('healconnect-call.{userId}', function ($user, $userId) {
+    return (int) $user->id === (int) $userId;
+});
+
