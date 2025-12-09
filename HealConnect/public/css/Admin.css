@@ -22,6 +22,7 @@
 }
 
 .sidebar .sidebar-item {
+    position: relative;
     color: #1f2d3d;
     font-weight: 500;
     text-decoration: none;
@@ -68,6 +69,26 @@
 .sidebar .logout-btn:hover {
     background: linear-gradient(90deg, #4b8df8, #4ad0a9);
     color: white;
+}
+
+.notification-badge {
+    position: absolute;
+    top: 8px;
+    right: 15px;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: bold;
+    min-width: 18px;
+    text-align: center;
+    display: none;
+    animation: pulse 2s infinite;
+}
+
+.notification-badge.show {
+    display: inline-block;
 }
 
 .admin-main {
@@ -412,6 +433,24 @@
 
 .btn.btn-primary:hover {
     background-color: #0056b3;
+}
+
+.btn-del {
+    display: inline-block;
+    padding: 10px 16px;
+    background-color: #e74c3c;
+    border-color: #c0392b;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-del:hover {
+    background-color: #c0392b;
 }
 
 @media (max-width: 768px) {

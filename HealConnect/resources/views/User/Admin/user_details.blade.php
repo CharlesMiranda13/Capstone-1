@@ -62,7 +62,6 @@
         <div class="form-group">
             <label><strong>Address</strong></label>
             @if($user->street || $user->city)
-                {{-- If structured address components exist, display them nicely --}}
                 <div class="address-details">
                     @if($user->street)
                         <div class="address-line">
@@ -107,7 +106,6 @@
                     @endif
                 </div>
             @elseif($user->address)
-                {{-- Fallback to single address field if components don't exist --}}
                 <textarea class="form-control" readonly rows="3">{{ $user->address }}</textarea>
             @else
                 <input type="text" class="form-control" value="Not Specified" readonly>

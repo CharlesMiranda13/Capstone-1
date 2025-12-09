@@ -31,37 +31,42 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($users as $user)
-                    <tr>
-                        <td>{{ $user->id }}</td>
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->email }}</td>
-                        <td>{{ ucfirst($user->role_display) }}</td>
-                        <td>
-                            <span class="badge 
-                                @if($user->status == 'Pending') bg-warning
-                                @elseif($user->status == 'Active') bg-success
-                                @elseif($user->status == 'Declined') bg-danger
-                                @endif">
-                            {{ $user->status }}
-                            </span>
-                        </td>   
-                        <td>
-                        {{-- View --}}
-                            <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-info btn-sm">View</a>
+            @foreach ($users as $user)
+                <tr>
+                    <td>{{ $user->id }}</td>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>{{ ucfirst($user->role_display) }}</td>
+                    <td>
+                        <span class="badge 
+                            @if($user->status == 'Pending') bg-warning
+                            @elseif($user->status == 'Active') bg-success
+                            @elseif($user->status == 'Declined') bg-danger
+                            @endif">
+                        {{ $user->status }}
+                        </span>
+                    </td>   
+                    <td>
+                        <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-primary btn-sm me-1">
+                            <i class="fa fa-eye"></i> View
+                        </a>
 
-                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-del btn-sm"
-                                    onclick="return confirm('Are you sure you want to delete this user?');">
-                                    Delete
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
+
+                        <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-del btn-sm"
+                                onclick="return confirm('Are you sure you want to delete this user?');">
+                                <i class="fa fa-trash"></i> Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            @endforeach
             </tbody>
         </table>
+        <div class="mt-3">
+            {{ $users->withQueryString()->links() }}
+        </div>
     </div>
 @endsection

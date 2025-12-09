@@ -99,6 +99,8 @@
     border-radius: 10px;
     border-left: 4px solid #28a745;
     margin-top: 10px;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .employees-list {

@@ -19,14 +19,14 @@ class UserController extends Controller
 
         // Only clinics and independent therapists
         $query->whereIn('role', ['patient','clinic', 'therapist'])
-          ->whereNull('clinic_id'); // exclude clinic employees
+            ->whereNull('clinic_id');
 
-        // Apply dropdown role filter
+        // Role filter
         if ($request->has('role') && $request->role != 'all') {
             $query->where('role', $request->role);
         }
 
-        // Apply search filter
+        // Search filter
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -35,7 +35,8 @@ class UserController extends Controller
             });
         }
 
-        $users = $query->get();
+        // Pagination (10 users per page)
+        $users = $query->orderBy('id', 'asc')->paginate(10);
 
         return view('User.Admin.manage_users', compact('users'));
     }
@@ -152,5 +153,26 @@ class UserController extends Controller
 
         return view('User.Admin.user_details', compact('user', 'employees'));
     }
-    
+    public function getUnreadCounts()
+    {
+        try {
+            // Count users pending approval
+            $newUsers = \App\Models\User::where('status', 'Pending')->count();
+            
+            // Count unread contact messages (is_read = false)
+            $newConcerns = \App\Models\ContactMessage::where('is_read', false)->count();
+            
+            return response()->json([
+                'new_users' => $newUsers,
+                'new_concerns' => $newConcerns
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error fetching admin unread counts: ' . $e->getMessage());
+            return response()->json([
+                'new_users' => 0,
+                'new_concerns' => 0,
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="pusher-key" content="{{ config('broadcasting.connections.pusher.key') }}">
+    <meta name="pusher-cluster" content="{{ config('broadcasting.connections.pusher.options.cluster') }}">
+    <meta name="user-role" content="admin">
+    <meta name="unread-counts-url" content="{{ route('admin.unread-counts') }}">
+
     <title>@yield('title', 'Admin Dashboard')</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('Css/style.css') }}">
@@ -25,11 +30,11 @@
         <a href="{{ route('admin.dashboard') }}" class ="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' :'' }}" >
             <i class="fa-solid fa-gauge"></i> Dashboard</a>
         <a href="{{ route('admin.manage-users') }}" class = "sidebar-item {{ request()->routeIs('admin.manage-users') ? 'active' : ''}}">
-            <i class="fa-solid fa-users"></i> Manage Users</a>
+            <i class="fa-solid fa-users"></i> Manage Users <span class="notification-badge" id="new-users-badge">0</span></a>
         <a href="{{ route('admin.viewreports') }}"class = "sidebar-item {{ request()->routeIs('admin.viewreports') ? 'active' : ''}}">
             <i class="fa-solid fa-chart-bar"></i> System Reports</a>
         <a href="{{ route('admin.contact_messages') }}"class = "sidebar-item {{ request()->routeIs('admin.contact_messages') ? 'active' : ''}}">
-            <i class="fa-solid fa-area-chart"></i> User Concern</a>
+            <i class="fa-solid fa-area-chart"></i> User Concern <span class="notification-badge" id="new-concerns-badge">0</span></a>
         <a href="{{ route('admin.setting') }}" class = "sidebar-item {{ request()->routeIs('admin.setting') ? 'active' : ''}}">
             <i class="fa-solid fa-cog"></i> Settings</a>
 
@@ -45,6 +50,8 @@
         @yield('content')
     </div>
     <script src="{{ asset('js/modal.js') }}"></script>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script src="{{ asset('js/notifications.js') }}"></script>
     @yield('scripts')
 </body>
 </html>

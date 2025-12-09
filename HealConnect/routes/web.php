@@ -112,6 +112,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::patch('/users/{id}/verify', [UserController::class, 'verify'])->name('users.verify');
         Route::patch('/users/{id}/decline', [UserController::class, 'decline'])->name('users.decline');
         Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+        Route::get('/unread-counts', [UserController::class, 'getUnreadCounts'])->name('unread-counts');
 
         // Subscription Management Routes
         Route::get('/subscriptions', [\App\Http\Controllers\Admin\SubscriptionManagementController::class, 'index'])
