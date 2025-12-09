@@ -92,6 +92,18 @@
                             <option value="">-- Select Date First --</option>
                         </select>
 
+                        {{-- Preferred Therapist Gender  --}}
+                        @if(!str_contains(strtolower($therapist->role_display), 'independent'))
+                            <label for="preferred_gender">Preferred Therapist Gender (Optional):</label>
+                            <select name="preferred_gender" id="preferred_gender">
+                                <option value="">-- Choose Gender --</option>
+                                <option value="any">Any</option>
+                                <option value="male">Male Therapist</option>
+                                <option value="female">Female Therapist</option>
+                            </select>
+                        @endif
+
+
                         {{-- Notes --}}
                         <label for="notes">Notes (Optional):</label>
                         <textarea name="notes" placeholder="Add any details or requests..."></textarea>

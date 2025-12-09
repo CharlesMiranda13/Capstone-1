@@ -56,6 +56,7 @@
                             <th>Type</th>
                             <th>Date</th>
                             <th>Time</th>
+                            <th>Preferred Gender</th>
                             <th>Notes</th>
                             <th>Referral</th>
                             <th>Status</th>
@@ -72,6 +73,7 @@
                                 <td>{{ ucfirst($appointment->appointment_type) }}</td>
                                 <td>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</td>
+                                <td>{{ $appointment->preferred_gender ? ucfirst($appointment->preferred_gender) : 'Any' }}</td>
                                 <td>{{ $appointment->notes ?? 'N/A' }}</td>
                                 <td>
                                     @if($appointment->referral)
