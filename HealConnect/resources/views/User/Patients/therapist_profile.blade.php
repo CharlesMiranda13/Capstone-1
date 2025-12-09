@@ -65,7 +65,7 @@
             </div>
 
             {{-- RIGHT SIDE --}}
-            <div class="profile-right">
+            <div class="profile-right {{ strtolower($therapist->role) === 'clinic' ? 'three-col' : 'two-col' }}">
 
                 {{-- SPECIALIZATIONS --}}
                 <div class="card-section col-1 row-1">
@@ -141,38 +141,39 @@
                 </div>
 
                 {{-- EMPLOYEES / STAFF --}}
-                
-                <div class="card-section col-3 row-1">
+                @if(strtolower($therapist->role) === 'clinic' || strtolower($therapist->role_display) === 'clinic')
+                <div class="card-section col-3 staff-section">
                     <h4><i class="fa-solid fa-users"></i> Our Staff</h4>
+                    
                     @if(isset($employees) && $employees->count() > 0)
                     <div class="employees-list">
                         @foreach($employees as $employee)
-                            <div class="employee-item">
+                        <div class="employee-item">
 
-                                <div class="employee-avatar">
-                                    <img src="{{ $employee->profile_picture 
-                                        ? asset('storage/' . $employee->profile_picture) 
-                                        : asset('images/logo1.png') }}"
-                                        alt="{{ $employee->name }}">
-                                </div>
-
-                                <div class="employee-info">
-                                    <p class="employee-name">{{ $employee->name }}</p>
-                                    <p class="employee-position">{{ $employee->position }}</p>
-
-                                    @if($employee->gender)
-                                        <p class="employee-gender">
-                                            {{ ucfirst($employee->gender) }}
-                                        </p>
-                                    @endif
-                                </div>
+                            <div class="employee-avatar">
+                                <img src="{{ $employee->profile_picture 
+                                    ? asset('storage/' . $employee->profile_picture) 
+                                    : asset('images/logo1.png') }}"
+                                    alt="{{ $employee->name }}">
                             </div>
+
+                            <div class="employee-info">
+                                <p class="employee-name">{{ $employee->name }}</p>
+                                <p class="employee-position">{{ $employee->position }}</p>
+
+                                @if($employee->gender)
+                                <p class="employee-gender">{{ ucfirst($employee->gender) }}</p>
+                                @endif
+                            </div>
+
+                        </div>
                         @endforeach
                     </div>
                     @else
                         <p>No staff members added yet.</p>
-                    @endif 
+                    @endif
                 </div>
+                @endif
             </div>
         </section>
     </div>
