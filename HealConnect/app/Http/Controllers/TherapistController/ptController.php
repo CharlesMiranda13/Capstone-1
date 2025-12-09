@@ -534,7 +534,6 @@ class ptController extends Controller
         $appointment->status = $request->input('status');
         $appointment->save();
 
-        // Update related availability (if any)
         try {
             $availability = Availability::where('provider_id', $appointment->provider_id)
                 ->whereDate('date', $appointment->appointment_date)
