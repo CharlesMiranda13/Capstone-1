@@ -45,6 +45,7 @@
                         <th>#</th>
                         <th>Profile</th>
                         <th>Full Name</th>
+                        <th>Gender</th>
                         <th>Email</th>
                         <th>Position</th>
                         <th>Actions</th>
@@ -63,6 +64,7 @@
                                     class="profile-pic">
                             </td>
                             <td>{{ $employee->name }}</td>
+                            <td>{{ $employee->gender}}</td>
                             <td>{{ $employee->email }}</td>
                             <td>{{ $employee->position }}</td>
                             <td class="actions">
@@ -93,6 +95,13 @@
             <div class="form-group">
                 <label>Full Name</label>
                 <input type="text" name="name" required>
+            </div>
+            <div class="form-group">
+                <label>Gender</label>
+                <select name="gender" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
             </div>
 
             <div class="form-group">

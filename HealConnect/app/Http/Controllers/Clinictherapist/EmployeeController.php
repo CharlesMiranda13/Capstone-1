@@ -46,6 +46,7 @@ class EmployeeController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
+            'gender' => 'required|in:Male,Female',
             'email' => 'required|email|unique:users,email',
             'position' => 'required|string|max:255',
             'profile_picture' => 'nullable|image|max:2048',
@@ -57,6 +58,7 @@ class EmployeeController extends Controller
 
         User::create([
             'name' => $request->name,
+            'gender' => $request->gender,
             'email' => $request->email,
             'position' => $request->position,
             'role' => 'employee',
@@ -82,6 +84,7 @@ class EmployeeController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
+            'gender' => 'required|in:Male,Female',
             'email' => 'required|email|unique:users,email,' . $employee->id,
             'position' => 'required|string|max:255',
             'profile_picture' => 'nullable|image|max:2048',
@@ -91,7 +94,7 @@ class EmployeeController extends Controller
             $employee->profile_picture = $request->file('profile_picture')->store('profile_pictures', 'public');
         }
 
-        $employee->update($request->only('name', 'email', 'position'));
+        $employee->update($request->only('name','gender' ,'email', 'position'));
 
         return back()->with('success', 'Employee updated successfully!');
     }

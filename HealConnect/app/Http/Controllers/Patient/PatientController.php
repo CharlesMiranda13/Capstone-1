@@ -196,7 +196,21 @@ class PatientController extends Controller
         $therapistAvailability = $therapist->upcomingAvailability();
         $price = $therapist->services->first()?->price ?? null;
 
-        return compact('therapist', 'servicesList', 'servicesData', 'therapistAvailability', 'price');
+        // Fetch employees if therapist is a clinic
+        $employees = collect();
+        
+        // Check if therapist is a clinic (has employees)
+        if (in_array($therapist->role, ['clinic', 'therapist']) || 
+            str_contains(strtolower($therapist->role_display ?? ''), 'clinic')) {
+            
+            $employees = User::where('clinic_id', $therapist->id)
+                             ->where('role', 'employee')
+                             ->select('id', 'name', 'gender', 'position', 'profile_picture')
+                             ->orderBy('name')
+                             ->get();
+        }
+
+        return compact('therapist', 'servicesList', 'servicesData', 'therapistAvailability', 'price', 'employees');
     }
 
     public function getUnreadCounts()

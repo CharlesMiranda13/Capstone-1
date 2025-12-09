@@ -9,6 +9,14 @@
     </div>
 
     <div class="form-group">
+        <label>Gender</label>
+        <select name="gender" required>
+            <option value="Male" {{ $employee->gender == 'Male' ? 'selected' : '' }}>Male</option>
+            <option value="Female" {{ $employee->gender == 'Female' ? 'selected' : '' }}>Female</option>
+        </select>
+    </div>
+
+    <div class="form-group">
         <label>Email Address</label>
         <input type="email" name="email" value="{{ $employee->email }}" required>
     </div>
