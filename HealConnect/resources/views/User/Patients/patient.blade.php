@@ -24,7 +24,7 @@
                 <div class="appointments-list">
                     @forelse ($appointments as $appointment)
                     <div class ="appointment-item">
-                        <p class ="therapist-name">{{$appointment->provider->name}}</p>
+                        <p class ="therapist-name"><strong>Dr. {{$appointment->provider->name}}</strong></p>
                         <p class ="appointment-date">
                             {{ \Carbon\Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time)->format('F j, Y - g:i A') }}
                         </p>
@@ -39,7 +39,23 @@
             </div>
 
             <div class="medical-card">
-                <h3><i class = "fa fa-folder-open "></i>Recent Medical Records</h3>
+                <h3><i class="fa fa-folder-open"></i>Recent Medical Records</h3>
+                <div class="medical-records-list">
+                    @forelse ($recentRecords as $record)
+                        <div class="record-item">
+                            <p class="record-update">
+                                <strong>Dr. {{ $record->therapist->name }}</strong> updated your 
+                                <span class="record-type">{{ $record->record_type }}</span>
+                            </p>
+                            <p class="record-date">
+                                {{ $record->created_at->format('F j, Y - g:i A') }}
+                            </p>
+                        </div>
+                    @empty
+                        <p class="empty-state">No medical records yet.</p>
+                    @endforelse
+                </div>
+                <a href="{{ route('patient.records') }}" class="view-all-link">View All Records →</a>
             </div>
 
         </div>

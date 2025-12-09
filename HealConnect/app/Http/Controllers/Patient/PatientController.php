@@ -31,7 +31,13 @@ class PatientController extends Controller
 
         $therapists = User::verifiedTherapists()->get();
 
-        return view('user.patients.patient', compact('user', 'appointments', 'therapists'));
+        $recentRecords = MedicalRecord::where('patient_id', $user->id)
+        ->with('therapist:id,name')
+        ->orderBy('created_at', 'desc')
+        ->limit(5)
+        ->get();
+
+        return view('user.patients.patient', compact('user', 'appointments', 'therapists', 'recentRecords'));
     }
 
     /** ---------------- LIST OF THERAPISTS ---------------- */
