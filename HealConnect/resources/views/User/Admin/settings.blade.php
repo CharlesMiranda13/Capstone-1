@@ -48,6 +48,7 @@
             @csrf
 
             {{-- General Tab --}}
+            <div id="general" class="tab-content active">
                 <div class="form-group">
                     <label for="contact_email">Contact Email</label>
                     <input 
