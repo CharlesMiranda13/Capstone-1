@@ -40,7 +40,7 @@
 
             <div class="medical-card">
                 <h3><i class="fa fa-folder-open"></i>Recent Medical Records</h3>
-                <div class="medical-records-list">
+                <div class="medical-records-list scrollable">
                     @forelse ($recentRecords as $record)
                         <div class="record-item">
                             <p class="record-update">
@@ -57,12 +57,28 @@
                 </div>
                 <a href="{{ route('patient.records') }}" class="view-all-link">View All Records →</a>
             </div>
-
         </div>
 
         <div class="right-column">
             <div class="notification">
-                <h3><i class="fa fa-bell"></i> Notifications</h3>
+                <h3><i class="fa fa-sticky-note"></i> Note</h3>
+                <div class="notes-content">
+                    @if (!empty($latestProgressNote))
+                        <div class="progress-note-card">
+                            <p class="note-from">
+                                <strong>From: Dr. {{ $latestProgressRecord->therapist->name ?? 'Your Therapist' }}</strong>
+                            </p>
+                            <p class="note-date-header">
+                                {{ $latestProgressNote['date'] }}
+                            </p>
+                            <p class="note-text">
+                                {{ $latestProgressNote['note'] }}
+                            </p>
+                        </div>
+                    @else
+                        <p class="empty-state">No progress notes yet.</p>
+                    @endif
+                </div>
             </div>
         </div>
     </main>

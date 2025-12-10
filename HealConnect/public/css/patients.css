@@ -225,6 +225,30 @@
     text-decoration: underline;
 }
 
+.medical-records-list.scrollable {
+    max-height: 250px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.medical-records-list.scrollable::-webkit-scrollbar {
+    width: 6px;
+}
+
+.medical-records-list.scrollable::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.medical-records-list.scrollable::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.medical-records-list.scrollable::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
 /* === Appointments List === */
 .appointments-list {
     display: flex;
@@ -289,6 +313,47 @@
 
 .notification h3 {
     color: #2c3e50;
+}
+
+.notes-content {
+    margin-top: 15px;
+}
+
+.progress-note-card {
+    padding: 15px;
+    background: #f8f9fa;
+    border-left: 4px solid #17a2b8;
+    border-radius: 4px;
+}
+
+.note-from {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #495057;
+}
+
+.note-text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #212529;
+    background: white;
+    padding: 12px;
+    border-radius: 4px;
+}
+
+.note-date {
+    margin: 0;
+    font-size: 12px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.note-date-header {
+    margin: 0 0 10px 0;
+    font-size: 13px;
+    color: #007bff;
+    font-weight: 600;
 }
 
 /* === Responsive Design === */

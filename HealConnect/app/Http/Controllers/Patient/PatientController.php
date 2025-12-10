@@ -38,7 +38,29 @@ class PatientController extends Controller
         ->limit(5)
         ->get();
 
-        return view('user.patients.patient', compact('user', 'appointments', 'therapists', 'recentRecords'));
+        $latestProgressNote = null;
+        if (!empty($user->exercises)) {
+            $progressEntries = array_filter(explode("\n\n", $user->exercises));
+            if (count($progressEntries) > 0) {
+                $latestEntry = end($progressEntries);
+                
+                $parts = explode(": ", $latestEntry, 2);
+                if (count($parts) == 2) {
+                    $latestProgressNote = [
+                        'date' => $parts[0],
+                        'note' => $parts[1]
+                    ];
+                }
+            }
+        }
+        
+        $latestProgressRecord = MedicalRecord::where('patient_id', $user->id)
+            ->where('record_type', 'Progress Note')
+            ->with('therapist:id,name')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        return view('user.patients.patient', compact('user', 'appointments', 'therapists', 'recentRecords', 'latestProgressNote', 'latestProgressRecord'));
     }
 
     /** ---------------- LIST OF THERAPISTS ---------------- */
