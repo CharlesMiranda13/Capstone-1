@@ -3,18 +3,17 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Settings;
+use App\Models\Setting;
 
-class SettingsSeeder extends Seeder
+class SettingSeeder extends Seeder
 {
     public function run()
     {
-        // Check if a settings record already exists
-        if (Settings::count() == 0) {
-            Settings::create([
+        if (Setting::count() == 0) {   
+            Setting::create([          
                 'system_name' => 'HealConnect',                   
                 'description' => 'Remote physical therapy platform',  
-                'contact_email' => '@healconnect.com',       
+                'contact_email' => 'support@healconnect.com',       
                 'terms' => 'Default terms and conditions here.',
                 'privacy' => 'Default privacy policy here.'
             ]);
