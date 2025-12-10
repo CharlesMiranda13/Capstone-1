@@ -43,6 +43,7 @@ class User extends Authenticatable
         'clinic_id',
         'position',
         'description',
+        'dob',
     ];
 
     protected $hidden = [
@@ -56,6 +57,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'subscription_started_at' => 'datetime',
+            'dob'=> 'date',
         ];
     }
 
@@ -153,6 +155,23 @@ class User extends Authenticatable
             'patient' => 'Patient',
             default => ucfirst($this->role),
         };
+    }
+    public function getFormattedDobAttribute()
+    {
+        // Check if dob is empty, null, or invalid date
+        if (empty($this->dob) || $this->dob === '0000-00-00') {
+            return 'Not provided';
+        }
+
+        try {
+            $date = $this->dob instanceof \Carbon\Carbon 
+                ? $this->dob 
+                : \Carbon\Carbon::parse($this->dob);
+            
+            return $date->format('F j, Y');
+        } catch (\Exception $e) {
+            return 'Not provided';
+        }
     }
 
     /** ---------------- HELPERS ---------------- */

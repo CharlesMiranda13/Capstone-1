@@ -47,12 +47,10 @@
 
                 <div class="contact-info">
                     <p><i class="fa-solid fa-envelope"></i> {{ $patient->email }}</p>
-                    <p><i class="fa-solid fa-phone"></i> {{ $patient->phone ?? 'Phone not specified' }}</p>
-                    <p><i class="fa-solid fa-location-dot"></i> {{ $patient->address ?? 'Address not specified' }}</p>
-                    <p><i class="fa-solid fa-calendar"></i> 
-                        {{ $patient->dob ? \Carbon\Carbon::parse($patient->dob)->format('F j, Y') : 'Not provided' }}
-                    </p>
-                    <p><i class="fa-solid fa-venus-mars"></i> {{ ucfirst($patient->gender) ?? 'Not specified' }}</p>
+                    <p><i class="fa-solid fa-phone"></i> {{ $patient->phone ?? 'Not specified' }}</p>
+                    <p><i class="fa-solid fa-location-dot"></i> {{ $patient->address ?? 'Not specified' }}</p>
+                    <p><i class="fa-solid fa-calendar"></i> {{ $patient->formatted_dob }}</p>
+                    <p><i class="fa-solid fa-venus-mars"></i> {{ $patient->gender ? ucfirst($patient->gender) : 'Not specified' }}</p>
                 </div>
 
                 <div class="app">

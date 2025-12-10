@@ -139,7 +139,7 @@ class RegisterController extends Controller
             'province' => $request->province,
             'region' => $request->region,
             'postal_code' => $request->postal_code,
-            'dob' => $request->dob ?? null,
+            'dob' => $request->input('dob') ?? $request->input('DOB') ?? null,
             'gender' => $request->Gender ?? null,
             'specialization' => $request->has('specialization')
                 ? implode(',', $request->specialization)
