@@ -36,6 +36,7 @@ class VideoCallStarted implements ShouldBroadcast
     {
         return [
             'caller' => $this->data['caller'],
+            'receiver_id' => $this->data['receiver_id'],
             'room' => $this->data['room'],
             'room_url' => $this->data['room_url'],
             'token' => $this->data['token'] ?? null

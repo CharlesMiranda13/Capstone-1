@@ -24,6 +24,9 @@ use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\VideoController;
 
+
+Broadcast::routes(['middleware' => ['auth']]);
+
 /*Public Pages*/
 
 Route::view('/', 'index')->name('home');
@@ -256,6 +259,7 @@ Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'check.status', 'c
     Route::put('/settings/info', [ClinicController::class, 'updateInfo'])->name('update.info');
     Route::put('/settings/password', [ClinicController::class, 'updatePassword'])->name('update.password');
 });
+
 //logout
 Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [UserAuthController::class, 'logout'])->name('logout');
@@ -277,7 +281,6 @@ Route::middleware(['auth', 'check.status', 'check.subscription'])->group(functio
     Route::delete('/messages/{id}', [ChatController::class, 'destroy'])->name('messages.destroy');
     Route::post('/messages/mark-as-read/{userId}', [ChatController::class, 'markAsRead'])->name('messages.markAsRead');
     Route::post('/messages/call-ended', [ChatController::class, 'storeCallEndedMessage'])->name('messages.callEnded');
-
 });
 
 
@@ -319,9 +322,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/clinic/unread-counts', [App\Http\Controllers\Clinictherapist\ClinicController::class, 'getUnreadCounts'])
         ->name('clinic.unread.counts');
 });
-Broadcast::routes(['middleware' => ['auth:web,admin']]);
 
-    // Start video call
+/* Video Call Routes */
 Route::middleware(['auth'])->group(function () {
     Route::post('/video/create-room', [VideoController::class, 'createRoom'])->name('video.create');
     Route::get('/video/room/{room}', [VideoController::class, 'showRoom'])->name('video.room');

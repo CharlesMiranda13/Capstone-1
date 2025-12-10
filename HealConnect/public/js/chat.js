@@ -469,6 +469,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ---------------- INCOMING VIDEO CALL EVENT ----------------
     channel.bind('video.call.started', data => {
+        console.log('📞 Video call event received:', data);
+        
+        // CRITICAL: Verify this call is actually for THIS user
+        if (data.receiver_id !== window.authUserId) {
+            console.warn('⚠️ Call not intended for this user. Ignoring.', {
+                intended_for: data.receiver_id,
+                current_user: window.authUserId
+            });
+            return; // Exit early - this call is not for us
+        }
+        
+        console.log('✅ Call confirmed for this user');
+        
         const incomingCallDiv = document.getElementById('incoming-call');
         const callerNameSpan = document.getElementById('caller-name');
         const joinBtn = document.getElementById('join-call-btn');
@@ -518,11 +531,14 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             newDeclineBtn.addEventListener('click', () => {
+                console.log('📞 Call declined by user');
                 incomingCallDiv.style.display = 'none';
+                
+                // Optional: Notify the caller that the call was declined
+                // You can implement this if needed
             });
         }
     });
-
     // ---------------- Edit/Delete message ----------------
     chatMessages.addEventListener('click', e => {
         const target = e.target;
