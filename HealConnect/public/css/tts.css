@@ -586,9 +586,14 @@
 /* Pagination & No Results */
 .no-results {
     text-align: center;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    color: #666;
     font-size: 1.1rem;
-    color: #777;
-    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
 }
 
 .pagination {
