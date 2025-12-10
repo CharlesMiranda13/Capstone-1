@@ -268,13 +268,25 @@
 .subscription-warning {
     background: #fff3cd;
     border-left: 4px solid #ffc107;
-    padding: 15px 20px;
-    margin-bottom: 20px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    padding: 40px;
+    margin: 50px auto;
+    max-width: 600px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     animation: slideDown 0.3s ease-out;
+}
+
+.subscription-warning h2 {
+    color: #856404;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.subscription-warning p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 25px;
 }
 
 .subscription-warning i {
@@ -288,27 +300,43 @@
 }
 
 .subscription-warning a {
-    color: #007bff;
+    color: white;
+    background: linear-gradient(90deg, #4b8df8, #4ad0a9);
+    padding: 12px 30px;
+    border-radius: 6px;
     font-weight: bold;
-    text-decoration: underline;
-    margin-left: auto;
-    white-space: nowrap;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
 }
 
 .subscription-warning a:hover {
-    color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(75, 141, 248, 0.4);
 }
 
 .subscription-expired {
     background: #f8d7da;
     border-left: 4px solid #dc3545;
-    padding: 15px 20px;
-    margin-bottom: 20px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    padding: 40px;
+    margin: 50px auto;
+    max-width: 600px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     animation: slideDown 0.3s ease-out;
+}
+
+.subscription-expired h2 {
+    color: #721c24;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.subscription-expired p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 25px;
 }
 
 .subscription-expired i {
@@ -322,21 +350,36 @@
 }
 
 .subscription-expired a {
-    color: #dc3545;
+    color: white;
+    background: #dc3545;
+    padding: 12px 30px;
+    border-radius: 6px;
     font-weight: bold;
-    text-decoration: underline;
-    margin-left: auto;
-    white-space: nowrap;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
 }
 
 .subscription-expired a:hover {
-    color: #a71d2a;
+    background: #a71d2a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+}
+
+.health-info p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+    text-align: left;
+}
+
+.health-info strong {
+    font-weight: bold;
 }
 
 @keyframes slideDown {
     from {
         opacity: 0;
-        transform: translateY(-10px);
+        transform: translateY(-20px);
     }
 
     to {

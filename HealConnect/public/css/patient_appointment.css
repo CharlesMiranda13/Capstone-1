@@ -58,3 +58,41 @@
     color: #9ca3af;
     margin-bottom: 10px;
 }
+
+.alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+}
+
+.alert.success {
+  background: #e8f9ee;
+  color: #1e8c47;
+  border: 1px solid #c5efd4;
+  border-left: 4px solid #16a34a;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    color: #fff;
+    font-size: 0.8rem;
+}
+
+.bg-warning {
+    background-color: #f59e0b;
+}
+
+.bg-success {
+    background-color: #10b981;
+}
+
+.bg-danger {
+    background-color: #ef4444;
+}
+
+.bg-primary {
+    background-color: #3b82f6;
+}

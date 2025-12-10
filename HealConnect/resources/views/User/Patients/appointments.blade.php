@@ -46,9 +46,14 @@
                         <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</td>
 
                         <td>
-                            <span class="status {{ strtolower($appointment->status) }}">
-                                {{ ucfirst($appointment->status) }}
-                            </span>
+                            <span class="badge 
+                                        @if($appointment->status == 'pending') bg-warning
+                                        @elseif($appointment->status == 'approved') bg-success
+                                        @elseif($appointment->status == 'rejected') bg-danger
+                                        @elseif($appointment->status == 'completed') bg-primary
+                                        @endif">
+                                        {{ ucfirst($appointment->status) }}
+                                    </span>
                         </td>
 
                         <td>

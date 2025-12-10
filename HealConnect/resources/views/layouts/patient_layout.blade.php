@@ -45,7 +45,7 @@
             <span class="notification-badge" id="appointments-badge">0</span>
         </a>
 
-        <a href="{{ route('patient.records') }}" class="sidebar-item {{ request()->routeIs('patients.records') ? 'active' : '' }}">
+        <a href="{{ route('patient.records') }}" class="sidebar-item {{ request()->routeIs('patient.records') ? 'active' : '' }}">
             <i class="fa-regular fa-file-lines"></i> Records
         </a>
 

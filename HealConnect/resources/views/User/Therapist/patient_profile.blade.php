@@ -64,8 +64,26 @@
             <div class="profile-right">
                 <div class="card-section">
                     <h4><i class="fa-solid fa-notes-medical"></i> Health Information</h4>
-                    @if($patient->medical_notes)
-                        <p>{{ $patient->medical_notes }}</p>
+                    @if($patient->ehr)
+                        @php
+                            // Parse the EHR text into individual fields
+                            $ehrLines = explode("\n", $patient->ehr);
+                            $ehrData = [];
+                            foreach ($ehrLines as $line) {
+                                $parts = explode(": ", $line, 2);
+                                if (count($parts) == 2) {
+                                    $ehrData[trim($parts[0])] = trim($parts[1]);
+                                }
+                            }
+                        @endphp
+                        
+                        <div class="health-info">
+                            <p><strong>Diagnosis:</strong> {{ $ehrData['Diagnosis'] ?? '—' }}</p>
+                            <p><strong>Allergies:</strong> {{ $ehrData['Allergies'] ?? '—' }}</p>
+                            <p><strong>Medications:</strong> {{ $ehrData['Medications'] ?? '—' }}</p>
+                            <p><strong>Medical History:</strong> {{ $ehrData['Medical History'] ?? '—' }}</p>
+                            <p><strong>Notes:</strong> {{ $ehrData['Notes'] ?? '—' }}</p>
+                        </div>
                     @else
                         <p>No health information provided.</p>
                     @endif
