@@ -95,7 +95,8 @@ class ClinicController extends ptController
     {
         $clinic = Auth::user();
 
-        $data = $this->getProfileData(); // existing profile data
+        // Get clinic-specific profile data (overrides parent method)
+        $data = $this->getClinicProfileData();
 
         // Fetch employees
         $employees = User::where('clinic_id', $clinic->id)
@@ -106,6 +107,34 @@ class ClinicController extends ptController
         $data['employees'] = $employees;
 
         return view('user.therapist.clinic.profile', $data);
+    }
+
+    /**
+     * Get profile data for clinic (weekly recurring schedules)
+     * Overrides the parent method which uses date-based availability
+     */
+    protected function getClinicProfileData()
+    {
+        $clinic = Auth::user();
+
+        // Fetch weekly recurring schedules (day_of_week based)
+        $schedules = Availability::where('provider_id', $clinic->id)
+            ->where('provider_type', get_class($clinic))
+            ->orderBy('day_of_week')
+            ->get();
+
+        $services = $this->getServices($clinic);
+
+        $existingPrice = TherapistService::where('serviceable_id', $clinic->id)
+            ->where('serviceable_type', get_class($clinic))
+            ->value('price');
+
+        return [
+            'user' => $clinic,
+            'schedules' => $schedules,
+            'servicesList' => $services,
+            'price' => $existingPrice,
+        ];
     }
 
     /** ---------------- SERVICES ---------------- */

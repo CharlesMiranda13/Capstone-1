@@ -72,14 +72,20 @@
                 {{-- AVAILABILITY --}}
                 <div class="card-section col-2 row-1">
                     <h4><i class="fa-solid fa-calendar-days"></i> Availability</h4>
-                    @if(isset($availability) && count($availability) > 0)
+                    @if(isset($schedules) && count($schedules) > 0)
                         <ul class="availability">
-                            @foreach($availability as $slot)
+                            @foreach($schedules->where('is_active', true) as $schedule)
+                                @php
+                                    $days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+                                    $dayName = is_numeric($schedule->day_of_week) 
+                                        ? $days[$schedule->day_of_week] 
+                                        : $schedule->day_of_week;
+                                @endphp
                                 <li>
-                                    <span class="date">{{ \Carbon\Carbon::parse($slot['date'])->format('F j, Y') }}</span>
+                                    <span class="date">{{ $dayName }}</span>
                                     <span class="time">
-                                        {{ \Carbon\Carbon::parse($slot['start_time'])->format('g:i A') }} -
-                                        {{ \Carbon\Carbon::parse($slot['end_time'])->format('g:i A') }}
+                                        {{ \Carbon\Carbon::parse($schedule->start_time)->format('g:i A') }} -
+                                        {{ \Carbon\Carbon::parse($schedule->end_time)->format('g:i A') }}
                                     </span>
                                 </li>
                             @endforeach
