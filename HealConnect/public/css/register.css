@@ -1,3 +1,6 @@
+/* ===================================
+   BASE STYLES
+   =================================== */
 .register-main {
     max-width: 1000px;
     margin: 60px auto;
@@ -7,6 +10,14 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     font-family: "Poppins", sans-serif;
     animation: fadeIn 0.5s ease-in-out;
+}
+
+.register-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #2da44e;
+    margin-bottom: 25px;
 }
 
 /* Form Layout */
@@ -30,6 +41,7 @@
 .register-form input[type="email"],
 .register-form input[type="password"],
 .register-form input[type="date"],
+.register-form input[type="number"],
 .register-form input[type="file"],
 .register-form select {
     padding: 12px 14px;
@@ -38,6 +50,8 @@
     font-size: 14px;
     margin-bottom: 16px;
     transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .register-form input:focus,
@@ -66,35 +80,18 @@
     transform: scale(1.02);
 }
 
-.group {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-bottom: 0;
+/* Form Groups */
+.form-group {
+    margin-bottom: 1.5rem;
 }
 
-.group label {
-    font-size: 14px;
-    font-weight: 500;
-    color: #000000;
+.form-label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.5rem;
 }
 
-.group input {
-    width: 100%;
-    padding: 12px 14px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    margin-bottom: 0;
-}
-
-.group input:focus {
-    border-color: #2da44e;
-    box-shadow: 0 0 6px rgba(45, 164, 78, 0.3);
-    outline: none;
-}
-
+/* Form Rows */
 .form-row {
     display: flex;
     gap: 20px;
@@ -110,6 +107,49 @@
 .form-col label {
     margin-bottom: 6px;
     font-weight: 600;
+}
+
+/* Checkbox Group */
+.checkbox-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 20px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: #007bff;
+}
+
+.mess {
+    font-size: 12px;
+    color: gray;
+    margin-top: 6px;
+    margin-bottom: 10px;
+}
+
+/* File Section */
+.file-section {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 18px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    border: 1px dashed #ccc;
+}
+
+.file-section label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 10px;
+    display: block;
 }
 
 /* File Input Group */
@@ -136,91 +176,7 @@
     margin-bottom: 0;
 }
 
-/* Footer Text */
-.register-main p {
-    margin-top: 18px;
-    font-size: 13px;
-    text-align: center;
-    color: #555;
-}
-
-.register-main h1 {
-    margin-bottom: 20px;
-    font-size: 26px;
-    font-weight: 700;
-    color: #2da44e;
-}
-
-.register-main p a {
-    color: #2da44e;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.register-main p a:hover {
-    text-decoration: underline;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-label {
-    font-weight: 600;
-    display: block;
-    margin-bottom: 0.5rem;
-}
-
-.checkbox-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 20px;
-}
-
-.checkbox-group label {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.checkbox-group input[type="checkbox"] {
-    margin-right: 8px;
-    accent-color: #007bff;
-}
-
-.mess {
-    font-size: 12px;
-    color: gray;
-    margin-top: 6px;
-    margin-bottom: 10px;
-}
-
-.register-title {
-    text-align: center;
-    font-size: 28px;
-    font-weight: 700;
-    color: #2da44e;
-    margin-bottom: 25px;
-}
-
-.file-section {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding: 18px;
-    background: #f9f9f9;
-    border-radius: 10px;
-    border: 1px dashed #ccc;
-}
-
-.file-section label {
-    font-size: 14px;
-    font-weight: 600;
-    margin-top: 10px;
-    display: block;
-}
-
-/* ------------------ Password Toggle ------------------ */
+/* Password Toggle */
 .password-wrapper {
     position: relative;
     display: block;
@@ -270,6 +226,7 @@
     pointer-events: none;
 }
 
+/* Selected Plan Notice */
 .selected-plan-notice {
     background: #e7f3ff;
     border-left: 4px solid #007bff;
@@ -294,43 +251,312 @@
     text-transform: capitalize;
 }
 
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Footer Text */
+.register-main p {
+    margin-top: 18px;
+    font-size: 13px;
+    text-align: center;
+    color: #555;
 }
 
-/* Responsive for smaller screens */
-@media (max-width: 768px) {
-    .clinic-group {
-        grid-template-columns: 1fr;
-    }
-
-    .register-main {
-        max-width: 50%;
-    }
+.register-main p a {
+    color: #2da44e;
+    text-decoration: none;
+    font-weight: 500;
 }
 
+.register-main p a:hover {
+    text-decoration: underline;
+}
+
+/* Animations */
 @keyframes fadeIn {
     from {
         opacity: 0;
         transform: translateY(-8px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-@media (max-width: 768px) {
-    .name-group {
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===================================
+   RESPONSIVE DESIGN
+   =================================== */
+
+/* Tablet Landscape (992px - 1199px) */
+@media (max-width: 1199px) {
+    .register-main {
+        max-width: 90%;
+        margin: 50px auto;
+        padding: 30px 35px;
+    }
+}
+
+/* Tablet (768px - 991px) */
+@media (max-width: 991px) {
+    .register-main {
+        max-width: 90%;
+        margin: 40px auto;
+        padding: 30px;
+    }
+
+    .register-title {
+        font-size: 26px;
+        margin-bottom: 20px;
+    }
+
+    .form-row {
+        gap: 15px;
+    }
+
+    .file-group {
+        gap: 12px;
+    }
+}
+
+/* Mobile Landscape & Portrait (481px - 767px) */
+@media (max-width: 767px) {
+    .register-main {
+        max-width: 95%;
+        margin: 30px auto;
+        padding: 25px 20px;
+    }
+
+    .register-title {
+        font-size: 24px;
+        margin-bottom: 18px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .form-col {
+        width: 100%;
+    }
+
+    .file-group {
         grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .checkbox-group {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .selected-plan-notice {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+
+    .selected-plan-notice i {
+        font-size: 16px;
+    }
+
+    .file-section {
+        padding: 15px;
+    }
+
+    .register-form input[type="text"],
+    .register-form input[type="tel"],
+    .register-form input[type="email"],
+    .register-form input[type="password"],
+    .register-form input[type="date"],
+    .register-form input[type="number"],
+    .register-form input[type="file"],
+    .register-form select {
+        padding: 11px 12px;
+        font-size: 14px;
+        margin-bottom: 14px;
+    }
+
+    .register-button {
+        padding: 13px;
+        font-size: 15px;
+    }
+}
+
+/* Mobile Portrait (320px - 480px) */
+@media (max-width: 480px) {
+    .register-main {
+        max-width: 95%;
+        margin: 20px auto;
+        padding: 20px 15px;
+    }
+
+    .register-title {
+        font-size: 22px;
+        margin-bottom: 16px;
+    }
+
+    .register-form label {
+        font-size: 13px;
+        margin: 8px 0 5px;
+    }
+
+    .register-form input[type="text"],
+    .register-form input[type="tel"],
+    .register-form input[type="email"],
+    .register-form input[type="password"],
+    .register-form input[type="date"],
+    .register-form input[type="number"],
+    .register-form input[type="file"],
+    .register-form select {
+        padding: 10px 12px;
+        font-size: 13px;
+        margin-bottom: 12px;
+    }
+
+    .register-button {
+        padding: 12px;
+        font-size: 14px;
+        margin-top: 15px;
+    }
+
+    .selected-plan-notice {
+        padding: 10px 12px;
+        font-size: 13px;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .selected-plan-notice i {
+        margin-bottom: 5px;
+        margin-right: 0;
+    }
+
+    .file-section {
+        padding: 12px;
+    }
+
+    .file-section label {
+        font-size: 13px;
+    }
+
+    .checkbox-group label {
+        font-size: 13px;
+    }
+
+    .mess {
+        font-size: 11px;
+    }
+
+    .register-main p {
+        font-size: 12px;
+        margin-top: 15px;
+    }
+
+    .password-wrapper input {
+        padding-right: 45px !important;
+    }
+
+    .toggle-password {
+        padding: 0 10px !important;
+    }
+}
+
+/* Extra Small Mobile (below 360px) */
+@media (max-width: 360px) {
+    .register-main {
+        max-width: 95%;
+        margin: 15px auto;
+        padding: 18px 12px;
+    }
+
+    .register-title {
+        font-size: 20px;
+        margin-bottom: 14px;
+    }
+
+    .register-form label {
+        font-size: 12px;
+        margin: 7px 0 4px;
+    }
+
+    .register-form input[type="text"],
+    .register-form input[type="tel"],
+    .register-form input[type="email"],
+    .register-form input[type="password"],
+    .register-form input[type="date"],
+    .register-form input[type="number"],
+    .register-form input[type="file"],
+    .register-form select {
+        padding: 9px 10px;
+        font-size: 12px;
+        margin-bottom: 10px;
+    }
+
+    .register-button {
+        padding: 11px;
+        font-size: 13px;
+        margin-top: 12px;
+    }
+
+    .selected-plan-notice {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .file-section {
+        padding: 10px;
+    }
+
+    .file-section label {
+        font-size: 12px;
+        margin-top: 8px;
+    }
+
+    .checkbox-group label {
+        font-size: 12px;
+    }
+
+    .mess {
+        font-size: 10px;
+    }
+
+    .register-main p {
+        font-size: 11px;
+    }
+
+    .password-wrapper input {
+        padding-right: 40px !important;
+    }
+
+    .toggle-password {
+        padding: 0 8px !important;
+    }
+
+    .toggle-password svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Landscape Orientation Fix for Mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+    .register-main {
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+    .register-title {
+        font-size: 22px;
+        margin-bottom: 15px;
     }
 }

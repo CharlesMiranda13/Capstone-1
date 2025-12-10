@@ -1,7 +1,13 @@
+/* ================================
+   APPOINTMENT BOOKING PAGE CSS
+   ================================ */
+
+/* Page Container (adjusted for sidebar) */
 .container {
     max-width: 100%;
     padding: 25px;
-    margin-left: 275px;
+    margin-left: 275px; /* desktop sidebar offset */
+    transition: margin-left 0.3s ease;
 }
 
 .header h2 {
@@ -11,7 +17,9 @@
     margin-bottom: 12px;
 }
 
-/* ===== PROFILE CARD LAYOUT ===== */
+/* ================================
+   PROFILE CARD LAYOUT
+   ================================ */
 .profile-card {
     display: flex;
     gap: 40px;
@@ -26,12 +34,14 @@
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
 }
 
+/* Left / Right Columns */
 .profile-left,
 .profile-right {
     flex: 1;
     margin: 0 auto 15px;
 }
 
+/* LEFT SIDE */
 .profile-left {
     background-color: #faf3ee;
     padding: 30px;
@@ -39,7 +49,7 @@
     border-right: 1px solid #eee;
 }
 
-/* ===== PROFILE IMAGE ===== */
+/* Profile Picture */
 .profile-left .profile-pic {
     width: 160px;
     height: 160px;
@@ -57,7 +67,7 @@
     object-fit: cover;
 }
 
-/* ===== TEXT SECTION ===== */
+/* Text */
 .profile-left h3 {
     font-size: 24px;
     font-weight: 600;
@@ -78,7 +88,7 @@
     margin-bottom: 18px;
 }
 
-/* ===== CONTACT INFO ===== */
+/* Contact Info */
 .contact-info p {
     font-size: 20px;
     color: #333;
@@ -86,17 +96,14 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin: 0 0 15px;
 }
 
 .contact-info i {
     font-size: 20px;
     color: #0d6efd;
-    margin: 0;
-    line-height: 1;
 }
 
-/* ===== CARD SECTIONS ===== */
+/* Services List */
 .card-section {
     margin-top: 25px;
     padding-top: 15px;
@@ -129,10 +136,12 @@
     content: "•";
     font-size: 18px;
     color: #0d6efd;
-    line-height: 1;
 }
 
-/* ===== BOOKING FORM ===== */
+/* ================================
+   BOOKING FORM
+   ================================ */
+
 .booking-form {
     display: flex;
     flex-direction: column;
@@ -168,7 +177,7 @@
     resize: vertical;
 }
 
-/* BUTTON */
+/* Submit Button */
 .booking-form .btn-submit {
     padding: 12px;
     background: #0d6efd;
@@ -185,15 +194,38 @@
     background: #0b5ed7;
 }
 
-/* ===== RESPONSIVE ===== */
+/* ================================
+   RESPONSIVE DESIGN
+   ================================ */
+
+/* Large tablets / small desktops (1200px) */
+@media (max-width: 1200px) {
+    .container {
+        margin-left: 240px;
+    }
+}
+
+/* Tablets (900px and below) */
 @media (max-width: 900px) {
+    .container {
+        margin-left: 0; /* Sidebar collapses */
+        padding: 20px;
+    }
+
     .profile-card {
         flex-direction: column;
         padding: 20px;
     }
 
-    .profile-left .profile-pic {
-        margin: 0 auto 15px;
+    .profile-left {
+        text-align: center;
+        border-right: none;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 25px;
+    }
+
+    .contact-info p {
+        justify-content: center;
     }
 
     .profile-left h3,
@@ -201,8 +233,65 @@
     .profile-left .bio {
         text-align: center;
     }
+}
 
+/* Mobile (600px and below) */
+@media (max-width: 600px) {
+    .container {
+        padding: 15px;
+    }
+
+    .header h2 {
+        font-size: 22px;
+        text-align: center;
+    }
+
+    .profile-left .profile-pic {
+        width: 130px;
+        height: 130px;
+    }
+
+    .profile-left h3 {
+        font-size: 20px;
+    }
+
+    .profile-left .role {
+        font-size: 18px;
+    }
+
+    .bio,
+    .services-list li,
     .contact-info p {
-        justify-content: center;
+        font-size: 16px;
+    }
+
+    .booking-form {
+        gap: 12px;
+    }
+
+    .booking-form label {
+        font-size: 13px;
+    }
+
+    .booking-form select,
+    .booking-form textarea {
+        font-size: 13px;
+    }
+
+    .btn-submit {
+        font-size: 15px;
+        padding: 10px;
+    }
+}
+
+/* Extra small (400px and below) */
+@media (max-width: 400px) {
+    .profile-card {
+        padding: 15px;
+    }
+
+    .profile-left .profile-pic {
+        width: 110px;
+        height: 110px;
     }
 }

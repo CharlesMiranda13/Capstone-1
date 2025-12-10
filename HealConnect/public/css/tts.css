@@ -613,18 +613,39 @@
     color: white;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 1024px) {
-    .filter-row {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
+/* ===================================
+   RESPONSIVE DESIGN
+   =================================== */
 
-@media (max-width: 768px) {
+/* Tablet and Below (991px and below) - Sidebar becomes hidden */
+@media (max-width: 991px) {
+    /* When sidebar is toggled off on tablets/mobile */
+    .ptlist {
+        margin-left: 0;
+        width: 100%;
+        padding: 20px 15px;
+    }
+
     .filters-wrapper {
-        flex-direction: column;
         margin-left: 20px;
         width: calc(100% - 40px);
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .advanced-filters {
+        margin-left: 20px;
+        width: calc(100% - 40px);
+    }
+
+    .active-filters {
+        margin-left: 20px;
+        width: calc(100% - 40px);
+    }
+
+    .therapist-title {
+        font-size: 1.8rem;
+        margin-top: 30px;
     }
 
     .filters-left {
@@ -633,8 +654,6 @@
 
     .search-container {
         width: 100%;
-        flex-direction: column;
-        gap: 10px;
     }
 
     .search-form {
@@ -645,46 +664,57 @@
         width: 100%;
     }
 
+    .filter-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Tablet (768px - 991px) */
+@media (max-width: 991px) and (min-width: 768px) {
+    .therapist-cards-container {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        padding: 0 15px;
+    }
+
     .filter-toggle-btn {
         width: 100%;
     }
+}
+
+/* Mobile Landscape (481px - 767px) */
+@media (max-width: 767px) {
+    .ptlist {
+        padding: 15px 10px;
+    }
+
+    .therapist-title {
+        font-size: 1.5rem;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .filters-wrapper {
+        margin-left: 15px;
+        width: calc(100% - 30px);
+        padding: 12px;
+    }
 
     .advanced-filters {
-        margin-left: 20px;
-        width: calc(100% - 40px);
+        margin-left: 15px;
+        width: calc(100% - 30px);
         padding: 20px;
     }
 
     .active-filters {
-        margin-left: 20px;
-        width: calc(100% - 40px);
+        margin-left: 15px;
+        width: calc(100% - 30px);
+        padding: 12px 15px;
     }
 
     .filter-row {
         grid-template-columns: 1fr;
         gap: 15px;
-    }
-
-    .therapist-title {
-        font-size: 1.6rem;
-    }
-
-    .therapist-cards-container {
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 20px;
-    }
-
-    .btn-book,
-    .btn-profile {
-        padding: 8px 16px;
-        font-size: 0.85rem;
-    }
-
-    .filter-tabs a,
-    .filter-services a {
-        display: inline-block;
-        margin: 4px 5px;
-        font-size: 0.9rem;
     }
 
     .filter-actions {
@@ -697,19 +727,54 @@
         width: 100%;
         justify-content: center;
     }
+
+    .therapist-cards-container {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 18px;
+        padding: 0 10px;
+        margin: 20px auto;
+    }
+
+    .therapist-logo img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .filter-tabs,
+    .filter-services {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .filter-tabs a,
+    .filter-services a {
+        font-size: 0.9rem;
+        padding: 4px 8px;
+        margin: 2px;
+    }
+
+    .filter-toggle-btn {
+        width: 100%;
+    }
 }
 
+/* Mobile Portrait (320px - 480px) */
 @media (max-width: 480px) {
     .ptlist {
-        padding: 20px 10px;
-        margin-left: 0;
-        width: 100%;
+        padding: 10px 8px;
+    }
+
+    .therapist-title {
+        font-size: 1.3rem;
+        margin-top: 15px;
+        margin-bottom: 15px;
     }
 
     .filters-wrapper {
         margin-left: 10px;
         width: calc(100% - 20px);
-        padding: 12px;
+        padding: 10px;
     }
 
     .advanced-filters {
@@ -721,52 +786,79 @@
     .active-filters {
         margin-left: 10px;
         width: calc(100% - 20px);
-        padding: 12px;
+        padding: 10px 12px;
     }
 
-    .therapist-title {
-        font-size: 1.4rem;
-        margin-top: 30px;
+    .filter-label {
+        font-size: 13px;
+    }
+
+    .filter-tag {
+        font-size: 12px;
+        padding: 6px 10px;
     }
 
     .therapist-cards-container {
         grid-template-columns: 1fr;
-        gap: 18px;
-        padding: 0 10px;
+        gap: 15px;
+        padding: 0 8px;
+        margin: 15px auto;
+    }
+
+    .therapist-card {
+        border-radius: 12px;
+    }
+
+    .therapist-logo {
+        padding: 15px 15px 8px;
     }
 
     .therapist-logo img {
-        width: 80px;
-        height: 80px;
+        width: 75px;
+        height: 75px;
+        border: 3px solid #95c5df;
     }
 
     .therapist-name {
-        font-size: 1.1rem;
+        font-size: 1.05rem;
+        padding: 0 15px;
+    }
+
+    .therapist-role {
+        font-size: 0.8rem;
+        padding: 0 15px;
     }
 
     .therapist-description {
-        font-size: 0.85rem;
-        min-height: 40px;
+        font-size: 0.8rem;
+        padding: 0 15px 8px;
     }
 
-    .filter-tabs,
-    .filter-services {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        gap: 6px;
+    .therapist-location {
+        font-size: 0.8rem;
+        padding: 0 15px 12px;
     }
 
-    .filter-tabs a,
-    .filter-services a {
-        font-size: 0.85rem;
-        padding: 4px 8px;
+    .clinic-type-badge {
+        top: 10px;
+        right: 10px;
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+
+    .therapist-card-footer {
+        padding: 12px 15px 15px;
+    }
+
+    .availability-status {
+        font-size: 0.8rem;
+        margin-bottom: 10px;
     }
 
     .therapist-actions {
         flex-direction: column;
         gap: 8px;
-        padding: 0 20px 25px;
+        width: 100%;
     }
 
     .btn-book,
@@ -774,6 +866,7 @@
         width: 100%;
         padding: 10px 0;
         text-align: center;
+        font-size: 0.85rem;
     }
 
     .filter-input,
@@ -786,5 +879,104 @@
     .btn-clear-filters {
         padding: 10px 20px;
         font-size: 13px;
+    }
+
+    .search-input {
+        font-size: 0.85rem;
+        padding: 8px 15px;
+    }
+
+    .search-btn {
+        padding: 8px 15px;
+    }
+
+    .filter-toggle-btn {
+        padding: 8px 15px;
+        font-size: 13px;
+    }
+
+    .no-results {
+        font-size: 1rem;
+        padding: 3rem 1.5rem;
+        min-height: 300px;
+    }
+
+    .pagination {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+}
+
+/* Extra Small Mobile (below 360px) */
+@media (max-width: 360px) {
+    .ptlist {
+        padding: 8px 5px;
+    }
+
+    .therapist-title {
+        font-size: 1.2rem;
+        margin-top: 12px;
+        margin-bottom: 12px;
+    }
+
+    .filters-wrapper {
+        margin-left: 8px;
+        width: calc(100% - 16px);
+        padding: 8px;
+    }
+
+    .advanced-filters {
+        margin-left: 8px;
+        width: calc(100% - 16px);
+        padding: 12px;
+    }
+
+    .active-filters {
+        margin-left: 8px;
+        width: calc(100% - 16px);
+        padding: 8px 10px;
+    }
+
+    .therapist-cards-container {
+        gap: 12px;
+        padding: 0 5px;
+        margin: 12px auto;
+    }
+
+    .therapist-logo img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .therapist-name {
+        font-size: 1rem;
+        padding: 0 12px;
+    }
+
+    .therapist-role,
+    .therapist-description,
+    .therapist-location {
+        font-size: 0.75rem;
+        padding: 0 12px;
+    }
+
+    .therapist-card-footer {
+        padding: 10px 12px 12px;
+    }
+
+    .btn-book,
+    .btn-profile {
+        padding: 8px 0;
+        font-size: 0.8rem;
+    }
+
+    .filter-tabs a,
+    .filter-services a {
+        font-size: 0.85rem;
+        padding: 3px 6px;
+    }
+
+    .service-label {
+        font-size: 0.85rem;
     }
 }

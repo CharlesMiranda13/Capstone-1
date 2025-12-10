@@ -1,7 +1,9 @@
+/* Main Content */
 .main-content {
     margin-left: 250px;
     padding: 20px;
     max-width: 100% !important;
+    transition: margin-left 0.3s ease;
 }
 
 /* Sidebar */
@@ -20,6 +22,7 @@
     padding-top: 20px;
     transition: all 0.3s ease;
     z-index: 1000;
+    overflow-y: auto;
 }
 
 .sidebar h1 {
@@ -48,6 +51,7 @@
 .sidebar .sidebar-item i {
     font-size: 18px;
     transition: color 0.3s ease;
+    margin-right: 10px;
 }
 
 .sidebar .sidebar-item:hover i,
@@ -78,7 +82,6 @@
     color: white;
 }
 
-
 .notification-badge {
     position: absolute;
     top: 8px;
@@ -99,19 +102,80 @@
     display: inline-block;
 }
 
-@keyframes pulse {
+/* Hamburger Menu Button */
+.hamburger-btn {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    background: #4b8df8;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
 
-    0%,
-    100% {
+.hamburger-btn:hover {
+    background: #4ad0a9;
+    transform: scale(1.05);
+}
+
+.hamburger-btn span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: white;
+    margin: 5px 0;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+/* Hamburger animation */
+.hamburger-btn.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+}
+
+.hamburger-btn.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-btn.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Overlay for mobile */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+@keyframes pulse {
+    0%, 100% {
         transform: scale(1);
     }
-
     50% {
         transform: scale(1.1);
     }
 }
 
-/* Main Layout */
+/* Welcome Header */
 .welcome-header {
     display: flex;
     justify-content: space-between;
@@ -121,11 +185,13 @@
     color: white;
     border-radius: 0 0 18px 18px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
 }
 
 .welcome-header h2 {
     font-size: 1.8rem;
     letter-spacing: 0.5px;
+    margin: 0;
 }
 
 .welcome-header .pic {
@@ -141,22 +207,29 @@
     transform: scale(1.05);
 }
 
-/* === Main Layout === */
+/* Main Layout */
 .patient-main {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 30px;
-    padding: 40px;
+    padding: 0 40px 40px 40px;
 }
 
-/* === Left Column === */
+/* Left Column */
 .left-column {
     display: flex;
     flex-direction: column;
     gap: 25px;
 }
 
-/* === Cards === */
+/* Right Column */
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Cards */
 .card,
 .medical-card,
 .notification {
@@ -168,8 +241,7 @@
 }
 
 .card:hover,
-.medical-card:hover,
-.notification:hover {
+.medical-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
 }
@@ -185,6 +257,7 @@
     gap: 10px;
 }
 
+/* Medical Records */
 .medical-records-list {
     margin-top: 15px;
 }
@@ -249,7 +322,7 @@
     background: #555;
 }
 
-/* === Appointments List === */
+/* Appointments List */
 .appointments-list {
     display: flex;
     flex-direction: column;
@@ -257,6 +330,20 @@
     max-height: 250px;
     overflow-y: auto;
     padding-right: 5px;
+}
+
+.appointments-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.appointments-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.appointments-list::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
 }
 
 .appointment-item {
@@ -274,41 +361,33 @@
 .therapist-name {
     font-weight: 600;
     color: #34495e;
+    margin: 0 0 8px 0;
 }
 
 .appointment-date {
     font-size: 0.95rem;
     color: #555;
+    margin: 0 0 5px 0;
 }
 
 .appointment-type {
     font-size: 0.9rem;
     color: #888;
+    margin: 0;
 }
 
 .empty-state {
     text-align: center;
     color: #aaa;
     font-style: italic;
+    padding: 20px;
 }
 
-/* === Medical Card === */
-.medical-card {
-    background-color: #fff;
-}
-
-/* === Right Column === */
-.right-column {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-/* === Notifications === */
+/* Notification Card */
 .notification {
+    background-color: rgb(240, 206, 13);
     position: sticky;
     top: 40px;
-    background-color: rgb(240, 206, 13);
 }
 
 .notification h3 {
@@ -356,59 +435,311 @@
     font-weight: 600;
 }
 
-/* === Responsive Design === */
+/* ===================================
+   RESPONSIVE DESIGN
+   =================================== */
 
-@media (max-width: 768px) {
-    .sidebar {
-        width: 200px;
-    }
-
-    .main-content {
-        margin-left: 200px;
-        padding: 15px;
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+    .patient-main {
+        grid-template-columns: 1fr;
+        gap: 25px;
+        padding: 0 30px 30px 30px;
     }
 
     .welcome-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
+        padding: 20px 30px;
     }
 
-    .welcome-header h2 {
-        font-size: 22px;
+    .notification {
+        position: static;
     }
+}
 
-    .welcome-header img {
-        width: 60px;
-        height: 60px;
-    }
-
-    .patient-main {
-        flex-direction: column;
+/* Mobile Landscape and Small Tablets (768px - 991px) */
+@media (max-width: 991px) {
+    .main-content {
         margin-left: 0;
         padding: 15px;
     }
 
-    .left-column,
-    .right-column {
-        width: 100%;
-        max-width: 100%;
+    .hamburger-btn {
+        display: block;
     }
 
-    .card,
-    .notification {
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
     .sidebar {
-        position: fixed;
         left: -250px;
-        transition: left 0.3s ease;
     }
 
     .sidebar.active {
         left: 0;
+    }
+
+    .sidebar-overlay {
+        display: block;
+    }
+
+    .welcome-header {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .welcome-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .patient-main {
+        padding: 0 20px 20px 20px;
+        gap: 20px;
+    }
+
+    .card,
+    .medical-card,
+    .notification {
+        padding: 20px;
+    }
+}
+
+/* Mobile Portrait (481px - 767px) */
+@media (max-width: 767px) {
+    .welcome-header {
+        flex-direction: row;
+        padding: 15px 20px;
+        border-radius: 0 0 12px 12px;
+    }
+
+    .welcome-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .welcome-header .pic {
+        width: 50px;
+        height: 50px;
+    }
+
+    .patient-main {
+        padding: 0 15px 15px 15px;
+        gap: 15px;
+    }
+
+    .card h3,
+    .medical-card h3,
+    .notification h3 {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+
+    .appointments-list,
+    .medical-records-list.scrollable {
+        max-height: 200px;
+    }
+
+    .appointment-item,
+    .record-item {
+        padding: 12px;
+    }
+
+    .sidebar h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .sidebar .sidebar-item {
+        padding: 13px 18px;
+        font-size: 0.95rem;
+    }
+}
+
+/* Small Mobile (320px - 480px) */
+@media (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+
+    .main-content {
+        padding: 10px;
+    }
+
+    .hamburger-btn {
+        top: 10px;
+        left: 10px;
+        padding: 8px;
+    }
+
+    .hamburger-btn span {
+        width: 22px;
+        height: 2.5px;
+    }
+
+    .sidebar {
+        width: 240px;
+        left: -240px;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .sidebar h1 {
+        font-size: 20px;
+        margin-bottom: 15px;
+        padding: 0 10px;
+    }
+
+    .sidebar .sidebar-item {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+
+    .sidebar .sidebar-item i {
+        font-size: 16px;
+        margin-right: 8px;
+    }
+
+    .sidebar .logout-btn {
+        padding: 12px 15px;
+    }
+
+    .welcome-header {
+        flex-direction: row;
+        padding: 12px 15px;
+        border-radius: 0 0 10px 10px;
+        margin-bottom: 15px;
+    }
+
+    .welcome-header h2 {
+        font-size: 1.1rem;
+        letter-spacing: 0.3px;
+    }
+
+    .welcome-header .pic {
+        width: 45px;
+        height: 45px;
+        border: 2px solid #fff;
+    }
+
+    .patient-main {
+        padding: 0 10px 10px 10px;
+        gap: 12px;
+    }
+
+    .card,
+    .medical-card,
+    .notification {
+        padding: 15px;
+        border-radius: 12px;
+    }
+
+    .card h3,
+    .medical-card h3,
+    .notification h3 {
+        font-size: 1rem;
+        margin-bottom: 12px;
+        gap: 8px;
+    }
+
+    .card h3 i,
+    .medical-card h3 i,
+    .notification h3 i {
+        font-size: 16px;
+    }
+
+    .appointments-list,
+    .medical-records-list.scrollable {
+        max-height: 180px;
+        gap: 10px;
+    }
+
+    .appointment-item {
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .therapist-name {
+        font-size: 0.95rem;
+        margin-bottom: 6px;
+    }
+
+    .appointment-date {
+        font-size: 0.85rem;
+        margin-bottom: 4px;
+    }
+
+    .appointment-type {
+        font-size: 0.8rem;
+    }
+
+    .record-item {
+        padding: 10px;
+        margin-bottom: 8px;
+        border-radius: 6px;
+    }
+
+    .record-update {
+        font-size: 13px;
+    }
+
+    .record-date {
+        font-size: 11px;
+    }
+
+    .view-all-link {
+        font-size: 0.9rem;
+        margin-top: 8px;
+    }
+
+    .progress-note-card {
+        padding: 12px;
+    }
+
+    .note-from {
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .note-date-header {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+
+    .note-text {
+        font-size: 13px;
+        padding: 10px;
+    }
+
+    .empty-state {
+        padding: 15px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Extra Small Mobile (below 360px) */
+@media (max-width: 360px) {
+    .sidebar {
+        width: 220px;
+        left: -220px;
+    }
+
+    .welcome-header h2 {
+        font-size: 1rem;
+    }
+
+    .welcome-header .pic {
+        width: 40px;
+        height: 40px;
+    }
+
+    .card h3,
+    .medical-card h3,
+    .notification h3 {
+        font-size: 0.95rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .appointment-item,
+    .record-item,
+    .progress-note-card {
+        padding: 8px;
     }
 }

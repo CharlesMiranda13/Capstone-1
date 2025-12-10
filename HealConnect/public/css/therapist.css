@@ -1,4 +1,4 @@
-/* ---------- SIDEBAR (kept same as your current) ---------- */
+/* ---------- SIDEBAR ---------- */
 .sidebar {
     width: 250px;
     background-color: #f4f7fb;
@@ -14,6 +14,7 @@
     padding-top: 20px;
     transition: all 0.3s ease;
     z-index: 1000;
+    overflow-y: auto;
 }
 
 .sidebar h1 {
@@ -42,11 +43,17 @@
 .sidebar .sidebar-item i {
     font-size: 18px;
     transition: color 0.3s ease;
+    margin-right: 10px;
 }
 
 .sidebar .sidebar-item:hover i,
 .sidebar .sidebar-item.active i {
     color: #ffffff;
+}
+
+.sidebar form {
+    margin: 0;
+    padding: 0;
 }
 
 .sidebar .logout-btn {
@@ -87,13 +94,74 @@
     display: inline-block;
 }
 
-@keyframes pulse {
+/* Hamburger Menu Button */
+.hamburger-btn {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    background: #4b8df8;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
 
-    0%,
-    100% {
+.hamburger-btn:hover {
+    background: #4ad0a9;
+    transform: scale(1.05);
+}
+
+.hamburger-btn span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: white;
+    margin: 5px 0;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+/* Hamburger animation */
+.hamburger-btn.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+}
+
+.hamburger-btn.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-btn.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Overlay for mobile */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+@keyframes pulse {
+    0%, 100% {
         transform: scale(1);
     }
-
     50% {
         transform: scale(1.1);
     }
@@ -105,6 +173,7 @@
     padding: 20px;
     max-width: 100% !important;
     min-height: 100vh;
+    transition: margin-left 0.3s ease;
 }
 
 /* ---------- WELCOME HEADER ---------- */
@@ -137,7 +206,7 @@
 /* ---------- DASHBOARD CARDS ---------- */
 .dashboard-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 25px;
     margin-top: 40px;
     margin-bottom: 40px;
@@ -184,9 +253,27 @@
     font-size: 0.95rem;
 }
 
+/* ---------- APPOINTMENTS ---------- */
+.appointments-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+}
+
+.appointments-card h3 {
+    font-size: 1.6rem;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+    border-left: 5px solid #4b8df8;
+    padding-left: 10px;
+}
+
 .appointments-list {
     margin-top: 10px;
-    max-height: 230px;
+    max-height: 300px;
     overflow-y: auto;
     padding-right: 5px;
 }
@@ -194,8 +281,8 @@
 .appointment-item {
     background-color: #f9fafc;
     border-radius: 8px;
-    padding: 12px 15px;
-    margin-bottom: 10px;
+    padding: 15px 18px;
+    margin-bottom: 12px;
     border-left: 4px solid #4b8df8;
     transition: 0.3s;
 }
@@ -204,15 +291,37 @@
     background-color: #eef6ff;
 }
 
+.appointment-item p {
+    margin: 8px 0;
+    font-size: 1.05rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+.appointment-item strong {
+    color: #333;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.empty-state {
+    text-align: center;
+    color: #999;
+    padding: 40px 20px;
+    font-style: italic;
+    font-size: 1rem;
+}
+
 .patient-name {
     font-weight: 600;
     color: #333;
     margin-bottom: 4px;
+    font-size: 1.1rem;
 }
 
 .appointment-date,
 .appointment-type {
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: #555;
     margin: 0;
 }
@@ -224,6 +333,7 @@
     border-radius: 12px;
     padding: 25px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
 }
 
 .analytics-overview h3 {
@@ -265,6 +375,7 @@
     max-height: 300px;
 }
 
+/* ---------- SUBSCRIPTION WARNINGS ---------- */
 .subscription-warning {
     background: #fff3cd;
     border-left: 4px solid #ffc107;
@@ -381,7 +492,6 @@
         opacity: 0;
         transform: translateY(-20px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -389,18 +499,391 @@
 }
 
 /* ---------- RESPONSIVE ---------- */
-@media (max-width: 768px) {
+
+/* Tablet and Below (991px and below) */
+@media (max-width: 991px) {
+    .main-content {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .hamburger-btn {
+        display: block;
+    }
+
+    .sidebar {
+        left: -250px;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .sidebar-overlay {
+        display: block;
+    }
+
     .welcome-header {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
+        padding: 20px;
+    }
+
+    .welcome-header h2 {
+        font-size: 1.5rem;
     }
 
     .dashboard-cards {
         grid-template-columns: 1fr;
+        gap: 20px;
+        margin-top: 30px;
     }
 
     .analytics-section {
         grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .analytics-card {
+        padding: 18px;
+        min-width: 0;
+        overflow: hidden;
+    }
+    
+    .analytics-card canvas {
+        width: 100% !important;
+        max-width: 100%;
+        max-height: 280px;
+        height: auto !important;
+    }
+    
+    .appointments-card {
+        padding: 20px;
+    }
+}
+
+/* Mobile Landscape (481px - 767px) */
+@media (max-width: 767px) {
+    .welcome-header {
+        flex-direction: row;
+        padding: 15px 20px;
+        border-radius: 0 0 12px 12px;
+    }
+
+    .welcome-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .welcome-header .pic {
+        width: 60px;
+        height: 60px;
+    }
+
+    .dashboard-cards .card {
+        padding: 20px;
+    }
+
+    .sidebar h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .sidebar .sidebar-item {
+        padding: 13px 18px;
+        font-size: 0.95rem;
+    }
+    
+    .analytics-overview {
+        padding: 20px 15px;
+        margin-top: 20px;
+    }
+    
+    .analytics-overview h3 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+    }
+    
+    .analytics-section {
+        gap: 15px;
+    }
+    
+    .analytics-card {
+        padding: 15px;
+        min-width: 0;
+        overflow: hidden;
+    }
+    
+    .analytics-card h4 {
+        font-size: 0.95rem;
+    }
+    
+    .analytics-card canvas {
+        width: 100% !important;
+        max-width: 100%;
+        max-height: 250px;
+        height: auto !important;
+    }
+    
+    .appointments-card {
+        padding: 18px;
+        margin-bottom: 20px;
+    }
+    
+    .appointments-card h3 {
+        font-size: 1.4rem;
+    }
+    
+    .appointments-list {
+        max-height: 300px;
+    }
+}
+
+/* Mobile Portrait (320px - 480px) */
+@media (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+
+    .main-content {
+        padding: 10px;
+    }
+
+    .hamburger-btn {
+        top: 10px;
+        left: 10px;
+        padding: 8px;
+    }
+
+    .hamburger-btn span {
+        width: 22px;
+        height: 2.5px;
+    }
+
+    .sidebar {
+        width: 240px;
+        left: -240px;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .sidebar h1 {
+        font-size: 20px;
+        margin-bottom: 15px;
+        padding: 0 10px;
+    }
+
+    .sidebar .sidebar-item {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+
+    .sidebar .sidebar-item i {
+        font-size: 16px;
+        margin-right: 8px;
+    }
+
+    .sidebar .logout-btn {
+        padding: 12px 15px;
+    }
+
+    .welcome-header {
+        flex-direction: row;
+        padding: 12px 15px;
+        border-radius: 0 0 10px 10px;
+    }
+
+    .welcome-header h2 {
+        font-size: 1.1rem;
+    }
+
+    .welcome-header .pic {
+        width: 50px;
+        height: 50px;
+        border: 2px solid #fff;
+    }
+
+    .dashboard-cards {
+        gap: 15px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-cards .card {
+        padding: 15px 20px;
+        border-radius: 10px;
+    }
+
+    .dashboard-cards .card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+    }
+
+    .dashboard-cards .card i {
+        font-size: 1.4rem;
+        margin-right: 8px;
+    }
+
+    .client-card h2 {
+        font-size: 2rem;
+    }
+
+    .appointments-card {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .appointments-card h3 {
+        font-size: 1.3rem;
+        margin-bottom: 12px;
+    }
+    
+    .appointments-list {
+        max-height: 250px;
+    }
+
+    .appointment-item {
+        padding: 10px 12px;
+        margin-bottom: 8px;
+    }
+    
+    .appointment-item p {
+        font-size: 0.85rem;
+    }
+
+    .analytics-overview {
+        padding: 15px 10px;
+        margin-top: 15px;
+    }
+
+    .analytics-overview h3 {
+        font-size: 1.3rem;
+        margin-bottom: 12px;
+        padding-left: 8px;
+        border-left-width: 4px;
+    }
+    
+    .analytics-section {
+        gap: 12px;
+    }
+
+    .analytics-card {
+        padding: 12px;
+        border-radius: 8px;
+        min-width: 0;
+        overflow: hidden;
+    }
+    
+    .analytics-card h4 {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+    
+    .analytics-card canvas {
+        width: 100% !important;
+        max-width: 100%;
+        max-height: 220px;
+        height: auto !important;
+    }
+
+    .subscription-warning,
+    .subscription-expired {
+        padding: 30px 20px;
+        margin: 30px 15px;
+    }
+
+    .subscription-warning h2,
+    .subscription-expired h2 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+
+    .subscription-warning p,
+    .subscription-expired p {
+        font-size: 1rem;
+        margin-bottom: 20px;
+    }
+
+    .subscription-warning a,
+    .subscription-expired a {
+        padding: 10px 25px;
+        font-size: 0.95rem;
+    }
+}
+
+/* Extra Small Mobile (below 360px) */
+@media (max-width: 360px) {
+    .sidebar {
+        width: 220px;
+        left: -220px;
+    }
+
+    .welcome-header h2 {
+        font-size: 1rem;
+    }
+
+    .welcome-header .pic {
+        width: 45px;
+        height: 45px;
+    }
+
+    .dashboard-cards .card h3 {
+        font-size: 1rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .dashboard-cards .card i {
+        font-size: 1.3rem;
+    }
+
+    .client-card h2 {
+        font-size: 1.8rem;
+    }
+    
+    .appointments-card {
+        padding: 12px;
+    }
+    
+    .appointments-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    .appointments-list {
+        max-height: 220px;
+    }
+    
+    .appointment-item {
+        padding: 8px 10px;
+    }
+
+    .analytics-overview {
+        padding: 12px 8px;
+        border-radius: 10px;
+    }
+
+    .analytics-overview h3 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    .analytics-section {
+        gap: 10px;
+    }
+    
+    .analytics-card {
+        padding: 10px;
+    }
+    
+    .analytics-card h4 {
+        font-size: 0.85rem;
+    }
+    
+    .analytics-card canvas {
+        width: 100% !important;
+        max-width: 100%;
+        max-height: 200px;
+        height: auto !important;
     }
 }

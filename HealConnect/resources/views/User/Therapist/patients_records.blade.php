@@ -93,19 +93,19 @@
 
                 <div class="form-grid">
                     <label>Diagnosis</label>
-                    <input type="text" name="diagnosis" value="{{ old('diagnosis', $ehr->diagnosis ?? '') }}" class="form-control">
+                    <input type="text" name="diagnosis" value="" class="form-control">
 
                     <label>Allergies</label>
-                    <input type="text" name="allergies" value="{{ old('allergies', $ehr->allergies ?? '') }}" class="form-control">
+                    <input type="text" name="allergies" value="" class="form-control">
 
                     <label>Medications</label>
-                    <textarea name="medications" rows="2" class="form-control">{{ old('medications', $ehr->medications ?? '') }}</textarea>
+                    <textarea name="medications" rows="2" class="form-control"></textarea>
 
                     <label>Medical History</label>
-                    <textarea name="medical_history" rows="2" class="form-control">{{ old('medical_history', $ehr->medical_history ?? '') }}</textarea>
+                    <textarea name="medical_history" rows="2" class="form-control"></textarea>
 
                     <label>Additional Notes</label>
-                    <textarea name="notes" rows="3" class="form-control">{{ old('notes', $ehr->notes ?? '') }}</textarea>
+                    <textarea name="notes" rows="3" class="form-control"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary mt-3">Save / Update EHR</button>
             </form>
@@ -121,18 +121,81 @@
                 <p class="text-muted">Track and update ongoing treatment strategies.</p>
             </div>
 
-            {{-- Display --}}
+            {{-- Display with Pagination --}}
             <div class="record-display card">
                 @if (!empty($therapies))
                     @php
                         // Split by double newlines to get individual entries
                         $therapyEntries = array_filter(explode("\n\n", $therapies));
+                        $perPage = 5; // Show 5 entries per page
+                        $currentPage = request()->get('therapy_page', 1);
+                        $totalEntries = count($therapyEntries);
+                        $totalPages = ceil($totalEntries / $perPage);
+                        $currentPage = max(1, min($currentPage, $totalPages)); // Ensure valid page
+                        
+                        $offset = ($currentPage - 1) * $perPage;
+                        $currentEntries = array_slice($therapyEntries, $offset, $perPage);
                     @endphp
-                    <ul class="treatment-list">
-                        @foreach ($therapyEntries as $therapy)
-                            <li>{{ $therapy }}</li>
+                    
+                    <div id="treatment-content">
+                        @foreach ($currentEntries as $therapy)
+                            <div class="treatment-entry">
+                                {{ $therapy }}
+                            </div>
                         @endforeach
-                    </ul>
+                    </div>
+
+                    {{-- Pagination Controls --}}
+                    @if ($totalPages > 1)
+                        <div class="pagination-container">
+                            <div class="pagination-info">
+                                Showing {{ $offset + 1 }}-{{ min($offset + $perPage, $totalEntries) }} of {{ $totalEntries }} entries
+                            </div>
+                            <div class="pagination-controls">
+                                <button 
+                                    class="pagination-btn" 
+                                    onclick="window.location.href='?therapy_page={{ $currentPage - 1 }}&progress_page={{ request()->get('progress_page', 1) }}#treatment-plan'"
+                                    {{ $currentPage <= 1 ? 'disabled' : '' }}>
+                                    Previous
+                                </button>
+                                
+                                @php
+                                    $range = 2; // Show 2 pages on each side of current page
+                                    $start = max(1, $currentPage - $range);
+                                    $end = min($totalPages, $currentPage + $range);
+                                @endphp
+                                
+                                @if($start > 1)
+                                    <button class="pagination-btn" onclick="window.location.href='?therapy_page=1&progress_page={{ request()->get('progress_page', 1) }}#treatment-plan'">1</button>
+                                    @if($start > 2)
+                                        <span class="pagination-ellipsis">...</span>
+                                    @endif
+                                @endif
+                                
+                                @for($i = $start; $i <= $end; $i++)
+                                    <button 
+                                        class="pagination-btn {{ $i == $currentPage ? 'active' : '' }}" 
+                                        onclick="window.location.href='?therapy_page={{ $i }}&progress_page={{ request()->get('progress_page', 1) }}#treatment-plan'">
+                                        {{ $i }}
+                                    </button>
+                                @endfor
+                                
+                                @if($end < $totalPages)
+                                    @if($end < $totalPages - 1)
+                                        <span class="pagination-ellipsis">...</span>
+                                    @endif
+                                    <button class="pagination-btn" onclick="window.location.href='?therapy_page={{ $totalPages }}&progress_page={{ request()->get('progress_page', 1) }}#treatment-plan'">{{ $totalPages }}</button>
+                                @endif
+                                
+                                <button 
+                                    class="pagination-btn" 
+                                    onclick="window.location.href='?therapy_page={{ $currentPage + 1 }}&progress_page={{ request()->get('progress_page', 1) }}#treatment-plan'"
+                                    {{ $currentPage >= $totalPages ? 'disabled' : '' }}>
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+                    @endif
                 @else
                     <p class="text-muted">No treatment plan recorded yet. Your therapist will add this information.</p>
                 @endif
@@ -140,16 +203,16 @@
 
             {{-- Update Form --}}
             @if($user->role === 'therapist' || $user->role === 'clinic')
-            <form action="{{ route('therapist.treatment.update', $patient->id) }}" method="POST" class="update-form mt-4">
+            <form action="{{ route('therapist.treatment.update', $patient->id) }}" method="POST" class="update-form mt-4" id="treatment-plan">
                 @csrf
                 @method('PUT')
                 <h4>Add / Update Treatment Plan</h4>
                 <div class="form-grid">
                     <label>Date</label>
-                    <input type="date" name="session_date" class="form-control">
+                    <input type="date" name="session_date" class="form-control" required>
 
                     <label>Description</label>
-                    <textarea name="description" rows="3" class="form-control" placeholder="Describe the treatment plan..."></textarea>
+                    <textarea name="description" rows="3" class="form-control" placeholder="Describe the treatment plan..." required></textarea>
                 </div>
                 <button type="submit" class="btn btn-success mt-3">Save Treatment Plan</button>
             </form>
@@ -165,18 +228,81 @@
                 <p class="text-muted">Document patient's progress and follow-up evaluations.</p>
             </div>
 
-            {{-- Display --}}
+            {{-- Display with Pagination --}}
             <div class="record-display card">
                 @if (!empty($exercises))
                     @php
                         // Split by double newlines to get individual entries
                         $progressEntries = array_filter(explode("\n\n", $exercises));
+                        $perPageProgress = 5; // Show 5 entries per page
+                        $currentProgressPage = request()->get('progress_page', 1);
+                        $totalProgressEntries = count($progressEntries);
+                        $totalProgressPages = ceil($totalProgressEntries / $perPageProgress);
+                        $currentProgressPage = max(1, min($currentProgressPage, $totalProgressPages)); // Ensure valid page
+                        
+                        $progressOffset = ($currentProgressPage - 1) * $perPageProgress;
+                        $currentProgressEntries = array_slice($progressEntries, $progressOffset, $perPageProgress);
                     @endphp
-                    <ul class="progress-list">
-                        @foreach ($progressEntries as $progress)
-                            <li>{{ $progress }}</li>
+                    
+                    <div id="progress-content">
+                        @foreach ($currentProgressEntries as $progress)
+                            <div class="progress-entry">
+                                {{ $progress }}
+                            </div>
                         @endforeach
-                    </ul>
+                    </div>
+
+                    {{-- Pagination Controls --}}
+                    @if ($totalProgressPages > 1)
+                        <div class="pagination-container">
+                            <div class="pagination-info">
+                                Showing {{ $progressOffset + 1 }}-{{ min($progressOffset + $perPageProgress, $totalProgressEntries) }} of {{ $totalProgressEntries }} entries
+                            </div>
+                            <div class="pagination-controls">
+                                <button 
+                                    class="pagination-btn" 
+                                    onclick="window.location.href='?therapy_page={{ request()->get('therapy_page', 1) }}&progress_page={{ $currentProgressPage - 1 }}#progress-notes'"
+                                    {{ $currentProgressPage <= 1 ? 'disabled' : '' }}>
+                                    Previous
+                                </button>
+                                
+                                @php
+                                    $progressRange = 2; // Show 2 pages on each side of current page
+                                    $progressStart = max(1, $currentProgressPage - $progressRange);
+                                    $progressEnd = min($totalProgressPages, $currentProgressPage + $progressRange);
+                                @endphp
+                                
+                                @if($progressStart > 1)
+                                    <button class="pagination-btn" onclick="window.location.href='?therapy_page={{ request()->get('therapy_page', 1) }}&progress_page=1#progress-notes'">1</button>
+                                    @if($progressStart > 2)
+                                        <span class="pagination-ellipsis">...</span>
+                                    @endif
+                                @endif
+                                
+                                @for($i = $progressStart; $i <= $progressEnd; $i++)
+                                    <button 
+                                        class="pagination-btn {{ $i == $currentProgressPage ? 'active' : '' }}" 
+                                        onclick="window.location.href='?therapy_page={{ request()->get('therapy_page', 1) }}&progress_page={{ $i }}#progress-notes'">
+                                        {{ $i }}
+                                    </button>
+                                @endfor
+                                
+                                @if($progressEnd < $totalProgressPages)
+                                    @if($progressEnd < $totalProgressPages - 1)
+                                        <span class="pagination-ellipsis">...</span>
+                                    @endif
+                                    <button class="pagination-btn" onclick="window.location.href='?therapy_page={{ request()->get('therapy_page', 1) }}&progress_page={{ $totalProgressPages }}#progress-notes'">{{ $totalProgressPages }}</button>
+                                @endif
+                                
+                                <button 
+                                    class="pagination-btn" 
+                                    onclick="window.location.href='?therapy_page={{ request()->get('therapy_page', 1) }}&progress_page={{ $currentProgressPage + 1 }}#progress-notes'"
+                                    {{ $currentProgressPage >= $totalProgressPages ? 'disabled' : '' }}>
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+                    @endif
                 @else
                     <p class="text-muted">No progress notes recorded yet. Your therapist will document your progress during sessions.</p>
                 @endif
@@ -184,11 +310,11 @@
 
             {{-- Update Form --}}
             @if($user->role === 'therapist' || $user->role === 'clinic')
-            <form action="{{ route('therapist.progress.update', $patient->id) }}" method="POST" class="update-form mt-4">
+            <form action="{{ route('therapist.progress.update', $patient->id) }}" method="POST" class="update-form mt-4" id="progress-notes">
                 @csrf
                 @method('PUT')
                 <h4>Add Progress Note</h4>
-                <textarea name="notes" rows="3" class="form-control" placeholder="Enter progress observation..."></textarea>
+                <textarea name="notes" rows="3" class="form-control" placeholder="Enter progress observation..." required></textarea>
                 <button type="submit" class="btn btn-info mt-3">Save Progress Note</button>
             </form>
             @endif

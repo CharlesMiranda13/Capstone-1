@@ -258,37 +258,90 @@ class PatientController extends Controller
     {
         $user = Auth::user();
         
-        // Ensure only patients can access
         if ($user->role !== 'patient') {
             abort(403, 'Unauthorized access');
         }
 
-        // Get all medical records for this patient
         $records = MedicalRecord::where('patient_id', $user->id)
             ->with('therapist:id,name')
-            ->orderBy('record_date', 'desc')
-            ->get();
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
         
         return view('user.patients.records', compact('records'));
     }
 
-    public function myRecords()
+    public function myRecords(Request $request)
     {
         $user = Auth::user();
         
-        // Ensure only patients can access
         if ($user->role !== 'patient') {
             abort(403, 'Unauthorized access');
         }
 
-        // Get the patient's own records
+        $recordId = $request->query('record_id');
+        $timestamp = $request->query('timestamp');
+        
+        if (!$recordId || !$timestamp) {
+            abort(404, 'Record not found');
+        }
+
+        // Find the specific medical record
+        $record = MedicalRecord::where('id', $recordId)
+            ->where('patient_id', $user->id)
+            ->firstOrFail();
+        
+        // Verify the timestamp matches (security check)
+        if ($record->created_at->timestamp != $timestamp) {
+            abort(403, 'Invalid record access');
+        }
+
+        // Get the patient
         $patient = $user;
+        
+        // Get all records up to this point, ordered from OLDEST to NEWEST
+        $recordsUpToThisPoint = MedicalRecord::where('patient_id', $user->id)
+            ->where('created_at', '<=', $record->created_at)
+            ->orderBy('created_at', 'asc') // Oldest first for building
+            ->get();
+        
+        // For EHR: Only get the LATEST/MOST RECENT one
+        $ehr = null;
+        
+        // For therapies and exercises: Build cumulative content
+        $therapies = '';
+        $exercises = '';
+        
+        foreach ($recordsUpToThisPoint as $historicalRecord) {
+            switch ($historicalRecord->changed_field) {
+                case 'ehr':
+                    // Replace with the latest EHR
+                    $ehr = $historicalRecord->changed_data;
+                    break;
+                case 'therapies':
+                    // Prepend new data to the top
+                    $newData = $historicalRecord->changed_data;
+                    $therapies = $newData . (!empty($therapies) ? "\n\n" . $therapies : '');
+                    break;
+                case 'exercises':
+                    // Prepend new data to the top
+                    $newData = $historicalRecord->changed_data;
+                    $exercises = $newData . (!empty($exercises) ? "\n\n" . $exercises : '');
+                    break;
+            }
+        }
+        
+        // Convert empty strings to null
+        $therapies = !empty($therapies) ? $therapies : null;
+        $exercises = !empty($exercises) ? $exercises : null;
         
         return view('user.patients.my_records', [
             'patient' => $patient,
-            'ehr' => $patient->ehr ?? null,
-            'therapies' => $patient->therapies ?? null,
-            'exercises' => $patient->exercises ?? null,
+            'record' => $record,
+            'ehr' => $ehr,
+            'therapies' => $therapies,
+            'exercises' => $exercises,
+            'recordDateTime' => $record->created_at,
+            'changedField' => $record->changed_field,
         ]);
     }
 

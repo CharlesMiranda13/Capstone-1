@@ -22,6 +22,17 @@
     <div class="page-logo">
         <img src="{{ asset('images/logo1.png') }}" alt="Logo">
     </div>
+
+    {{-- Hamburger Menu Button --}}
+    <button class="hamburger-btn" id="hamburger-btn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    {{-- Sidebar Overlay --}}
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
     <div class="sidebar">
         <div class="logo">
             <a href="{{ route('therapist.home') }}">
@@ -77,6 +88,7 @@
     <script src="{{ asset('js/include.js') }}"></script>
     <script src="{{ asset('js/modal.js') }}"></script>
     <script src="{{ asset('js/notifications.js') }}"></script>
+    <script src="{{ asset('js/sidebar.js') }}"></script>
     @yield('scripts')
 </body>
 </html>

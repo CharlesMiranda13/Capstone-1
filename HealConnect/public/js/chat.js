@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const fileBtn = document.getElementById('file-btn');
     const fileInput = document.getElementById('file-input');
     const startVideoCall = document.getElementById("start-video-call");
+    
+    // Mobile elements
+    const chatSidebar = document.getElementById('chat-sidebar');
+    const chatMain = document.getElementById('chat-main');
+    const backBtn = document.getElementById('back-btn');
 
     let currentReceiverId = null;
     let lastMessageDate = null;
@@ -56,6 +61,37 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    /** ------------------ Mobile Toggle Functions ------------------ */
+    function showChatView() {
+        if (window.innerWidth <= 767) {
+            chatSidebar.classList.add('hidden');
+            chatMain.classList.add('active');
+        }
+    }
+
+    function showSidebarView() {
+        if (window.innerWidth <= 767) {
+            chatSidebar.classList.remove('hidden');
+            chatMain.classList.remove('active');
+        }
+    }
+
+    // Back button handler for mobile
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            showSidebarView();
+        });
+    }
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 767) {
+            // Desktop view - reset mobile classes
+            chatSidebar.classList.remove('hidden');
+            chatMain.classList.remove('active');
+        }
+    });
 
     /** ------------------ Helper Functions ------------------ */
     function getDateLabel(dateObj) {
@@ -276,6 +312,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         markMessagesAsRead(currentReceiverId);
         loadMessages(currentReceiverId);
+        
+        // Show chat view on mobile when a conversation is selected
+        showChatView();
     });
 
     // ---------------- Format call duration ----------------

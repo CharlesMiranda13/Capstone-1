@@ -24,6 +24,16 @@
         <img src="{{ asset('images/logo1.png') }}" alt="Logo">
     </div>
 
+    {{-- Hamburger Button --}}
+    <button class="hamburger-btn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    {{-- Overlay --}}
+    <div class="sidebar-overlay"></div>
+
     <div class="sidebar">
         <div class="logo">
             <a href="{{ route('patient.home') }}">
@@ -75,6 +85,7 @@
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script src="{{ asset('js/modal.js') }}"></script>
     <script src="{{ asset('js/notifications.js') }}"></script>
+    <script src="{{ asset('js/sidebar.js') }}"></script>
     @yield('scripts')
 </body>
 </html>

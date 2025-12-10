@@ -761,7 +761,8 @@ footer,
 @media (max-width: 768px) {
     .main-section {
         flex-direction: column;
-        text-align: center;
+        height: auto;
+        gap: 30px;
         padding: 30px 20px;
     }
 
@@ -771,12 +772,13 @@ footer,
     }
 
     .flip-card {
+        max-width: 100%;
         width: 90%;
-        height: auto;
+        margin: 0 auto;
     }
 
     .flip-card-front img {
-        height: auto;
+        object-fit: cover;
     }
 
     .physical-therapy-section {
@@ -804,5 +806,31 @@ footer,
 
     .main-image img {
         max-width: 100%;
+    }
+
+    .main-section {
+        padding: 20px 15px;
+        gap: 25px;
+    }
+
+    .flip-card {
+        width: 95%;
+        max-width: 400px;
+    }
+
+    .flip-card-front,
+    .flip-card-back {
+        border-radius: 8px;
+    }
+
+    .flip-card-front img {
+        border-radius: 8px;
+    }
+}
+
+@media (max-width: 360px) {
+    .flip-card {
+        width: 100%;
+        max-width: 320px;
     }
 }

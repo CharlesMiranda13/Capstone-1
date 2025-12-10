@@ -1,7 +1,9 @@
+/* Base Styles */
 .appointments-page {
     margin-left: 250px;
     padding: 2rem;
     min-height: 100vh;
+    transition: margin-left 0.3s ease;
 }
 
 .appointments-container {
@@ -9,6 +11,7 @@
     border-radius: 16px;
     padding: 2rem;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    overflow: hidden; /* Prevent content overflow */
 }
 
 .appointments-container h2 {
@@ -18,6 +21,15 @@
     margin-bottom: 30px;
 }
 
+/* Table Wrapper for Scroll */
+.table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -2rem;
+    padding: 0 2rem;
+}
+
+/* Table Styles */
 .appointments-container table {
     width: 100%;
     border-collapse: collapse;
@@ -29,56 +41,32 @@
     text-align: center;
     vertical-align: middle;
     border: 1px solid #ddd;
+    white-space: nowrap;
 }
 
 .appointments-container th {
     background-color: #f0f0f0;
     font-weight: 600;
+    color: #333;
 }
 
 .appointments-container tr:nth-child(even) {
     background-color: #fafafa;
 }
 
-.appointments-container .badge {
-    padding: 6px 10px;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 0.9rem;
+.appointments-container tr:hover {
+    background-color: #f5f5f5;
 }
 
-.empty-state {
-    text-align: center;
-    color: #6b7280;
-    padding: 40px 0;
-}
-
-.empty-state i {
-    font-size: 50px;
-    color: #9ca3af;
-    margin-bottom: 10px;
-}
-
-.alert {
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-size: 0.95rem;
-}
-
-.alert.success {
-  background: #e8f9ee;
-  color: #1e8c47;
-  border: 1px solid #c5efd4;
-  border-left: 4px solid #16a34a;
-}
-
+/* Badge Styles */
 .badge {
     display: inline-block;
     padding: 0.35rem 0.7rem;
     border-radius: 999px;
     color: #fff;
     font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
 }
 
 .bg-warning {
@@ -95,4 +83,361 @@
 
 .bg-primary {
     background-color: #3b82f6;
+}
+
+/* Button Styles */
+.btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-sm {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+}
+
+.btn-danger {
+    background-color: #ef4444;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #dc2626;
+    transform: translateY(-1px);
+}
+
+/* Alert Styles */
+.alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.alert.success {
+    background: #e8f9ee;
+    color: #1e8c47;
+    border: 1px solid #c5efd4;
+    border-left: 4px solid #16a34a;
+}
+
+.alert i {
+    font-size: 1.1rem;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    color: #6b7280;
+    padding: 60px 20px;
+}
+
+.empty-state i {
+    font-size: 50px;
+    color: #9ca3af;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Scrollbar Styling */
+.table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* ===================================
+   RESPONSIVE DESIGN
+   =================================== */
+
+/* Tablet and Below (991px and below) - When sidebar becomes hidden */
+@media (max-width: 991px) {
+    .appointments-page {
+        margin-left: 0;
+        padding: 1.5rem;
+    }
+}
+
+/* Tablet Portrait (768px - 991px) */
+@media (max-width: 991px) and (min-width: 768px) {
+    .appointments-container {
+        padding: 1.5rem;
+    }
+
+    .table-wrapper {
+        margin: 0 -1.5rem;
+        padding: 0 1.5rem;
+    }
+
+    .appointments-container h2 {
+        font-size: 1.6rem;
+        margin-bottom: 25px;
+    }
+
+    .appointments-container th,
+    .appointments-container td {
+        padding: 10px;
+        font-size: 0.95rem;
+    }
+}
+
+/* Mobile Landscape (481px - 767px) */
+@media (max-width: 767px) {
+    .appointments-page {
+        margin-left: 0;
+        padding: 1rem;
+    }
+    
+    .appointments-container {
+        padding: 1rem;
+        border-radius: 12px;
+    }
+
+    .table-wrapper {
+        margin: 0 -1rem;
+        padding: 0 1rem;
+    }
+    
+    .appointments-container h2 {
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+    }
+    
+    .appointments-container table {
+        min-width: 650px;
+        font-size: 0.9rem;
+    }
+    
+    .appointments-container th,
+    .appointments-container td {
+        padding: 10px 8px;
+        font-size: 0.85rem;
+    }
+
+    .badge {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+    }
+
+    .btn-sm {
+        padding: 5px 8px;
+        font-size: 0.8rem;
+    }
+
+    .alert {
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+
+    .empty-state {
+        padding: 40px 15px;
+    }
+
+    .empty-state i {
+        font-size: 45px;
+    }
+
+    .empty-state p {
+        font-size: 1rem;
+    }
+}
+
+/* Mobile Portrait (320px - 480px) - Card Layout */
+@media (max-width: 480px) {
+    .appointments-page {
+        margin-left: 0;
+        padding: 0.75rem;
+    }
+    
+    .appointments-container {
+        padding: 0.75rem;
+        border-radius: 10px;
+    }
+
+    .table-wrapper {
+        margin: 0;
+        padding: 0;
+        overflow-x: visible;
+    }
+    
+    .appointments-container h2 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+
+    /* Convert table to card layout */
+    .appointments-container table {
+        display: block;
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .appointments-container thead {
+        display: none;
+    }
+
+    .appointments-container tbody {
+        display: block;
+        width: 100%;
+    }
+
+    .appointments-container tr {
+        display: block;
+        width: 100%;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 12px;
+        background: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .appointments-container tr:nth-child(even) {
+        background-color: #fafafa;
+    }
+
+    .appointments-container td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border: none;
+        text-align: right;
+        font-size: 0.85rem;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+
+    .appointments-container td:not(:last-child) {
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .appointments-container td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #555;
+        flex-shrink: 0;
+        margin-right: 10px;
+        text-align: left;
+    }
+
+    .badge {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.7rem;
+    }
+    
+    .alert {
+        padding: 10px;
+        font-size: 0.85rem;
+        gap: 8px;
+    }
+
+    .alert i {
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+    
+    .btn-sm {
+        padding: 6px 10px;
+        font-size: 0.8rem;
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    .appointments-container form {
+        width: 100%;
+    }
+
+    .empty-state {
+        padding: 30px 10px;
+    }
+
+    .empty-state i {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+
+    .empty-state p {
+        font-size: 0.95rem;
+    }
+}
+
+/* Extra Small Mobile (320px - 360px) */
+@media (max-width: 360px) {
+    .appointments-page {
+        padding: 0.5rem;
+    }
+
+    .appointments-container {
+        padding: 0.5rem;
+        border-radius: 8px;
+    }
+
+    .appointments-container h2 {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+    }
+
+    .appointments-container tr {
+        padding: 10px;
+        margin-bottom: 12px;
+    }
+
+    .appointments-container td {
+        padding: 6px 0;
+        font-size: 0.8rem;
+    }
+
+    .appointments-container td:before {
+        font-size: 0.8rem;
+    }
+
+    .badge {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.65rem;
+    }
+
+    .btn-sm {
+        padding: 5px 8px;
+        font-size: 0.75rem;
+    }
+
+    .alert {
+        padding: 8px;
+        font-size: 0.8rem;
+        flex-wrap: wrap;
+    }
+
+    .empty-state i {
+        font-size: 35px;
+    }
+
+    .empty-state p {
+        font-size: 0.9rem;
+    }
 }

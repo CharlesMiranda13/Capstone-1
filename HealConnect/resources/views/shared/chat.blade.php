@@ -29,7 +29,8 @@
     <div class="chat-container">
 
         {{-- LEFT: CHAT LIST --}}
-        <aside class="chat-sidebar">
+        <aside class="chat-sidebar" id="chat-sidebar">   {{-- ← ADDED ID --}}
+
             <div class="sidebar-header">
                 <h3>Messages</h3>
             </div>
@@ -67,12 +68,19 @@
         </aside>
 
         {{-- RIGHT: CHAT AREA --}}
-        <section class="chat-main">
+        <section class="chat-main" id="chat-main">   {{-- ← ADDED ID --}}
+
+            {{-- ⭐ ADDED BACK BUTTON FOR MOBILE --}}
+            <button class="back-btn" id="back-btn">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+
             <header class="chat-header">
                 <div class="chat-user">
                     <img src="{{ asset('images/logo1.png') }}" id="chat-user-avatar" class="avatar" alt="User">
                     <h2 id="chat-username">Select a conversation</h2>
                 </div>
+
                 @if($user->role == 'therapist' || $user->role == 'clinic')
                     <button id="start-video-call" class="video-call-btn" title="Start Video Call">
                         <i class="fas fa-video"></i> 
@@ -139,17 +147,15 @@
 
 {{-- Pass PHP variables to JavaScript --}}
 <script>
-    // User Information
     window.authUserRole = "{{ auth()->user()->role }}";
     window.userId = {{ auth()->user()->id }};
     window.authUserId = {{ auth()->id() }};
     window.authUserName = "{{ auth()->user()->name }}";
     
-    // Pusher Configuration
     window.pusherKey = "{{ config('broadcasting.connections.pusher.key') }}";
     window.pusherCluster = "{{ config('broadcasting.connections.pusher.options.cluster') }}";
-
 </script>
+
 <script src="https://unpkg.com/@daily-co/daily-js"></script>
 <script src="{{ asset('js/chat.js') }}"></script>
 

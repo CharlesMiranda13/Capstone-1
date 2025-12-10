@@ -149,6 +149,8 @@
     background: #6c757d;
     color: white;
     margin-left: 10px;
+    text-decoration: none;
+    display: inline-block;
 }
 
 .btn-secondary:hover {
@@ -165,12 +167,14 @@
 
 .table-card-body {
     padding: 20px;
+    overflow-x: auto;
 }
 
 /* Table */
 .subscription-table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 900px;
 }
 
 .subscription-table thead {
@@ -213,6 +217,7 @@
     border-radius: 12px;
     font-size: 12px;
     font-weight: 500;
+    white-space: nowrap;
 }
 
 .badge-secondary {
@@ -258,6 +263,7 @@
     align-items: center;
     gap: 5px;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .btn-info:hover {
@@ -428,6 +434,7 @@
     justify-content: center;
     gap: 5px;
     margin-top: 20px;
+    flex-wrap: wrap;
 }
 
 .pagination a,
@@ -439,10 +446,15 @@
     color: #007bff;
 }
 
-.pagination .active span {
+.pagination span.active {
     background: #007bff;
     color: white;
     border-color: #007bff;
+}
+
+.pagination span.disabled {
+    color: #6c757d;
+    cursor: not-allowed;
 }
 
 /* Responsive */
@@ -458,9 +470,38 @@
     .details-grid {
         grid-template-columns: 1fr;
     }
+
+    .subscription-table {
+        font-size: 13px;
+    }
+
+    .subscription-table th,
+    .subscription-table td {
+        padding: 12px 10px;
+    }
 }
 
 @media (max-width: 768px) {
+    .subscriptions-container {
+        padding: 15px;
+    }
+
+    .subscriptions-header h2 {
+        font-size: 24px;
+    }
+
+    .stats-cards-grid {
+        gap: 15px;
+    }
+
+    .stats-card {
+        padding: 20px;
+    }
+
+    .stats-card h3 {
+        font-size: 30px;
+    }
+
     .plan-distribution {
         grid-template-columns: 1fr;
     }
@@ -472,17 +513,97 @@
         gap: 15px;
     }
 
+    .filter-card {
+        padding: 15px;
+    }
+
+    .filter-form {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-form button,
+    .btn-secondary {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 5px;
+    }
+
+    .table-card-body {
+        padding: 15px;
+    }
+
+    .subscription-table {
+        font-size: 12px;
+        min-width: 800px;
+    }
+
+    .subscription-table th,
+    .subscription-table td {
+        padding: 10px 8px;
+    }
+
     .action-form {
         flex-direction: column;
     }
 }
 
 @media (max-width: 480px) {
-    .stats-cards-grid {
-        grid-template-columns: 1fr;
+    .subscriptions-container {
+        padding: 10px;
     }
 
-    .filter-form {
+    .subscriptions-header h2 {
+        font-size: 20px;
+    }
+
+    .stats-cards-grid {
         grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .stats-card {
+        padding: 18px;
+    }
+
+    .stats-card h3 {
+        font-size: 28px;
+    }
+
+    .stats-card p {
+        font-size: 13px;
+    }
+
+    .filter-card {
+        padding: 12px;
+    }
+
+    .table-card-body {
+        padding: 10px;
+    }
+
+    .subscription-table {
+        font-size: 11px;
+        min-width: 700px;
+    }
+
+    .subscription-table th,
+    .subscription-table td {
+        padding: 8px 6px;
+    }
+
+    .badge {
+        font-size: 10px;
+        padding: 4px 8px;
+    }
+
+    .btn-info {
+        font-size: 11px;
+        padding: 5px 10px;
+    }
+
+    .pagination a,
+    .pagination span {
+        padding: 6px 10px;
+        font-size: 13px;
     }
 }

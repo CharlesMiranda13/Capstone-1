@@ -419,9 +419,6 @@ class ptController extends Controller
         ]);
     }
 //
-    /**
-     * Update Electronic Health Record (EHR)
-     */
     public function updateEHR(Request $request, $patientId)
     {
         $request->validate([
@@ -441,16 +438,19 @@ class ptController extends Controller
         $ehrData .= "Medical History: " . ($request->medical_history ?? '—') . "\n";
         $ehrData .= "Notes: " . ($request->notes ?? '—');
         
+        // Update patient's EHR
         $patient->ehr = $ehrData;
         $patient->save();
 
-        // Create a medical record entry
+        // Create a medical record entry tracking this specific change
         MedicalRecord::create([
             'patient_id' => $patientId,
             'therapist_id' => Auth::id(),
             'record_date' => now(),
-            'description' => 'Electronic Health Record Updated',
+            'description' => 'EHR Updated',
             'record_type' => 'EHR',
+            'changed_field' => 'ehr',
+            'changed_data' => $ehrData,
         ]);
 
         return redirect()->back()->with('success', 'EHR updated successfully!');
@@ -468,22 +468,25 @@ class ptController extends Controller
 
         $patient = User::findOrFail($patientId);
         
-        // Format with date from the form
+        // Format with date from the form - THIS IS THE NEW ENTRY ONLY
         $formattedDate = Carbon::parse($request->session_date)->format('M d, Y');
         $newTreatment = $formattedDate . ": " . $request->description;
         
-        $patient->therapies = $patient->therapies 
-            ? $patient->therapies . "\n\n" . $newTreatment 
-            : $newTreatment;
+        // Update patient's treatment plan (prepend new to top)
+        $updatedTherapies = $newTreatment . ($patient->therapies ? "\n\n" . $patient->therapies : '');
+        
+        $patient->therapies = $updatedTherapies;
         $patient->save();
 
-        // Create a medical record entry with TODAY'S date (when therapist made the change)
+        // Create a medical record entry tracking ONLY the new entry
         MedicalRecord::create([
             'patient_id' => $patientId,
             'therapist_id' => Auth::id(),
-            'record_date' => now()->toDateString(),  // Changed: Use today's date instead of session_date
-            'description' => 'Treatment Plan Updated ',
+            'record_date' => now()->toDateString(),
+            'description' => 'Treatment Plan Updated',
             'record_type' => 'Treatment Plan',
+            'changed_field' => 'therapies',
+            'changed_data' => $newTreatment, // ONLY save the new entry, not the accumulated text
         ]);
 
         return redirect()->back()->with('success', 'Treatment plan updated successfully!');
@@ -500,20 +503,24 @@ class ptController extends Controller
 
         $patient = User::findOrFail($patientId);
         
-        // Append new progress note with timestamp
+        // Format new progress note with timestamp - THIS IS THE NEW ENTRY ONLY
         $newProgress = now()->format('M d, Y') . ": " . $request->notes;
-        $patient->exercises = $patient->exercises 
-            ? $patient->exercises . "\n\n" . $newProgress 
-            : $newProgress;
+        
+        // Update patient's progress notes (prepend new to top)
+        $updatedExercises = $newProgress . ($patient->exercises ? "\n\n" . $patient->exercises : '');
+        
+        $patient->exercises = $updatedExercises;
         $patient->save();
 
-        // Create a medical record entry
+        // Create a medical record entry tracking ONLY the new entry
         MedicalRecord::create([
             'patient_id' => $patientId,
             'therapist_id' => Auth::id(),
             'record_date' => now(),
             'description' => 'Progress Note Updated',
             'record_type' => 'Progress Note',
+            'changed_field' => 'exercises',
+            'changed_data' => $newProgress, // ONLY save the new entry, not the accumulated text
         ]);
 
         return redirect()->back()->with('success', 'Progress note updated successfully!');
