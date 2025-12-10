@@ -18,6 +18,45 @@ document.addEventListener('DOMContentLoaded', function () {
     let callStartTime = null;
     let callPopup = null;
 
+    /** ------------------ Search Functionality ------------------ */
+    const chatSearch = document.getElementById('chat-search');
+    
+    if (chatSearch) {
+        chatSearch.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            const chatItems = chatList.querySelectorAll('.chat-item');
+            let hasResults = false;
+
+            chatItems.forEach(item => {
+                const userName = item.querySelector('h4').textContent.toLowerCase();
+                const lastMessage = item.querySelector('.chat-info p').textContent.toLowerCase();
+                
+                if (userName.includes(searchTerm) || lastMessage.includes(searchTerm)) {
+                    item.classList.remove('hidden');
+                    hasResults = true;
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+
+            // Show/hide no results message
+            let noResultsMsg = chatList.querySelector('.no-results');
+            
+            if (!hasResults && searchTerm !== '') {
+                if (!noResultsMsg) {
+                    noResultsMsg = document.createElement('p');
+                    noResultsMsg.className = 'no-results';
+                    noResultsMsg.textContent = 'No conversations found';
+                    chatList.appendChild(noResultsMsg);
+                }
+            } else {
+                if (noResultsMsg) {
+                    noResultsMsg.remove();
+                }
+            }
+        });
+    }
+
     /** ------------------ Helper Functions ------------------ */
     function getDateLabel(dateObj) {
         const today = new Date();
@@ -43,7 +82,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const time = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         
-        // Handle system messages (call ended)
+        // Handle call ended messages with enhanced styling
+        if (msg.type === 'call_ended' || msg.message_type === 'call_ended') {
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('message', 'call-ended-message');
+            wrapper.dataset.messageId = msg.id;
+            
+            // Parse duration from message if it exists
+            const durationMatch = msg.message.match(/(\d+h\s*\d+m|\d+m\s*\d+s|\d+s)/);
+            const duration = durationMatch ? durationMatch[0] : msg.duration || 'Unknown duration';
+            
+            wrapper.innerHTML = `
+                <div class="call-ended-content">
+                    <div class="call-icon-wrapper">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="call-details">
+                        <span class="call-status">Video chat ended</span>
+                        <span class="call-duration">${duration}</span>
+                    </div>
+                    <span class="call-time">${time}</span>
+                </div>
+            `;
+            chatMessages.appendChild(wrapper);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return;
+        }
+
+        // Handle other system messages
         if (msg.type === 'system' || msg.message_type === 'system') {
             const wrapper = document.createElement('div');
             wrapper.classList.add('message', 'system-message');
@@ -420,8 +486,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /** ------------------ PUSHER SETUP ------------------ */
     console.log('=== INITIALIZING PUSHER ===');
-    console.log('🔐 Current User ID:', window.authUserId);
-    console.log('🔐 Window User ID:', window.userId);
     Pusher.logToConsole = true;
 
     const pusher = new Pusher(window.pusherKey, {
@@ -435,25 +499,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    pusher.connection.bind('connected', () => console.log('✅ Pusher connected'));
-    pusher.connection.bind('error', err => console.error('❌ Pusher error:', err));
+    pusher.connection.bind('connected', () => console.log('✓ Pusher connected'));
+    pusher.connection.bind('error', err => console.error('✗ Pusher error:', err));
 
     const channelName = `private-healconnect-chat.${window.userId}`;
-    console.log('📡 Subscribing to channel:', channelName);
     const channel = pusher.subscribe(channelName);
 
     channel.bind('pusher:subscription_succeeded', () => {
-        console.log('✅ Successfully subscribed to:', channelName);
-        console.log('✅ This user will ONLY receive calls for user ID:', window.userId);
-    });
-
-    channel.bind('pusher:subscription_error', (error) => {
-        console.error('❌ Subscription error:', error);
+        console.log('✓ Subscribed to:', channelName);
     });
 
     // Message sent event
     channel.bind('message.sent', data => {
-        console.log('💬 Message received:', data);
+        console.log('📩 Message received:', data);
         const msg = data.message;
         if (msg.sender_id === window.userId) return;
 
@@ -470,58 +528,14 @@ document.addEventListener('DOMContentLoaded', function () {
         
         const preview = msg.type === 'file' ? "[File]" : 
                        msg.type === 'voice' ? "[Voice Message]" : 
+                       msg.type === 'call_ended' ? "📹 Video chat ended" :
                        msg.type === 'system' ? msg.message :
                        msg.message;
         moveChatToTop(msg.sender_id, preview);
     });
 
-    // ============================================================
-    // FIXED: INCOMING VIDEO CALL EVENT - PROPER VERIFICATION
-    // ============================================================
+    // ---------------- INCOMING VIDEO CALL EVENT ----------------
     channel.bind('video.call.started', data => {
-        console.log('📞 ========================================');
-        console.log('📞 VIDEO CALL EVENT RECEIVED');
-        console.log('📞 ========================================');
-        console.log('📞 Event Data:', {
-            receiverId: data.receiver_id,
-            callerName: data.caller?.name,
-            callerId: data.caller?.id,
-            room: data.room
-        });
-        
-        // Convert to numbers for accurate comparison
-        const receiverIdNumber = parseInt(data.receiver_id);
-        const currentUserIdNumber = parseInt(window.userId);
-        const authUserIdNumber = parseInt(window.authUserId);
-        
-        console.log('🔍 ID Comparison:', {
-            receiverIdNumber,
-            currentUserIdNumber,
-            authUserIdNumber,
-            matchesWindowUserId: receiverIdNumber === currentUserIdNumber,
-            matchesAuthUserId: receiverIdNumber === authUserIdNumber
-        });
-        
-        // CRITICAL: Only show call if receiver_id matches THIS user
-        // Reject if it doesn't match EITHER of our user IDs
-        if (receiverIdNumber !== currentUserIdNumber && receiverIdNumber !== authUserIdNumber) {
-            console.warn("⚠️ ========================================");
-            console.warn("⚠️ CALL REJECTED - NOT FOR THIS USER");
-            console.warn("⚠️ ========================================");
-            console.warn("⚠️ This call is for user ID:", receiverIdNumber);
-            console.warn("⚠️ But I am user ID:", currentUserIdNumber);
-            console.warn("⚠️ Caller:", data.caller?.name, "(ID:", data.caller?.id + ")");
-            return;
-        }
-        
-        console.log('✅ ========================================');
-        console.log('✅ CALL VERIFIED FOR THIS USER');
-        console.log('✅ ========================================');
-        console.log('✅ Caller:', data.caller.name, '(ID:', data.caller.id, ')');
-        console.log('✅ Room:', data.room);
-        console.log('✅ Showing incoming call notification...');
-        
-        // Now safe to show the incoming call UI
         const incomingCallDiv = document.getElementById('incoming-call');
         const callerNameSpan = document.getElementById('caller-name');
         const joinBtn = document.getElementById('join-call-btn');
@@ -530,16 +544,13 @@ document.addEventListener('DOMContentLoaded', function () {
         if (incomingCallDiv && callerNameSpan) {
             callerNameSpan.textContent = data.caller.name;
             incomingCallDiv.style.display = 'flex';
-            console.log('✅ Incoming call UI displayed');
 
-            // Clone buttons to remove old listeners
             const newJoinBtn = joinBtn.cloneNode(true);
             const newDeclineBtn = declineBtn.cloneNode(true);
             joinBtn.parentNode.replaceChild(newJoinBtn, joinBtn);
             declineBtn.parentNode.replaceChild(newDeclineBtn, declineBtn);
 
             newJoinBtn.addEventListener('click', () => {
-                console.log('✅ User clicked JOIN - Opening video call');
                 incomingCallDiv.style.display = 'none';
                 
                 // Record call start time for receiver
@@ -550,8 +561,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const top = (screen.height - height) / 2;
                 const roomUrl = `/video/room/${data.room}${data.token ? '?token=' + data.token : ''}`;
                 
-                console.log('📞 Opening video call window:', roomUrl);
-                
                 callPopup = window.open(
                     roomUrl,
                     'HealConnect_VideoCall',
@@ -559,18 +568,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 );
 
                 if (!callPopup) {
-                    console.error('❌ Popup blocked - redirecting in same window');
                     alert('Please allow popups.');
                     window.location.href = roomUrl;
                     callStartTime = null;
                 } else {
-                    console.log('✅ Video call window opened successfully');
                     currentReceiverId = data.caller.id;
                     
                     // Monitor when popup closes
                     const checkPopup = setInterval(() => {
                         if (callPopup.closed) {
-                            console.log('📞 Call window closed - handling call end');
                             clearInterval(checkPopup);
                             handleCallEnd();
                         }
@@ -579,18 +585,8 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             newDeclineBtn.addEventListener('click', () => {
-                console.log('❌ User clicked DECLINE');
                 incomingCallDiv.style.display = 'none';
             });
-        } else {
-            console.error('❌ Incoming call UI elements not found!');
-        }
-    });
-
-    // Log all events for debugging
-    channel.bind_global((event, data) => {
-        if (!event.startsWith('pusher:')) {
-            console.log('📡 Event received on channel:', event, data);
         }
     });
 

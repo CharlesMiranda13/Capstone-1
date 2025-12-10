@@ -280,7 +280,6 @@ Route::middleware(['auth', 'check.status', 'check.subscription'])->group(functio
     Route::put('/messages/{id}/edit', [ChatController::class, 'update'])->name('messages.update');
     Route::delete('/messages/{id}', [ChatController::class, 'destroy'])->name('messages.destroy');
     Route::post('/messages/mark-as-read/{userId}', [ChatController::class, 'markAsRead'])->name('messages.markAsRead');
-    Route::post('/messages/call-ended', [ChatController::class, 'storeCallEndedMessage'])->name('messages.callEnded');
 });
 
 
@@ -328,5 +327,5 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/video/create-room', [VideoController::class, 'createRoom'])->name('video.create');
     Route::get('/video/room/{room}', [VideoController::class, 'showRoom'])->name('video.room');
     Route::delete('/video/room/{room}', [VideoController::class, 'deleteRoom'])->name('video.delete');
-    
+    Route::post('/messages/call-ended', [VideoController::class, 'callEnded'])->name('messages.callEnded');
 });
