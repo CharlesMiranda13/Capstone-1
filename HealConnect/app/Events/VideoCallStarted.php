@@ -30,7 +30,6 @@ class VideoCallStarted implements ShouldBroadcast
 
     public function broadcastOn(): array
     {
-        //  This creates a PRIVATE channel for the specific receiver
         $channel = new PrivateChannel('healconnect-chat.' . $this->data['receiver_id']);
         
         Log::info('Broadcasting on channel:', [

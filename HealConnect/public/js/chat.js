@@ -517,15 +517,10 @@ document.addEventListener('DOMContentLoaded', function () {
         // THIS IS THE KEY FIX: Strict verification
         if (receiverIdNumber !== currentUserIdNumber || 
             receiverIdNumber !== authUserIdNumber) {
-            console.warn('⚠️ ========================================');
-            console.warn('⚠️ CALL NOT FOR THIS USER - IGNORING');
-            console.warn('⚠️ ========================================');
-            console.warn('❌ Call intended for user ID:', data.receiver_id, '(type:', typeof data.receiver_id, ')');
-            console.warn('❌ Current window.userId:', window.userId, '(type:', typeof window.userId, ')');
-            console.warn('❌ Current window.authUserId:', window.authUserId, '(type:', typeof window.authUserId, ')');
-            console.warn('⚠️ ========================================');
-            return; // STOP HERE - don't show notification
+            console.warn("⚠️ Call not intended for this user – ignoring.");
+            return;
         }
+
         
         console.log('✅ ========================================');
         console.log('✅ CALL VERIFIED FOR THIS USER');
