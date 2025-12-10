@@ -420,6 +420,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /** ------------------ PUSHER SETUP ------------------ */
     console.log('=== INITIALIZING PUSHER ===');
+    console.log('🔐 Current User ID:', window.authUserId);
+    console.log('🔐 Window User ID:', window.userId);
     Pusher.logToConsole = true;
 
     const pusher = new Pusher(window.pusherKey, {
@@ -433,19 +435,25 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    pusher.connection.bind('connected', () => console.log(' Pusher connected'));
-    pusher.connection.bind('error', err => console.error(' Pusher error:', err));
+    pusher.connection.bind('connected', () => console.log('✅ Pusher connected'));
+    pusher.connection.bind('error', err => console.error('❌ Pusher error:', err));
 
     const channelName = `private-healconnect-chat.${window.userId}`;
+    console.log('📡 Subscribing to channel:', channelName);
     const channel = pusher.subscribe(channelName);
 
     channel.bind('pusher:subscription_succeeded', () => {
-        console.log('Subscribed to:', channelName);
+        console.log('✅ Successfully subscribed to:', channelName);
+        console.log('✅ This user will ONLY receive calls for user ID:', window.userId);
+    });
+
+    channel.bind('pusher:subscription_error', (error) => {
+        console.error('❌ Subscription error:', error);
     });
 
     // Message sent event
     channel.bind('message.sent', data => {
-        console.log(' Message received:', data);
+        console.log('💬 Message received:', data);
         const msg = data.message;
         if (msg.sender_id === window.userId) return;
 
@@ -467,21 +475,66 @@ document.addEventListener('DOMContentLoaded', function () {
         moveChatToTop(msg.sender_id, preview);
     });
 
-    // ---------------- INCOMING VIDEO CALL EVENT ----------------
+    // ============================================================
+    // FIXED: INCOMING VIDEO CALL EVENT WITH TRIPLE VERIFICATION
+    // ============================================================
     channel.bind('video.call.started', data => {
-        console.log('📞 Video call event received:', data);
+        console.log('📞 ========================================');
+        console.log('📞 RAW VIDEO CALL EVENT RECEIVED');
+        console.log('📞 ========================================');
+        console.log('📞 Full event data:', JSON.stringify(data, null, 2));
         
-        // CRITICAL: Verify this call is actually for THIS user
-        if (data.receiver_id !== window.authUserId) {
-            console.warn('⚠️ Call not intended for this user. Ignoring.', {
-                intended_for: data.receiver_id,
-                current_user: window.authUserId
-            });
-            return; // Exit early - this call is not for us
+        // CRITICAL CHECK #1: Verify channel subscription
+        console.log('🔍 Channel Check:', {
+            subscribedChannel: channelName,
+            currentUserId: window.userId,
+            authUserId: window.authUserId
+        });
+        
+        // CRITICAL CHECK #2: Verify receiver_id matches current user
+        console.log('🔍 Receiver Check:', {
+            eventReceiverId: data.receiver_id,
+            eventReceiverIdType: typeof data.receiver_id,
+            currentUserId: window.userId,
+            currentUserIdType: typeof window.userId,
+            authUserId: window.authUserId,
+            authUserIdType: typeof window.authUserId
+        });
+        
+        // TRIPLE VERIFICATION - Use strict equality with type conversion
+        const receiverIdNumber = parseInt(data.receiver_id);
+        const currentUserIdNumber = parseInt(window.userId);
+        const authUserIdNumber = parseInt(window.authUserId);
+        
+        console.log('🔍 Parsed IDs:', {
+            receiverIdNumber,
+            currentUserIdNumber,
+            authUserIdNumber,
+            match1: receiverIdNumber === currentUserIdNumber,
+            match2: receiverIdNumber === authUserIdNumber
+        });
+        
+        // THIS IS THE KEY FIX: Strict verification
+        if (receiverIdNumber !== currentUserIdNumber || 
+            receiverIdNumber !== authUserIdNumber) {
+            console.warn('⚠️ ========================================');
+            console.warn('⚠️ CALL NOT FOR THIS USER - IGNORING');
+            console.warn('⚠️ ========================================');
+            console.warn('❌ Call intended for user ID:', data.receiver_id, '(type:', typeof data.receiver_id, ')');
+            console.warn('❌ Current window.userId:', window.userId, '(type:', typeof window.userId, ')');
+            console.warn('❌ Current window.authUserId:', window.authUserId, '(type:', typeof window.authUserId, ')');
+            console.warn('⚠️ ========================================');
+            return; // STOP HERE - don't show notification
         }
         
-        console.log('✅ Call confirmed for this user');
+        console.log('✅ ========================================');
+        console.log('✅ CALL VERIFIED FOR THIS USER');
+        console.log('✅ ========================================');
+        console.log('✅ Caller:', data.caller.name, '(ID:', data.caller.id, ')');
+        console.log('✅ Room:', data.room);
+        console.log('✅ Showing incoming call notification...');
         
+        // Now safe to show the incoming call UI
         const incomingCallDiv = document.getElementById('incoming-call');
         const callerNameSpan = document.getElementById('caller-name');
         const joinBtn = document.getElementById('join-call-btn');
@@ -490,13 +543,16 @@ document.addEventListener('DOMContentLoaded', function () {
         if (incomingCallDiv && callerNameSpan) {
             callerNameSpan.textContent = data.caller.name;
             incomingCallDiv.style.display = 'flex';
+            console.log('✅ Incoming call UI displayed');
 
+            // Clone buttons to remove old listeners
             const newJoinBtn = joinBtn.cloneNode(true);
             const newDeclineBtn = declineBtn.cloneNode(true);
             joinBtn.parentNode.replaceChild(newJoinBtn, joinBtn);
             declineBtn.parentNode.replaceChild(newDeclineBtn, declineBtn);
 
             newJoinBtn.addEventListener('click', () => {
+                console.log('✅ User clicked JOIN - Opening video call');
                 incomingCallDiv.style.display = 'none';
                 
                 // Record call start time for receiver
@@ -507,6 +563,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 const top = (screen.height - height) / 2;
                 const roomUrl = `/video/room/${data.room}${data.token ? '?token=' + data.token : ''}`;
                 
+                console.log('📞 Opening video call window:', roomUrl);
+                
                 callPopup = window.open(
                     roomUrl,
                     'HealConnect_VideoCall',
@@ -514,15 +572,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 );
 
                 if (!callPopup) {
+                    console.error('❌ Popup blocked - redirecting in same window');
                     alert('Please allow popups.');
                     window.location.href = roomUrl;
                     callStartTime = null;
                 } else {
+                    console.log('✅ Video call window opened successfully');
                     currentReceiverId = data.caller.id;
                     
                     // Monitor when popup closes
                     const checkPopup = setInterval(() => {
                         if (callPopup.closed) {
+                            console.log('📞 Call window closed - handling call end');
                             clearInterval(checkPopup);
                             handleCallEnd();
                         }
@@ -531,14 +592,21 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             newDeclineBtn.addEventListener('click', () => {
-                console.log('📞 Call declined by user');
+                console.log('❌ User clicked DECLINE');
                 incomingCallDiv.style.display = 'none';
-                
-                // Optional: Notify the caller that the call was declined
-                // You can implement this if needed
             });
+        } else {
+            console.error('❌ Incoming call UI elements not found!');
         }
     });
+
+    // Log all events for debugging
+    channel.bind_global((event, data) => {
+        if (!event.startsWith('pusher:')) {
+            console.log('📡 Event received on channel:', event, data);
+        }
+    });
+
     // ---------------- Edit/Delete message ----------------
     chatMessages.addEventListener('click', e => {
         const target = e.target;
