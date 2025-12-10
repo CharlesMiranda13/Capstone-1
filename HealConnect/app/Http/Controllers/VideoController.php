@@ -26,6 +26,15 @@ class VideoController extends Controller
             $caller = auth()->user();
             $receiver = User::find($receiverId);
 
+            // CRITICAL: Verify receiver exists and is a patient
+            if (!$receiver) {
+                Log::error('Receiver not found', ['receiver_id' => $receiverId]);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Receiver not found'
+                ], 404);
+            }
+
             // Security check: Only therapists and clinics can initiate calls
             if (!in_array($caller->role, ['therapist', 'clinic'])) {
                 Log::warning('Unauthorized video call attempt', [
@@ -39,14 +48,35 @@ class VideoController extends Controller
                 ], 403);
             }
 
-            // Log the attempt
-            Log::info('🎥 Video call initiated', [
-                'caller_id' => $caller->id,
-                'caller_name' => $caller->name,
-                'caller_role' => $caller->role,
-                'receiver_id' => $receiverId,
-                'receiver_name' => $receiver->name,
-                'receiver_role' => $receiver->role
+            // Security check: Only call patients
+            if ($receiver->role !== 'patient') {
+                Log::warning('Attempted to call non-patient', [
+                    'caller_id' => $caller->id,
+                    'receiver_id' => $receiverId,
+                    'receiver_role' => $receiver->role
+                ]);
+                
+                return response()->json([
+                    'success' => false,
+                    'message' => 'You can only call patients'
+                ], 403);
+            }
+
+            // Log the attempt with EXACT IDs and types
+            Log::info('🎥 ========================================');
+            Log::info('🎥 VIDEO CALL INITIATED');
+            Log::info('🎥 ========================================');
+            Log::info('Caller Details:', [
+                'id' => $caller->id,
+                'id_type' => gettype($caller->id),
+                'name' => $caller->name,
+                'role' => $caller->role
+            ]);
+            Log::info('Receiver Details:', [
+                'id' => $receiverId,
+                'id_type' => gettype($receiverId),
+                'name' => $receiver->name,
+                'role' => $receiver->role
             ]);
 
             // Generate unique room name
@@ -117,7 +147,7 @@ class VideoController extends Controller
                     ], 500);
                 }
                 
-                Log::info(' Room created successfully', [
+                Log::info('✅ Room created successfully', [
                     'room_name' => $roomName,
                     'room_url' => $roomData['url']
                 ]);
@@ -126,28 +156,42 @@ class VideoController extends Controller
                 $callerToken = $this->createMeetingToken($apiKey, $roomName, $caller->name, true);
                 $receiverToken = $this->createMeetingToken($apiKey, $roomName, $receiver->name, false);
 
-                //  Broadcast ONLY to the specific receiver
+                // CRITICAL FIX: Ensure receiver_id is an INTEGER
+                $receiverIdInt = (int) $receiverId;
+
+                // Prepare broadcast data
+                $broadcastData = [
+                    'caller' => [
+                        'id' => (int) $caller->id,  // Ensure integer
+                        'name' => $caller->name,
+                        'role' => $caller->role,
+                    ],
+                    'receiver_id' => $receiverIdInt,  // THIS IS THE KEY - must be integer
+                    'room' => $roomName,
+                    'room_url' => $roomData['url'],
+                    'token' => $receiverToken
+                ];
+
+                Log::info('📡 ========================================');
+                Log::info('📡 BROADCASTING VIDEO CALL');
+                Log::info('📡 ========================================');
+                Log::info('Target Channel:', [
+                    'channel' => 'private-healconnect-chat.' . $receiverIdInt,
+                    'receiver_id' => $receiverIdInt,
+                    'receiver_id_type' => gettype($receiverIdInt)
+                ]);
+                Log::info('Broadcast Data:', $broadcastData);
+                Log::info('📡 ========================================');
+
+                // CRITICAL: Broadcast ONLY to the specific receiver's private channel
                 try {
-                    Log::info(' Broadcasting video call to receiver', [
-                        'receiver_id' => $receiverId,
-                        'channel' => 'healconnect-chat.' . $receiverId
-                    ]);
+                    // This will broadcast to: private-healconnect-chat.{receiver_id}
+                    broadcast(new VideoCallStarted($broadcastData))->toOthers();
 
-                    broadcast(new VideoCallStarted([
-                        'caller' => [
-                            'id' => $caller->id,
-                            'name' => $caller->name,
-                            'role' => $caller->role,
-                        ],
-                        'receiver_id' => $receiverId,  
-                        'room' => $roomName,
-                        'room_url' => $roomData['url'],
-                        'token' => $receiverToken
-                    ]))->toOthers();
-
-                    Log::info('Broadcast sent successfully');
+                    Log::info('✅ Broadcast sent successfully to receiver ID: ' . $receiverIdInt);
+                    
                 } catch (\Exception $e) {
-                    Log::error(' Broadcast failed', [
+                    Log::error('❌ Broadcast failed', [
                         'error' => $e->getMessage(),
                         'trace' => $e->getTraceAsString()
                     ]);
@@ -184,10 +228,11 @@ class VideoController extends Controller
             ], 422);
 
         } catch (\Exception $e) {
-            Log::error(' Video call error', [
+            Log::error('❌ Video call error', [
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
-                'line' => $e->getLine()
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
             ]);
 
             return response()->json([
@@ -224,7 +269,7 @@ class VideoController extends Controller
                 $token = $tokenData['token'] ?? null;
                 
                 if ($token) {
-                    Log::info('Meeting token created', [
+                    Log::info('✅ Meeting token created', [
                         'user_name' => $userName,
                         'is_owner' => $isOwner,
                         'token_preview' => substr($token, 0, 20) . '...'
@@ -241,7 +286,7 @@ class VideoController extends Controller
             return null;
 
         } catch (\Exception $e) {
-            Log::error(' Token creation error', [
+            Log::error('❌ Token creation error', [
                 'user_name' => $userName,
                 'error' => $e->getMessage()
             ]);
@@ -306,7 +351,7 @@ class VideoController extends Controller
                 'Authorization' => 'Bearer ' . $apiKey,
             ])->delete("https://api.daily.co/v1/rooms/{$roomName}");
 
-            Log::info(' Room deletion attempt', [
+            Log::info('🗑️ Room deletion attempt', [
                 'room_name' => $roomName,
                 'status' => $response->status(),
                 'successful' => $response->successful()
@@ -318,7 +363,7 @@ class VideoController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            Log::error(' Room deletion error', [
+            Log::error('❌ Room deletion error', [
                 'room_name' => $roomName,
                 'error' => $e->getMessage()
             ]);
