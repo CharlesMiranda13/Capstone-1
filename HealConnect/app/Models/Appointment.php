@@ -35,6 +35,10 @@ class Appointment extends Model
     {
         return $this->morphTo();
     }
+    public function therapist()
+    {
+        return $this->belongsTo(User::class, 'provider_id');
+    }
 
     /** ---------------- SCOPES ---------------- */
 

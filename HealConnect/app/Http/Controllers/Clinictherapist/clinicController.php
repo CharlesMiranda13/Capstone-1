@@ -57,9 +57,16 @@ class ClinicController extends ptController
         // Upcoming appointments
         $appointments = Appointment::where('provider_id', $clinic->id)
             ->where('provider_type', User::class)
-            ->with(['patient'])
-           ->whereDate('appointment_date', '>=', today())
+            ->with(['patient', 'therapist'])
+            ->where(function($query) {
+                $query->whereDate('appointment_date', '>', today())
+                    ->orWhere(function($q) {
+                        $q->whereDate('appointment_date', '=', today())
+                        ->whereTime('appointment_time', '>=', now()->format('H:i:s'));
+                    });
+            })
             ->orderBy('appointment_date')
+            ->orderBy('appointment_time')
             ->get();
         $appointmentsQuery = Appointment::where('provider_id', $clinic->id)
             ->where('provider_type', User::class);
