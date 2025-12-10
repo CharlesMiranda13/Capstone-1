@@ -67,11 +67,6 @@
 <main class="clinic-main">
     <div class="dashboard-cards">
         <div class="card">
-            <i class="fa-solid fa-user-doctor" style="color:#007bff;"></i>
-            <h3>{{ $totalTherapists }}</h3>
-            <p>Therapists</p>
-        </div>
-        <div class="card">
             <i class="fa-solid fa-users" style="color:#28a745;"></i>
             <h3>{{ $totalEmployees }}</h3>
             <p>Employees</p>
