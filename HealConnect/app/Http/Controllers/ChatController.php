@@ -300,4 +300,30 @@ class ChatController extends Controller
 
         broadcast(new NewMessageEvent($userId, $unreadCount));
     }
+
+    // ------------------ CALL ENDED MESSAGE ------------------
+    public function storeCallEndedMessage(Request $request)
+    {
+        $request->validate([
+            'receiver_id' => 'required|exists:users,id',
+            'duration' => 'required|string'
+        ]);
+
+        $message = Message::create([
+            'sender_id' => Auth::id(),
+            'receiver_id' => $request->receiver_id,
+            'message' => "Video call ended • {$request->duration}",
+            'message_type' => 'system', 
+            'is_read' => false,
+        ]);
+
+        $message->type = 'system';
+
+        broadcast(new MessageSent($message))->toOthers();
+
+        // Broadcast notification to receiver
+        $this->broadcastUnreadCount($request->receiver_id);
+
+        return response()->json(['success' => true, 'message' => $message]);
+    }
 }

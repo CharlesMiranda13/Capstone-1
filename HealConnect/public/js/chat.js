@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let mediaRecorder = null;
     let audioChunks = [];
     let isRecording = false;
+    let callStartTime = null;
+    let callPopup = null;
 
     /** ------------------ Helper Functions ------------------ */
     function getDateLabel(dateObj) {
@@ -40,26 +42,45 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const time = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        
+        // Handle system messages (call ended)
+        if (msg.type === 'system' || msg.message_type === 'system') {
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('message', 'system-message');
+            wrapper.dataset.messageId = msg.id;
+            wrapper.innerHTML = `
+                <div class="message-content">
+                    <i class="fas fa-video"></i>
+                    ${msg.message}
+                </div>
+            `;
+            chatMessages.appendChild(wrapper);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return;
+        }
+
+        // Regular messages
         const wrapper = document.createElement('div');
         wrapper.classList.add('message', isOwn ? 'sent' : 'received');
         wrapper.dataset.messageId = msg.id;
 
         let bubbleContent = '';
-        if (msg.type === 'voice') {
+        if (msg.type === 'voice' || msg.message_type === 'voice') {
             bubbleContent = `
                 <audio controls preload="none">
-                    <source src="${msg.message_url}" type="audio/webm">
+                    <source src="${msg.message_url || msg.message}" type="audio/webm">
                     Your browser does not support the audio element.
                 </audio>
             `;
-        } else if (msg.type === 'file' && msg.file_url) {
-            const ext = msg.file_url.split('.').pop().toLowerCase();
+        } else if ((msg.type === 'file' || msg.message_type === 'file') && (msg.file_url || msg.message)) {
+            const fileUrl = msg.file_url || msg.message;
+            const ext = fileUrl.split('.').pop().toLowerCase();
             if (['jpg','jpeg','png','gif'].includes(ext)) {
-                bubbleContent = `<img src="${msg.file_url}" class="chat-file" alt="image">`;
+                bubbleContent = `<img src="${fileUrl}" class="chat-file" alt="image">`;
             } else if (['mp4','mov','avi'].includes(ext)) {
-                bubbleContent = `<video controls class="chat-file"><source src="${msg.file_url}" type="video/${ext}"></video>`;
+                bubbleContent = `<video controls class="chat-file"><source src="${fileUrl}" type="video/${ext}"></video>`;
             } else {
-                bubbleContent = `<a href="${msg.file_url}" target="_blank">Download File</a>`;
+                bubbleContent = `<a href="${fileUrl}" target="_blank">Download File</a>`;
             }
         } else {
             bubbleContent = `<p class="text">${msg.message}${msg.edited ? ' (edited)' : ''}</p>`;
@@ -72,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="message-menu">
                     <span class="menu-toggle">⋯</span>
                     <div class="menu-options">
-                        ${msg.type === 'text' ? `<span class="edit-message" data-message-id="${msg.id}">Edit</span>` : ''}
+                        ${(msg.type === 'text' || msg.message_type === 'text') ? `<span class="edit-message" data-message-id="${msg.id}">Edit</span>` : ''}
                         <span class="delete-message" data-message-id="${msg.id}">Delete</span>
                     </div>
                 </div>
@@ -191,6 +212,60 @@ document.addEventListener('DOMContentLoaded', function () {
         loadMessages(currentReceiverId);
     });
 
+    // ---------------- Format call duration ----------------
+    function formatCallDuration(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+        
+        if (hours > 0) {
+            return `${hours}h ${minutes}m`;
+        } else if (minutes > 0) {
+            return `${minutes}m ${secs}s`;
+        } else {
+            return `${secs}s`;
+        }
+    }
+
+    // ---------------- Handle call end ----------------
+    async function handleCallEnd() {
+        if (!callStartTime || !currentReceiverId) return;
+        
+        const callEndTime = new Date();
+        const durationInSeconds = Math.floor((callEndTime - callStartTime) / 1000);
+        
+        // Only send message if call lasted at least 1 second
+        if (durationInSeconds >= 1) {
+            const formattedDuration = formatCallDuration(durationInSeconds);
+            
+            try {
+                const response = await fetch('/messages/call-ended', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        receiver_id: currentReceiverId,
+                        duration: formattedDuration
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Call ended message sent');
+                }
+            } catch (error) {
+                console.error('Error sending call end message:', error);
+            }
+        }
+        
+        // Reset call tracking
+        callStartTime = null;
+        callPopup = null;
+    }
+
     // ---------------- VIDEO CALL INITIATION ----------------
     if (startVideoCall) {
         startVideoCall.addEventListener('click', async () => {
@@ -219,24 +294,37 @@ document.addEventListener('DOMContentLoaded', function () {
                 const data = await response.json();
 
                 if (data.success && data.redirect) {
+                    // Record call start time
+                    callStartTime = new Date();
+                    
                     const width = 1280, height = 720;
                     const left = (screen.width - width) / 2;
                     const top = (screen.height - height) / 2;
                     
-                    const popup = window.open(
+                    callPopup = window.open(
                         data.redirect,
                         'HealConnect_VideoCall',
                         `width=${width},height=${height},left=${left},top=${top},toolbar=no,menubar=no`
                     );
 
-                    if (!popup) {
+                    if (!callPopup) {
                         alert('Please allow popups and try again.');
+                        callStartTime = null;
+                    } else {
+                        // Monitor when popup closes
+                        const checkPopup = setInterval(() => {
+                            if (callPopup.closed) {
+                                clearInterval(checkPopup);
+                                handleCallEnd();
+                            }
+                        }, 1000);
                     }
                 } else {
                     throw new Error(data.message || 'Failed to create room');
                 }
             } catch (error) {
                 alert('Failed to start video call: ' + error.message);
+                callStartTime = null;
             } finally {
                 startVideoCall.disabled = false;
                 startVideoCall.innerHTML = originalHTML;
@@ -357,7 +445,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Message sent event
     channel.bind('message.sent', data => {
-        console.log('📨 Message received:', data);
+        console.log(' Message received:', data);
         const msg = data.message;
         if (msg.sender_id === window.userId) return;
 
@@ -374,6 +462,7 @@ document.addEventListener('DOMContentLoaded', function () {
         
         const preview = msg.type === 'file' ? "[File]" : 
                        msg.type === 'voice' ? "[Voice Message]" : 
+                       msg.type === 'system' ? msg.message :
                        msg.message;
         moveChatToTop(msg.sender_id, preview);
     });
@@ -397,20 +486,34 @@ document.addEventListener('DOMContentLoaded', function () {
             newJoinBtn.addEventListener('click', () => {
                 incomingCallDiv.style.display = 'none';
                 
+                // Record call start time for receiver
+                callStartTime = new Date();
+                
                 const width = 1280, height = 720;
                 const left = (screen.width - width) / 2;
                 const top = (screen.height - height) / 2;
                 const roomUrl = `/video/room/${data.room}${data.token ? '?token=' + data.token : ''}`;
                 
-                const popup = window.open(
+                callPopup = window.open(
                     roomUrl,
                     'HealConnect_VideoCall',
                     `width=${width},height=${height},left=${left},top=${top},toolbar=no,menubar=no`
                 );
 
-                if (!popup) {
+                if (!callPopup) {
                     alert('Please allow popups.');
                     window.location.href = roomUrl;
+                    callStartTime = null;
+                } else {
+                    currentReceiverId = data.caller.id;
+                    
+                    // Monitor when popup closes
+                    const checkPopup = setInterval(() => {
+                        if (callPopup.closed) {
+                            clearInterval(checkPopup);
+                            handleCallEnd();
+                        }
+                    }, 1000);
                 }
             });
 
@@ -419,6 +522,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     });
+
     // ---------------- Edit/Delete message ----------------
     chatMessages.addEventListener('click', e => {
         const target = e.target;
