@@ -476,51 +476,43 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ============================================================
-    // FIXED: INCOMING VIDEO CALL EVENT WITH TRIPLE VERIFICATION
+    // FIXED: INCOMING VIDEO CALL EVENT - PROPER VERIFICATION
     // ============================================================
     channel.bind('video.call.started', data => {
         console.log('📞 ========================================');
-        console.log('📞 RAW VIDEO CALL EVENT RECEIVED');
+        console.log('📞 VIDEO CALL EVENT RECEIVED');
         console.log('📞 ========================================');
-        console.log('📞 Full event data:', JSON.stringify(data, null, 2));
-        
-        // CRITICAL CHECK #1: Verify channel subscription
-        console.log('🔍 Channel Check:', {
-            subscribedChannel: channelName,
-            currentUserId: window.userId,
-            authUserId: window.authUserId
+        console.log('📞 Event Data:', {
+            receiverId: data.receiver_id,
+            callerName: data.caller?.name,
+            callerId: data.caller?.id,
+            room: data.room
         });
         
-        // CRITICAL CHECK #2: Verify receiver_id matches current user
-        console.log('🔍 Receiver Check:', {
-            eventReceiverId: data.receiver_id,
-            eventReceiverIdType: typeof data.receiver_id,
-            currentUserId: window.userId,
-            currentUserIdType: typeof window.userId,
-            authUserId: window.authUserId,
-            authUserIdType: typeof window.authUserId
-        });
-        
-        // TRIPLE VERIFICATION - Use strict equality with type conversion
+        // Convert to numbers for accurate comparison
         const receiverIdNumber = parseInt(data.receiver_id);
         const currentUserIdNumber = parseInt(window.userId);
         const authUserIdNumber = parseInt(window.authUserId);
         
-        console.log('🔍 Parsed IDs:', {
+        console.log('🔍 ID Comparison:', {
             receiverIdNumber,
             currentUserIdNumber,
             authUserIdNumber,
-            match1: receiverIdNumber === currentUserIdNumber,
-            match2: receiverIdNumber === authUserIdNumber
+            matchesWindowUserId: receiverIdNumber === currentUserIdNumber,
+            matchesAuthUserId: receiverIdNumber === authUserIdNumber
         });
         
-        // THIS IS THE KEY FIX: Strict verification
-        if (receiverIdNumber !== currentUserIdNumber || 
-            receiverIdNumber !== authUserIdNumber) {
-            console.warn("⚠️ Call not intended for this user – ignoring.");
+        // CRITICAL: Only show call if receiver_id matches THIS user
+        // Reject if it doesn't match EITHER of our user IDs
+        if (receiverIdNumber !== currentUserIdNumber && receiverIdNumber !== authUserIdNumber) {
+            console.warn("⚠️ ========================================");
+            console.warn("⚠️ CALL REJECTED - NOT FOR THIS USER");
+            console.warn("⚠️ ========================================");
+            console.warn("⚠️ This call is for user ID:", receiverIdNumber);
+            console.warn("⚠️ But I am user ID:", currentUserIdNumber);
+            console.warn("⚠️ Caller:", data.caller?.name, "(ID:", data.caller?.id + ")");
             return;
         }
-
         
         console.log('✅ ========================================');
         console.log('✅ CALL VERIFIED FOR THIS USER');
