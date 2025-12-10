@@ -186,7 +186,7 @@ class VideoController extends Controller
                 // CRITICAL: Broadcast ONLY to the specific receiver's private channel
                 try {
                     // This will broadcast to: private-healconnect-chat.{receiver_id}
-                    broadcast(new VideoCallStarted($broadcastData))->toOthers();
+                    broadcast(new VideoCallStarted($broadcastData));
 
                     Log::info('✅ Broadcast sent successfully to receiver ID: ' . $receiverIdInt);
                     

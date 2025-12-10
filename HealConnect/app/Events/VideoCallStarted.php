@@ -24,21 +24,24 @@ class VideoCallStarted implements ShouldBroadcast
         Log::info('VideoCallStarted Event Created', [
             'receiver_id' => $data['receiver_id'],
             'receiver_id_type' => gettype($data['receiver_id']),
-            'channel_will_be' => 'private-healconnect-chat.' . $data['receiver_id']
+            'channel_will_be' => 'private-healconnect-call.' . $data['receiver_id']
         ]);
     }
 
     public function broadcastOn(): array
     {
-        $channel = new PrivateChannel('healconnect-chat.' . $this->data['receiver_id']);
-        
+        $channelName = 'healconnect-call.' . $this->data['receiver_id'];
+
         Log::info('Broadcasting on channel:', [
-            'channel_name' => 'private-healconnect-chat.' . $this->data['receiver_id'],
+            'channel_name' => $channelName,
             'receiver_id' => $this->data['receiver_id']
         ]);
-        
-        return [$channel];
+
+        return [
+            new PrivateChannel($channelName)
+        ];
     }
+
 
     public function broadcastAs(): string
     {
