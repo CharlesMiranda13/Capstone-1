@@ -220,6 +220,56 @@
     display: block;
 }
 
+/* ------------------ Password Toggle ------------------ */
+.password-wrapper {
+    position: relative;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.password-wrapper input {
+    padding-right: 50px !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 0;
+    bottom: 5px;
+    height: 100%;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer;
+    padding: 0 14px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    transition: color 0.3s ease;
+    width: auto !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    z-index: 10;
+}
+
+.toggle-password:hover {
+    color: #374151;
+    background: transparent !important;
+}
+
+.toggle-password:focus {
+    outline: none;
+}
+
+.toggle-password:active {
+    background: transparent !important;
+}
+
+.toggle-password svg {
+    pointer-events: none;
+}
+
 .selected-plan-notice {
     background: #e7f3ff;
     border-left: 4px solid #007bff;

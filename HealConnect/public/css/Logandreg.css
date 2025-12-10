@@ -289,6 +289,49 @@
   margin: 0 auto 20px;
 }
 
+/* ------------------ Password Toggle ------------------ */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-wrapper input {
+  padding-right: 45px !important;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer;
+  padding: 8px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  transition: color 0.3s ease;
+  width: auto !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  z-index: 10;
+}
+
+.toggle-password:hover {
+  color: #374151;
+  background: transparent !important;
+}
+
+.toggle-password:focus {
+  outline: none;
+}
+
+.toggle-password:active {
+  background: transparent !important;
+}
+
 /* ------------------ Responsive ------------------ */
 @media (max-width: 1024px) {
   .tab-container {

@@ -74,3 +74,19 @@ document.addEventListener("DOMContentLoaded", () => {
     cardBtn.classList.remove("active");
   });
 });
+
+function togglePassword(inputId, button) {
+    const input = document.getElementById(inputId);
+    const eyeOpen = button.querySelectorAll('.eye-open');
+    const eyeClosed = button.querySelectorAll('.eye-closed');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        eyeOpen.forEach(el => el.style.display = 'none');
+        eyeClosed.forEach(el => el.style.display = 'block');
+    } else {
+        input.type = 'password';
+        eyeOpen.forEach(el => el.style.display = 'block');
+        eyeClosed.forEach(el => el.style.display = 'none');
+    }
+}

@@ -37,7 +37,16 @@
 
                     <div class="form-group">
                         <label>Password:</label>
-                        <input type="password" name="password" required>
+                        <div class="password-wrapper">
+                            <input type="password" name="password" id="login-password" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword('login-password', this)" tabindex="-1">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle class="eye-open" cx="12" cy="12" r="3"></circle>
+                                    <line class="eye-closed" style="display:none;" x1="1" y1="1" x2="23" y2="23"></line>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
 
 

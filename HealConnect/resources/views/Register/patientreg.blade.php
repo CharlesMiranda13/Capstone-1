@@ -134,14 +134,32 @@
                 <small style="color:red;">{{ $message }}</small>
             @enderror
 
-        <label for="password" style ="font-weight: 600;">Password:</label>
-        <input type="password" id="password" name="password" required />
+        <label for="password" style="font-weight: 600;">Password:</label>
+        <div class="password-wrapper">
+            <input type="password" id="password" name="password" required />
+            <button type="button" class="toggle-password" onclick="togglePassword('password', this)" tabindex="-1">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle class="eye-open" cx="12" cy="12" r="3"></circle>
+                    <line class="eye-closed" style="display:none;" x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+            </button>
+        </div>
+        @error('password')
+            <small style="color:red;">{{ $message }}</small>
+        @enderror
 
-        <label for="password_confirmation" style ="font-weight: 600;">Confirm Password:</label>
-        <input type="password" id="password_confirmation" name="password_confirmation" required />
-            @error('password')
-                <small style="color:red;">{{ $message }}</small>
-            @enderror
+        <label for="password_confirmation" style="font-weight: 600;">Confirm Password:</label>
+        <div class="password-wrapper">
+            <input type="password" id="password_confirmation" name="password_confirmation" required />
+            <button type="button" class="toggle-password" onclick="togglePassword('password_confirmation', this)" tabindex="-1">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle class="eye-open" cx="12" cy="12" r="3"></circle>
+                    <line class="eye-closed" style="display:none;" x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+            </button>
+        </div>
 
         <div class="file-section">
             <div class="file-group">
