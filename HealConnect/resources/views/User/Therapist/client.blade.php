@@ -20,6 +20,7 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/client.css') }}">
+<link rel="stylesheet" href="{{ asset('css/patient-profile.css') }}">
 @endsection
 
 @section('content')
@@ -55,7 +56,7 @@
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Records</th>
-                        <th>View Profile
+                        <th>View Profile</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -77,19 +78,12 @@
                                 </a>
                             </td>
                             <td>
-                                <button class="openModalBtn btn-view-profile" data-link="{{route('therapist.patients.profile',  $patient->id)}}">
+                                <button class="openModalBtn" data-link="{{ route('therapist.patients.profile', $patient->id) }}">
                                    <i class="fa fa-user"></i>
                                 </button>
                             </td>
                         </tr>
                     @endforeach
-                    <div id="patientModal" class="modal">
-                        <div class="modal-content">
-                            <span class="close">&times;</span>
-                            <div id="modal-body"></div>
-                            </div>
-                        </div>
-                    </div>
                 </tbody>
             </table>
         @else
@@ -97,4 +91,13 @@
         @endif
     </div>
 </main>
+
+{{-- Patient Profile Modal - OUTSIDE the main container --}}
+<div id="patientModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
 @endsection

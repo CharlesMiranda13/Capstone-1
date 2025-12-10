@@ -4,6 +4,7 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/therapist_appointment.css') }}">
+<link rel="stylesheet" href="{{ asset('css/patient-profile.css') }}">
 @endsection
 
 @section('content')
@@ -91,7 +92,6 @@
                                 </td>
                                 <td>{{ $appointment->record_count > 0 ? $appointment->record_count : '0' }}</td>
                                 <td class="action-cell">
-
                                     <form action="{{ route('therapist.appointments.updateStatus', $appointment->id) }}" method="POST" class="status-form">
                                         @csrf
                                         @method('PATCH')
@@ -110,17 +110,19 @@
                                 </td>
                             </tr>
                         @endforeach
-                        <div id="patientModal" class="modal">
-                            <div class="modal-content">
-                                <span class="close">&times;</span>
-                                <div id="modal-body"></div>
-                            </div>
-                        </div>
-
                     </tbody>
                 </table>
             </div>
         @endif
     </div>
 </main>
+
+{{-- Patient Profile Modal - OUTSIDE the main container --}}
+<div id="patientModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="modal-body"></div>
+    </div>
+</div>
+
 @endsection

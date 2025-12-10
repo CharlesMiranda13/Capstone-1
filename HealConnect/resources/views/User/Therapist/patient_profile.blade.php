@@ -1,16 +1,34 @@
+@php
+    use Illuminate\Support\Facades\Auth;
+    
+    $user = Auth::user();
+    
+    switch ($user->role) {
+        case 'therapist':
+            $layout = 'layouts.therapist';
+            break;
+        case 'clinic':
+            $layout = 'layouts.clinic_layout';
+            break;
+        default:
+            $layout = 'layouts.therapist';
+            break;
+    }
+@endphp
+
 @if (!request()->has('embed'))
-    @extends('layouts.therapist')
+    @extends($layout)
 
     @section('title', 'Patient Profile')
 
     @section('styles')
-        <link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/patient-profile.css') }}">
     @endsection
 
     @section('content')
 @endif
 
-<main class="therapist-profile">
+<main class="patient-profile">
     <div class="container">
         <div class="header">
             <h2>{{ $patient->name }}'s Profile</h2>
@@ -32,9 +50,9 @@
                     <p><i class="fa-solid fa-phone"></i> {{ $patient->phone ?? 'Phone not specified' }}</p>
                     <p><i class="fa-solid fa-location-dot"></i> {{ $patient->address ?? 'Address not specified' }}</p>
                     <p><i class="fa-solid fa-calendar"></i> 
-                        Date of Birth: {{ $patient->dob ? \Carbon\Carbon::parse($patient->dob)->format('F j, Y') : 'Not provided' }}
+                        {{ $patient->dob ? \Carbon\Carbon::parse($patient->dob)->format('F j, Y') : 'Not provided' }}
                     </p>
-                    <p><i class="fa-solid fa-venus-mars"></i> Gender: {{ ucfirst($patient->gender) ?? 'Not specified' }}</p>
+                    <p><i class="fa-solid fa-venus-mars"></i> {{ ucfirst($patient->gender) ?? 'Not specified' }}</p>
                 </div>
 
                 <div class="app">
