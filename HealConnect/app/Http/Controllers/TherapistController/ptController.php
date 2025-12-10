@@ -269,6 +269,7 @@ class ptController extends Controller
         return $schedules->map(function ($s) {
             return [
                 'title' => 'Available',
+                'date' => $s->date ?? null,
                 'day_of_week' => isset($s->day_of_week) ? (int) $s->day_of_week : null,
                 'start_time' => $s->start_time ?? null,
                 'end_time' => $s->end_time ?? null,
