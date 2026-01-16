@@ -144,14 +144,15 @@ class ChatController extends Controller
 
         $message->type = 'text';
 
-        broadcast(new MessageSent($message))->toOthers();
-
-        // Broadcast notification to receiver
-        $this->broadcastUnreadCount($request->receiver_id);
+        try {
+            broadcast(new MessageSent($message))->toOthers();
+            $this->broadcastUnreadCount($request->receiver_id);
+        } catch (\Exception $e) {
+            \Log::error('Broadcasting failed: ' . $e->getMessage());
+        }
 
         return response()->json(['success' => true, 'message' => $message]);
     }
-
     // Voice Message
     public function sendVoice(Request $request)
     {
@@ -165,9 +166,7 @@ class ChatController extends Controller
             mkdir($storagePath, 0755, true);
         }
 
-        // Store voice message in public storage
         $path = $request->file('voice_message')->store('voice_messages', 'public');
-
         $url = asset('storage/' . $path); 
 
         // Save to database
@@ -182,10 +181,12 @@ class ChatController extends Controller
         $message->message_url = $url;
         $message->type = 'voice';
 
-        broadcast(new MessageSent($message))->toOthers();
-
-        // Broadcast notification to receiver
-        $this->broadcastUnreadCount($request->receiver_id);
+        try {
+            broadcast(new MessageSent($message))->toOthers();
+            $this->broadcastUnreadCount($request->receiver_id);
+        } catch (\Exception $e) {
+            \Log::error('Broadcasting failed: ' . $e->getMessage());
+        }
 
         return response()->json(['success' => true, 'message' => $message]);
     }
@@ -203,11 +204,9 @@ class ChatController extends Controller
             mkdir($storagePath, 0755, true);
         }
 
-        // Store file
         $path = $request->file('file')->store('chat_files', 'public');
         $url = asset('storage/' . $path);
 
-        // Save message record
         $message = Message::create([
             'sender_id' => Auth::id(),
             'receiver_id' => $request->receiver_id,
@@ -219,10 +218,12 @@ class ChatController extends Controller
         $message->file_url = $url;
         $message->type = 'file';
 
-        broadcast(new MessageSent($message))->toOthers();
-
-        // Broadcast notification to receiver
-        $this->broadcastUnreadCount($request->receiver_id);
+        try {
+            broadcast(new MessageSent($message))->toOthers();
+            $this->broadcastUnreadCount($request->receiver_id);
+        } catch (\Exception $e) {
+            \Log::error('Broadcasting failed: ' . $e->getMessage());
+        }
 
         return response()->json(['success' => true, 'message' => $message]);
     }
@@ -319,10 +320,12 @@ class ChatController extends Controller
 
         $message->type = 'system';
 
-        broadcast(new MessageSent($message))->toOthers();
-
-        // Broadcast notification to receiver
-        $this->broadcastUnreadCount($request->receiver_id);
+        try {
+            broadcast(new MessageSent($message))->toOthers();
+            $this->broadcastUnreadCount($request->receiver_id);
+        } catch (\Exception $e) {
+            \Log::error('Broadcasting failed: ' . $e->getMessage());
+        }
 
         return response()->json(['success' => true, 'message' => $message]);
     }

@@ -473,11 +473,29 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: JSON.stringify({ message, receiver_id: currentReceiverId })
             });
+
+            if (!res.ok) {
+                const errorText = await res.text();
+                console.error('Server error response:', errorText);
+                alert('Failed to send message. Please try again.');
+                return;
+            }
+            
             const data = await res.json();
-            messageInput.value = '';
-            renderMessage(data.message, true);
-            moveChatToTop(currentReceiverId, data.message.message);
-        } catch (err) { console.error("Text message send failed:", err); }
+
+            if (data && data.message) {
+                messageInput.value = '';
+                renderMessage(data.message, true);
+                moveChatToTop(currentReceiverId, data.message.message);
+            } else {
+                console.error('Unexpected response format:', data);
+                alert('Message sent but display failed. Please refresh.');
+                messageInput.value = '';
+            }
+        } catch (err) {
+            console.error("Text message send failed:", err);
+            alert('Failed to send message. Please check your connection.');
+        }
     });
 
     // ---------------- Voice recording ----------------
