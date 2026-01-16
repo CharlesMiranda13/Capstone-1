@@ -113,8 +113,8 @@
 <script>
     window.dashboardData = {
         usergrowth: {
-            labels: {!! json_encode(range(1, now()->daysInMonth)) !!},
-            values: {!! json_encode($monthlyData ?? []) !!}
+            labels: @json($monthlyLabels),
+            values: @json($monthlyValues),
         },
         appointmentTypeData: {
             labels: {!! json_encode($appointmentTypes->keys() ?? []) !!},

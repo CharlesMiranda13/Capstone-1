@@ -9,7 +9,7 @@
         case 'clinic':
             $layout = 'layouts.clinic_layout';
             break;
-        default;
+        default:
             $layout = 'layouts.therapist';
             break;
     }
