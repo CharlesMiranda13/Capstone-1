@@ -11,51 +11,69 @@
     @if(session('selected_plan_for_registration'))
         <div class="selected-plan-notice">
             <i class="fa fa-info-circle"></i>
-            You've selected the <strong>{{ ucfirst(str_replace(' ', ' ', session('selected_plan_for_registration'))) }}</strong> plan. 
-            Complete registration to continue to payment.
+            <span>You've selected the&nbsp;<strong>{{ ucfirst(str_replace('_', ' ', session('selected_plan_for_registration'))) }}</strong>&nbsp;plan. Complete registration to continue to payment.</span>
         </div>
     @endif
 
-    <form action="{{ route('register.store', ['type' => 'therapist']) }}" method="POST" class="register-form" enctype="multipart/form-data">
+    {{-- Display ALL Validation Errors --}}
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <strong>Please correct the following errors:</strong>
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
+    <form action="{{ route('register.store', ['type' => 'therapist']) }}" method="POST" class="register-form" enctype="multipart/form-data" novalidate>
         @csrf
 
         <div class="form-row">
             <div class="form-col">
                 <label for="Fname">First Name:</label>
-                <input type="text" id="Fname" name="Fname" required />
+                <input type="text" id="Fname" name="Fname" value="{{ old('Fname') }}" required />
+                @error('Fname') <small class="field-error">{{ $message }}</small> @enderror
             </div>
+
             <div class="form-col">
                 <label for="Mname">Middle Name:</label>
-                <input type="text" id="Mname" name="Mname"/>
+                <input type="text" id="Mname" name="Mname" value="{{ old('Mname') }}" />
             </div>
         </div>
 
         <label for="Lname">Last Name:</label>
-        <input type="text" id="Lname" name="Lname" required />
+        <input type="text" id="Lname" name="Lname" value="{{ old('Lname') }}" required />
+        @error('Lname') <small class="field-error">{{ $message }}</small> @enderror
 
         <div class="form-row">
             <div class="form-col">
                 <label for="dob">Date of Birth:</label>
-                <input type="date" id="dob" name="dob" required max="{{ date('Y-m-d')}}" min= "{{ date('Y-m-d', strtotime('-120 years'))}}" />
+                <input type="date" id="dob" name="dob" value="{{ old('dob') }}" required 
+                       max="{{ date('Y-m-d')}}" min="{{ date('Y-m-d', strtotime('-120 years'))}}" />
+                @error('dob') <small class="field-error">{{ $message }}</small> @enderror
             </div>
+
             <div class="form-col">
                 <label for="Gender">Gender:</label>
                 <select id="Gender" name="Gender" required>
                     <option value="">--Please choose an option--</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
+                    <option value="Male" {{ old('Gender') == 'Male' ? 'selected' : '' }}>Male</option>
+                    <option value="Female" {{ old('Gender') == 'Female' ? 'selected' : '' }}>Female</option>
                 </select>
+                @error('Gender') <small class="field-error">{{ $message }}</small> @enderror
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-col">
-                <label for="street">Street Address:</label>
+                <label for="street">Clinic Street Address:</label>
                 <input type="text" id="street" name="street" required 
                     placeholder="House No., Street Name" 
                     value="{{ old('street') }}" />
                 @error('street')
-                    <small style="color:red;">{{ $message }}</small>
+                    <small class="field-error">{{ $message }}</small>
                 @enderror
             </div>
             <div class="form-col">
@@ -63,7 +81,7 @@
                 <input type="text" id="barangay" name="barangay" required 
                     value="{{ old('barangay') }}" />
                 @error('barangay')
-                    <small style="color:red;">{{ $message }}</small>
+                    <small class="field-error">{{ $message }}</small>
                 @enderror
             </div>
         </div>
@@ -74,7 +92,7 @@
                 <input type="text" id="city" name="city" required 
                     value="{{ old('city') }}" />
                 @error('city')
-                    <small style="color:red;">{{ $message }}</small>
+                    <small class="field-error">{{ $message }}</small>
                 @enderror
             </div>
             <div class="form-col">
@@ -82,7 +100,7 @@
                 <input type="text" id="province" name="province" required 
                     value="{{ old('province') }}" />
                 @error('province')
-                    <small style="color:red;">{{ $message }}</small>
+                    <small class="field-error">{{ $message }}</small>
                 @enderror
             </div>
         </div>
@@ -96,9 +114,10 @@
                     placeholder="1234"
                     value="{{ old('postal_code') }}" />
                 @error('postal_code')
-                    <small style="color:red;">{{ $message }}</small>
+                    <small class="field-error">{{ $message }}</small>
                 @enderror
             </div>
+
             <div class="form-col">
                 <label for="region">Region:</label>
                 <select id="region" name="region" required>
@@ -121,9 +140,7 @@
                     <option value="Region XIII" {{ old('region') == 'Region XIII' ? 'selected' : '' }}>Region XIII - Caraga</option>
                     <option value="BARMM" {{ old('region') == 'BARMM' ? 'selected' : '' }}>BARMM - Bangsamoro Autonomous Region</option>
                 </select>
-                @error('region')
-                    <small style="color:red;">{{ $message }}</small>
-                @enderror
+                @error('region') <small class="field-error">{{ $message }}</small> @enderror
             </div>
         </div>
 
@@ -133,13 +150,20 @@
 
         <label for="phone">Phone Number:</label>
         <input type="tel" id="phone" name="phone" 
-            pattern="^09\d{9}$" 
-            maxlength="11"
+            pattern="^(09\d{9}|0\d{1,3}-?\d{6,7})$"
+            maxlength="13"
             required 
-            placeholder="09XXXXXXXXX" />
+            placeholder="e.g. 09123456789 or 02-1234567"
+            value="{{ old('phone') }}" />
+        @error('phone')
+            <small class="field-error">{{ $message }}</small>
+        @enderror
 
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required />
+        <input type="email" id="email" name="email" required value="{{ old('email') }}"/>
+        @error('email')
+            <small class="field-error">{{ $message }}</small>
+        @enderror
 
         <label for="password" style="font-weight: 600;">Password:</label>
         <div class="password-wrapper">
@@ -153,7 +177,7 @@
             </button>
         </div>
         @error('password')
-            <small style="color:red;">{{ $message }}</small>
+            <small class="field-error">{{ $message }}</small>
         @enderror
 
         <label for="password_confirmation" style="font-weight: 600;">Confirm Password:</label>
@@ -167,50 +191,58 @@
                 </svg>
             </button>
         </div>
+        @error('password_confirmation')
+            <small class="field-error">{{ $message }}</small>
+        @enderror
 
 
         <div class="form-group">
             <label class="form-label">Areas of Specialization</label>
             <div class="checkbox-group">
-                <label><input type="checkbox" name="specialization[]" value="Orthopedic"> Orthopedic Rehabilitation</label>
-                <label><input type="checkbox" name="specialization[]" value="Neurological"> Neurological Rehabilitation</label>
-                <label><input type="checkbox" name="specialization[]" value="Pediatric"> Pediatric Therapy</label>
-                <label><input type="checkbox" name="specialization[]" value="Sports Therapy"> Sports Therapy</label>
-                <label><input type="checkbox" name="specialization[]" value="Geriatric"> Geriatric Therapy</label>
-                <label><input type="checkbox" name="specialization[]" value="Cardiopulmonary"> Cardiopulmonary Rehabilitation</label>
-                <label><input type="checkbox" name="specialization[]" value="WomenHealth"> Women's Health</label>
-                <label><input type="checkbox" name="specialization[]" value="Other"> Other</label>
+                <label><input type="checkbox" name="specialization[]" value="Orthopedic" {{ is_array(old('specialization')) && in_array('Orthopedic', old('specialization')) ? 'checked' : '' }}> Orthopedic Rehabilitation</label>
+                <label><input type="checkbox" name="specialization[]" value="Neurological" {{ is_array(old('specialization')) && in_array('Neurological', old('specialization')) ? 'checked' : '' }}> Neurological Rehabilitation</label>
+                <label><input type="checkbox" name="specialization[]" value="Pediatric" {{ is_array(old('specialization')) && in_array('Pediatric', old('specialization')) ? 'checked' : '' }}> Pediatric Therapy</label>
+                <label><input type="checkbox" name="specialization[]" value="Sports" {{ is_array(old('specialization')) && in_array('Sports', old('specialization')) ? 'checked' : '' }}> Sports Therapy</label>
+                <label><input type="checkbox" name="specialization[]" value="Geriatric" {{ is_array(old('specialization')) && in_array('Geriatric', old('specialization')) ? 'checked' : '' }}> Geriatric Therapy</label>
+                <label><input type="checkbox" name="specialization[]" value="Cardiopulmonary" {{ is_array(old('specialization')) && in_array('Cardiopulmonary', old('specialization')) ? 'checked' : '' }}> Cardiopulmonary Rehabilitation</label>
+                <label><input type="checkbox" name="specialization[]" value="WomenHealth" {{ is_array(old('specialization')) && in_array('WomenHealth', old('specialization')) ? 'checked' : '' }}> Women's Health</label>
+                <label><input type="checkbox" name="specialization[]" value="Other" {{ is_array(old('specialization')) && in_array('Other', old('specialization')) ? 'checked' : '' }}> Other</label>
             </div>
             <small class="mess">You may select more than one specialization.</small>
+            @error('specialization')
+                <small class="field-error">{{ $message }}</small>
+            @enderror
         </div>
 
         <div class="form-group">
             <label for="start_year" class="form-label">Year Started Practicing</label>
-            <input type="number" id="start_year" name="start_year" min="1900" max="{{ date('Y') }}" required>
+            <input type="number" id="start_year" name="start_year" min="1900" max="{{ date('Y') }}" required value="{{ old('start_year') }}">
+            @error('start_year')
+                <small class="field-error">{{ $message }}</small>
+            @enderror
         </div>
 
         <div class="file-section">
             <div class="file-group">
                 <div>
-                    <label for="ValidIDFront">  Valid ID (Front Side):</label>
+                    <label for="ValidIDFront"> Valid ID (Front Side):</label>
                     <input type="file" id="ValidIDFront" name="ValidIDFront" accept=".jpg, .jpeg, .png, .pdf" required />
                     @error('ValidIDFront')
-                        <small style="color:red;">{{ $message }}</small>    
+                        <small class="field-error">{{ $message }}</small>
                     @enderror
                 </div>
                 <div>
-                    <label for="ValidIDBack">Valid ID (Back Side):</label>
+                    <label for="ValidIDBack">Valid ID (Back Side) :</label>
                     <input type="file" id="ValidIDBack" name="ValidIDBack" accept=".jpg, .jpeg, .png, .pdf" required />
                     @error('ValidIDBack')
-                        <small style="color:red;">{{ $message }}</small>    
+                        <small class="field-error">{{ $message }}</small>
                     @enderror
                 </div>
-
                 <div>
                     <label for="license">License: </label>
                     <input type="file" id="license" name="license" accept=".jpg, .jpeg, .png, .pdf" required />
-                    @error('License')
-                        <small style="color:red;">{{ $message }}</small>    
+                    @error('license')
+                        <small class="field-error">{{ $message }}</small>    
                     @enderror
                 </div>
             </div>

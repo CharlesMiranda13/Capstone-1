@@ -7,89 +7,93 @@
 <main class="register-main patient">
     <h1 class="register-title">Patient Registration</h1>
 
-    <form action="{{ route('register.store', ['type' => 'patient']) }}" method="POST" class="register-form" enctype="multipart/form-data">
+    {{-- Display ALL Validation Errors --}}
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <strong>Please correct the following errors:</strong>
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
+
+    <form action="{{ route('register.store', ['type' => 'patient']) }}" method="POST" class="register-form" enctype="multipart/form-data" novalidate>
         @csrf
 
         <div class="form-row">
             <div class="form-col">
                 <label for="Fname">First Name:</label>
-                <input type="text" id="Fname" name="Fname" required />
+                <input type="text" id="Fname" name="Fname" value="{{ old('Fname') }}" required />
+                @error('Fname') <small class="field-error">{{ $message }}</small> @enderror
             </div>
+
             <div class="form-col">
                 <label for="Mname">Middle Name:</label>
-                <input type="text" id="Mname" name="Mname"/>
+                <input type="text" id="Mname" name="Mname" value="{{ old('Mname') }}" />
             </div>
         </div>
 
-        <label for="Lname" style ="font-weight: 600;">Last Name:</label>
-        <input type="text" id="Lname" name="Lname" required />
+        <label for="Lname">Last Name:</label>
+        <input type="text" id="Lname" name="Lname" value="{{ old('Lname') }}" required />
+        @error('Lname') <small class="field-error">{{ $message }}</small> @enderror
 
         <div class="form-row">
             <div class="form-col">
                 <label for="dob">Date of Birth:</label>
-                <input type="date" id="dob" name="dob" required max="{{ date('Y-m-d')}}" min= "{{ date('Y-m-d', strtotime('-120 years'))}}" />
+                <input type="date" id="dob" name="dob" value="{{ old('dob') }}" required 
+                       max="{{ date('Y-m-d')}}" min="{{ date('Y-m-d', strtotime('-120 years'))}}" />
+                @error('dob') <small class="field-error">{{ $message }}</small> @enderror
             </div>
+
             <div class="form-col">
                 <label for="Gender">Gender:</label>
                 <select id="Gender" name="Gender" required>
                     <option value="">--Please choose an option--</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
+                    <option value="Male" {{ old('Gender')=='Male'?'selected':'' }}>Male</option>
+                    <option value="Female" {{ old('Gender')=='Female'?'selected':'' }}>Female</option>
                 </select>
+                @error('Gender') <small class="field-error">{{ $message }}</small> @enderror
             </div>
         </div>
 
+        {{-- Address --}}
         <div class="form-row">
             <div class="form-col">
                 <label for="street">Street Address:</label>
-                <input type="text" id="street" name="street" required 
-                    placeholder="House No., Street Name" 
-                    value="{{ old('street') }}" />
-                @error('street')
-                    <small style="color:red;">{{ $message }}</small>
-                @enderror
+                <input type="text" id="street" name="street" value="{{ old('street') }}" required />
+                @error('street') <small class="field-error">{{ $message }}</small> @enderror
             </div>
+
             <div class="form-col">
                 <label for="barangay">Barangay:</label>
-                <input type="text" id="barangay" name="barangay" required 
-                    value="{{ old('barangay') }}" />
-                @error('barangay')
-                    <small style="color:red;">{{ $message }}</small>
-                @enderror
+                <input type="text" id="barangay" name="barangay" value="{{ old('barangay') }}" required />
+                @error('barangay') <small class="field-error">{{ $message }}</small> @enderror
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-col">
-                <label for="city">City/Municipality:</label>
-                <input type="text" id="city" name="city" required 
-                    value="{{ old('city') }}" />
-                @error('city')
-                    <small style="color:red;">{{ $message }}</small>
-                @enderror
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city" value="{{ old('city') }}" required />
+                @error('city') <small class="field-error">{{ $message }}</small> @enderror
             </div>
+
             <div class="form-col">
                 <label for="province">Province:</label>
-                <input type="text" id="province" name="province" required 
-                    value="{{ old('province') }}" />
-                @error('province')
-                    <small style="color:red;">{{ $message }}</small>
-                @enderror
+                <input type="text" id="province" name="province" value="{{ old('province') }}" required />
+                @error('province') <small class="field-error">{{ $message }}</small> @enderror
             </div>
         </div>
 
         <div class="form-row">
             <div class="form-col">
-                <label for="postal_code">Postal/ZIP Code:</label>
-                <input type="text" id="postal_code" name="postal_code" 
-                    pattern="^\d{4}$" 
-                    maxlength="4" 
-                    placeholder="1234"
-                    value="{{ old('postal_code') }}" />
-                @error('postal_code')
-                    <small style="color:red;">{{ $message }}</small>
-                @enderror
+                <label for="postal_code">Postal Code:</label>
+                <input type="text" id="postal_code" name="postal_code" value="{{ old('postal_code') }}" maxlength="4" />
+                @error('postal_code') <small class="field-error">{{ $message }}</small> @enderror
             </div>
+
             <div class="form-col">
                 <label for="region">Region:</label>
                 <select id="region" name="region" required>
@@ -112,42 +116,22 @@
                     <option value="Region XIII" {{ old('region') == 'Region XIII' ? 'selected' : '' }}>Region XIII - Caraga</option>
                     <option value="BARMM" {{ old('region') == 'BARMM' ? 'selected' : '' }}>BARMM - Bangsamoro Autonomous Region</option>
                 </select>
-                @error('region')
-                    <small style="color:red;">{{ $message }}</small>
-                @enderror
+                @error('region') <small class="field-error">{{ $message }}</small> @enderror
             </div>
         </div>
 
-        <small style="font-size: 12px; color: gray; display: block; margin-bottom: 15px;">
-            Please provide your complete and accurate address for verification purposes.
-        </small>
-        <label for="phone" style ="font-weight: 600;">Phone Number:</label>
-        <input type="tel" id="phone" name="phone" 
-            pattern="^09\d{9}$" 
-            maxlength="11"
-            required 
-            placeholder="09XXXXXXXXX" />
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" required />
+        @error('phone') <small class="field-error">{{ $message }}</small> @enderror
 
-        <label for="email" style ="font-weight: 600;">Email:</label>
-        <input type="email" id="email" name="email" required />
-            @error('email')
-                <small style="color:red;">{{ $message }}</small>
-            @enderror
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{ old('email') }}" required />
+        @error('email') <small class="field-error">{{ $message }}</small> @enderror
 
-        <label for="password" style="font-weight: 600;">Password:</label>
-        <div class="password-wrapper">
-            <input type="password" id="password" name="password" required />
-            <button type="button" class="toggle-password" onclick="togglePassword('password', this)" tabindex="-1">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path class="eye-open" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                    <circle class="eye-open" cx="12" cy="12" r="3"></circle>
-                    <line class="eye-closed" style="display:none;" x1="1" y1="1" x2="23" y2="23"></line>
-                </svg>
-            </button>
-        </div>
-        @error('password')
-            <small style="color:red;">{{ $message }}</small>
-        @enderror
+        {{-- Password --}}
+        <label>Password:</label>
+        <input type="password" name="password" required />
+        @error('password') <small class="field-error">{{ $message }}</small> @enderror
 
         <label for="password_confirmation" style="font-weight: 600;">Confirm Password:</label>
         <div class="password-wrapper">
