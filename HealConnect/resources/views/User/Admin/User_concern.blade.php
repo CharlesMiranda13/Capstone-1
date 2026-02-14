@@ -6,8 +6,6 @@
 @endsection
 
 @section('content')
-<main class="admin-main">
-
     <h1>User Concerns</h1>
 
     @if ($messages->isEmpty())
@@ -38,7 +36,6 @@
 
         </div>
     @endif
-</main>
 
 <div id="concernViewModal" class="modal-overlay">
     <div class="modal-box">

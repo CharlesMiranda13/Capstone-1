@@ -341,4 +341,63 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Initialize tab switch modal with change detection
   setupTabSwitchModal();
+
+  // --- User Details Specific Modals ---
+  function setupUserDetailsModals() {
+      // 1. Image Viewer
+      const imageModal = document.getElementById('imageViewerModal');
+      const modalImg = document.getElementById('imageViewerContent');
+      const closeImageContext = document.getElementById('closeImageViewer');
+      
+      if(imageModal && modalImg) {
+          document.querySelectorAll('.btn-view-doc').forEach(btn => {
+              btn.addEventListener('click', function() {
+                  const imgSrc = this.getAttribute('data-img');
+                  if(imgSrc) {
+                      imageModal.style.display = 'flex';
+                      modalImg.src = imgSrc;
+                  }
+              });
+          });
+
+          if(closeImageContext) {
+              closeImageContext.addEventListener('click', () => {
+                  imageModal.style.display = 'none';
+                  modalImg.src = '';
+              });
+          }
+
+          window.addEventListener('click', (e) => {
+              if (e.target === imageModal) {
+                  imageModal.style.display = 'none';
+                  modalImg.src = '';
+              }
+          });
+      }
+      
+      const declineModal = document.getElementById('declineModal');
+      const openDeclineBtns = document.querySelectorAll('.openDeclineBtn');
+      const closeDeclineCtx = document.querySelector('.closeDeclineModal');
+      const cancelDeclineBtn = document.querySelector('.btn-cancel');
+
+      if(declineModal) {
+          openDeclineBtns.forEach(btn => {
+              btn.addEventListener('click', () => {
+                  declineModal.style.display = 'flex';
+              });
+          });
+
+          function closeDecline() {
+              declineModal.style.display = 'none';
+          }
+
+          if(closeDeclineCtx) closeDeclineCtx.addEventListener('click', closeDecline);
+          if(cancelDeclineBtn) cancelDeclineBtn.addEventListener('click', closeDecline);
+
+          window.addEventListener('click', (e) => {
+              if (e.target === declineModal) closeDecline();
+          });
+      }
+  }
+  setupUserDetailsModals();
 });

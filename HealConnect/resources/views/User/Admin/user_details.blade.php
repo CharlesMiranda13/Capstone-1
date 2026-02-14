@@ -17,250 +17,252 @@
     </div>
 @endif
 
-<div class="user-details">
-    <h2 class="user-details-title">User Details</h2>
+<div class="user-details-container">
+    
+    {{-- Back Button --}}
+    <div class="back-btn-container">
+        <a href="{{ route('admin.manage-users') }}" class="btn-back">
+            <i class="fa fa-arrow-left"></i> Back to Users
+        </a>
+    </div>
 
-    <div class="user-form">
-
-        {{-- Profile Picture --}}
-        <div class="profile-section">
-            <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('images/logo1.png') }}" 
-                 alt="Profile Picture" 
-                 class="profile-picture">
-            <h3 class="profile-name">{{ $user->name }}</h3>
-            <p class="profile-role">{{ ucfirst($user->role_display) }}</p>
-            
-            {{-- Clinic Type Badge --}}
-            @if($user->role === 'clinic' && $user->clinic_type)
-                <span class="clinic-type-badge {{ $user->clinic_type }}">
-                    {{ ucfirst($user->clinic_type) }} Clinic
-                </span>
-            @endif
-        </div>
-
-        {{-- Basic Details --}}
-        <div class="form-group">
-            <label><strong>ID</strong></label>
-            <input type="text" class="form-control" value="{{ $user->id }}" readonly>
-        </div>
-
-        <div class="form-group">
-            <label><strong>Email</strong></label>
-            <input type="text" class="form-control" value="{{ $user->email }}" readonly>
-        </div>
-
-        <div class="form-group">
-            <label><strong>Status</strong></label>
-            <input type="text" class="form-control" value="{{ ucfirst($user->status) }}" readonly>
-        </div>
-
-        <div class="form-group">
-            <label><strong>Phone</strong></label>
-            <input type="text" class="form-control" value="{{ $user->phone ?? 'Not Specified' }}" readonly>
-        </div>
-        
-        <div class="form-group">
-            <label><strong>Address</strong></label>
-            @if($user->street || $user->city)
-                <div class="address-details">
-                    @if($user->street)
-                        <div class="address-line">
-                            <small class="address-label">Street:</small>
-                            <span>{{ $user->street }}</span>
-                        </div>
-                    @endif
-                    
-                    @if($user->barangay)
-                        <div class="address-line">
-                            <small class="address-label">Barangay:</small>
-                            <span>{{ $user->barangay }}</span>
-                        </div>
-                    @endif
-                    
-                    @if($user->city)
-                        <div class="address-line">
-                            <small class="address-label">City/Municipality:</small>
-                            <span>{{ $user->city }}</span>
-                        </div>
-                    @endif
-                    
-                    @if($user->province)
-                        <div class="address-line">
-                            <small class="address-label">Province:</small>
-                            <span>{{ $user->province }}</span>
-                        </div>
-                    @endif
-                    
-                    @if($user->region)
-                        <div class="address-line">
-                            <small class="address-label">Region:</small>
-                            <span>{{ $user->region }}</span>
-                        </div>
-                    @endif
-                    
-                    @if($user->postal_code)
-                        <div class="address-line">
-                            <small class="address-label">Postal Code:</small>
-                            <span>{{ $user->postal_code }}</span>
-                        </div>
-                    @endif
-                </div>
-            @elseif($user->address)
-                <textarea class="form-control" readonly rows="3">{{ $user->address }}</textarea>
-            @else
-                <input type="text" class="form-control" value="Not Specified" readonly>
-            @endif
-        </div>
-
-        @if ($user->role !== 'clinic')
-            <div class="form-group">
-                <label><strong>Gender</strong></label>
-                <input type="text" class="form-control" value="{{ $user->gender ?? 'Not specified' }}" readonly>
+    {{-- Profile Header Card --}}
+    <div class="profile-header">
+        <div class="header-main">
+            <div class="profile-img-container">
+                <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('images/logo1.png') }}" 
+                     alt="Profile" class="profile-avatar">
             </div>
-        @endif
-
-        {{-- Clinic Type as Field --}}
-        @if($user->role === 'clinic')
-            <div class="form-group">
-                <label><strong>Clinic Type</strong></label>
-                <input type="text" class="form-control" 
-                       value="{{ $user->clinic_type ? ucfirst($user->clinic_type) : 'Not Specified' }}" 
-                       readonly>
-            </div>
-        @endif
-
-        {{-- Therapist / Clinic Details --}}
-        @if (in_array($user->role, ['therapist','clinic']))
-            <div class="form-group">
-                <label><strong>Specialization</strong></label>
-                @if ($user->specialization)
-                    <div class="specialization-container">
-                        <ul class="specialization-list">
-                            @foreach(explode(',', $user->specialization) as $spec)
-                                <li class="specialization-badge">
-                                    {{ trim($spec) }}
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @else
-                    <p class="text-muted">N/A</p>
-                @endif
-            </div>
-
-            <div class="form-group">
-                <label><strong>Experience (Years)</strong></label>
-                <input type="text" class="form-control" value="{{ round($user->experience_years ?? 0) }}" readonly>
-            </div>
-            <div class="form-group">
-                <label><strong>Subscription Status</strong></label>
-                <input type="text" class="form-control" 
-                    value="{{ ucfirst($user->subscription_status ?? 'Not Subscribed') }}" readonly>
-            </div>
-        @endif
-
-        {{-- Clinic Employees Section --}}
-        @if($user->role === 'clinic' && isset($employees) && $employees->count())
-            <div class="form-group employees-section">
-                <label><strong>Clinic Employees</strong></label>
-                <div class="employees-container">
-                    <ul class="employees-list">
-                        @foreach($employees as $emp)
-                            <li class="employee-card">
-                                <div class="employee-info">
-                                    <div class="employee-name">{{ $emp->name }}</div>
-                                    <div class="employee-email">
-                                        <i class="fa fa-envelope"></i>
-                                        {{ $emp->email }}
-                                    </div>
-                                </div>
-                            </li>
-                        @endforeach
-                    </ul>
+            <div class="profile-info">
+                <h2 class="profile-name">{{ $user->name }}</h2>
+                <p class="profile-role">
+                    {{ ucfirst($user->role_display) }}
+                    @if($user->role === 'clinic' && $user->clinic_type)
+                        <span class="clinic-badge {{ $user->clinic_type }}">
+                            {{ ucfirst($user->clinic_type) }}
+                        </span>
+                    @endif
+                </p>
+                <div class="profile-meta">
+                    <span class="meta-item"><i class="fa fa-envelope"></i> {{ $user->email }}</span>
+                    <span class="meta-item"><i class="fa fa-phone"></i> {{ $user->phone ?? 'N/A' }}</span>
                 </div>
             </div>
-        @elseif($user->role === 'clinic')
-            <div class="form-group employees-section">
-                <label><strong>Clinic Employees</strong></label>
-                <div class="employees-empty">
-                    <p class="text-muted">No employees registered yet</p>
-                </div>
+            <div class="profile-status">
+                <span class="status-badge {{ strtolower($user->status) }}">{{ $user->status }}</span>
             </div>
-        @endif
-
-        {{-- Created Date --}}
-        <div class="form-group">
-            <label><strong>Created At</strong></label>
-            <input type="text" class="form-control" value="{{ $user->created_at->format('M d, Y') }}" readonly>
         </div>
 
-        {{-- Uploaded Credentials --}}
-        <div class="form-group">
-            <label><strong>Submitted Credentials</strong></label><br>
-
-            {{-- Valid ID --}}
-            @if ($user->valid_id_path)
-                @php
-                    $validIds = json_decode($user->valid_id_path, true);
-                    if (!is_array($validIds)) {
-                        $validIds = ['front' => $user->valid_id_path, 'back' => $user->valid_id_path];
-                    }
-                @endphp
-                <div class="form-group">
-                    <label><strong>Valid ID</strong></label><br>
-                    @if(isset($validIds['front']))
-                        <a href="#" id="viewValidIdBtn" class="btn btn-primary" data-valid-id="{{ asset('storage/' . $validIds['front']) }}">
-                            View Front
-                        </a>
-                    @endif
-                    @if(isset($validIds['back']))
-                        <a href="#" id="viewValidIdBackBtn" class="btn btn-primary" data-valid-id="{{ asset('storage/' . $validIds['back']) }}">
-                            View Back
-                        </a>
-                    @endif
-
-                    <div id="validIdModal" class="modal">
-                        <span class="close" id="closeModalBtn">&times;</span>
-                        <img class="modal-content" id="validIdImage" alt="Valid ID">
-                    </div>
-                </div>
-            @else
-                <p><em>No Valid ID submitted.</em></p>
-            @endif
-
-            {{-- License --}}
-            @if (in_array($user->role, ['therapist','clinic']))
-                @if ($user->license_path)
-                    <div class="form-group">
-                        <label><strong>License</strong></label><br>
-                        <a href="#" id="viewLicenseBtn" class="btn btn-primary" data-license="{{ asset('storage/' . $user->license_path) }}">
-                            View License
-                        </a>
-
-                        <div id="licenseModal" class="modal">
-                            <span class="close" id="closeLicenseBtn">&times;</span>
-                            <img class="modal-content" id="licenseImage" alt="License">
-                        </div>
-                    </div>
-                @else
-                    <p><em>No License submitted.</em></p>
-                @endif
-            @endif
-        </div>
-            
-        {{-- Actions --}}
-        <div class="form-actions">
-            {{-- APPROVE --}}
+        {{-- Quick Actions --}}
+        <div class="header-actions">
             <form action="{{ route('admin.users.verify', $user->id) }}" method="POST">
                 @csrf
                 @method('PATCH')
-                <button type="submit" class="btn-success">Approve</button>
+                <button type="submit" class="btn-action btn-approve" onclick="return confirm('Approve this user?');">
+                    <i class="fa fa-check"></i> Approve User
+                </button>
             </form>
-
-            {{-- DECLINE BUTTON --}}
-            <button type="button" class="btn-warning openDeclineBtn">Decline</button>
+            <button type="button" class="btn-action btn-decline openDeclineBtn">
+                <i class="fa fa-times"></i> Decline
+            </button>
         </div>
     </div>
+
+    {{-- Main Content Grid --}}
+    <div class="profile-grid">
+        
+        {{-- Left Column: Basic & Professional --}}
+        <div class="profile-col">
+            
+            {{-- Basic Info Card --}}
+            <div class="info-card">
+                <div class="card-header">
+                    <h3><i class="fa fa-info-circle"></i> Basic Information</h3>
+                </div>
+                <div class="card-body">
+                    <div class="detail-row">
+                        <span class="label">User ID</span>
+                        <span class="value">#{{ $user->id }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Joined</span>
+                        <span class="value">{{ $user->created_at->format('M d, Y') }}</span>
+                    </div>
+                    @if ($user->role !== 'clinic')
+                    <div class="detail-row">
+                        <span class="label">Gender</span>
+                        <span class="value">{{ ucfirst($user->gender ?? 'N/A') }}</span>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            @if (in_array($user->role, ['therapist','clinic']))
+            <div class="info-card">
+                <div class="card-header">
+                    <h3><i class="fa fa-briefcase"></i> Professional Details</h3>
+                </div>
+                <div class="card-body">
+                    <div class="detail-item">
+                        <span class="label-block">Specialization</span>
+                        @if ($user->specialization)
+                            <div class="tags-container">
+                                @foreach(explode(',', $user->specialization) as $spec)
+                                    <span class="tag-badge">{{ trim($spec) }}</span>
+                                @endforeach
+                            </div>
+                        @else
+                            <span class="text-muted">N/A</span>
+                        @endif
+                    </div>
+                    
+                    <div class="detail-grid">
+                        <div class="detail-box">
+                            <span class="label">Experience</span>
+                            <span class="value-highlight">{{ round($user->experience_years ?? 0) }} Years</span>
+                        </div>
+                        <div class="detail-box">
+                            <span class="label">Subscription</span>
+                            <span class="value-highlight {{ strtolower($user->subscription_status ?? 'free') }}">
+                                {{ ucfirst($user->subscription_status ?? 'None') }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+        </div>
+
+        {{-- Middle Column: Location --}}
+        <div class="profile-col">
+            {{-- Address Card --}}
+            <div class="info-card">
+                <div class="card-header">
+                    <h3><i class="fa fa-map-marker-alt"></i> Location Details</h3>
+                </div>
+                <div class="card-body">
+                    @if($user->street || $user->city)
+                        @if($user->street)
+                        <div class="detail-row">
+                            <span class="label">Street</span>
+                            <span class="value">{{ $user->street }}</span>
+                        </div>
+                        @endif
+                        @if($user->barangay)
+                        <div class="detail-row">
+                            <span class="label">Barangay</span>
+                            <span class="value">{{ $user->barangay }}</span>
+                        </div>
+                        @endif
+                        <div class="detail-row">
+                            <span class="label">City</span>
+                            <span class="value">{{ $user->city ?? '-' }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Province</span>
+                            <span class="value">{{ $user->province ?? '-' }}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Region</span>
+                            <span class="value">{{ $user->region ?? '-' }}</span>
+                        </div>
+                    @elseif($user->address)
+                        <div class="detail-row">
+                            <span class="label">Address</span>
+                            <span class="value">{{ $user->address }}</span>
+                        </div>
+                    @else
+                        <p class="text-muted">No address provided.</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        {{-- Right Column: Documents & Staff --}}
+        <div class="profile-col">
+            
+            {{-- Verification Documents --}}
+            <div class="info-card">
+                <div class="card-header">
+                    <h3><i class="fa fa-id-card"></i> Verification Documents</h3>
+                </div>
+                <div class="card-body">
+                    <div class="documents-grid">
+                        {{-- Valid ID --}}
+                        <div class="doc-item">
+                            <span class="doc-label">Valid ID</span>
+                            @if ($user->valid_id_path)
+                                @php
+                                    $validIds = json_decode($user->valid_id_path, true);
+                                    if (!is_array($validIds)) {
+                                        $validIds = ['front' => $user->valid_id_path];
+                                    }
+                                @endphp
+                                <div class="doc-actions">
+                                    @foreach($validIds as $key => $path)
+                                        <button class="btn-view-doc" data-img="{{ asset('storage/' . $path) }}">
+                                            <i class="fa fa-eye"></i> {{ ucfirst($key) }}
+                                        </button>
+                                    @endforeach
+                                </div>
+                            @else
+                                <span class="text-danger"><i class="fa fa-times-circle"></i> Missing</span>
+                            @endif
+                        </div>
+
+                        {{-- License --}}
+                        @if (in_array($user->role, ['therapist','clinic']))
+                        <div class="doc-item">
+                            <span class="doc-label">License</span>
+                            @if ($user->license_path)
+                                <button class="btn-view-doc" data-img="{{ asset('storage/' . $user->license_path) }}">
+                                    <i class="fa fa-file-alt"></i> View License
+                                </button>
+                            @else
+                                <span class="text-danger"><i class="fa fa-times-circle"></i> Missing</span>
+                            @endif
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            {{-- Clinic Employees --}}
+            @if($user->role === 'clinic')
+            <div class="info-card">
+                <div class="card-header">
+                    <h3><i class="fa fa-users"></i> Clinic Staff</h3>
+                </div>
+                <div class="card-body">
+                    @if(isset($employees) && $employees->count())
+                        <div class="staff-list">
+                            @foreach($employees as $emp)
+                                <div class="staff-item">
+                                    <div class="staff-avatar">
+                                        <i class="fa fa-user-md"></i>
+                                    </div>
+                                    <div class="staff-info">
+                                        <strong>{{ $emp->name }}</strong>
+                                        <span>{{ $emp->email }}</span>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <p class="text-muted">No staff registered.</p>
+                    @endif
+                </div>
+            </div>
+            @endif
+
+        </div>
+    </div>
+</div>
+
+{{-- Standard Image Modal --}}
+<div id="imageViewerModal" class="modal">
+    <span class="close" id="closeImageViewer">&times;</span>
+    <img class="modal-content" id="imageViewerContent">
 </div>
 
 {{-- DECLINE MODAL --}}
@@ -289,4 +291,7 @@
     </div>
 </div>
 
+
+@section('scripts')
+{{-- Scripts are handled by global modal.js --}}
 @endsection

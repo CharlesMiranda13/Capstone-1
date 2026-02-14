@@ -3,7 +3,6 @@
 @section('title', 'Admin Dashboard')
 
 @section('content')
-<div class="admin-main">
     <h2>Dashboard</h2>
     <div class="dashboard-cards">
         <a href="{{ route('admin.manage-users', ['role' => 'all']) }}" class="card">
@@ -45,7 +44,6 @@
             </div>
         </div>
     </div>
-</div>
 @endsection
 
 @section('scripts')
