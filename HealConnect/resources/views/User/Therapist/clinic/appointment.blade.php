@@ -55,82 +55,146 @@
                             <th>Patient</th>
                             <th>Provider</th>
                             <th>Type</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Preferred Gender</th>
-                            <th>Notes</th>
-                            <th>Referral</th>
+                            <th>Schedule</th>
+                            <th>Details</th>
                             <th>Status</th>
-                            <th>Record</th>
                             <th>Action</th>
-                            <th>View Profile</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($appointments as $appointment)
                             <tr>
-                                <td>{{ $appointment->patient->name }}</td>
-                                <td>{{ $appointment->provider->name ?? 'N/A' }}</td>
-                                <td>{{ ucfirst($appointment->appointment_type) }}</td>
-                                <td>{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('F j, Y') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</td>
-                                <td>{{ $appointment->preferred_gender ? ucfirst($appointment->preferred_gender) : 'Any' }}</td>
-                                <td>{{ $appointment->notes ?? 'N/A' }}</td>
-                                <td>
-                                    @if($appointment->referral)
-                                        <a href="{{ asset('storage/referrals/' . $appointment->referral) }}" target="_blank" class="link-referral">
-                                            View Referral
-                                        </a>
-                                    @else
-                                        N/A
-                                    @endif
+                                <td class="patient-cell" data-label="Patient">
+                                    <div class="patient-info-mini">
+                                        <span class="patient-name">{{ $appointment->patient->name }}</span>
+                                        <span class="patient-record-count"><i class="fa fa-folder-open"></i> {{ $appointment->record_count ?? 0 }} Records</span>
+                                    </div>
                                 </td>
-                                <td>
-                                    <span class="badge 
-                                        @if($appointment->status == 'pending') bg-warning
-                                        @elseif($appointment->status == 'approved') bg-success
-                                        @elseif($appointment->status == 'rejected') bg-danger
-                                        @elseif($appointment->status == 'completed') bg-primary
+                                <td data-label="Provider">{{ $appointment->provider->name ?? 'N/A' }}</td>
+                                <td data-label="Type">
+                                    <span class="type-tag {{ $appointment->appointment_type == 'online' ? 'type-online' : 'type-inperson' }}">
+                                        <i class="fa {{ $appointment->appointment_type == 'online' ? 'fa-video' : 'fa-user-md' }}"></i>
+                                        {{ ucfirst($appointment->appointment_type) }}
+                                    </span>
+                                </td>
+                                <td class="schedule-cell" data-label="Schedule">
+                                    <div class="schedule-info">
+                                        <span class="date">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('M d, Y') }}</span>
+                                        <span class="time">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</span>
+                                    </div>
+                                </td>
+                                <td class="details-cell" data-label="Details">
+                                    <div class="details-icons">
+                                        @if($appointment->preferred_gender)
+                                            <i class="fa fa-venus-mars" title="Preferred Gender: {{ ucfirst($appointment->preferred_gender) }}"></i>
+                                        @endif
+                                        @if($appointment->notes)
+                                            <i class="fa fa-sticky-note" title="Notes: {{ $appointment->notes }}"></i>
+                                        @endif
+                                        @if($appointment->referral)
+                                            <a href="{{ asset('storage/referrals/' . $appointment->referral) }}" target="_blank" title="View Referral">
+                                                <i class="fa fa-file-medical"></i>
+                                            </a>
+                                        @endif
+                                        <button class="openModalBtn icon-btn" data-link="{{ route('clinic.patients.profile', ['id' => $appointment->patient->id, 'embed' => 1]) }}" title="View Profile">
+                                            <i class="fa fa-user-circle"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td data-label="Status">
+                                    <span class="status-badge 
+                                        @if($appointment->status == 'pending') status-pending
+                                        @elseif($appointment->status == 'approved') status-approved
+                                        @elseif($appointment->status == 'rejected') status-rejected
+                                        @elseif($appointment->status == 'completed') status-completed
                                         @endif">
                                         {{ ucfirst($appointment->status) }}
                                     </span>
                                 </td>
-                                <td>{{ $appointment->record_count ?? 0 }}</td>
-                                <td class="action-cell">
+                                <td class="action-cell" data-label="Action">
                                     @if(auth()->user()->id == $appointment->provider_id || auth()->user()->role == 'admin')
                                         <form action="{{ route('clinic.appointments.updateStatus', $appointment->id) }}" method="POST" class="status-form">
                                             @csrf
                                             @method('PATCH')
-                                            <select name="status" class="status-select" onchange="this.form.submit()">
-                                                <option value="" disabled selected>Change Status</option>
+                                            <select name="status" class="status-control" onchange="this.form.submit()">
+                                                <option value="" disabled selected>Update</option>
                                                 <option value="approved">Approve</option>
                                                 <option value="rejected">Reject</option>
                                                 <option value="completed">Complete</option>
                                             </select>
                                         </form>
                                     @else
-                                        N/A
+                                        <span class="muted">No Action</span>
                                     @endif
-                                </td>
-                                <td>
-                                    <button class="openModalBtn" data-link="{{ route('clinic.patients.profile', $appointment->patient->id) }}">
-                                        <i class="fa fa-user"></i>
-                                    </button>
                                 </td>
                             </tr>
                         @endforeach
-
-                        <div id="patientModal" class="modal">
-                            <div class="modal-content">
-                                <span class="close">&times;</span>
-                                <div id="modal-body"></div>
-                            </div>
-                        </div>
-
                     </tbody>
                 </table>
             </div>
         @endif
     </div>
+
+    <!-- Move modal outside of main container logic -->
+    <div id="patientModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
 </main>
+@section('scripts')
+<script>
+    // Ensure modal transparency is fixed project-wide for this view
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('patientModal');
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target.classList.contains('close')) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+    });
+</script>
+
+<style>
+    /* Absolute forcing of modal transparency fix */
+    #patientModal, .modal {
+        background-color: rgba(0, 0, 0, 0.7) !important;
+    }
+    
+    #patientModal .modal-content {
+        background-color: #ffffff !important;
+        background: #ffffff !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    #modal-body, .patient-profile {
+        background-color: #ffffff !important;
+        opacity: 1 !important;
+    }
+
+    /* Search Bar Alignment Fix */
+    .search-filter-form {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+    }
+
+    .search-input, .filter-select, .btn-search {
+        height: 45px !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .btn-search {
+        justify-content: center !important;
+        padding: 0 20px !important;
+    }
+</style>
 @endsection

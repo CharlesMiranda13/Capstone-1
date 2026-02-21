@@ -25,212 +25,247 @@
 
 /* ====== SEARCH & FILTER BAR ====== */
 .search-filter {
-    margin-bottom: 1.5rem;
-    overflow: hidden;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 12px;
 }
 
 .search-filter-form {
     display: flex;
-    align-items: stretch;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    justify-content: center;
-    max-width: 100%;
+    align-items: center;
+    gap: 1rem;
 }
 
 .search-input {
-    flex: 1 1 200px;
-    min-width: 0;
-    max-width: 100%;
-    padding: 0.6rem 1rem;
-    border: 1px solid #ddd;
+    flex: 2;
+    height: 42px;
+    /* Explicit height */
+    padding: 0 1rem;
+    border: 1px solid #e2e8f0;
     border-radius: 10px;
     font-size: 0.95rem;
-    transition: 0.3s;
-    box-sizing: border-box;
+    transition: all 0.2s ease;
 }
 
 .search-input:focus {
     border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
-    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 .filter-select {
-    flex: 0 1 auto;
-    min-width: 120px;
-    max-width: 100%;
-    padding: 0.6rem 1rem;
-    border: 1px solid #ddd;
+    flex: 0.5;
+    height: 42px;
+    /* Explicit height */
+    padding: 0 1rem;
+    border: 1px solid #e2e8f0;
     border-radius: 10px;
+    background: white;
     font-size: 0.95rem;
-    background-color: #fff;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    box-sizing: border-box;
-}
-
-.filter-select:hover {
-    border-color: #3b82f6;
-}
-
-.search-filter .btn-search {
-    flex: 0 0 auto;
-    background: #3b82f6;
-    color: #fff;
-    border: none;
-    padding: 0.7rem 1.5rem;
-    border-radius: 10px;
     cursor: pointer;
-    transition: 0.3s;
-    box-sizing: border-box;
-    white-space: nowrap;
 }
 
-.search-filter .btn-search:hover {
-    background: #2563eb;
-    transform: translateY(-2px);
-}
-
-/* ====== ALERTS ====== */
-.alert-success {
-    background-color: #dcfce7;
-    color: #166534;
+.btn-search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 42px;
+    /* Explicit height to match inputs */
+    padding: 0 1.5rem;
+    background: #3b82f6;
+    color: white;
+    border: none;
     border-radius: 10px;
-    padding: 0.8rem 1rem;
-    margin-bottom: 1rem;
-    border-left: 4px solid #16a34a;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-search:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
 }
 
 /* ====== TABLE SECTION ====== */
 .table-container {
-    overflow-x: auto;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .appointments-table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 0.6rem;
-    font-size: 0.95rem;
+    border-collapse: collapse;
 }
 
-.appointments-table thead {
-    background-color: #f8fafc;
-    color: #1e293b;
-    font-weight: 600;
-}
-
-.appointments-table th,
-.appointments-table td {
-    padding: 1rem;
-    text-align: center;
-}
-
-.appointments-table th:first-child,
-.appointments-table td:first-child {
+.appointments-table th {
+    background: #f1f5f9;
+    padding: 1rem 1.5rem;
     text-align: left;
-}
-
-.appointments-table tr {
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.appointments-table tbody tr:hover {
-    transform: scale(1.01);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-}
-
-/* ====== BADGES ====== */
-.badge {
-    display: inline-block;
-    padding: 0.35rem 0.7rem;
-    border-radius: 999px;
-    color: #fff;
-    font-size: 0.8rem;
-    white-space: nowrap;
-}
-
-.bg-warning {
-    background-color: #f59e0b;
-}
-
-.bg-success {
-    background-color: #10b981;
-}
-
-.bg-danger {
-    background-color: #ef4444;
-}
-
-.bg-primary {
-    background-color: #3b82f6;
-}
-
-/* ====== BUTTONS ====== */
-.btn {
-    border-radius: 8px;
     font-size: 0.85rem;
-    padding: 0.4rem 0.7rem;
-    text-decoration: none;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
 }
 
-.btn:hover {
-    opacity: 0.9;
+.appointments-table td {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
 }
 
-.btn-success {
-    background-color: #10b981;
-    color: #fff;
-    border: none;
+.appointments-table tr:last-child td {
+    border-bottom: none;
 }
 
-.btn-info {
-    background-color: #3b82f6;
-    color: #fff;
-    border: none;
+.appointments-table tr:hover {
+    background: #f8fafc;
 }
 
-.status-select {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 0.4rem 0.6rem;
-    font-size: 0.85rem;
-    cursor: pointer;
-    background-color: #fff;
-    transition: 0.3s;
+/* Patient Cell */
+.patient-info-mini {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
 }
 
-.status-select:hover {
-    border-color: #3b82f6;
-}
-
-.empty-message {
-    text-align: center;
+.patient-name {
+    font-weight: 600;
+    color: #1e293b;
     font-size: 1rem;
-    color: #6b7280;
-    padding: 1.5rem 0;
 }
 
-.openModalBtn {
+.patient-record-count {
+    font-size: 0.75rem;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.patient-record-count i {
+    color: #3b82f6;
+}
+
+/* Type Tags */
+.type-tag {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border: none;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
     border-radius: 8px;
-    background-color: #3b82f6;
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    font-size: 0.85rem;
+    font-weight: 500;
 }
 
-.openModalBtn:hover {
-    background-color: #2563eb;
-    transform: translateY(-2px);
+.type-online {
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.type-inperson {
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+/* Schedule Cell */
+.schedule-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.schedule-info .date {
+    font-weight: 500;
+    color: #334155;
+}
+
+.schedule-info .time {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+/* Details Cell */
+.details-icons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.1rem;
+    color: #94a3b8;
+}
+
+.details-icons i,
+.details-icons a {
+    color: #94a3b8;
+    cursor: help;
+    transition: color 0.2s ease;
+}
+
+.details-icons a:hover,
+.details-icons i:hover {
+    color: #3b82f6;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #3b82f6;
+    cursor: pointer;
+    font-size: 1.4rem;
+    transition: transform 0.2s ease;
+}
+
+.icon-btn:hover {
+    transform: scale(1.1);
+    color: #2563eb;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 0.4rem 0.9rem;
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-approved {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-rejected {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.status-completed {
+    background: #e0f2fe;
+    color: #075985;
+}
+
+/* Action Select */
+.status-control {
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    outline: none;
+    background: white;
+}
+
+.muted {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    font-style: italic;
 }
 
 .link-referral {
@@ -541,6 +576,7 @@ table tr:hover {
 
 /* Tablet and Below (991px and below) */
 @media (max-width: 991px) {
+
     .appointments-main,
     .availability-page {
         margin-left: 0;
@@ -596,6 +632,7 @@ table tr:hover {
 
 /* Mobile Landscape (768px and below) */
 @media (max-width: 768px) {
+
     .appointments-main,
     .availability-page {
         padding: 12px;
@@ -703,6 +740,7 @@ table tr:hover {
 
 /* Mobile Portrait (480px and below) */
 @media (max-width: 480px) {
+
     .appointments-main,
     .availability-page {
         padding: 10px;
@@ -855,6 +893,7 @@ table tr:hover {
 
 /* Extra Small Mobile (360px and below) */
 @media (max-width: 360px) {
+
     .appointments-main,
     .availability-page {
         padding: 8px;
@@ -955,6 +994,7 @@ table tr:hover {
 
 /* Landscape Mode Optimization for Small Devices */
 @media (max-height: 500px) and (orientation: landscape) {
+
     .appointments-main,
     .availability-page {
         padding: 10px;

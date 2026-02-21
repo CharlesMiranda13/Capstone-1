@@ -23,7 +23,7 @@
                 <strong>Subscription Expiring Soon!</strong>
                 Your {{ ucfirst(auth()->user()->plan) }} subscription will expire in {{ ceil($daysRemaining) }} day{{ ceil($daysRemaining) > 1 ? 's' : '' }} on {{ $subscriptionEnd->format('M d, Y') }}.
             </div>
-            <a href="{{ route('pricing.index') }}">Renew Now</a>
+            <a href="{{ route('subscribe.show', 'pro clinic') }}">Renew Now</a>
         </div>
     @elseif($daysRemaining <= 0)
         <div class="subscription-expired">
@@ -32,7 +32,7 @@
                 <strong>Subscription Expired!</strong>
                 Your subscription ended on {{ $subscriptionEnd->format('M d, Y') }}. Renew to continue accessing all features.
             </div>
-            <a href="{{ route('pricing.index') }}">Renew Now</a>
+            <a href="{{ route('subscribe.show', 'pro clinic') }}">Renew Now</a>
         </div>
     @endif
 @elseif(auth()->user()->subscription_status === 'expired')
@@ -42,7 +42,7 @@
             <strong>Subscription Expired!</strong>
             Your subscription has ended. Renew to continue accessing all features.
         </div>
-        <a href="{{ route('pricing.index') }}">Renew Now</a>
+        <a href="{{ route('subscribe.show', 'pro clinic') }}">Renew Now</a>
     </div>
 @elseif(auth()->user()->subscription_status === 'inactive' || !auth()->user()->plan)
     <div class="subscription-expired">
@@ -51,7 +51,7 @@
             <strong>No Active Subscription</strong>
             Subscribe to a plan to unlock all features and start connecting with patients.
         </div>
-        <a href="{{ route('pricing.index') }}">View Plans</a>
+        <a href="{{ route('subscribe.show', 'pro clinic') }}">View Plans</a>
     </div>
 @endif
 <div class="welcome-header">
