@@ -154,6 +154,10 @@ class AppointmentController extends Controller
 
         $therapist = User::findOrFail($validated['therapist_id']);
 
+        if (!$therapist->canAccessSystem()) {
+            return back()->withInput()->with('error', 'This therapist/clinic is currently not accepting new appointments due to subscription status.');
+        }
+
         // Validate availability based on role 
         if ($therapist->role === 'therapist') {
             // For independent therapist: check specific date availability
@@ -168,12 +172,20 @@ class AppointmentController extends Controller
             if (!$isValid) {
                 return back()->withInput()->with('error', 'Selected time slot is not available.');
             }
-        } elseif ($therapist->role === 'clinic') {
-            // For clinic: check weekly schedule by day_of_week
+        } elseif ($therapist->role === 'clinic' || $therapist->role === 'employee') {
+            // For clinic or clinic employee: check clinic's weekly schedule
+            $statusProvider = ($therapist->role === 'employee') 
+                ? $therapist->clinic 
+                : $therapist;
+
+            if (!$statusProvider) {
+                return back()->withInput()->with('error', 'Service provider information is incomplete.');
+            }
+
             $appointmentDate = Carbon::parse($validated['appointment_date']);
             $dayOfWeek = $appointmentDate->dayOfWeek;
             
-            $isValid = $therapist->availability()
+            $isValid = $statusProvider->availability()
                 ->where('is_active', true)
                 ->whereNotNull('day_of_week') // Clinic schedules have day_of_week
                 ->where('day_of_week', $dayOfWeek)
@@ -182,7 +194,10 @@ class AppointmentController extends Controller
                 ->exists();
             
             if (!$isValid) {
-                return back()->withInput()->with('error', 'Selected time slot is not available for this clinic.');
+                $msg = ($therapist->role === 'employee') 
+                    ? 'Selected time slot is not available for this clinic employee.'
+                    : 'Selected time slot is not available for this clinic.';
+                return back()->withInput()->with('error', $msg);
             }
         }
 

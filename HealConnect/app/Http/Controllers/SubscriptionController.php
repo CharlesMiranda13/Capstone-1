@@ -38,6 +38,14 @@ class SubscriptionController extends Controller
     // Show pricing page with all plans
     public function index()
     {
+        if (Auth::check()) {
+            if (Auth::user()->role === 'therapist') {
+                return redirect()->route('subscribe.show', 'pro solo');
+            } elseif (Auth::user()->role === 'clinic') {
+                return redirect()->route('subscribe.show', 'pro clinic');
+            }
+        }
+
         return view('pricing', ['plans' => $this->plans]);
     }
 

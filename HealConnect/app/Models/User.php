@@ -95,11 +95,50 @@ class User extends Authenticatable
                      ->where('status', 'Active');
     }
 
+    /**
+     * Scope for therapists/clinics who are either subscribed or in valid trial.
+     */
+    public function scopeSubscribedOrTrial($query)
+    {
+        return $query->where(function($q) {
+            $q->where('subscription_status', 'active')
+              ->orWhere(function($q2) {
+                  $q2->where('subscription_status', 'inactive')
+                     ->where(function($q3) {
+                         $q3->selectRaw('count(distinct patient_id)')
+                            ->from('appointments')
+                            ->where(function($q4) {
+                                // Match the provider themselves OR any of their employees
+                                $q4->whereColumn('provider_id', 'users.id')
+                                   ->orWhereIn('provider_id', function($q5) {
+                                       $q5->select('id')
+                                          ->from('users as u2')
+                                          ->whereColumn('u2.clinic_id', 'users.id');
+                                   });
+                            })
+                            ->where('status', '!=', 'cancelled');
+                     }, '<', 3);
+              });
+        });
+    }
+
     /** ---------------- RELATIONSHIPS ---------------- */
     // Availability (polymorphic)
     public function availability()
     {
         return $this->morphMany(\App\Models\Availability::class, 'provider');
+    }
+
+    // Clinic Employees
+    public function employees()
+    {
+        return $this->hasMany(User::class, 'clinic_id');
+    }
+
+    // Employee's Clinic
+    public function clinic()
+    {
+        return $this->belongsTo(User::class, 'clinic_id');
     }
 
     public function activeAvailability()
@@ -226,5 +265,56 @@ class User extends Authenticatable
                 ->orderBy('start_time')
                 ->get(['date', 'start_time', 'end_time', 'is_active']);
         }
+    }
+
+    /**
+     * Count unique customers (patients) for this provider (or collective for clinics).
+     */
+    public function getCustomerCountAttribute()
+    {
+        $query = Appointment::where('status', '!=', 'cancelled');
+
+        if ($this->role === 'clinic') {
+            // Count for clinic and all its employees
+            $employeeIds = $this->employees()->pluck('id')->push($this->id);
+            $query->whereIn('provider_id', $employeeIds);
+        } else {
+            // Count for solo therapist or specific employee
+            $query->where('provider_id', $this->id);
+        }
+
+        return $query->distinct('patient_id')->count('patient_id');
+    }
+
+    /**
+     * Check if the user is in trial mode and can access the system.
+     */
+    public function canAccessSystem()
+    {
+        // If employee, check their clinic's subscription status
+        if ($this->role === 'employee' && $this->clinic_id) {
+            $clinic = $this->clinic;
+            return $clinic ? $clinic->canAccessSystem() : false;
+        }
+
+        // Admin or Patient are not subject to these subscription rules here 
+        if ($this->role === 'patient') {
+            return true;
+        }
+
+        if ($this->subscription_status === 'active') {
+            return true;
+        }
+
+        if ($this->subscription_status === 'expired') {
+            return false;
+        }
+
+        // inactive (trial)
+        if ($this->subscription_status === 'inactive') {
+            return $this->customer_count < 3;
+        }
+
+        return false;
     }
 }

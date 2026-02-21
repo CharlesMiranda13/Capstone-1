@@ -1,8 +1,30 @@
-@extends('layouts.app')
+@php
+    $layout = 'layouts.app';
+    if (auth()->check()) {
+        switch (auth()->user()->role) {
+            case 'therapist':
+                $layout = 'layouts.therapist';
+                break;
+            case 'clinic':
+                $layout = 'layouts.clinic_layout';
+                break;
+            case 'patient':
+                $layout = 'layouts.patient_layout';
+                break;
+        }
+    }
+@endphp
+
+@extends($layout)
 @section('title', 'HealConnect - Pricing')
+
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/pricing.css') }}">
+@endsection
 
 @section('content')
 <main class="pricing-main">
+    @guest
     <!-- Grow with HealConnect Section -->
     <section class="why-join">
         <div class="why-join-content">
@@ -42,6 +64,8 @@
             to ensure service quality and patient safety on HealConnect.</em>
         </p>
     </section>
+
+    @endguest
 
     <!-- Pricing Section  -->
     <section class="pricing-section">

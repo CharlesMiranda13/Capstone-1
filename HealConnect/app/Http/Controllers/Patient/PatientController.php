@@ -30,7 +30,7 @@ class PatientController extends Controller
             ->take(3)
             ->get();
             
-        $therapists = User::verifiedTherapists()->get();
+        $therapists = User::verifiedTherapists()->subscribedOrTrial()->get();
 
         $recentRecords = MedicalRecord::where('patient_id', $user->id)
         ->with('therapist:id,name')
@@ -158,7 +158,7 @@ class PatientController extends Controller
     private function filterTherapists(Request $request)
     {
         $query = User::verifiedTherapists()
-            ->where('subscription_status', 'active')
+            ->subscribedOrTrial()
             ->with(['services', 'availability']); 
 
         if ($request->filled('search')) {
