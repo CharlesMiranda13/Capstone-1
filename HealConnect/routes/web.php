@@ -182,7 +182,7 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
     
 
     //clients
-    Route::get('/clients', [IndtherapistController::class, 'clients'])->name('client');
+    Route::get('/clients', [IndtherapistController::class, 'clients'])->name('clients');
     Route::get('/patients/{patientId}/records', [ptController::class, 'patient_records'])->name('patients_records');
     Route::put('/patients/{id}/ehr', [ptController::class, 'updateEHR'])->name('ehr.update');
     Route::put('/patients/{id}/treatment', [ptController::class, 'updateTreatment'])->name('treatment.update');

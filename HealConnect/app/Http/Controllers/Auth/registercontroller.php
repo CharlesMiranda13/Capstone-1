@@ -68,9 +68,13 @@ class RegisterController extends Controller
             $rules['clinic_type'] = 'required|in:public,private';
         }
         
-        if ($type == 'clinic' || $type == "therapist") {
+        if ($type == 'clinic' || $type == 'therapist') {
             $rules['license'] = 'required|file|mimes:jpg,jpeg,png,pdf|max:2048';
             $rules['start_year'] = 'required|integer|min:1900|max:' . date('Y');
+            
+            if ($type == 'clinic') {
+                $rules['Business'] = 'required|file|mimes:jpg,jpeg,png,pdf|max:2048';
+            }
         }
         
         if ($type == 'therapist' || $type == 'clinic') {
@@ -112,6 +116,10 @@ class RegisterController extends Controller
             ? $request->file('license')->store('licenses', 'public')
             : null;
 
+        $businessPermitPath = ($type === 'clinic')
+            ? $request->file('Business')->store('business_permits', 'public')
+            : null;
+
         $startDate = ($type === 'clinic' || $type === 'therapist')
             ? $request->start_year 
             : null;
@@ -130,6 +138,7 @@ class RegisterController extends Controller
             'verification_code' => $verificationCode,
             'valid_id_path' => $validIdPath,
             'license_path' => $licensePath,
+            'business_permit_path' => $businessPermitPath,
             'status' => 'Pending',
             'phone' => $request->phone,
             'address' => $fullAddress,

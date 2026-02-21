@@ -40,6 +40,7 @@ class User extends Authenticatable
         'clinic_type',
         'valid_id_path',
         'license_path',
+        'business_permit_path',
         'clinic_id',
         'position',
         'description',

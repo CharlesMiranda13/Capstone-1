@@ -101,21 +101,33 @@ class ptController extends Controller
             'description'   => 'nullable|string|max:2000', 
             'specialization' => 'nullable|array',
             'specialization.*' => 'nullable|string|max:255',
-            'clinic_license' => 'nullable|string|max:255', 
+            'license' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', 
+            'Business' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ];
 
         $validated = $request->validate($rules);
         $specializations = $validated['specialization'] ?? [];
         $specializationString = $specializations ? implode(',', $specializations) : null;
 
-        $user->update([
+        $updateData = [
             'name' => $validated['name'],
             'phone'     => $validated['phone'] ?? $user->phone,
             'address'   => $validated['address'] ?? $user->address,
             'description'   => $validated['description'] ?? $user->description,
             'specialization' => $specializationString,
-            'clinic_license' => $validated['clinic_license'] ?? $user->clinic_license,
-        ]);
+        ];
+
+        // Handle License Upload
+        if ($request->hasFile('license')) {
+            $updateData['license_path'] = $request->file('license')->store('licenses', 'public');
+        }
+
+        // Handle Business Permit Upload
+        if ($request->hasFile('Business')) {
+            $updateData['business_permit_path'] = $request->file('Business')->store('business_permits', 'public');
+        }
+
+        $user->update($updateData);
 
         return back()->with('success', 'Profile updated successfully.');
     }

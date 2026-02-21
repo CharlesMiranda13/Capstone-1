@@ -288,6 +288,7 @@ class PatientController extends Controller
         // Find the specific medical record
         $record = MedicalRecord::where('id', $recordId)
             ->where('patient_id', $user->id)
+            ->with('therapist:id,name,profile_picture,role')
             ->firstOrFail();
         
         // Verify the timestamp matches (security check)
