@@ -24,7 +24,9 @@
                 <div class="appointments-list">
                     @forelse ($appointments as $appointment)
                     <div class ="appointment-item">
-                        <p class ="therapist-name"><strong>Dr. {{$appointment->provider->name}}</strong></p>
+                        <p class ="therapist-name"><strong>
+                            {{ $appointment->provider->role === 'therapist' ? 'Dr. ' : '' }}{{ $appointment->provider->name }}
+                        </strong></p>
                         <p class ="appointment-date">
                             {{ \Carbon\Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time)->format('F j, Y - g:i A') }}
                         </p>
@@ -44,7 +46,7 @@
                     @forelse ($recentRecords as $record)
                         <div class="record-item">
                             <p class="record-update">
-                                <strong>Dr. {{ $record->therapist->name }}</strong> updated your 
+                                <strong>{{ $record->therapist->role === 'therapist' ? 'Dr. ' : '' }}{{ $record->therapist->name }}</strong> updated your 
                                 <span class="record-type">{{ $record->record_type }}</span>
                             </p>
                             <p class="record-date">
@@ -66,7 +68,7 @@
                     @if (!empty($latestProgressNote))
                         <div class="progress-note-card">
                             <p class="note-from">
-                                <strong>From: Dr. {{ $latestProgressRecord->therapist->name ?? 'Your Therapist' }}</strong>
+                                <strong>From: {{ ($latestProgressRecord->therapist->role ?? '') === 'therapist' ? 'Dr. ' : '' }}{{ $latestProgressRecord->therapist->name ?? 'Your Therapist' }}</strong>
                             </p>
                             <p class="note-date-header">
                                 {{ $latestProgressNote['date'] }}

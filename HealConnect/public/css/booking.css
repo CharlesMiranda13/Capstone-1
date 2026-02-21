@@ -2,11 +2,10 @@
    APPOINTMENT BOOKING PAGE CSS
    ================================ */
 
-/* Page Container (adjusted for sidebar) */
+/* Page Container */
 .container {
     max-width: 100%;
-    padding: 25px;
-    margin-left: 275px; /* desktop sidebar offset */
+    padding: 0;
     transition: margin-left 0.3s ease;
 }
 
@@ -198,17 +197,11 @@
    RESPONSIVE DESIGN
    ================================ */
 
-/* Large tablets / small desktops (1200px) */
-@media (max-width: 1200px) {
-    .container {
-        margin-left: 240px;
-    }
-}
+
 
 /* Tablets (900px and below) */
 @media (max-width: 900px) {
     .container {
-        margin-left: 0; /* Sidebar collapses */
         padding: 20px;
     }
 

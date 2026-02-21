@@ -7,10 +7,11 @@
 @endsection
 
 @section('content')
+<div class="page-header-row">
+    <h2 class="page-title-new">System Reports</h2>
+    <p class="page-subtitle">Platform-wide subscription, user, and appointment statistics</p>
+</div>
 <div class="reports-container">
-    <div class="reports-header">
-        <h2>System Reports</h2>
-    </div>
 
     <!-- Subscription Reports -->
     <div class="report-card">
@@ -121,26 +122,28 @@
             <h5><i class="fa-solid fa-chart-line"></i> Registration Trend (Last 30 Days)</h5>
         </div>
         <div class="report-card-body">
-            <table class="report-table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>New Registrations</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($recentRegistrations as $reg)
-                    <tr>
-                        <td>{{ \Carbon\Carbon::parse($reg->date)->format('M d, Y') }}</td>
-                        <td><span class="badge badge-primary">{{ $reg->count }}</span></td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="2" class="empty-state">No recent registrations</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+            <div class="hc-table-container hc-table-responsive">
+                <table class="hc-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>New Registrations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($recentRegistrations as $reg)
+                        <tr>
+                            <td>{{ \Carbon\Carbon::parse($reg->date)->format('M d, Y') }}</td>
+                            <td><span class="hc-badge hc-badge-info">{{ $reg->count }}</span></td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="2" class="empty-state">No recent registrations</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

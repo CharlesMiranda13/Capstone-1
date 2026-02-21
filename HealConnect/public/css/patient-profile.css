@@ -67,18 +67,15 @@
     background-color: #fefefe;
     margin: auto;
     padding: 0;
-    border: 1px solid #888;
+    border: 1px solid #e2e8f0;
     width: 90%;
     max-width: 1000px;
     max-height: 90vh;
     overflow-y: auto;
+    overflow-x: hidden;
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     position: relative;
-    right: 0;
-    bottom: 0;
-    background: url('https://www.transparenttextures.com/patterns/cubes.png');
-    opacity: 0.1;
 }
 
 .header-content {
@@ -159,9 +156,8 @@
     align-items: center;
     gap: 1rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-    flex: 1 1 200px;
-    /* Allow cards to grow and shrink properly */
-    min-width: 180px;
+    flex: 1 1 120px;
+    min-width: 0;
 }
 
 .card-icon {
@@ -416,36 +412,171 @@
     margin-bottom: 0.5rem;
 }
 
-/* Modal specific */
+/* ===== MODAL-SPECIFIC OVERRIDES ===== */
+
+/* Modal wrapper */
+#patientModal .modal-content {
+    background: #ffffff !important;
+    border-radius: 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    max-width: 900px;
+    width: 95%;
+    max-height: 95vh;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+}
+
+/* Inner padding & background */
+.modal .patient-profile {
+    background-color: white !important;
+    padding: 0.75rem;
+    min-height: auto;
+}
+
+/* Container: full width in modal */
+.modal .patient-profile .container {
+    max-width: 100%;
+    padding: 0;
+}
+
+/* Header banner: compact & centered */
 .modal .profile-header-banner {
-    padding: 1.5rem 1.25rem;
-    margin-bottom: 1.5rem;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.modal .header-content {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.modal .profile-main-info {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
 }
 
 .modal .profile-pic {
-    width: 80px;
-    height: 80px;
+    width: 52px;
+    height: 52px;
 }
 
 .modal .profile-text h2 {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
+    margin: 0;
 }
 
-#patientModal .modal-content {
-    background: #ffffff !important;
-    background-color: #ffffff !important;
-    /* Double force */
-    border-radius: 20px;
-    overflow-y: auto;
-    position: relative;
-    max-width: 1000px;
-    width: 95%;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+.modal .patient-id-badge {
+    font-size: 0.75rem;
 }
 
-.modal .patient-profile {
-    background-color: white !important;
-    padding: 20px;
+.modal .header-actions .hc-btn {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.8rem;
+}
+
+/* Summary cards: compact single row */
+.modal .summary-grid {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.modal .summary-card {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0.6rem 0.75rem;
+    border-radius: 10px;
+    gap: 0.6rem;
+}
+
+.modal .card-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+    border-radius: 8px;
+}
+
+.modal .card-info .label {
+    font-size: 0.7rem;
+    white-space: nowrap;
+}
+
+.modal .card-info .value {
+    font-size: 0.9rem;
+}
+
+/* Content grid: two columns side-by-side to reduce scrolling */
+.modal .profile-content-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* Info sections: tighter */
+.modal .info-section {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border-radius: 12px;
+}
+
+.modal .info-section h3 {
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+}
+
+.modal .info-list {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+}
+
+.modal .info-label {
+    font-size: 0.7rem;
+}
+
+.modal .info-value {
+    font-size: 0.85rem;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+/* Health grid: tighter */
+.modal .health-grid {
+    gap: 0.6rem;
+}
+
+.modal .health-card {
+    padding: 0.6rem 0.75rem;
+}
+
+/* Appointment history - no fixed cap, show all entries */
+.modal .timeline {
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0.5rem;
+}
+
+.modal .timeline-item {
+    margin-bottom: 0.75rem;
+}
+
+.modal .timeline-content {
+    padding: 0.6rem 0.75rem;
+}
+
+.modal .tl-type,
+.modal .tl-date {
+    font-size: 0.8rem;
+}
+
+.modal .tl-note {
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
 }
 
 /* Close button for the specific patient modal */

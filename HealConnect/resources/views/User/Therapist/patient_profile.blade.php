@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 <div class="header-actions">
-                    <a href="{{ route('messages', ['receiver_id' => $patient->id]) }}" class="btn-message">
+                    <a href="{{ route('messages', ['receiver_id' => $patient->id]) }}" class="hc-btn hc-btn-primary">
                         <i class="fa-solid fa-comments"></i> Send Message
                     </a>
                 </div>

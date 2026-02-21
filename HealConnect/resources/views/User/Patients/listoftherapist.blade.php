@@ -7,56 +7,58 @@
 @endsection
 
 @section('content')
+<div class="page-header-row">
+    <h2 class="page-title-new">Verified Therapists & Clinics</h2>
+    <p class="page-subtitle">Browse and book appointments with verified mental health professionals</p>
+</div>
 <main class="Therapist-main">
-
-    {{-- Page Title --}}
-    <div class="ptlist">
-        <h2 class="therapist-title">VERIFIED THERAPISTS / CLINICS</h2>
-    </div>
     
     <div class="filters-wrapper">
 
         <div class="filters-left">
 
             {{-- Category Tabs --}}
-            <div class="filter-tabs">
-                <span class="service-label">Category:</span>
-                <a href="{{ route('patient.therapists') }}" 
-                    class="{{ request('category') == '' ? 'active' : '' }}">All</a> |
-                <a href="{{ route('patient.therapists', ['category' => 'independent']) }}" 
-                    class="{{ request('category') == 'independent' ? 'active' : '' }}">Independent</a> |
-                <a href="{{ route('patient.therapists', ['category' => 'clinic']) }}" 
-                    class="{{ request('category') == 'clinic' ? 'active' : '' }}">Clinic</a>
+            <div class="filter-row-inline">
+                <span class="service-label">Category</span>
+                <div class="hc-tabs-wrapper">
+                    <a href="{{ route('patient.therapists') }}" 
+                        class="hc-tab-item {{ request('category') == '' ? 'active' : '' }}">All</a>
+                    <a href="{{ route('patient.therapists', ['category' => 'independent']) }}" 
+                        class="hc-tab-item {{ request('category') == 'independent' ? 'active' : '' }}">Independent</a>
+                    <a href="{{ route('patient.therapists', ['category' => 'clinic']) }}" 
+                        class="hc-tab-item {{ request('category') == 'clinic' ? 'active' : '' }}">Clinic</a>
+                </div>
             </div>
 
             {{-- Services Tabs --}}
-            <div class="filter-services">
-                <span class="service-label">Services:</span>
-                <a href="{{ route('patient.therapists', ['service' => 'home']) }}" 
-                    class="{{ request('service') == 'home' ? 'active' : '' }}">In-home</a> |
-                <a href="{{ route('patient.therapists', ['service' => 'online']) }}" 
-                    class="{{ request('service') == 'online' ? 'active' : '' }}">Online</a> |
-                <a href="{{ route('patient.therapists', ['service' => 'clinic']) }}" 
-                    class="{{ request('service') == 'clinic' ? 'active' : '' }}">Clinic</a>
+            <div class="filter-row-inline">
+                <span class="service-label">Services</span>
+                <div class="hc-tabs-wrapper">
+                    <a href="{{ route('patient.therapists', ['service' => 'home']) }}" 
+                        class="hc-tab-item {{ request('service') == 'home' ? 'active' : '' }}">In-home</a>
+                    <a href="{{ route('patient.therapists', ['service' => 'online']) }}" 
+                        class="hc-tab-item {{ request('service') == 'online' ? 'active' : '' }}">Online</a>
+                    <a href="{{ route('patient.therapists', ['service' => 'clinic']) }}" 
+                        class="hc-tab-item {{ request('service') == 'clinic' ? 'active' : '' }}">Clinic</a>
+                </div>
             </div>
 
         </div>
 
         <div class="search-container">
             <form action="{{ route('patient.therapists') }}" method="GET" class="search-form">
-                <input type="text" 
-                       name="search" 
-                       placeholder="Search by name or specialization..." 
-                       value="{{ request('search') }}"
-                       class="search-input">
-
-                <button type="submit" class="search-btn">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
-
-                {{-- Advanced Filters Toggle --}}
+                <div class="search-input-wrap">
+                    <input type="text" 
+                           name="search" 
+                           placeholder="Search by name or specialization..." 
+                           value="{{ request('search') }}"
+                           class="search-input">
+                    <button type="submit" class="search-btn">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
                 <button type="button" class="filter-toggle-btn" onclick="toggleAdvancedFilters()">
-                    <i class="fa-solid fa-filter"></i> Filters
+                    <i class="fa-solid fa-sliders"></i> Filters
                 </button>
             </form>
         </div>
@@ -170,38 +172,44 @@
 
             @foreach($therapists as $therapist)
                 <div class="therapist-card">
-                    <div class="therapist-logo">
-                        @if($therapist->profile_picture)
-                            <img src="{{ asset('storage/' .$therapist->profile_picture) }}" alt="{{ $therapist->name }}">
-                        @else
-                            <img src="{{ asset('images/logo1.png') }}" alt="Default Therapist">
-                        @endif
-                    </div>
 
+                    {{-- Clinic Type Badge --}}
                     @if($therapist->role === 'clinic' && $therapist->clinic_type)
                         <span class="clinic-type-badge {{ $therapist->clinic_type }}">
                             {{ ucfirst($therapist->clinic_type) }}
                         </span>
                     @endif
 
-                    <h3 class="therapist-name">{{ $therapist->name }}</h3>
-                    <p class="therapist-role">{{ ucfirst($therapist->role_display) }}</p>
+                    {{-- Card Body --}}
+                    <div class="therapist-card-body">
+                        <div class="therapist-logo">
+                            @if($therapist->profile_picture)
+                                <img src="{{ asset('storage/' . $therapist->profile_picture) }}" alt="{{ $therapist->name }}">
+                            @else
+                                <img src="{{ asset('images/logo1.png') }}" alt="Default Therapist">
+                            @endif
+                        </div>
 
-                    <p class="therapist-description">
-                        {{ $therapist->description ?? 'A compassionate and dedicated therapist ready to assist you.' }}
-                    </p>
+                        <h3 class="therapist-name">{{ $therapist->name }}</h3>
+                        <p class="therapist-role">{{ ucfirst($therapist->role_display) }}</p>
 
-                    <p class="therapist-location">
-                        <i class="fa-solid fa-location-dot"></i>
-                        @if($therapist->city && $therapist->province)
-                            {{ $therapist->city }}, {{ $therapist->province }}
-                        @else
-                            {{ $therapist->address ?? 'Location not specified' }}
-                        @endif
-                    </p>
+                        <p class="therapist-description">
+                            {{ $therapist->description ?? 'A compassionate and dedicated therapist ready to assist you.' }}
+                        </p>
 
-                    <div class="card-spacer"></div>
-                    
+                        <p class="therapist-location">
+                            <i class="fa-solid fa-location-dot"></i>
+                            @if($therapist->city && $therapist->province)
+                                {{ $therapist->city }}, {{ $therapist->province }}
+                            @else
+                                {{ $therapist->address ?? 'Location not specified' }}
+                            @endif
+                        </p>
+
+                        <div class="card-spacer"></div>
+                    </div>
+
+                    {{-- Card Footer --}}
                     <div class="therapist-card-footer">
                         @if($therapist->availability->where('is_active', true)->count() > 0)
                             <span class="availability-status available">

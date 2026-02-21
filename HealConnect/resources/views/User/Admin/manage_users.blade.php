@@ -2,24 +2,31 @@
 
 @section('title', 'Admin Dashboard')
 @section('content')
-    <h2>Manage Users</h2>
-    <div class="filters mb-3">
-        <form method="GET" action="{{ route('admin.manage-users') }}" class="d-flex gap-2">
-            <input type="text" name="search" placeholder="Search users..." value="{{ request('search') }}">
-            <select name="role" onchange="this.form.submit()">
-                <option value="all" {{ request('role') == 'all' ? 'selected' : '' }}>All</option>
-                <option value="patient" {{ request('role') == 'patient' ? 'selected' : '' }}>Patients</option>
-                <option value="therapist" {{ request('role') == 'therapist' ? 'selected' : '' }}>Therapists</option>
-                <option value="clinic" {{ request('role') == 'clinic' ? 'selected' : '' }}>Clinics</option>
+    <div class="page-header-row">
+        <h2 class="page-title-new">Manage Users</h2>
+        <p class="page-subtitle">View, search, and manage all registered users</p>
+    </div>
+
+    <div class="search-filter-new">
+        <form method="GET" action="{{ route('admin.manage-users') }}" class="search-filter-form-new">
+            <div class="search-input-wrapper">
+                <i class="fa fa-search search-icon-inside"></i>
+                <input type="text" name="search" placeholder="Search users..." value="{{ request('search') }}" class="search-input-new">
+            </div>
+            <select name="role" class="filter-select-new" onchange="this.form.submit()">
+                <option value="all"      {{ request('role') == 'all'       ? 'selected' : '' }}>All Roles</option>
+                <option value="patient"  {{ request('role') == 'patient'   ? 'selected' : '' }}>Patients</option>
+                <option value="therapist"{{ request('role') == 'therapist' ? 'selected' : '' }}>Therapists</option>
+                <option value="clinic"   {{ request('role') == 'clinic'    ? 'selected' : '' }}>Clinics</option>
             </select>
-            <button type="submit" class="btn-search">
-                <i class="fa fa-search"></i>
+            <button type="submit" class="hc-btn hc-btn-primary hc-btn-search">
+                <i class="fa fa-search"></i> Search
             </button>
         </form>
     </div>
 
-    <div class="table-responsive">
-        <table class="user-table">
+    <div class="hc-table-container hc-table-responsive">
+        <table class="hc-table">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -44,10 +51,10 @@
                         <span class="role-badge">{{ ucfirst($user->role_display) }}</span>
                     </td>
                     <td>
-                        <span class="badge 
-                            @if($user->status == 'Pending') bg-warning
-                            @elseif($user->status == 'Active') bg-success
-                            @elseif($user->status == 'Declined') bg-danger
+                        <span class="hc-badge 
+                            @if($user->status == 'Pending') hc-badge-warning
+                            @elseif($user->status == 'Active') hc-badge-success
+                            @elseif($user->status == 'Declined') hc-badge-danger
                             @endif">
                         {{ $user->status }}
                         </span>

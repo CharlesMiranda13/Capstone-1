@@ -95,9 +95,8 @@
             @forelse ($appointments as $appointment)
                 <div class="appointment-item">
                     <p><strong>Patient:</strong> {{ $appointment->patient->name }}</p>
-                    <p><strong>Therapist:</strong> {{ $appointment->therapist->name ?? 'Unassigned' }}</p>
                     <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time)
-                                                ->format('F j, Y - g:i A') }}
+                                                ->format('F j, Y - g:i A') }}</p>
                     <p><strong>Type:</strong> {{ ucfirst($appointment->appointment_type) }}</p>
                 </div>
             @empty

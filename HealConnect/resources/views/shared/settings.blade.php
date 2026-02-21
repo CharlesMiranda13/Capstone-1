@@ -48,10 +48,10 @@
         @endif
 
         {{-- TAB NAVIGATION --}}
-        <div class="settings-tabs">
-            <button class="tab-link active" data-tab="profile">Profile</button>
-            <button class="tab-link" data-tab="personal">Personal Information</button>
-            <button class="tab-link" data-tab="security">Security</button>
+        <div class="hc-tabs-wrapper">
+            <button type="button" class="hc-tab-item tab-link active" data-tab="profile">Profile</button>
+            <button type="button" class="hc-tab-item tab-link" data-tab="personal">Personal Information</button>
+            <button type="button" class="hc-tab-item tab-link" data-tab="security">Security</button>
         </div>
 
         {{-- PROFILE TAB --}}
@@ -73,7 +73,7 @@
                             @error('profile_picture')
                                 <small class="error-message">{{ $message }}</small>
                             @enderror
-                            <button type="submit" class="submit-button primary-button">Upload</button>
+                            <button type="submit" class="hc-btn hc-btn-primary">Upload</button>
                         </div>
                     </div>
                 </form>
@@ -89,7 +89,7 @@
                         <textarea name="description" id="description" rows="10">{{ old('description', Auth::user()->description) }}</textarea>
                     </div>
 
-                    <button type="submit" class="submit-button success-button">Save Bio</button>
+                    <button type="submit" class="hc-btn hc-btn-success">Save Bio</button>
                 </form>
                 @endif
 
@@ -100,7 +100,7 @@
         <div id="personal" class="tab-content">
             <div class="scard">
                 <h4 class="section-title">Personal Information</h4>
-                <form action="{{ route($role . '.update.info') }}" method="POST">
+                <form action="{{ route($role . '.update.info') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -169,18 +169,46 @@
                             @foreach($specializations as $spec)
                                 <div class="specialization-item" style="display:flex; gap:10px; margin-bottom:8px;">
                                     <input type="text" name="specialization[]" class="specialization-input" value="{{ $spec }}">
-                                    <button type="button" class="remove-spec" style="background:#dc3545;color:white;border:none;padding:6px 10px;border-radius:6px;">X</button>
+                                    <button type="button" class="remove-spec hc-icon-btn hc-btn-danger" style="border:none;">
+                                        <i class="fa fa-times"></i>
+                                    </button>
                                 </div>
                             @endforeach
                         </div>
 
-                        <button type="button" id="add-specialization" 
-                            style="margin-top:8px;background:#198754;color:white;border:none;padding:7px 15px;border-radius:6px;">
-                            + Add Specialization
+                        <button type="button" id="add-specialization" class="hc-btn hc-btn-outline">
+                            <i class="fa fa-plus"></i> Add Specialization
                         </button>
                     </div>
+
+                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+                    <h5 style="margin-bottom: 15px; color: #666;">Verification Documents</h5>
+
+                    <div class="form-group">
+                        <label for="license">Clinic License / DOH Accreditation</label>
+                        <input type="file" name="license" id="license" accept=".jpg, .jpeg, .png, .pdf">
+                        @if(Auth::user()->license_path)
+                            <small class="text-success" style="display:block; margin-top:5px;">
+                                <i class="fa fa-check-circle"></i> Document uploaded. 
+                                <a href="{{ asset('storage/' . Auth::user()->license_path) }}" target="_blank" style="color: #0d6efd; text-decoration: underline;">View Current</a>
+                            </small>
+                        @endif
+                    </div>
+
+                    @if($role === 'clinic')
+                    <div class="form-group">
+                        <label for="Business">Business Permit</label>
+                        <input type="file" name="Business" id="Business" accept=".jpg, .jpeg, .png, .pdf">
+                        @if(Auth::user()->business_permit_path)
+                            <small class="text-success" style="display:block; margin-top:5px;">
+                                <i class="fa fa-check-circle"></i> Document uploaded.
+                                <a href="{{ asset('storage/' . Auth::user()->business_permit_path) }}" target="_blank" style="color: #0d6efd; text-decoration: underline;">View Current</a>
+                            </small>
+                        @endif
+                    </div>
                     @endif
-                    <button type="submit" class="submit-button success-button">Save Changes</button>
+                    @endif
+                    <button type="submit" class="hc-btn hc-btn-success">Save Changes</button>
                 </form>
             </div>
         </div>
@@ -208,7 +236,7 @@
                         <input type="password" name="new_password_confirmation" id="new_password_confirmation" required>
                     </div>
 
-                    <button type="submit" class="submit-button warning-button">Update Password</button>
+                    <button type="submit" class="hc-btn hc-btn-primary">Update Password</button>
                 </form>
             </div>
         </div>

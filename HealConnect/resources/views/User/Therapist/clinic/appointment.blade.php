@@ -8,17 +8,22 @@
 @endsection
 
 @section('content')
-<main class="appointments-main">
-    <div class="container">
-        <h2 class="page-title">Clinic Appointments</h2>
+<div class="bg-white rounded-4 shadow-sm p-4 w-100">
+        <div class="page-header-row">
+            <h2 class="page-title-new">Clinic Appointments</h2>
+            <p class="page-subtitle">View and manage appointments for your clinic's therapists</p>
+        </div>
 
         {{-- Search & Filter --}}
-        <div class="search-filter">
-            <form method="GET" action="{{ route('clinic.appointments') }}" class="search-filter-form">
-                <input type="text" name="search" placeholder="Search by patient name or type..."
-                    value="{{ request('search') }}" class="search-input">
+        <div class="search-filter-new">
+            <form method="GET" action="{{ route('clinic.appointments') }}" class="search-filter-form-new">
+                <div class="search-input-wrapper">
+                    <i class="fa fa-search search-icon-inside"></i>
+                    <input type="text" name="search" placeholder="Search by patient name or type..."
+                        value="{{ request('search') }}" class="search-input-new">
+                </div>
 
-                <select name="status" class="filter-select" onchange="this.form.submit()">
+                <select name="status" class="filter-select-new" onchange="this.form.submit()">
                     <option value="">All Status</option>
                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                     <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
@@ -26,15 +31,14 @@
                     <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
                 </select>
 
-                <select name="type" class="filter-select" onchange="this.form.submit()">
+                <select name="type" class="filter-select-new" onchange="this.form.submit()">
                     <option value="">All Types</option>
                     <option value="in-person" {{ request('type') == 'in-person' ? 'selected' : '' }}>In-Person</option>
                     <option value="online" {{ request('type') == 'online' ? 'selected' : '' }}>Online</option>
                 </select>
 
-
-                <button type="submit" class="btn-search">
-                    <i class="fa fa-search"></i>
+                <button type="submit" class="hc-btn hc-btn-primary hc-btn-search">
+                    <i class="fa fa-search"></i> Search
                 </button>
             </form>
         </div>
@@ -48,8 +52,8 @@
         @if($appointments->isEmpty())
             <p class="empty-message">No appointments yet.</p>
         @else
-            <div class="table-container">
-                <table class="appointments-table">
+            <div class="hc-table-container hc-table-responsive">
+                <table class="hc-table">
                     <thead>
                         <tr>
                             <th>Patient</th>
@@ -92,21 +96,21 @@
                                             <i class="fa fa-sticky-note" title="Notes: {{ $appointment->notes }}"></i>
                                         @endif
                                         @if($appointment->referral)
-                                            <a href="{{ asset('storage/referrals/' . $appointment->referral) }}" target="_blank" title="View Referral">
+                                            <a href="{{ route('clinic.referral.view', $appointment->id) }}" class="hc-icon-btn" title="View Referral">
                                                 <i class="fa fa-file-medical"></i>
                                             </a>
                                         @endif
-                                        <button class="openModalBtn icon-btn" data-link="{{ route('clinic.patients.profile', ['id' => $appointment->patient->id, 'embed' => 1]) }}" title="View Profile">
+                                        <button class="openModalBtn hc-icon-btn" data-link="{{ route('clinic.patients.profile', ['id' => $appointment->patient->id, 'embed' => 1]) }}" title="View Profile">
                                             <i class="fa fa-user-circle"></i>
                                         </button>
                                     </div>
                                 </td>
                                 <td data-label="Status">
-                                    <span class="status-badge 
-                                        @if($appointment->status == 'pending') status-pending
-                                        @elseif($appointment->status == 'approved') status-approved
-                                        @elseif($appointment->status == 'rejected') status-rejected
-                                        @elseif($appointment->status == 'completed') status-completed
+                                    <span class="hc-badge 
+                                        @if($appointment->status == 'pending') hc-badge-warning
+                                        @elseif($appointment->status == 'approved') hc-badge-success
+                                        @elseif($appointment->status == 'rejected') hc-badge-danger
+                                        @elseif($appointment->status == 'completed') hc-badge-info
                                         @endif">
                                         {{ ucfirst($appointment->status) }}
                                     </span>
@@ -116,7 +120,7 @@
                                         <form action="{{ route('clinic.appointments.updateStatus', $appointment->id) }}" method="POST" class="status-form">
                                             @csrf
                                             @method('PATCH')
-                                            <select name="status" class="status-control" onchange="this.form.submit()">
+                                            <select name="status" class="hc-status-select" onchange="this.form.submit()">
                                                 <option value="" disabled selected>Update</option>
                                                 <option value="approved">Approve</option>
                                                 <option value="rejected">Reject</option>
@@ -133,16 +137,17 @@
                 </table>
             </div>
         @endif
-    </div>
 
-    <!-- Move modal outside of main container logic -->
+</div>
+    <!-- Patient Profile Modal -->
     <div id="patientModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
             <div id="modal-body"></div>
         </div>
     </div>
-</main>
+@endsection
+
 @section('scripts')
 <script>
     // Ensure modal transparency is fixed project-wide for this view
@@ -157,44 +162,4 @@
         }
     });
 </script>
-
-<style>
-    /* Absolute forcing of modal transparency fix */
-    #patientModal, .modal {
-        background-color: rgba(0, 0, 0, 0.7) !important;
-    }
-    
-    #patientModal .modal-content {
-        background-color: #ffffff !important;
-        background: #ffffff !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
-    }
-
-    #modal-body, .patient-profile {
-        background-color: #ffffff !important;
-        opacity: 1 !important;
-    }
-
-    /* Search Bar Alignment Fix */
-    .search-filter-form {
-        display: flex !important;
-        align-items: center !important;
-        gap: 10px !important;
-    }
-
-    .search-input, .filter-select, .btn-search {
-        height: 45px !important;
-        margin: 0 !important;
-        box-sizing: border-box !important;
-        display: flex !important;
-        align-items: center !important;
-    }
-
-    .btn-search {
-        justify-content: center !important;
-        padding: 0 20px !important;
-    }
-</style>
 @endsection

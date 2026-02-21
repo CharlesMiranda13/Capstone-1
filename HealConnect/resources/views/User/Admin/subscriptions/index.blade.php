@@ -43,10 +43,10 @@
     <!-- Plan Distribution -->
     <div class="plan-distribution">
         <div class="plan-card">
-            <h5>Pro Solo: <span class="badge badge-primary">{{ $stats['pro_solo'] }}</span></h5>
+            <h5>Pro Solo: <span class="hc-badge hc-badge-info">{{ $stats['pro_solo'] }}</span></h5>
         </div>
         <div class="plan-card">
-            <h5>Pro Clinic: <span class="badge badge-info">{{ $stats['pro_clinic'] }}</span></h5>
+            <h5>Pro Clinic: <span class="hc-badge hc-badge-info">{{ $stats['pro_clinic'] }}</span></h5>
         </div>
     </div>
 
@@ -78,7 +78,8 @@
     <!-- Subscriptions Table -->
     <div class="table-card">
         <div class="table-card-body">
-            <table class="subscription-table">
+            <div class="hc-table-container hc-table-responsive">
+                <table class="hc-table">
                 <thead>
                     <tr>
                         <th>User</th>
@@ -95,15 +96,15 @@
                     <tr>
                         <td>{{ $subscription->name }}</td>
                         <td>{{ $subscription->email }}</td>
-                        <td><span class="badge badge-secondary">{{ ucfirst($subscription->role_display) }}</span></td>
-                        <td><span class="badge badge-primary">{{ ucfirst($subscription->plan) }}</span></td>
+                        <td><span class="hc-badge hc-badge-info">{{ ucfirst($subscription->role_display) }}</span></td>
+                        <td><span class="hc-badge hc-badge-info">{{ ucfirst($subscription->plan) }}</span></td>
                         <td>
                             @if($subscription->subscription_status == 'active')
-                                <span class="badge badge-success">Active</span>
+                                <span class="hc-badge hc-badge-success">Active</span>
                             @elseif($subscription->subscription_status == 'expired')
-                                <span class="badge badge-danger">Expired</span>
+                                <span class="hc-badge hc-badge-danger">Expired</span>
                             @else
-                                <span class="badge badge-warning">Inactive</span>
+                                <span class="hc-badge hc-badge-warning">Inactive</span>
                             @endif
                         </td>
                         <td>{{ $subscription->subscription_started_at ? $subscription->subscription_started_at->format('M d, Y') : 'N/A' }}</td>
@@ -120,6 +121,7 @@
                     @endforelse
                 </tbody>
             </table>
+        </div>
 
             <!-- Pagination -->
             @if($subscriptions->hasPages())

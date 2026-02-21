@@ -33,14 +33,17 @@
     </div>
 
     {{-- Settings Container --}}
+    <div class="page-header-row">
+        <h2 class="page-title-new">Admin Settings</h2>
+        <p class="page-subtitle">Configure platform settings, legal content, and account security</p>
+    </div>
     <div class="settings-container">
-        <h2>Admin Settings</h2>
 
         {{-- Tab Navigation --}}
-        <div class="settings-tabs">
-            <button class="tab-link active" data-tab="general">General</button>
-            <button class="tab-link" data-tab="legal">Legal & Compliance</button>
-            <button class="tab-link" data-tab="security">Security</button>
+        <div class="hc-tabs-wrapper">
+            <button type="button" class="hc-tab-item tab-link active" data-tab="general">General</button>
+            <button type="button" class="hc-tab-item tab-link" data-tab="legal">Legal & Compliance</button>
+            <button type="button" class="hc-tab-item tab-link" data-tab="security">Security</button>
         </div>
 
         {{-- Settings Form --}}

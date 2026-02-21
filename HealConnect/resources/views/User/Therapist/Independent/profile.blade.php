@@ -8,11 +8,12 @@
 
 @section('content')
 <main class="therapist-profile">
-    <div class="container">
+    <div class="w-100">
 
         {{-- HEADER --}}
-        <div class="header">
-            <h2>Your Profile</h2>
+        <div class="page-header-row">
+            <h2 class="page-title-new">Your Profile</h2>
+            <p class="page-subtitle">Manage your professional information and availability</p>
         </div>
 
         {{-- PROFILE CARD --}}

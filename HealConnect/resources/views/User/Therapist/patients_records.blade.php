@@ -24,34 +24,46 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/client.css') }}">
+<!-- Font Awesome for EMR Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 @endsection
 
 @section('content')
-<main class="therapist-patient-records">
+<main class="therapist-patient-records {{ $user->role === 'patient' ? 'patient-portal-view' : '' }}">
     <div class="container">
         {{-- Success Message --}}
         @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+            <div class="alert alert-success mt-3 mb-4">{{ session('success') }}</div>
         @endif
 
-        {{-- Header --}}
-        <div class="header">
-            <h2>{{ $patient->name }}'s Medical Records</h2>
-            <p class="subtitle">Review and manage electronic health information below.</p>
+        {{-- Patient Banner - Professional EMR Style --}}
+        <div class="patient-banner">
+            <div class="patient-banner-avatar">
+                {{ strtoupper(substr($patient->name, 0, 1)) }}
+            </div>
+            <div class="patient-banner-info">
+                <div class="d-flex align-items-center mb-1">
+                    <h2 class="mb-0">{{ $user->role === 'patient' ? 'My Health Profile' : $patient->name }}</h2>
+                    <span class="hc-badge hc-badge-success ms-3">{{ $user->role === 'patient' ? 'Verified Account' : 'Active Patient' }}</span>
+                </div>
+                <div class="patient-banner-meta">
+                    <span><i class="far fa-user me-2"></i>{{ ucfirst($patient->gender ?? 'N/A') }}</span>
+                    <span><i class="far fa-calendar-alt me-2"></i>Age: {{ $patient->age ?? 'N/A' }}</span>
+                    <span><i class="far fa-envelope me-2"></i>{{ $patient->email }}</span>
+                    <span><i class="fas fa-id-card me-2"></i>ID: #{{ $patient->id }}</span>
+                </div>
+            </div>
         </div>
 
-        {{-- EHR Section --}}
-        <section class="record-section">
-            <div class="section-header">
-                <h3>🩺 Electronic Health Record (EHR)</h3>
-                <p class="text-muted">Comprehensive patient information — diagnosis, allergies, medications, and more.</p>
+        {{-- === EHR SECTION === --}}
+        <section class="emr-section">
+            <div class="emr-section-header">
+                <h3><i class="fas fa-notes-medical text-primary"></i> Electronic Health Record</h3>
             </div>
 
-            {{-- EHR Display --}}
-            <div class="record-display card">
+            <div class="emr-card">
                 @if (!empty($ehr))
                     @php
-                        // Parse the EHR text into individual fields
                         $ehrLines = explode("\n", $ehr);
                         $ehrData = [];
                         foreach ($ehrLines as $line) {
@@ -61,263 +73,184 @@
                             }
                         }
                     @endphp
-                    <div class="ehr-grid">
-                        <div><strong>Diagnosis:</strong> {{ $ehrData['Diagnosis'] ?? '—' }}</div>
-                        <div><strong>Allergies:</strong> {{ $ehrData['Allergies'] ?? '—' }}</div>
-                        <div><strong>Medications:</strong> {{ $ehrData['Medications'] ?? '—' }}</div>
-                        <div><strong>Medical History:</strong> {{ $ehrData['Medical History'] ?? '—' }}</div>
-                        <div><strong>Notes:</strong> {{ $ehrData['Notes'] ?? '—' }}</div>
+                    <div class="emr-records-grid">
+                        <div class="record-panel">
+                            <label>Primary Diagnosis</label>
+                            <div class="content">{{ $ehrData['Diagnosis'] ?? 'No diagnosis recorded' }}</div>
+                        </div>
+                        <div class="record-panel">
+                            <label>Allergies & Sensitivities</label>
+                            <div class="content">{{ $ehrData['Allergies'] ?? 'None documented' }}</div>
+                        </div>
+                        <div class="record-panel">
+                            <label>Active Medications</label>
+                            <div class="content">{{ $ehrData['Medications'] ?? 'No medications listed' }}</div>
+                        </div>
+                        <div class="record-panel">
+                            <label>Medical History</label>
+                            <div class="content">{{ $ehrData['Medical History'] ?? 'No history provided' }}</div>
+                        </div>
                     </div>
                 @else
-                    <p class="text-muted">No EHR record found. Your therapist will add information during your sessions.</p>
-                @endif
-            </div>
-
-            {{-- Update Form --}}
-            @if($user->role === 'therapist' || $user->role === 'clinic')
-            <form action="{{ route('therapist.ehr.update', $patient->id) }}" method="POST" class="update-form mt-4">
-                @csrf
-                @method('PUT')
-                <h4>Update EHR</h4>
-
-                {{-- Validation Errors --}}
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
+                    <div class="text-center py-4">
+                        <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Missing patient health record data.</p>
                     </div>
                 @endif
 
-                <div class="form-grid">
-                    <label>Diagnosis</label>
-                    <input type="text" name="diagnosis" value="" class="form-control">
-
-                    <label>Allergies</label>
-                    <input type="text" name="allergies" value="" class="form-control">
-
-                    <label>Medications</label>
-                    <textarea name="medications" rows="2" class="form-control"></textarea>
-
-                    <label>Medical History</label>
-                    <textarea name="medical_history" rows="2" class="form-control"></textarea>
-
-                    <label>Additional Notes</label>
-                    <textarea name="notes" rows="3" class="form-control"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary mt-3">Save / Update EHR</button>
-            </form>
-            @endif
+                @if($user->role === 'therapist' || $user->role === 'clinic')
+                    <div class="mt-4 pt-4 border-top">
+                        <h4 class="mb-3">Update EHR Data</h4>
+                        <form action="{{ route('therapist.ehr.update', $patient->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <div class="row">
+                                <div class="col-md-6 emr-form-group">
+                                    <label>Diagnosis</label>
+                                    <input type="text" name="diagnosis" value="{{ $ehrData['Diagnosis'] ?? '' }}" class="emr-input" placeholder="e.g. Major Depressive Disorder">
+                                </div>
+                                <div class="col-md-6 emr-form-group">
+                                    <label>Allergies</label>
+                                    <input type="text" name="allergies" value="{{ $ehrData['Allergies'] ?? '' }}" class="emr-input" placeholder="e.g. Penicillin">
+                                </div>
+                                <div class="col-12 emr-form-group">
+                                    <label>Medications</label>
+                                    <textarea name="medications" rows="2" class="emr-input" placeholder="List active medications...">{{ $ehrData['Medications'] ?? '' }}</textarea>
+                                </div>
+                                <div class="col-12 emr-form-group">
+                                    <label>Additional Notes</label>
+                                    <textarea name="notes" rows="2" class="emr-input" placeholder="Confidential medical notes...">{{ $ehrData['Notes'] ?? '' }}</textarea>
+                                </div>
+                            </div>
+                            <button type="submit" class="hc-btn hc-btn-primary mt-2">Update Electronic Record</button>
+                        </form>
+                    </div>
+                @endif
+            </div>
         </section>
 
-        <hr>
-
         {{-- === TREATMENT PLAN === --}}
-        <section class="record-section">
-            <div class="section-header">
-                <h3>💊 Treatment Plan</h3>
-                <p class="text-muted">Track and update ongoing treatment strategies.</p>
+        <section class="emr-section">
+            <div class="emr-section-header">
+                <h3><i class="fas fa-clipboard-list text-success"></i> Comprehensive Treatment Plan</h3>
             </div>
 
-            {{-- Display with Pagination --}}
-            <div class="record-display card">
+            <div class="emr-card">
                 @if (!empty($therapies))
                     @php
-                        // Split by double newlines to get individual entries
                         $therapyEntries = array_filter(explode("\n\n", $therapies));
-                        $perPage = 5; // Show 5 entries per page
+                        $perPage = 5;
                         $currentPage = request()->get('therapy_page', 1);
                         $totalEntries = count($therapyEntries);
                         $totalPages = ceil($totalEntries / $perPage);
-                        $currentPage = max(1, min($currentPage, $totalPages)); // Ensure valid page
-                        
+                        $currentPage = max(1, min($currentPage, $totalPages));
                         $offset = ($currentPage - 1) * $perPage;
                         $currentEntries = array_slice($therapyEntries, $offset, $perPage);
                     @endphp
                     
-                    <div id="treatment-content">
+                    <div class="treatment-list mb-4">
                         @foreach ($currentEntries as $therapy)
-                            <div class="treatment-entry">
+                            <div class="treatment-entry p-3 bg-light border-start border-success border-4 rounded mb-3">
                                 {{ $therapy }}
                             </div>
                         @endforeach
                     </div>
 
-                    {{-- Pagination Controls --}}
                     @if ($totalPages > 1)
-                        <div class="pagination-container">
-                            <div class="pagination-info">
-                                Showing {{ $offset + 1 }}-{{ min($offset + $perPage, $totalEntries) }} of {{ $totalEntries }} entries
-                            </div>
+                        <div class="pagination-container border-0 bg-light p-2 rounded">
+                            <div class="pagination-info">Showing {{ $offset + 1 }}-{{ min($offset + $perPage, $totalEntries) }} of {{ $totalEntries }}</div>
                             <div class="pagination-controls">
-                                <button 
-                                    class="pagination-btn" 
-                                    onclick="window.location.href='?therapy_page={{ $currentPage - 1 }}&progress_page={{ request()->get('progress_page', 1) }}#treatment-plan'"
-                                    {{ $currentPage <= 1 ? 'disabled' : '' }}>
-                                    Previous
-                                </button>
-                                
-                                @php
-                                    $range = 2; // Show 2 pages on each side of current page
-                                    $start = max(1, $currentPage - $range);
-                                    $end = min($totalPages, $currentPage + $range);
-                                @endphp
-                                
-                                @if($start > 1)
-                                    <button class="pagination-btn" onclick="window.location.href='?therapy_page=1&progress_page={{ request()->get('progress_page', 1) }}#treatment-plan'">1</button>
-                                    @if($start > 2)
-                                        <span class="pagination-ellipsis">...</span>
-                                    @endif
-                                @endif
-                                
-                                @for($i = $start; $i <= $end; $i++)
-                                    <button 
-                                        class="pagination-btn {{ $i == $currentPage ? 'active' : '' }}" 
-                                        onclick="window.location.href='?therapy_page={{ $i }}&progress_page={{ request()->get('progress_page', 1) }}#treatment-plan'">
-                                        {{ $i }}
-                                    </button>
-                                @endfor
-                                
-                                @if($end < $totalPages)
-                                    @if($end < $totalPages - 1)
-                                        <span class="pagination-ellipsis">...</span>
-                                    @endif
-                                    <button class="pagination-btn" onclick="window.location.href='?therapy_page={{ $totalPages }}&progress_page={{ request()->get('progress_page', 1) }}#treatment-plan'">{{ $totalPages }}</button>
-                                @endif
-                                
-                                <button 
-                                    class="pagination-btn" 
-                                    onclick="window.location.href='?therapy_page={{ $currentPage + 1 }}&progress_page={{ request()->get('progress_page', 1) }}#treatment-plan'"
-                                    {{ $currentPage >= $totalPages ? 'disabled' : '' }}>
-                                    Next
-                                </button>
+                                <button class="pagination-btn {{ $currentPage <= 1 ? 'disabled' : '' }}" onclick="window.location.href='?therapy_page={{ $currentPage - 1 }}#treatment-plan'">Prev</button>
+                                <button class="pagination-btn active">{{ $currentPage }}</button>
+                                <button class="pagination-btn {{ $currentPage >= $totalPages ? 'disabled' : '' }}" onclick="window.location.href='?therapy_page={{ $currentPage + 1 }}#treatment-plan'">Next</button>
                             </div>
                         </div>
                     @endif
                 @else
-                    <p class="text-muted">No treatment plan recorded yet. Your therapist will add this information.</p>
+                    <p class="text-muted text-center py-3">No active treatment strategies defined.</p>
+                @endif
+
+                @if($user->role === 'therapist' || $user->role === 'clinic')
+                    <div class="mt-4 pt-4 border-top" id="treatment-plan">
+                        <h4 class="mb-3">Append Treatment Strategy</h4>
+                        <form action="{{ route('therapist.treatment.update', $patient->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <div class="row">
+                                <div class="col-md-4 emr-form-group">
+                                    <label>Session Date</label>
+                                    <input type="date" name="session_date" class="emr-input" required>
+                                </div>
+                                <div class="col-md-8 emr-form-group">
+                                    <label>Strategy / Goal Description</label>
+                                    <input type="text" name="description" class="emr-input" placeholder="e.g. Cognitive Behavioral Therapy - Phase 1" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="hc-btn hc-btn-primary" style="background-color: #059669;">Log Treatment Strategy</button>
+                        </form>
+                    </div>
                 @endif
             </div>
-
-            {{-- Update Form --}}
-            @if($user->role === 'therapist' || $user->role === 'clinic')
-            <form action="{{ route('therapist.treatment.update', $patient->id) }}" method="POST" class="update-form mt-4" id="treatment-plan">
-                @csrf
-                @method('PUT')
-                <h4>Add / Update Treatment Plan</h4>
-                <div class="form-grid">
-                    <label>Date</label>
-                    <input type="date" name="session_date" class="form-control" required>
-
-                    <label>Description</label>
-                    <textarea name="description" rows="3" class="form-control" placeholder="Describe the treatment plan..." required></textarea>
-                </div>
-                <button type="submit" class="btn btn-success mt-3">Save Treatment Plan</button>
-            </form>
-            @endif
         </section>
 
-        <hr>
-
         {{-- === PROGRESS NOTES === --}}
-        <section class="record-section">
-            <div class="section-header">
-                <h3>📘 Progress Notes</h3>
-                <p class="text-muted">Document patient's progress and follow-up evaluations.</p>
+        <section class="emr-section">
+            <div class="emr-section-header">
+                <h3><i class="fas fa-history text-info"></i> Clinical Progress Notes</h3>
             </div>
 
-            {{-- Display with Pagination --}}
-            <div class="record-display card">
+            <div class="emr-card">
                 @if (!empty($exercises))
                     @php
-                        // Split by double newlines to get individual entries
                         $progressEntries = array_filter(explode("\n\n", $exercises));
-                        $perPageProgress = 5; // Show 5 entries per page
+                        $perPageProgress = 5;
                         $currentProgressPage = request()->get('progress_page', 1);
                         $totalProgressEntries = count($progressEntries);
                         $totalProgressPages = ceil($totalProgressEntries / $perPageProgress);
-                        $currentProgressPage = max(1, min($currentProgressPage, $totalProgressPages)); // Ensure valid page
-                        
+                        $currentProgressPage = max(1, min($currentProgressPage, $totalProgressPages));
                         $progressOffset = ($currentProgressPage - 1) * $perPageProgress;
                         $currentProgressEntries = array_slice($progressEntries, $progressOffset, $perPageProgress);
                     @endphp
                     
-                    <div id="progress-content">
+                    <div class="timeline ps-4 mt-2">
                         @foreach ($currentProgressEntries as $progress)
-                            <div class="progress-entry">
-                                {{ $progress }}
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <span class="timeline-date"><i class="far fa-clock me-1"></i> Recorded Entry</span>
+                                    <div class="content">{{ $progress }}</div>
+                                </div>
                             </div>
                         @endforeach
                     </div>
 
-                    {{-- Pagination Controls --}}
                     @if ($totalProgressPages > 1)
-                        <div class="pagination-container">
-                            <div class="pagination-info">
-                                Showing {{ $progressOffset + 1 }}-{{ min($progressOffset + $perPageProgress, $totalProgressEntries) }} of {{ $totalProgressEntries }} entries
-                            </div>
+                        <div class="pagination-container border-0 bg-light p-2 rounded mt-3">
+                            <div class="pagination-info">Page {{ $currentProgressPage }} of {{ $totalProgressPages }}</div>
                             <div class="pagination-controls">
-                                <button 
-                                    class="pagination-btn" 
-                                    onclick="window.location.href='?therapy_page={{ request()->get('therapy_page', 1) }}&progress_page={{ $currentProgressPage - 1 }}#progress-notes'"
-                                    {{ $currentProgressPage <= 1 ? 'disabled' : '' }}>
-                                    Previous
-                                </button>
-                                
-                                @php
-                                    $progressRange = 2; // Show 2 pages on each side of current page
-                                    $progressStart = max(1, $currentProgressPage - $progressRange);
-                                    $progressEnd = min($totalProgressPages, $currentProgressPage + $progressRange);
-                                @endphp
-                                
-                                @if($progressStart > 1)
-                                    <button class="pagination-btn" onclick="window.location.href='?therapy_page={{ request()->get('therapy_page', 1) }}&progress_page=1#progress-notes'">1</button>
-                                    @if($progressStart > 2)
-                                        <span class="pagination-ellipsis">...</span>
-                                    @endif
-                                @endif
-                                
-                                @for($i = $progressStart; $i <= $progressEnd; $i++)
-                                    <button 
-                                        class="pagination-btn {{ $i == $currentProgressPage ? 'active' : '' }}" 
-                                        onclick="window.location.href='?therapy_page={{ request()->get('therapy_page', 1) }}&progress_page={{ $i }}#progress-notes'">
-                                        {{ $i }}
-                                    </button>
-                                @endfor
-                                
-                                @if($progressEnd < $totalProgressPages)
-                                    @if($progressEnd < $totalProgressPages - 1)
-                                        <span class="pagination-ellipsis">...</span>
-                                    @endif
-                                    <button class="pagination-btn" onclick="window.location.href='?therapy_page={{ request()->get('therapy_page', 1) }}&progress_page={{ $totalProgressPages }}#progress-notes'">{{ $totalProgressPages }}</button>
-                                @endif
-                                
-                                <button 
-                                    class="pagination-btn" 
-                                    onclick="window.location.href='?therapy_page={{ request()->get('therapy_page', 1) }}&progress_page={{ $currentProgressPage + 1 }}#progress-notes'"
-                                    {{ $currentProgressPage >= $totalProgressPages ? 'disabled' : '' }}>
-                                    Next
-                                </button>
+                                <button class="pagination-btn {{ $currentProgressPage <= 1 ? 'disabled' : '' }}" onclick="window.location.href='?progress_page={{ $currentProgressPage - 1 }}#progress-notes'">Prev</button>
+                                <button class="pagination-btn {{ $currentProgressPage >= $totalProgressPages ? 'disabled' : '' }}" onclick="window.location.href='?progress_page={{ $currentProgressPage + 1 }}#progress-notes'">Next</button>
                             </div>
                         </div>
                     @endif
                 @else
-                    <p class="text-muted">No progress notes recorded yet. Your therapist will document your progress during sessions.</p>
+                    <p class="text-muted text-center py-3">No progress notes archived for this patient.</p>
+                @endif
+
+                @if($user->role === 'therapist' || $user->role === 'clinic')
+                    <div class="mt-4 pt-4 border-top" id="progress-notes">
+                        <h4 class="mb-3">New Progress Observation</h4>
+                        <form action="{{ route('therapist.progress.update', $patient->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <div class="emr-form-group">
+                                <textarea name="notes" rows="3" class="emr-input" placeholder="Document clinical observations, mood status, and progress towards goals..." required></textarea>
+                            </div>
+                            <button type="submit" class="hc-btn hc-btn-primary" style="background-color: #0ea5e9;">Archive Progress Note</button>
+                        </form>
+                    </div>
                 @endif
             </div>
-
-            {{-- Update Form --}}
-            @if($user->role === 'therapist' || $user->role === 'clinic')
-            <form action="{{ route('therapist.progress.update', $patient->id) }}" method="POST" class="update-form mt-4" id="progress-notes">
-                @csrf
-                @method('PUT')
-                <h4>Add Progress Note</h4>
-                <textarea name="notes" rows="3" class="form-control" placeholder="Enter progress observation..." required></textarea>
-                <button type="submit" class="btn btn-info mt-3">Save Progress Note</button>
-            </form>
-            @endif
         </section>
 
     </div>

@@ -1,17 +1,10 @@
 /* Base Styles */
 .appointments-page {
-    margin-left: 250px;
-    padding: 2rem;
-    min-height: 100vh;
-    transition: margin-left 0.3s ease;
+    padding: 0;
 }
 
 .appointments-container {
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 2rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    overflow: hidden; /* Prevent content overflow */
+    width: 100%;
 }
 
 .appointments-container h2 {
@@ -178,7 +171,6 @@
 /* Tablet and Below (991px and below) - When sidebar becomes hidden */
 @media (max-width: 991px) {
     .appointments-page {
-        margin-left: 0;
         padding: 1.5rem;
     }
 }
@@ -209,10 +201,9 @@
 /* Mobile Landscape (481px - 767px) */
 @media (max-width: 767px) {
     .appointments-page {
-        margin-left: 0;
         padding: 1rem;
     }
-    
+
     .appointments-container {
         padding: 1rem;
         border-radius: 12px;
@@ -222,17 +213,17 @@
         margin: 0 -1rem;
         padding: 0 1rem;
     }
-    
+
     .appointments-container h2 {
         font-size: 1.4rem;
         margin-bottom: 20px;
     }
-    
+
     .appointments-container table {
         min-width: 650px;
         font-size: 0.9rem;
     }
-    
+
     .appointments-container th,
     .appointments-container td {
         padding: 10px 8px;
@@ -270,10 +261,9 @@
 /* Mobile Portrait (320px - 480px) - Card Layout */
 @media (max-width: 480px) {
     .appointments-page {
-        margin-left: 0;
         padding: 0.75rem;
     }
-    
+
     .appointments-container {
         padding: 0.75rem;
         border-radius: 10px;
@@ -284,7 +274,7 @@
         padding: 0;
         overflow-x: visible;
     }
-    
+
     .appointments-container h2 {
         font-size: 1.2rem;
         margin-bottom: 15px;
@@ -350,7 +340,7 @@
         padding: 0.25rem 0.5rem;
         font-size: 0.7rem;
     }
-    
+
     .alert {
         padding: 10px;
         font-size: 0.85rem;
@@ -361,7 +351,7 @@
         font-size: 1rem;
         flex-shrink: 0;
     }
-    
+
     .btn-sm {
         padding: 6px 10px;
         font-size: 0.8rem;

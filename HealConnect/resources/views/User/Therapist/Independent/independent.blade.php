@@ -64,31 +64,36 @@
 
 <main class="therapist-main">
     <div class="dashboard-cards">
-        <div class="card appointments-card">
-            <h3><i class="fa fa-calendar"></i> Upcoming Appointments</h3>
-            <div class="appointments-list">
-                @forelse ($appointments as $appointment)
-                    <div class="appointment-item">
-                        <p class="patient-name">{{ $appointment->patient->name }}</p>
-                        <p class="appointment-date">
-                            {{ \Carbon\Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time)->format('F j, Y - g:i A') }}
-                        </p>
-                        <p class="appointment-type">
-                            Type: {{ ucfirst($appointment->appointment_type) }}
-                        </p>
-                    </div>
-                @empty
-                    <p class="empty-state">No upcoming appointments.</p>
-                @endforelse
-            </div>
+        <div class="card">
+            <i class="fa fa-calendar-check" style="color:#28a745;"></i>
+            <h3>{{ count($appointments) }}</h3>
+            <p>Upcoming Appointments</p>
         </div>
+        <div class="card">
+            <i class="fa-solid fa-users"></i>
+            <h3>{{ $appointmentCount ?? 0 }}</h3>
+            <p>Total Patients</p>
+        </div>
+        <div class="card">
+            <i class="fa-solid fa-hourglass-half" style="color:orange;"></i>
+            <h3>{{ $pendingCount ?? 0 }}</h3>
+            <p>Pending Appointments</p>
+        </div>
+    </div>
 
-        <div class="card client-card">
-            <h3><i class="fa fa-folder-open"></i> Total Clients</h3>
-            <div class="client-count">
-                <h2>{{ $appointmentCount ?? 0 }}</h2>
-                <p>Active Clients</p>
-            </div>
+    <!-- Upcoming Appointments List -->
+    <div class="card appointments-card">
+        <h3><i class="fa fa-calendar"></i> Upcoming Appointments</h3>
+        <div class="appointments-list">
+            @forelse ($appointments as $appointment)
+                <div class="appointment-item">
+                    <p><strong>Patient:</strong> {{ $appointment->patient->name }}</p>
+                    <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($appointment->appointment_date . ' ' . $appointment->appointment_time)->format('F j, Y - g:i A') }}</p>
+                    <p><strong>Type:</strong> {{ ucfirst($appointment->appointment_type) }}</p>
+                </div>
+            @empty
+                <p class="empty-state">No upcoming appointments.</p>
+            @endforelse
         </div>
     </div>
 

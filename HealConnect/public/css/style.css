@@ -175,27 +175,27 @@ main {
     height: calc(70vh - 60px);
 }
 
-.main-content {
+.main-section .main-content {
     max-width: 800px;
     text-align: left;
     padding: 0 20px;
 }
 
-.main-content,
-.flip-card {
+.main-section .main-content,
+.main-section .flip-card {
     flex: 1;
     min-width: 50px;
     margin: 10px;
 }
 
-.main-content p {
+.main-section .main-content p {
     font-size: 20px;
     color: black;
     margin-top: 10px;
     font-weight: 100;
 }
 
-.main-content button {
+.main-section .main-content button {
     background-color: white;
     color: black;
     border: none;
@@ -207,7 +207,7 @@ main {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.main-content button:hover {
+.main-section .main-content button:hover {
     background-color: #1361f3;
     color: #fff;
     cursor: pointer;
@@ -751,7 +751,7 @@ footer,
         padding: 30px 20px;
     }
 
-    .main-content {
+    .main-section .main-content {
         max-width: 100%;
         margin-bottom: 20px;
     }
@@ -818,4 +818,121 @@ footer,
         width: 100%;
         max-width: 320px;
     }
+}
+
+/* ====== GLOBAL COMPONENTS ====== */
+
+/* Unified Buttons (.hc-btn) */
+.hc-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    text-decoration: none;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    line-height: 1.2;
+    outline: none;
+}
+
+.hc-btn:active {
+    transform: scale(0.98);
+}
+
+.hc-btn i {
+    font-size: 1rem;
+}
+
+/* Variants */
+.hc-btn-primary {
+    background: #3b82f6;
+    color: white;
+}
+
+.hc-btn-primary:hover {
+    background: #2563eb;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.hc-btn-success {
+    background: #10b981;
+    color: white;
+}
+
+.hc-btn-success:hover {
+    background: #059669;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.hc-btn-danger {
+    background: #ef4444;
+    color: white;
+}
+
+.hc-btn-danger:hover {
+    background: #dc2626;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.hc-btn-outline {
+    background: transparent;
+    border: 1.5px solid #e2e8f0;
+    color: #64748b;
+}
+
+.hc-btn-outline:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #334155;
+}
+
+/* Icon Buttons (Compact Actions in Tables) */
+.hc-icon-btn {
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    background: white;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.hc-icon-btn:hover {
+    background: #f1f5f9;
+    color: #3b82f6;
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+}
+
+.hc-icon-btn i {
+    font-size: 1.1rem;
+}
+
+/* Remote / Status Control (Select styling) */
+.hc-status-select {
+    padding: 8px 12px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #334155;
+    background: white;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.hc-status-select:focus {
+    border-color: #3b82f6;
 }

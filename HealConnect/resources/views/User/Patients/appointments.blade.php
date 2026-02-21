@@ -8,8 +8,12 @@
 
 @section('content')
 <main class="appointments-page">
-    <section class="appointments-container">
-        <h2>My Appointments</h2>
+    <div class="bg-white rounded-4 shadow-sm p-4 w-100">
+        <div class="page-header-row mb-4">
+            <h2 class="page-title-new">My Appointments</h2>
+            <p class="page-subtitle">View your scheduled and past appointments</p>
+        </div>
+        <section class="appointments-container">
 
         {{-- Success Message --}}
         @if (session('success'))
@@ -25,8 +29,8 @@
                 <p>You don't have any scheduled appointments yet.</p>
             </div>
         @else
-            <div class="table-wrapper">
-                <table class="table table-bordered table-striped">
+            <div class="hc-table-container hc-table-responsive">
+                <table class="hc-table">
                     <thead>
                         <tr>
                             <th>Therapist</th>
@@ -49,11 +53,11 @@
                             <td data-label="Time">{{ \Carbon\Carbon::parse($appointment->appointment_time)->format('g:i A') }}</td>
 
                             <td data-label="Status">
-                                <span class="badge 
-                                            @if($appointment->status == 'pending') bg-warning
-                                            @elseif($appointment->status == 'approved') bg-success
-                                            @elseif($appointment->status == 'rejected') bg-danger
-                                            @elseif($appointment->status == 'completed') bg-primary
+                                <span class="hc-badge 
+                                            @if($appointment->status == 'pending') hc-badge-warning
+                                            @elseif($appointment->status == 'approved') hc-badge-success
+                                            @elseif($appointment->status == 'rejected') hc-badge-danger
+                                            @elseif($appointment->status == 'completed') hc-badge-info
                                             @endif">
                                             {{ ucfirst($appointment->status) }}
                                         </span>
@@ -81,6 +85,7 @@
                 </table>
             </div>
         @endif
-    </section>
+        </section>
+    </div>
 </main>
 @endsection

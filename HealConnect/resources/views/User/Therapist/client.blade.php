@@ -23,69 +23,85 @@
 <link rel="stylesheet" href="{{ asset('css/patient-profile.css') }}">
 @endsection
 
+
+
 @section('content')
 <main class="therapist-patients">
-    <div class="container">
-        <div class="patients-header">
-            <h2>My Patients</h2>    
+    <div class="w-100">
+        <div class="patients-header page-header-row">
+            <h2 class="page-title-new">My Patients</h2>
+            <p class="page-subtitle">Manage patient records and view health profiles</p>
         </div>
         
-        {{-- Search & Filter --}}
-        <div class="search-filter">
-            <form method="GET" action="{{ route('therapist.client') }}" class="search-filter-form">
-                <input type="text" name="search" placeholder="Search by patient name ..."
-                    value="{{ request('search') }}" class="search-input">
+        <div class="search-filter-new">
+            <form method="GET" action="{{ route($user->role === 'clinic' ? 'clinic.clients' : 'therapist.clients') }}" class="search-filter-form-new">
+                <div class="search-input-wrapper">
+                    <i class="fa fa-search search-icon-inside"></i>
+                    <input type="text" name="search" placeholder="Search patients..."
+                        value="{{ request('search') }}" class="search-input-new">
+                </div>
 
-                <select name="gender" class="filter-select" onchange="this.form.submit()">
+                <select name="gender" class="filter-select-new" onchange="this.form.submit()">
                     <option value="">All Genders</option>
                     <option value="male" {{ request('gender') == 'male' ? 'selected' : '' }}>Male</option>
                     <option value="female" {{ request('gender') == 'female' ? 'selected' : '' }}>Female</option>
                 </select>
 
-                <button type="submit" class="btn-search">
-                    <i class="fa fa-search"></i>
+                <button type="submit" class="hc-btn hc-btn-primary hc-btn-search">
+                    <i class="fa fa-search"></i> Search
                 </button>
             </form>
         </div>
 
         @if($patients->count() > 0)
-            <table class="patient-table" id="tableView">
+        <div class="hc-table-container hc-table-responsive">
+            <table class="hc-table" id="tableView">
                 <thead>
                     <tr>
                         <th>Patient</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Records</th>
-                        <th>View Profile</th>
+                        <th>Email Address</th>
+                        <th>Phone Number</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($patients as $patient)
                         <tr>
-                            <td class="name">
-                                @if($patient->profile_picture)
-                                    <img src="{{ asset('storage/' . $patient->profile_picture) }}" alt="{{ $patient->name }}">
-                                @else
-                                    <img src="{{ asset('images/logo1.png') }}" alt="Default Patient">
-                                @endif
-                                {{ $patient->name }}
+                            <td class="patient-info-cell">
+                                <div class="patient-avatar-name">
+                                    @if($patient->profile_picture)
+                                        <img src="{{ asset('storage/' . $patient->profile_picture) }}" alt="{{ $patient->name }}" class="patient-avatar">
+                                    @else
+                                        <div class="patient-avatar-init">
+                                            {{ strtoupper(substr($patient->name, 0, 1)) }}
+                                        </div>
+                                    @endif
+                                    <div class="patient-meta">
+                                        <span class="patient-name-main">{{ $patient->name }}</span>
+                                        <span class="patient-gender-tag">{{ ucfirst($patient->gender ?? 'N/A') }}</span>
+                                    </div>
+                                </div>
                             </td>
-                            <td>{{ $patient->email }}</td>
-                            <td>{{ $patient->phone ?? 'Not specified' }}</td>
-                            <td>
-                                <a href="{{ route('therapist.patients_records', ['patientId' => $patient->id]) }}" class="btn-view-records">
-                                    Medical Records
+                            <td><span class="email-text">{{ $patient->email }}</span></td>
+                            <td><span class="phone-text">{{ $patient->phone ?? '—' }}</span></td>
+                            <td class="text-center">
+                                <a href="{{ route('therapist.patients_records', ['patientId' => $patient->id]) }}" class="hc-btn hc-btn-outline hc-btn-sm" title="Medical Records">
+                                    <i class="fa fa-folder-open"></i> Records
                                 </a>
                             </td>
-                            <td>
-                                <button class="openModalBtn" data-link="{{ route('therapist.patients.profile', $patient->id) }}">
-                                   <i class="fa fa-user"></i>
+                            <td class="text-center">
+                                <button class="hc-btn hc-btn-primary openModalBtn" 
+                                        data-link="{{ route('therapist.patients.profile', $patient->id) }}?embed=1"
+                                        title="View Profile">
+                                   <i class="fa fa-user-circle"></i>
                                 </button>
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+        </div>
         @else
             <p>You currently have no patients.</p>
         @endif

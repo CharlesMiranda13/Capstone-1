@@ -1,1064 +1,420 @@
 /* ====== BASE STYLES ====== */
-.therapist-patients {
-    min-height: 100vh;
-    padding: 2rem 1rem;
-    margin-left: 250px;
-    transition: margin-left 0.3s ease;
+.therapist-patients,
+.therapist-patient-records {
+    padding: 0;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    background: #ffffff;
+.therapist-patients .container,
+.therapist-patient-records .container {
+    background: #ffffff !important;
     border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    padding: 2rem;
-}
-
-.alert {
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 0.95rem;
-}
-
-.alert-success {
-    background: #e8f9ee;
-    color: #1e8c47;
-    border: 1px solid #c5efd4;
-    border-left: 4px solid #16a34a;
-}
-
-/* ====== HEADER ====== */
-.patients-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-
-.patients-header h2 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #2c3e50;
-}
-
-/* ====== SEARCH & FILTER SECTION ====== */
-.search-filter {
-    margin-bottom: 1.5rem;
-    overflow: hidden;
-}
-
-.search-filter-form {
-    display: flex;
-    gap: 0.8rem;
-    flex-wrap: wrap;
-    align-items: stretch;
+    padding: 2.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin: 0;
     max-width: 100%;
+    min-height: calc(100vh - 150px);
 }
 
-.search-input {
-    flex: 1 1 220px;
-    min-width: 0;
-    max-width: 100%;
-    padding: 0.6rem 1rem;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    transition: 0.3s;
-    box-sizing: border-box;
-}
+/* Header and Search styles moved to shared-components.css */
 
-.search-input:focus {
-    outline: none;
-    border-color: #4f46e5;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
-}
-
-.filter-select {
-    flex: 0 1 auto;
-    min-width: 140px;
-    max-width: 100%;
-    padding: 0.6rem 1rem;
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
-    background: #fff;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: 0.2s;
-    box-sizing: border-box;
-}
-
-.filter-select:hover {
-    border-color: #4f46e5;
-}
-
-.btn-search {
-    flex: 0 0 auto;
-    background: #4f46e5;
-    color: #fff;
-    border: none;
-    padding: 0.6rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-    box-sizing: border-box;
-    white-space: nowrap;
-}
-
-.btn-search:hover {
-    background: #4338ca;
-    transform: translateY(-2px);
-}
-
-/* ====== PATIENT TABLE ====== */
-.patient-table {
+/* ====== PREMIUM TABLE ====== */
+.hc-table-new {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 1.5rem;
+    background: white;
 }
 
-.patient-table th,
-.patient-table td {
+.hc-table-new th {
+    background: #f8fafc;
+    padding: 1.25rem 1.5rem;
     text-align: left;
-    padding: 1rem;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.patient-table th {
-    background: #f3f4f6;
-    font-weight: 600;
-    color: #374151;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #475569;
     text-transform: uppercase;
-    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid #f1f5f9;
 }
 
-.patient-table tbody tr {
-    transition: background 0.2s;
+.hc-table-new td {
+    padding: 1.5rem 1.5rem;
+    border-bottom: 1px solid #f8fafc;
+    vertical-align: middle;
 }
 
-.patient-table tbody tr:hover {
-    background: #f9fafb;
+.hc-table-new tbody tr:hover {
+    background: #f8fafc;
 }
 
-/* Patient Name + Image */
-.patient-table td.name {
+/* Patient Info Cell */
+.patient-info-cell {
+    min-width: 250px;
+}
+
+.patient-avatar-name {
     display: flex;
     align-items: center;
-    gap: 0.8rem;
-    font-weight: 500;
-    color: #111827;
+    gap: 1rem;
 }
 
-.patient-table td.name img {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
+.patient-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     object-fit: cover;
-    border: 2px solid #e5e7eb;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.patient-avatar-init {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: #eff6ff;
+    color: #3b82f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.patient-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.patient-name-main {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 1rem;
+}
+
+.patient-gender-tag {
+    font-size: 0.75rem;
+    color: #3b82f6;
+    font-weight: 600;
+    background: #eff6ff;
+    padding: 0.15rem 0.5rem;
+    border-radius: 6px;
+    display: inline-block;
+    width: fit-content;
+}
+
+.email-text,
+.phone-text {
+    font-size: 0.9rem;
+    color: #475569;
+    font-weight: 500;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* ====== MODAL OVERRIDES ====== */
+/* Modal overrides moved to shared-components.css */
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 768px) {
+    .therapist-patients {
+        margin-left: 0;
+        padding: 1rem;
+    }
+
+    .search-filter-form-new {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-select-new,
+    .hc-btn-search {
+        width: 100%;
+    }
+
+    .hc-table-new {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+
+.patient-portal-view {
+    padding: 1.5rem 2.5rem !important;
+}
+
+/* ====== PROFESSIONAL MEDICAL RECORDS (EMR STYLE) ====== */
+.therapist-patient-records .container {
+    padding: 0;
+    background: transparent !important;
+    box-shadow: none;
+}
+
+/* Patient Banner */
+.patient-banner {
+    background: white;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid #f1f5f9;
+}
+
+.patient-banner-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 20px;
+    background: #f0f9ff;
+    color: #0284c7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.patient-banner-info h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+}
+
+.patient-banner-meta {
+    display: flex;
+    gap: 1.5rem;
+    color: #64748b;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+/* Therapist pill inside the record banner */
+.patient-banner {
+    justify-content: space-between;
+}
+
+.record-therapist-pill {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f8fafc;
+    border: 1px solid #e5e9f0;
+    border-radius: 14px;
+    padding: 10px 16px;
+    margin-left: auto;
     flex-shrink: 0;
 }
 
-/* ====== BUTTONS ====== */
-.btn-view-profile {
-    background: #3b82f6;
-    color: #fff;
-    padding: 0.5rem 0.7rem;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: 0.3s;
-    border: none;
-    cursor: pointer;
-    display: inline-flex;
+.record-therapist-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    display: flex;
     align-items: center;
     justify-content: center;
-    white-space: nowrap;
-}
-
-.btn-view-profile:hover {
-    background: #2563eb;
-    transform: translateY(-2px);
-}
-
-.openModalBtn {
-    background: #3b82f6;
+    font-weight: 700;
     color: #fff;
-    padding: 0.5rem 0.7rem;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    transition: 0.3s;
-    border: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 1rem;
+    overflow: hidden;
+    flex-shrink: 0;
 }
 
-.openModalBtn:hover {
-    background: #2563eb;
-    transform: translateY(-2px);
-}
-
-.btn-view-records {
-    background: #10b981;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    text-decoration: none;
-    font-size: 0.9rem;
-    transition: 0.3s;
-    display: inline-block;
-    white-space: nowrap;
-}
-
-.btn-view-records:hover {
-    background: #059669;
-    transform: translateY(-2px);
-}
-
-/* ====== MODAL ====== */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
+.record-therapist-avatar img {
     width: 100%;
     height: 100%;
-    overflow: hidden;
-    background-color: rgba(0, 0, 0, 0.4);
+    object-fit: cover;
 }
 
-.modal-content {
-    position: relative;
-    background-color: #fff;
-    margin: 5% auto;
-    padding: 0;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 1200px;
-    height: 85vh;
-    overflow: hidden;
+.record-therapist-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
 }
 
-.close {
-    color: #aaa;
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 1;
-}
-
-.close:hover {
-    color: black;
-}
-
-#modal-body {
-    height: calc(100% - 50px);
-    overflow-y: auto;
-    padding: 20px;
-}
-
-/* Empty state */
-.therapist-patients p {
-    text-align: center;
-    font-size: 1rem;
-    color: #6b7280;
-    margin-top: 2rem;
-}
-
-/* ====== PATIENTS RECORDS SECTION ====== */
-.therapist-patient-records {
-    background: #f9fafc;
-    min-height: 100vh;
-    padding: 2rem 1rem;
-    margin-left: 250px;
-    transition: margin-left 0.3s ease;
-}
-
-.therapist-patient-records .container {
-    max-width: 1100px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 2rem 3rem;
-    border-radius: 16px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-}
-
-/* === Header === */
-.header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.header h2 {
-    font-size: 1.9rem;
-    font-weight: 700;
-    color: #2b3a67;
-}
-
-.header .subtitle {
-    color: #6b7280;
-    font-size: 0.95rem;
-    margin-top: 0.5rem;
-}
-
-/* === Section Header === */
-.record-section {
-    margin-bottom: 3rem;
-}
-
-.section-header h3 {
-    font-size: 1.4rem;
+.record-therapist-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #94a3b8;
     font-weight: 600;
-    color: #2c3e50;
 }
 
-.section-header p {
+.record-therapist-name {
     font-size: 0.9rem;
-    color: #6b7280;
-    margin-bottom: 1rem;
+    font-weight: 700;
+    color: #1e293b;
 }
 
-/* === Record Display Cards === */
-.record-display.card {
-    background: #fdfdfd;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-top: 1rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-}
-
-.record-box {
-    background: #f7fafc;
-    border-radius: 10px;
-    padding: 1rem;
-    border: 1px solid #e5e7eb;
-}
-
-.ehr-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.8rem 1.5rem;
-    line-height: 1.5;
-}
-
-/* === Lists === */
-.treatment-list,
-.progress-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.treatment-list li,
-.progress-list li {
-    background: #f1f5f9;
-    border-radius: 8px;
-    padding: 0.8rem 1rem;
-    margin-bottom: 0.6rem;
-    border-left: 4px solid #4b8df8;
-}
-
-.treatment-entry, 
-.progress-entry {
-    padding: 1rem;
-    background-color: #f9f9f9;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-}
-
-.treatment-entry:last-child, 
-.progress-entry:last-child {
-    margin-bottom: 0;
-}
-
-/* === Forms === */
-.update-form {
-    margin-top: 1.5rem;
-    background: #f9fafc;
-    border-radius: 12px;
-    padding: 1.5rem;
-    border: 1px solid #e5e7eb;
-}
-
-.update-form h4 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: #2b3a67;
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem 2rem;
-}
-
-.form-grid label {
+.record-therapist-role {
+    font-size: 0.75rem;
+    color: #2563eb;
     font-weight: 500;
-    color: #374151;
 }
 
-.form-control {
-    width: 100%;
-    padding: 0.7rem;
-    border-radius: 8px;
-    border: 1px solid #cbd5e1;
-    font-size: 0.95rem;
-    color: #1f2937;
-    transition: 0.3s ease;
-    box-sizing: border-box;
+/* Colored icon circle for empty states */
+.empty-icon-wrap {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
 }
 
-.form-control:focus {
-    outline: none;
-    border-color: #4b8df8;
-    box-shadow: 0 0 0 3px rgba(75, 141, 248, 0.2);
-}
-
-textarea.form-control {
-    resize: vertical;
-}
-
-/* === Buttons === */
-.btn {
-    display: inline-block;
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    border: none;
-    font-weight: 600;
-    color: #fff;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-primary {
-    background: linear-gradient(90deg, #4b8df8, #4ad0a9);
-}
-
-.btn-success {
-    background: linear-gradient(90deg, #34d399, #059669);
-}
-
-.btn-info {
-    background: linear-gradient(90deg, #60a5fa, #2563eb);
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
-}
-
-.text-muted {
-    color: #9ca3af;
-}
-
-/* Record Timestamp Banner */
-.record-timestamp-banner {
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-    border-radius: 12px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: 0 8px 16px rgba(17, 153, 142, 0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-.record-timestamp-banner::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    animation: shimmer 3s infinite;
-}
-
-@keyframes shimmer {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(-10%, -10%); }
-}
-
-.record-timestamp-banner h3 {
-    color: white;
-    margin: 0 0 1rem 0;
-    font-size: 1.5rem;
-    font-weight: 600;
-    position: relative;
-    z-index: 1;
-}
-
-.record-timestamp-banner p {
-    color: rgba(255, 255, 255, 0.95);
-    margin: 0.5rem 0;
-    font-size: 1rem;
-    position: relative;
-    z-index: 1;
-    text-align: left;
-}
-
-.record-timestamp-banner strong {
-    color: white;
-    font-weight: 600;
-}
-
-.snapshot-badge {
-    display: inline-block;
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(10px);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
+.status-badge {
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
     font-size: 0.85rem;
-    font-weight: 600;
-    margin-top: 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    position: relative;
-    z-index: 1;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
-/* Pagination Styles */
-.pagination-container {
+.status-active {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+/* EMR Content Area */
+.emr-section {
+    margin-bottom: 2.5rem;
+}
+
+.emr-section-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 1rem;
-    padding: 0.5rem 0;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
-.pagination-controls {
+.emr-section-header h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1e293b;
     display: flex;
-    gap: 0.5rem;
     align-items: center;
-    flex-wrap: wrap;
+    gap: 0.75rem;
 }
 
-.pagination-btn {
-    padding: 0.5rem 1rem;
-    background-color: #007bff;
+.emr-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+}
+
+/* Structured EHR Grid */
+.emr-records-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.record-panel {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.record-panel label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.record-panel .content {
+    color: #1e293b;
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* Timeline Style for Progress Notes */
+.timeline-item {
+    padding-left: 2rem;
+    position: relative;
+    padding-bottom: 2rem;
+    border-left: 2px solid #e2e8f0;
+}
+
+.timeline-item:last-child {
+    border-left: transparent;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -7px;
+    top: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #3b82f6;
+    border: 2px solid white;
+}
+
+.timeline-content {
+    background: #ffffff;
+    padding: 1.25rem;
+    border-radius: 12px;
+    border: 1px solid #f1f5f9;
+}
+
+.timeline-date {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* EMR Forms */
+.emr-form-group {
+    margin-bottom: 1.5rem;
+}
+
+.emr-form-group label {
+    display: block;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 0.75rem;
+}
+
+.emr-input {
+    width: 100%;
+    padding: 0.85rem 1.2rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    transition: 0.2s;
+}
+
+.emr-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.08);
+    outline: none;
+}
+
+.btn-emr-primary {
+    background: #0284c7;
     color: white;
+    padding: 0.85rem 2rem;
+    border-radius: 12px;
+    font-weight: 700;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.2s;
+    transition: 0.2s;
 }
 
-.pagination-btn:hover:not(:disabled) {
-    background-color: #0056b3;
-}
-
-.pagination-btn:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-    
-.pagination-btn.active {
-    background-color: #0056b3;
-    font-weight: bold;
-}
-
-.pagination-info {
-    font-size: 0.9rem;
-    color: #666;
-}
-    
-.pagination-ellipsis {
-    padding: 0 0.5rem;
-    color: #666;
-}
-
-/* ====== RESPONSIVE DESIGN ====== */
-
-/* Tablet and Below (991px and below) */
-@media (max-width: 991px) {
-    .therapist-patients,
-    .therapist-patient-records {
-        margin-left: 0;
-        padding: 15px;
-    }
-
-    .container {
-        padding: 1.5rem;
-    }
-
-    .therapist-patient-records .container {
-        padding: 1.5rem 2rem;
-    }
-
-    .patients-header h2 {
-        font-size: 1.6rem;
-    }
-
-    .header h2 {
-        font-size: 1.7rem;
-    }
-
-    .ehr-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Tablet (768px and below) */
-@media (max-width: 768px) {
-    .therapist-patients,
-    .therapist-patient-records {
-        padding: 12px;
-    }
-
-    .container {
-        padding: 1.2rem;
-        border-radius: 12px;
-    }
-
-    .therapist-patient-records .container {
-        padding: 1.5rem;
-    }
-
-    .patients-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-
-    .patients-header h2 {
-        font-size: 1.5rem;
-    }
-
-    .header h2 {
-        font-size: 1.6rem;
-    }
-
-    .section-header h3 {
-        font-size: 1.2rem;
-    }
-
-    /* Hide phone column on tablets */
-    .patient-table th:nth-child(3),
-    .patient-table td:nth-child(3) {
-        display: none;
-    }
-
-    .search-filter-form {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.7rem;
-    }
-
-    .search-input,
-    .filter-select {
-        width: 100%;
-        min-width: unset;
-        flex: 1 1 auto;
-    }
-
-    .btn-search {
-        width: 100%;
-        padding: 0.7rem 1rem;
-    }
-
-    .patient-table th,
-    .patient-table td {
-        padding: 0.8rem;
-        font-size: 0.9rem;
-    }
-
-    .patient-table td.name {
-        gap: 0.6rem;
-    }
-
-    .patient-table td.name img {
-        width: 40px;
-        height: 40px;
-    }
-
-    .btn-view-records,
-    .btn-view-profile,
-    .openModalBtn {
-        padding: 0.45rem 0.65rem;
-        font-size: 0.85rem;
-    }
-
-    .modal-content {
-        width: 95%;
-        height: 90vh;
-        margin: 2.5% auto;
-    }
-
-    .record-timestamp-banner {
-        padding: 1.5rem;
-    }
-
-    .record-timestamp-banner h3 {
-        font-size: 1.3rem;
-    }
-
-    .record-display.card,
-    .update-form {
-        padding: 1.2rem;
-    }
-
-    .pagination-container {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 1rem;
-    }
-
-    .pagination-controls {
-        justify-content: center;
-    }
-
-    .pagination-info {
-        text-align: center;
-    }
-}
-
-/* Mobile Portrait (480px and below) */
-@media (max-width: 480px) {
-    .therapist-patients,
-    .therapist-patient-records {
-        padding: 10px;
-    }
-
-    .container {
-        padding: 1rem;
-        border-radius: 10px;
-    }
-
-    .therapist-patient-records .container {
-        padding: 1.2rem;
-    }
-
-    .patients-header h2 {
-        font-size: 1.3rem;
-    }
-
-    .header h2 {
-        font-size: 1.4rem;
-    }
-
-    .header .subtitle {
-        font-size: 0.85rem;
-    }
-
-    .section-header h3 {
-        font-size: 1.1rem;
-    }
-
-    .section-header p {
-        font-size: 0.85rem;
-    }
-
-    .search-filter {
-        margin-bottom: 1rem;
-    }
-
-    .search-input,
-    .filter-select {
-        padding: 0.55rem 0.8rem;
-        font-size: 0.9rem;
-    }
-
-    .btn-search {
-        padding: 0.6rem 1rem;
-        font-size: 0.9rem;
-    }
-
-    .alert {
-        padding: 10px 14px;
-        font-size: 0.85rem;
-    }
-
-    /* Convert table to mobile-friendly layout */
-    .patient-table {
-        font-size: 0.85rem;
-    }
-
-    .patient-table thead {
-        display: none;
-    }
-
-    .patient-table,
-    .patient-table tbody,
-    .patient-table tr,
-    .patient-table td {
-        display: block;
-        width: 100%;
-    }
-
-    .patient-table tr {
-        margin-bottom: 1rem;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 1rem;
-        background: #fff;
-    }
-
-    .patient-table td {
-        padding: 0.5rem 0;
-        border: none;
-        text-align: left !important;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .patient-table td.name {
-        justify-content: flex-start;
-        padding-bottom: 0.8rem;
-        border-bottom: 1px solid #f3f4f6;
-        margin-bottom: 0.5rem;
-    }
-
-    .patient-table td.name img {
-        width: 50px;
-        height: 50px;
-    }
-
-    .patient-table td:not(.name):before {
-        content: attr(data-label);
-        font-weight: 600;
-        color: #374151;
-        margin-right: 1rem;
-    }
-
-    .patient-table td:nth-child(3) {
-        display: flex !important;
-    }
-
-    .btn-view-records {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
-    }
-
-    .btn-view-profile,
-    .openModalBtn {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.8rem;
-    }
-
-    .modal-content {
-        width: 95%;
-        height: 90vh;
-        margin: 5% auto;
-        border-radius: 6px;
-    }
-
-    .close {
-        font-size: 24px;
-        top: 8px;
-        right: 15px;
-    }
-
-    #modal-body {
-        padding: 15px;
-    }
-
-    .record-timestamp-banner {
-        padding: 1.2rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .record-timestamp-banner h3 {
-        font-size: 1.2rem;
-        margin-bottom: 0.8rem;
-    }
-
-    .record-timestamp-banner p {
-        font-size: 0.9rem;
-    }
-
-    .snapshot-badge {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
-    }
-
-    .record-display.card {
-        padding: 1rem;
-    }
-
-    .record-box {
-        padding: 0.8rem;
-    }
-
-    .update-form {
-        padding: 1rem;
-    }
-
-    .update-form h4 {
-        font-size: 1rem;
-    }
-
-    .form-control {
-        padding: 0.6rem;
-        font-size: 0.9rem;
-    }
-
-    .btn {
-        padding: 0.5rem 1rem;
-        font-size: 0.85rem;
-    }
-
-    .treatment-list li,
-    .progress-list li {
-        padding: 0.7rem 0.8rem;
-        font-size: 0.9rem;
-    }
-
-    .treatment-entry,
-    .progress-entry {
-        padding: 0.8rem;
-        font-size: 0.9rem;
-    }
-
-    .pagination-btn {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.85rem;
-    }
-
-    .pagination-info {
-        font-size: 0.85rem;
-    }
-}
-
-/* Extra Small Mobile (360px and below) */
-@media (max-width: 360px) {
-    .therapist-patients,
-    .therapist-patient-records {
-        padding: 8px;
-    }
-
-    .container {
-        padding: 0.8rem;
-    }
-
-    .therapist-patient-records .container {
-        padding: 1rem;
-    }
-
-    .patients-header h2 {
-        font-size: 1.2rem;
-    }
-
-    .header h2 {
-        font-size: 1.3rem;
-    }
-
-    .section-header h3 {
-        font-size: 1rem;
-    }
-
-    .search-input,
-    .filter-select {
-        padding: 0.5rem 0.7rem;
-        font-size: 0.85rem;
-    }
-
-    .btn-search {
-        padding: 0.55rem 0.9rem;
-        font-size: 0.85rem;
-    }
-
-    .patient-table tr {
-        padding: 0.8rem;
-    }
-
-    .patient-table td.name img {
-        width: 45px;
-        height: 45px;
-    }
-
-    .patient-table td {
-        font-size: 0.8rem;
-    }
-
-    .btn-view-records {
-        padding: 0.35rem 0.7rem;
-        font-size: 0.75rem;
-    }
-
-    .openModalBtn {
-        padding: 0.35rem 0.55rem;
-        font-size: 0.75rem;
-    }
-
-    .record-timestamp-banner {
-        padding: 1rem;
-    }
-
-    .record-timestamp-banner h3 {
-        font-size: 1.1rem;
-    }
-
-    .record-timestamp-banner p {
-        font-size: 0.85rem;
-    }
-
-    .snapshot-badge {
-        padding: 0.35rem 0.7rem;
-        font-size: 0.75rem;
-    }
-
-    .record-display.card,
-    .update-form {
-        padding: 0.8rem;
-    }
-
-    .form-control {
-        padding: 0.5rem;
-        font-size: 0.85rem;
-    }
-
-    .btn {
-        padding: 0.45rem 0.9rem;
-        font-size: 0.8rem;
-    }
-
-    .treatment-list li,
-    .progress-list li {
-        padding: 0.6rem 0.7rem;
-        font-size: 0.85rem;
-    }
-
-    .pagination-btn {
-        padding: 0.35rem 0.7rem;
-        font-size: 0.8rem;
-    }
-}
-
-/* Landscape Mode Optimization */
-@media (max-height: 500px) and (orientation: landscape) {
-    .therapist-patients,
-    .therapist-patient-records {
-        padding: 10px;
-    }
-
-    .patients-header h2,
-    .header h2 {
-        font-size: 1.2rem;
-        margin-bottom: 0.8rem;
-    }
-
-    .modal-content {
-        height: 95vh;
-        margin: 2.5% auto;
-    }
-
-    .record-timestamp-banner {
-        padding: 1rem;
-    }
+.btn-emr-primary:hover {
+    background: #0369a1;
+    transform: translateY(-1px);
 }

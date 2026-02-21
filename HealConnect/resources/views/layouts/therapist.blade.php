@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('Css/therapist.css') }}">
     <link rel="stylesheet" href="{{ asset('Css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/shared-components.css') }}">
     
 
     @yield('styles')
@@ -59,7 +60,7 @@
             <span class="notification-badge" id="messages-badge">0</span>
         </a>
 
-        <a href="{{ route('therapist.client') }}" class="sidebar-item {{ request()->routeIs('therapist.client') ? 'active' : '' }}">
+        <a href="{{ route('therapist.clients') }}" class="sidebar-item {{ request()->routeIs('therapist.clients') ? 'active' : '' }}">
             <i class="fa-solid fa-users"></i> Clients
         </a>
 

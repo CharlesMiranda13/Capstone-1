@@ -8,81 +8,95 @@
 
 @section('content')
 <main class="employee-main">
-    <section class="employee-header">
-        <div class="employee-header-left">
-            <h2>Clinic Employees</h2>
-            <p>Manage employees, update details, and monitor schedules</p>
-        </div>
+    <div class="w-100">
+        <section class="employee-header page-header-row">
+            <div class="header-flex-content">
+                <div class="employee-header-left">
+                    <h2 class="page-title-new">Clinic Employees</h2>
+                    <p class="page-subtitle">Manage employees, update details, and monitor schedules</p>
+                </div>
 
-        <div class="employee-header-right">
-            <!-- FILTER FORM -->
-            <form method="GET" action="{{ route('clinic.employees') }}" class="filter-form">
-                <input type="text" name="search"
-                       placeholder="Search employees..."
-                       value="{{ request('search') }}">
-
-                <select name="position" onchange="this.form.submit()">
-                    <option value="">All Positions</option>
-                    <option value="Therapist">Therapist</option>
-                    <option value="Assistant">Staff</option>
-                </select>
-            </form>
-        </div>
-    </section>
-
-    <!-- TABLE SECTION -->
-    <section class="employee-table-section">
-        <div class="table-card">
-            <div class="table-top">
-                <button id="addEmployeeBtn" class="btn add-btn">
-                    + Add Employee
-                </button>
+                <div class="header-actions">
+                    <button id="addEmployeeBtn" class="hc-btn hc-btn-primary">
+                        <i class="fa fa-plus"></i> Add Employee
+                    </button>
+                </div>
             </div>
 
-            <table class="employee-table">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Profile</th>
-                        <th>Full Name</th>
-                        <th>Gender</th>
-                        <th>Email</th>
-                        <th>Position</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($employees as $index => $employee)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>
-                                <img 
-                                    src="{{ $employee->profile_picture 
-                                        ? asset('storage/' . $employee->profile_picture)
-                                        : asset('images/logo1.png') }}"
-                                    alt="Profile Picture"
-                                    class="profile-pic">
-                            </td>
-                            <td>{{ $employee->name }}</td>
-                            <td>{{ $employee->gender}}</td>
-                            <td>{{ $employee->email }}</td>
-                            <td>{{ $employee->position }}</td>
-                            <td class="actions">
-                                <button class="edit-btn" data-id="{{ $employee->id }}">Edit</button>
-                                <button class="delete-btn" data-id="{{ $employee->id }}">Delete</button>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="no-data">No employees found.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+            <div class="search-filter-new">
+                <form method="GET" action="{{ route('clinic.employees') }}" class="search-filter-form-new">
+                    <div class="search-input-wrapper">
+                        <i class="fa fa-search search-icon-inside"></i>
+                        <input type="text" name="search"
+                               placeholder="Search employees..."
+                               value="{{ request('search') }}" class="search-input-new">
+                    </div>
 
-        </div>
-    </section>
+                    <select name="position" class="filter-select-new" onchange="this.form.submit()">
+                        <option value="">All Positions</option>
+                        <option value="Therapist">Therapist</option>
+                        <option value="Assistant">Staff</option>
+                    </select>
 
+                    <button type="submit" class="hc-btn hc-btn-primary hc-btn-search">
+                        <i class="fa fa-search"></i> Search
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- TABLE SECTION -->
+        <section class="employee-table-section">
+            <div class="hc-table-container hc-table-responsive">
+                <table class="hc-table">
+                    <thead>
+                        <tr>
+                            <th width="50">#</th>
+                            <th>Profile</th>
+                            <th>Full Name</th>
+                            <th class="text-center">Gender</th>
+                            <th>Email Address</th>
+                            <th>Position</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($employees as $index => $employee)
+                            <tr>
+                                <td><span class="muted-text">{{ $index + 1 }}</span></td>
+                                <td>
+                                    <img 
+                                        src="{{ $employee->profile_picture 
+                                            ? asset('storage/' . $employee->profile_picture)
+                                            : asset('images/logo1.png') }}"
+                                        alt="Profile Picture"
+                                        class="patient-avatar">
+                                </td>
+                                <td><span class="patient-name-main">{{ $employee->name }}</span></td>
+                                <td class="text-center">
+                                    <span class="patient-gender-tag">{{ ucfirst($employee->gender ?? 'N/A') }}</span>
+                                </td>
+                                <td><span class="email-text">{{ $employee->email }}</span></td>
+                                <td><span class="phone-text">{{ $employee->position }}</span></td>
+                                <td class="text-center actions-cell">
+                                    <button class="hc-icon-btn hc-btn-outline edit-btn" data-id="{{ $employee->id }}" title="Edit">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button class="hc-icon-btn hc-btn-danger delete-btn" data-id="{{ $employee->id }}" title="Delete">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="no-data">No employees found.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
 </main>
 
 <!-- ADD EMPLOYEE MODAL -->
@@ -92,34 +106,39 @@
         <h3>Add New Employee</h3>
         <form id="addEmployeeForm" method="POST" action="{{ route('clinic.employees.store') }}" enctype="multipart/form-data">
             @csrf
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" name="name" required>
-            </div>
-            <div class="form-group">
-                <label>Gender</label>
-                <select name="gender" required>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" name="email" required>
+            <div class="hc-form-row">
+                <div class="hc-form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" class="hc-input" required>
+                </div>
+                <div class="hc-form-group">
+                    <label>Gender</label>
+                    <select name="gender" class="hc-select" required>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label>Position</label>
-                <input type="text" name="position" required>
+            <div class="hc-form-row">
+                <div class="hc-form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" class="hc-input" required>
+                </div>
+                <div class="hc-form-group">
+                    <label>Position</label>
+                    <input type="text" name="position" class="hc-input" required>
+                </div>
             </div>
 
-            <div class="form-group">
+            <div class="hc-form-group">
                 <label>Profile Picture</label>
-                <input type="file" name="profile_picture">
+                <input type="file" name="profile_picture" class="hc-file-input">
             </div>
 
-            <button type="submit" class="submit-btn">Save Employee</button>
+            <div class="modal-footer-new">
+                <button type="submit" class="hc-btn hc-btn-primary hc-btn-block">Save Employee</button>
+            </div>
         </form>
     </div>
 </div>
@@ -132,4 +151,20 @@
     </div>
 </div>
 
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Modal closing logic
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target.classList.contains('close') || e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
 @endsection

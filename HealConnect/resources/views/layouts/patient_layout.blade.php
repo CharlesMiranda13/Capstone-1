@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="{{ asset('Css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('Css/settings.css') }}">
     <link rel="stylesheet" href="{{ asset('Css/tts.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/shared-components.css') }}">
 
     @yield('styles')
 </head>

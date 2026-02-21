@@ -1,8 +1,6 @@
 .chat-page {
-    margin-left: 250px;
     padding: 20px;
     min-height: calc(100vh - 80px);
-    transition: margin-left 0.3s ease;
     display: flex;
     flex-direction: column;
 }
@@ -172,10 +170,13 @@
 }
 
 @keyframes pulse-dot {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 1;
         transform: translateY(-50%) scale(1);
     }
+
     50% {
         opacity: 0.7;
         transform: translateY(-50%) scale(1.1);
@@ -432,9 +433,11 @@
     0% {
         box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.7);
     }
+
     70% {
         box-shadow: 0 0 0 10px rgba(229, 57, 53, 0);
     }
+
     100% {
         box-shadow: 0 0 0 0 rgba(229, 57, 53, 0);
     }
@@ -552,6 +555,7 @@
         transform: scale(0.8);
         opacity: 0;
     }
+
     to {
         transform: scale(1);
         opacity: 1;
@@ -616,6 +620,7 @@
         opacity: 0;
         transform: translateY(-45%);
     }
+
     to {
         opacity: 1;
         transform: translateY(-50%);
@@ -726,6 +731,7 @@
         transform: translateY(50px);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;

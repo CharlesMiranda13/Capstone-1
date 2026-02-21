@@ -6,10 +6,14 @@
 @endsection
 
 @section('content')
-    <h1>User Concerns</h1>
+    <div class="page-header-row">
+        <h2 class="page-title-new">User Concerns</h2>
+        <p class="page-subtitle">Review and respond to submitted user messages</p>
+    </div>
 
+    <div class="hc-card">
     @if ($messages->isEmpty())
-        <p>No user concerns yet.</p>
+        <p class="empty-message">No user concerns yet.</p>
     @else
         <div class="concern-list">
 
@@ -36,6 +40,7 @@
 
         </div>
     @endif
+    </div>{{-- end hc-card --}}
 
 <div id="concernViewModal" class="modal-overlay">
     <div class="modal-box">

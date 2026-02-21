@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('Css/therapist.css') }}">
     <link rel="stylesheet" href="{{ asset('Css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/shared-components.css') }}">
     
 
     @yield('styles')
@@ -51,7 +52,7 @@
         <a href="{{ route('clinic.employees') }}" class="sidebar-item {{request()->routeIs('clinic.employees') ? 'active' : '' }}">
             <i class="fa-solid fa-user-md"></i> Employees
         </a>        
-        <a href="{{ route('therapist.client') }}" class="sidebar-item {{ request()->routeIs('therapist.client') ? 'active' : '' }}">
+        <a href="{{ route('clinic.clients') }}" class="sidebar-item {{ request()->routeIs('clinic.clients') ? 'active' : '' }}">
             <i class="fa-solid fa-users"></i> Clients
         </a>
         <a href="{{ route('clinic.appointments') }}" class="sidebar-item {{request()->routeIs('clinic.appointments') ? 'active' : '' }}">

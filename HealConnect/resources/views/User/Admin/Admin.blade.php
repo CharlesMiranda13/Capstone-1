@@ -3,7 +3,10 @@
 @section('title', 'Admin Dashboard')
 
 @section('content')
-    <h2>Dashboard</h2>
+    <div class="page-header-row">
+        <h2 class="page-title-new">Admin Dashboard</h2>
+        <p class="page-subtitle">Overview of platform activity and user statistics</p>
+    </div>
     <div class="dashboard-cards">
         <a href="{{ route('admin.manage-users', ['role' => 'all']) }}" class="card">
             <i class="fa-solid fa-users" style="color:#007bff;"></i>

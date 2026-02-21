@@ -21,7 +21,7 @@
     
     {{-- Back Button --}}
     <div class="back-btn-container">
-        <a href="{{ route('admin.manage-users') }}" class="btn-back">
+        <a href="{{ route('admin.manage-users') }}" class="hc-btn hc-btn-outline">
             <i class="fa fa-arrow-left"></i> Back to Users
         </a>
     </div>
@@ -55,16 +55,21 @@
 
         {{-- Quick Actions --}}
         <div class="header-actions">
-            <form action="{{ route('admin.users.verify', $user->id) }}" method="POST">
+            @if(strtolower($user->status) === 'pending')
+            <select id="adminActionRemote" class="hc-status-select" style="min-width: 160px;">
+                <option value="" disabled selected>Quick Actions...</option>
+                <option value="approve">Approve User</option>
+                <option value="decline">Decline User</option>
+            </select>
+
+            {{-- Hidden Form for Approval --}}
+            <form id="approveUserForm" action="{{ route('admin.users.verify', $user->id) }}" method="POST" style="display:none;">
                 @csrf
                 @method('PATCH')
-                <button type="submit" class="btn-action btn-approve" onclick="return confirm('Approve this user?');">
-                    <i class="fa fa-check"></i> Approve User
-                </button>
             </form>
-            <button type="button" class="btn-action btn-decline openDeclineBtn">
-                <i class="fa fa-times"></i> Decline
-            </button>
+            @else
+                <span class="muted">No actions available</span>
+            @endif
         </div>
     </div>
 
@@ -200,7 +205,7 @@
                                 @endphp
                                 <div class="doc-actions">
                                     @foreach($validIds as $key => $path)
-                                        <button class="btn-view-doc" data-img="{{ asset('storage/' . $path) }}">
+                                        <button class="hc-btn hc-btn-outline hc-btn-sm btn-view-doc" data-img="{{ asset('storage/' . $path) }}">
                                             <i class="fa fa-eye"></i> {{ ucfirst($key) }}
                                         </button>
                                     @endforeach
@@ -215,8 +220,22 @@
                         <div class="doc-item">
                             <span class="doc-label">License</span>
                             @if ($user->license_path)
-                                <button class="btn-view-doc" data-img="{{ asset('storage/' . $user->license_path) }}">
+                                <button class="hc-btn hc-btn-outline hc-btn-sm btn-view-doc" data-img="{{ asset('storage/' . $user->license_path) }}">
                                     <i class="fa fa-file-alt"></i> View License
+                                </button>
+                            @else
+                                <span class="text-danger"><i class="fa fa-times-circle"></i> Missing</span>
+                            @endif
+                        </div>
+                        @endif
+
+                        {{-- Business Permit (Clinic Only) --}}
+                        @if ($user->role === 'clinic')
+                        <div class="doc-item">
+                            <span class="doc-label">Business Permit</span>
+                            @if ($user->business_permit_path)
+                                <button class="hc-btn hc-btn-outline hc-btn-sm btn-view-doc" data-img="{{ asset('storage/' . $user->business_permit_path) }}">
+                                    <i class="fa fa-file-contract"></i> View Permit
                                 </button>
                             @else
                                 <span class="text-danger"><i class="fa fa-times-circle"></i> Missing</span>
@@ -293,5 +312,33 @@
 
 
 @section('scripts')
-{{-- Scripts are handled by global modal.js --}}
+<script>
+    document.getElementById('adminActionRemote')?.addEventListener('change', function() {
+        const action = this.value;
+        if (action === 'approve') {
+            if (confirm('Are you sure you want to approve this user?')) {
+                document.getElementById('approveUserForm').submit();
+            } else {
+                this.value = ''; // Reset select
+            }
+        } else if (action === 'decline') {
+            // openDeclineModal is defined in modal.js, but let's make sure it's accessible or trigger the click
+            const overlay = document.getElementById('declineModal');
+            if (overlay) {
+                overlay.style.display = 'flex';
+            }
+            this.value = ''; // Reset select
+        }
+    });
+
+    function closeDeclineModal() {
+        const overlay = document.getElementById('declineModal');
+        if (overlay) {
+            overlay.style.display = 'none';
+        }
+    }
+
+    // Modal Close buttons
+    document.querySelector('.closeDeclineModal')?.addEventListener('click', closeDeclineModal);
+</script>
 @endsection
