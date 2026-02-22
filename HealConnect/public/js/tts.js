@@ -15,8 +15,10 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Get the text
-      const text = targetElement.innerText.trim();
+      // Get only heading + paragraph text, skip icons and button
+      const clone = targetElement.cloneNode(true);
+      clone.querySelectorAll(".card-icon, .value-icon, .speak-btn").forEach(el => el.remove());
+      const text = clone.innerText.trim();
       if (!text) {
         console.error("No text to speak for:", targetId);
         return;

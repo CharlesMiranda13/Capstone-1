@@ -23,96 +23,81 @@
 @endsection
 
 @section('content')
+<div class="page-header-row pricing-hero-strip">
+    <h1 class="page-title-new">Choose Your Plan</h1>
+    <p class="page-subtitle">Join HealConnect and grow your physical therapy practice with ease. Whether you're working independently or running a clinic, we have a plan for you.</p>
+</div>
+
 <main class="pricing-main">
     @guest
-    <!-- Grow with HealConnect Section -->
-    <section class="why-join">
-        <div class="why-join-content">
-            <div class="why-join-text">
-                <h2>Be a part of HealConnect.com</h2>
-                <ul class="why-simple">
-                    <li><i class="fa fa-bullhorn"></i> Expand your reach and attract new patients</li>
-                    <li><i class="fa fa-calendar-check"></i> Be Discovered Online</li>
-                    <li><i class="fa fa-hand-holding-heart"></i> Take your practice to the next level</li>
-                    <li><i class="fa fa-hand-holding-heart"></i> Offer your expertise to patients who need physical care</li>
-                </ul>
-            </div>
+    <!-- Compact Info Section -->
+    <section class="info-row container">
+        <div class="info-card why-join-compact">
+            <h3><i class="fa fa-rocket"></i> Be a part of HealConnect</h3>
+            <ul class="check-list">
+                <li><i class="fas fa-check"></i> Expand your reach & attract new patients</li>
+                <li><i class="fas fa-check"></i> Be Discovered Online</li>
+                <li><i class="fas fa-check"></i> Take your practice to the next level</li>
+                <li><i class="fas fa-check"></i> Offer expertise to patients in need</li>
+            </ul>
+        </div>
 
-            <div class="why-join-image">
-                <img src="{{ asset('images/jv.png') }}" alt="Join HealConnect">
-            </div>
+        <div class="info-card eligibility-compact">
+            <h3><i class="fa fa-user-shield"></i> Who can join?</h3>
+            <ul class="check-list">
+                <li><i class="fas fa-check"></i> Licensed PTs & OTs (PRC)</li>
+                <li><i class="fas fa-check"></i> Rehab & Sports Specialists</li>
+                <li><i class="fas fa-check"></i> Accredited Clinics & Centers</li>
+            </ul>
+            <p class="mini-note">Valid license is required during registration.</p>
         </div>
     </section>
-
-    <!-- Eligibility Section -->
-    <section class="eligibility-section">
-        <h2>Who is Eligible to Join HealConnect?</h2>
-        <p>
-            HealConnect welcomes licensed and certified rehabilitation professionals 
-            who aim to reach more patients and provide quality physical therapy services. 
-            Eligible members include:
-        </p>
-        <ul class="eligibility-list">
-            <li><i class="fa fa-check-circle"></i> Licensed Physical Therapists (RPT)</li>
-            <li><i class="fa fa-check-circle"></i> Licensed Occupational Therapists (OTR)</li>
-            <li><i class="fa fa-check-circle"></i> Licensed Sports or Rehabilitation Specialists</li>
-            <li><i class="fa fa-check-circle"></i> Accredited Clinics and Rehabilitation Centers</li>
-            <li><i class="fa fa-check-circle"></i> Certified Manual, Exercise, or Neurological Therapists</li>
-        </ul>
-        <p class="eligibility-note">
-            <em>Applicants must provide a valid PRC license or certification during registration 
-            to ensure service quality and patient safety on HealConnect.</em>
-        </p>
-    </section>
-
     @endguest
 
-    <!-- Pricing Section  -->
-    <section class="pricing-section">
-        <div class="pricing-container">
-            <section class="pricing-hero">
-                <h1>Choose Your Plan</h1>
-                <p>
-                    Join HealConnect and grow your physical therapy practice with ease. 
-                    Whether you're working independently or running a clinic, 
-                    our plans help you connect with patients, manage sessions, and build your reputation online.
-                </p>
-            </section>
-
+    <!-- Pricing Cards Section -->
+    <section class="pricing-cards-section container">
+        <div class="pricing-grid">
             @foreach ($plans as $key => $plan)
                 <div class="pricing-card {{ $key }}">
-                    <h2>{{ $plan['name'] }}</h2>
-                    <p class="price">{{ $plan['price'] }}</p>
-                    <h4>{{ $plan['description'] }}</h4>
-                    <ul>
-                        @foreach ($plan['features'] as $feature)
-                            <li>{{ $feature }}</li>
-                        @endforeach
-                    </ul>
-                    
-                    @auth
-                        {{-- If logged in, go directly to subscription --}}
-                        @if(auth()->user()->role === 'therapist' || auth()->user()->role === 'clinic')
-                            <a href="{{ route('subscribe.show', $key) }}" class="btn btn-primary">Get Started</a>
+                    <div class="card-header">
+                        <h2>{{ $plan['name'] }}</h2>
+                        <div class="price-box">
+                            <span class="currency">₱</span>
+                            <span class="price-value">{{ filter_var($plan['price'], FILTER_SANITIZE_NUMBER_INT) }}</span>
+                            <span class="period">/mo</span>
+                        </div>
+                        <p class="plan-desc">{{ $plan['description'] }}</p>
+                    </div>
+
+                    <div class="card-body">
+                        <ul class="feature-list">
+                            @foreach ($plan['features'] as $feature)
+                                <li><i class="fas fa-check-circle"></i> {{ $feature }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    <div class="card-footer">
+                        @auth
+                            @if(auth()->user()->role === 'therapist' || auth()->user()->role === 'clinic')
+                                <a href="{{ route('subscribe.show', $key) }}" class="btn-get-started">Get Started</a>
+                            @else
+                                <span class="btn-disabled">For Therapists & Clinics</span>
+                            @endif
                         @else
-                            <span class="btn btn-disabled">For Therapists & Clinics Only</span>
-                        @endif
-                    @else
-                        {{-- If not logged in, route to correct registration type --}}
-                        @php
-                            $registrationType = ($key === 'pro clinic') ? 'clinic' : 'therapist';
-                        @endphp
-                        <a href="{{ route('register.form', $registrationType) }}?plan={{ $key }}" class="btn btn-primary">Get Started</a>
-                    @endauth
+                            @php
+                                $registrationType = ($key === 'pro clinic') ? 'clinic' : 'therapist';
+                            @endphp
+                            <a href="{{ route('register.form', $registrationType) }}?plan={{ $key }}" class="btn-get-started">Get Started</a>
+                        @endauth
+                    </div>
                 </div>
             @endforeach
         </div>
-        <p class="pricing-note">
-            <em>Note: Each therapist on HealConnect sets their own session rates. 
-            Fees may vary depending on experience, specialization, and treatment duration.</em>
-        </p>
+
+        <div class="pricing-disclaimer">
+            <p><strong>Note:</strong> Each therapist sets their own session rates. Fees varies by experience and specialization.</p>
+        </div>
     </section>
-
-
 </main>
 @endsection

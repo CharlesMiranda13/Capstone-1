@@ -3,50 +3,56 @@
 @section('title', 'HealConnect - Therapists & Clinics')
 
 @section('content')
+<div class="page-header-row">
+    <h2 class="page-title-new">Verified Therapists & Clinics</h2>
+    <p class="page-subtitle">Browse and book appointments with verified healthcare professionals</p>
+</div>
+
 <main class="Therapist-main">
 
-    {{-- Page Title --}}
-    <div class="ptlist-local">
-        <h2 class="therapist-title">VERIFIED THERAPISTS / CLINICS</h2>
-    </div>
-
-    <div class="filters-wrapper-local">
+    <div class="filters-wrapper">
         <div class="filters-left">
 
-            <div class="filter-tabs">
-                <span class="service-label">Category:</span>
-                <a href="{{ route('ptlist') }}" 
-                    class="{{ request('category') == '' ? 'active' : '' }}">All</a> |
-                <a href="{{ route('ptlist', ['category' => 'independent']) }}" 
-                    class="{{ request('category') == 'independent' ? 'active' : '' }}">Independent Therapist</a> |
-                <a href="{{ route('ptlist', ['category' => 'clinic']) }}" 
-                    class="{{ request('category') == 'clinic' ? 'active' : '' }}">Clinic</a>
+            {{-- Category Filter --}}
+            <div class="filter-row-inline">
+                <span class="service-label">Category</span>
+                <div class="hc-tabs-wrapper">
+                    <a href="{{ route('ptlist') }}" 
+                        class="hc-tab-item {{ request('category') == '' ? 'active' : '' }}">All</a>
+                    <a href="{{ route('ptlist', ['category' => 'independent']) }}" 
+                        class="hc-tab-item {{ request('category') == 'independent' ? 'active' : '' }}">Independent</a>
+                    <a href="{{ route('ptlist', ['category' => 'clinic']) }}" 
+                        class="hc-tab-item {{ request('category') == 'clinic' ? 'active' : '' }}">Clinic</a>
+                </div>
             </div>
 
-            {{-- Services Tabs --}}
-            <div class="filter-services">
-                <span class="service-label">Services:</span>
-                <a href="{{ route('ptlist', ['service' => 'home']) }}" 
-                    class="{{ request('service') == 'home' ? 'active' : '' }}">In-home</a> |
-                <a href="{{ route('ptlist', ['service' => 'online']) }}" 
-                    class="{{ request('service') == 'online' ? 'active' : '' }}">Online</a> |
-                <a href="{{ route('ptlist', ['service' => 'clinic']) }}" 
-                    class="{{ request('service') == 'clinic' ? 'active' : '' }}">Clinic</a>
+            {{-- Services Filter --}}
+            <div class="filter-row-inline">
+                <span class="service-label">Services</span>
+                <div class="hc-tabs-wrapper">
+                    <a href="{{ route('ptlist', ['service' => 'home']) }}" 
+                        class="hc-tab-item {{ request('service') == 'home' ? 'active' : '' }}">In-home</a>
+                    <a href="{{ route('ptlist', ['service' => 'online']) }}" 
+                        class="hc-tab-item {{ request('service') == 'online' ? 'active' : '' }}">Online</a>
+                    <a href="{{ route('ptlist', ['service' => 'clinic']) }}" 
+                        class="hc-tab-item {{ request('service') == 'clinic' ? 'active' : '' }}">Clinic</a>
+                </div>
             </div>
         </div>
 
         {{-- Search Bar --}}
         <div class="search-container">
             <form action="{{ route('ptlist') }}" method="GET" class="search-form">
-                <input type="text" 
-                       name="search" 
-                       placeholder="Search therapists..." 
-                       value="{{ request('search') }}"
-                       class="search-input">
-
-                <button type="submit" class="search-btn">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
+                <div class="search-input-wrap">
+                    <input type="text" 
+                           name="search" 
+                           placeholder="Search therapists..." 
+                           value="{{ request('search') }}"
+                           class="search-input">
+                    <button type="submit" class="search-btn">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -56,34 +62,38 @@
             @foreach($therapists as $therapist)
                 <div class="therapist-card">
                     
-                    {{-- White Section: Profile Picture, Name, Role, Description, Location --}}
-                    <div class="therapist-logo">
-                        @if($therapist->profile_picture)
-                            <img src="{{ asset('storage/' .$therapist->profile_picture) }}" alt="{{ $therapist->name }}">
-                        @else
-                            <img src="{{ asset('images/logo1.png') }}" alt="Default Therapist">
-                        @endif
-                    </div>
-                    
                     @if($therapist->role === 'clinic' && $therapist->clinic_type)
                         <span class="clinic-type-badge {{ $therapist->clinic_type }}">
                             {{ ucfirst($therapist->clinic_type) }}
                         </span>
                     @endif
 
-                    <h3 class="therapist-name">{{ $therapist->name }}</h3>
-                    <p class="therapist-role">{{ ucfirst($therapist->role_display) }}</p>
-                    
-                    <p class="therapist-description">
-                        {{ $therapist->description ?? 'A compassionate and dedicated therapist ready to assist you.' }}
-                    </p>
+                    {{-- Card Body --}}
+                    <div class="therapist-card-body">
+                        <div class="therapist-logo">
+                            @if($therapist->profile_picture)
+                                <img src="{{ asset('storage/' .$therapist->profile_picture) }}" alt="{{ $therapist->name }}">
+                            @else
+                                <img src="{{ asset('images/logo1.png') }}" alt="Default Therapist">
+                            @endif
+                        </div>
+                        
+                        <h3 class="therapist-name">{{ $therapist->name }}</h3>
+                        <p class="therapist-role">{{ ucfirst($therapist->role_display) }}</p>
+                        
+                        <p class="therapist-description">
+                            {{ $therapist->description ?? 'A compassionate and dedicated therapist ready to assist you.' }}
+                        </p>
 
-                    <p class="therapist-location">
-                        <i class="fa-solid fa-location-dot"></i>
-                        {{ $therapist->address ?? 'Location not specified' }}
-                    </p>
+                        <p class="therapist-location">
+                            <i class="fa-solid fa-location-dot"></i>
+                            {{ $therapist->address ?? 'Location not specified' }}
+                        </p>
 
-                    {{-- Blue Section Container: Availability and Action Buttons --}}
+                        <div class="card-spacer"></div>
+                    </div>
+
+                    {{-- Card Footer --}}
                     <div class="therapist-card-footer">
                         @if($therapist->availability && count($therapist->availability) > 0)
                             <span class="availability-status available">

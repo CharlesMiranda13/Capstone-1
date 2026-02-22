@@ -19,7 +19,6 @@
     
     <div id="page-content" class="main-wrapper" style="display:none;">
         @include('header/footer.header')
-
         <main>
             @if(session('success'))
                 <div class="alert alert-success" style="text-align:center; margin:20px auto;">

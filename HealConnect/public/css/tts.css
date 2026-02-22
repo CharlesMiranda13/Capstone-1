@@ -4,8 +4,37 @@
 
 /* ---- Page Layout ---- */
 .Therapist-main {
-    padding-bottom: 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px 3rem;
 }
+
+/* ---- Hero Section (Listing Page) ---- */
+.page-header-row {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+    color: #ffffff;
+    padding: 2.5rem 40px;
+    text-align: center;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.page-title-new {
+    font-size: 2.4rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.5px;
+    color: #ffffff !important;
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 700px;
+    margin: 0 auto;
+    font-weight: 400;
+}
+
 
 /* ---- Filter & Search Toolbar ---- */
 .filters-wrapper {
