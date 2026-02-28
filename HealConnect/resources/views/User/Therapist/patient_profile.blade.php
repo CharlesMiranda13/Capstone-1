@@ -29,7 +29,7 @@
 @endif
 
 <main class="patient-profile">
-    <div class="container">
+    <div class="{{ request()->has('embed') ? 'container-fluid px-0' : 'container' }}">
         {{-- Profile Header with Banner --}}
         <div class="profile-header-banner">
             <div class="header-overlay"></div>
@@ -184,4 +184,23 @@
 
 @if (!request()->has('embed'))
     @endsection
+@else
+    <script>
+        // Force the parent modal content box to stretch since external CSS is failing or cached
+        (function() {
+            try {
+                const modalBody = document.getElementById('modal-body');
+                if (modalBody) {
+                    const modalContent = modalBody.closest('.modal-content');
+                    if (modalContent) {
+                        modalContent.style.width = '100%';
+                        modalContent.style.maxWidth = '1000px';
+                        modalContent.style.padding = '0';
+                    }
+                }
+            } catch (e) {
+                console.error('Error auto-resizing modal:', e);
+            }
+        })();
+    </script>
 @endif

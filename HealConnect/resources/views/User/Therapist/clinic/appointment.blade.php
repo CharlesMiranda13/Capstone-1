@@ -3,8 +3,8 @@
 @section('title', 'Clinic Appointments')
 
 @section('styles')
-<link rel="stylesheet" href="{{ asset('css/therapist_appointment.css') }}">
-<link rel="stylesheet" href="{{ asset('css/patient-profile.css') }}">
+<link rel="stylesheet" href="{{ asset('css/therapist_appointment.css') }}?v={{ filemtime(public_path('css/therapist_appointment.css')) }}">
+<link rel="stylesheet" href="{{ asset('css/patient-profile.css') }}?v={{ filemtime(public_path('css/patient-profile.css')) }}">
 @endsection
 
 @section('content')
@@ -95,20 +95,14 @@
                                         @if($appointment->notes)
                                             <i class="fa fa-sticky-note" title="Notes: {{ $appointment->notes }}"></i>
                                         @endif
-                                        
-                                        <div class="hc-dropdown">
-                                            <button class="hc-dropdown-toggle">Options</button>
-                                            <div class="hc-dropdown-menu">
-                                                @if($appointment->referral)
-                                                    <a href="{{ route('clinic.referral.view', $appointment->id) }}" class="hc-dropdown-item">
-                                                        <i class="fa fa-file-medical"></i> Referral
-                                                    </a>
-                                                @endif
-                                                <button class="hc-dropdown-item openModalBtn" data-link="{{ route('clinic.patients.profile', ['id' => $appointment->patient->id, 'embed' => 1]) }}">
-                                                    <i class="fa fa-user-circle"></i> Profile
-                                                </button>
-                                            </div>
-                                        </div>
+                                        @if($appointment->referral)
+                                            <a href="{{ route('clinic.referral.view', $appointment->id) }}" class="hc-action-btn btn-referral" title="View Referral">
+                                                <i class="fa fa-file-medical"></i> Referral
+                                            </a>
+                                        @endif
+                                        <button class="hc-action-btn btn-profile openModalBtn" data-link="{{ route('clinic.patients.profile', ['id' => $appointment->patient->id, 'embed' => 1]) }}" title="View Profile">
+                                            <i class="fa fa-user-circle"></i> Profile
+                                        </button>
                                     </div>
                                 </td>
                                 <td data-label="Status">
@@ -150,7 +144,7 @@
 </div>
     <!-- Patient Profile Modal -->
     <div id="patientModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="width: 100% !important; max-width: 1000px !important;">
             <span class="close">&times;</span>
             <div id="modal-body"></div>
         </div>

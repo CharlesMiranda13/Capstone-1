@@ -19,8 +19,8 @@
 @section('title', 'Clients')
 
 @section('styles')
-<link rel="stylesheet" href="{{ asset('css/client.css') }}">
-<link rel="stylesheet" href="{{ asset('css/patient-profile.css') }}">
+<link rel="stylesheet" href="{{ asset('css/client.css') }}?v={{ filemtime(public_path('css/client.css')) }}">
+<link rel="stylesheet" href="{{ asset('css/patient-profile.css') }}?v={{ filemtime(public_path('css/patient-profile.css')) }}">
 @endsection
 
 
@@ -114,7 +114,7 @@
 
 {{-- Patient Profile Modal - OUTSIDE the main container --}}
 <div id="patientModal" class="modal">
-    <div class="modal-content">
+    <div class="modal-content" style="width: 100% !important; max-width: 1000px !important;">
         <span class="close">&times;</span>
         <div id="modal-body"></div>
     </div>

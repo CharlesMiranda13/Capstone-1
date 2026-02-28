@@ -132,6 +132,7 @@ nav {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    z-index: 1010;
 }
 
 nav a {
@@ -721,6 +722,10 @@ footer,
 
 /* Responsive Design */
 @media (max-width: 1000px) {
+    #homepage h2 {
+        font-size: 28px;
+    }
+
     nav {
         display: none;
         flex-direction: column;
@@ -733,6 +738,7 @@ footer,
         padding: 5%;
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1050;
     }
 
     nav.show {
@@ -741,6 +747,7 @@ footer,
 
     .hamburger {
         display: block;
+        z-index: 1060;
     }
 }
 
@@ -785,6 +792,19 @@ footer,
 }
 
 @media (max-width: 480px) {
+    #homepage h2 {
+        font-size: 1.25rem;
+    }
+
+    .header-logo img {
+        width: 35px;
+        height: 35px;
+    }
+
+    #homepage {
+        padding: 10px 15px;
+    }
+
     nav a {
         font-size: 14px;
         margin: 0.5rem 0;

@@ -159,7 +159,7 @@
 </div>
     <!-- Patient Profile Modal -->
     <div id="patientModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="width: 100% !important; max-width: 1000px !important;">
             <span class="close">&times;</span>
             <div id="modal-body"></div>
         </div>
