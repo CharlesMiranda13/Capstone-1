@@ -95,6 +95,9 @@
                     </tbody>
                 </table>
             </div>
+            <div class="mt-4">
+                {{ $employees->withQueryString()->links('pagination.custom') }}
+            </div>
         </section>
     </div>
 </main>

@@ -1040,7 +1040,8 @@
     }
 
     .flash-message {
-        font-size: 13px;
+        width: 100%;
+        font-size: 14px;
         padding: 10px 15px;
     }
 }

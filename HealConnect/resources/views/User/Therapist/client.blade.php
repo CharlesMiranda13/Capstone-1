@@ -102,6 +102,9 @@
                 </tbody>
             </table>
         </div>
+        <div class="mt-4">
+            {{ $patients->withQueryString()->links('pagination.custom') }}
+        </div>
         @else
             <p>You currently have no patients.</p>
         @endif

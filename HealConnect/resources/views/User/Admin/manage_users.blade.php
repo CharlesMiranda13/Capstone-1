@@ -80,7 +80,7 @@
             </tbody>
         </table>
     </div>
-    <div class="mt-3">
-        {{ $users->withQueryString()->links() }}
+    <div class="mt-4 d-flex justify-content-center">
+        {{ $users->withQueryString()->links('pagination.custom') }}
     </div>
 @endsection
