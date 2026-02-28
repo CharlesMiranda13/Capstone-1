@@ -126,16 +126,24 @@ class IndtherapistController extends ptController
     {
         $therapist = Auth::user();
 
-        $patients = $this->getPatientsFor($therapist->id, User::class);
+        $query = User::whereHas('patientAppointments', function ($q) use ($therapist) {
+            $q->where('provider_id', $therapist->id)
+              ->where('provider_type', User::class);
+        });
 
         if ($request->filled('search')) {
-            $search = strtolower($request->search);
-            $patients = $patients->filter(fn ($p) => str_contains(strtolower($p->name), $search));
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
         }
 
         if ($request->filled('gender')) {
-            $patients = $patients->filter(fn ($p) => $p->gender === $request->gender);
+            $query->where('gender', $request->gender);
         }
+
+        $patients = $query->paginate(10);
 
         return view('user.therapist.client', compact('therapist', 'patients'));
     }
@@ -153,10 +161,7 @@ class IndtherapistController extends ptController
 
         $appointments = $query->orderBy('appointment_date', 'desc')
             ->orderBy('appointment_time', 'desc')
-            ->get();
-
-        // Get unique patients (latest appointment for each patient)
-        $appointments = $appointments->unique('patient_id')->values();
+            ->paginate(10);
 
         // Add record count for each patient
         foreach ($appointments as $appointment) {

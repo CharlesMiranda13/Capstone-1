@@ -27,7 +27,7 @@ class EmployeeController extends Controller
             $query->where('position', $request->position);
         }
 
-        $employees = $query->get();
+        $employees = $query->paginate(10);
 
         // Get unique positions for dropdown
         $positions = User::where('clinic_id', $clinic->id)

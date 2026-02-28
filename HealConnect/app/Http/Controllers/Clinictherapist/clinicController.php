@@ -264,17 +264,24 @@ class ClinicController extends ptController
     {
         $clinic = Auth::user();
 
-        // Get patients who have appointments with THIS clinic
-        $patients = $this->getPatientsFor($clinic->id, User::class);
+        $query = User::whereHas('patientAppointments', function ($q) use ($clinic) {
+            $q->where('provider_id', $clinic->id)
+              ->where('provider_type', User::class);
+        });
 
         if ($request->filled('search')) {
-            $search = strtolower($request->search);
-            $patients = $patients->filter(fn ($p) => str_contains(strtolower($p->name), $search));
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
         }
 
         if ($request->filled('gender')) {
-            $patients = $patients->filter(fn ($p) => $p->gender === $request->gender);
+            $query->where('gender', $request->gender);
         }
+
+        $patients = $query->paginate(10);
 
         return view('user.therapist.client', compact('clinic', 'patients'));
     }
@@ -289,44 +296,22 @@ class ClinicController extends ptController
             ->with(['patient', 'provider']);
 
         $query = $this->applyAppointmentFilters($query, $request);
+
         $appointments = $query->orderBy('appointment_date', 'desc')
-        ->orderBy('appointment_time', 'desc')
-        ->get();
+            ->orderBy('appointment_time', 'desc')
+            ->paginate(10);
 
-    // Get unique patients (latest appointment for each patient)
-    $appointments = $appointments->unique('patient_id')->values();
-
-    // Add record count for each patient
-    foreach ($appointments as $appointment) {
-        $appointment->record_count = Appointment::where('provider_id', $clinic->id)
-            ->where('patient_id', $appointment->patient_id)
-            ->where('status', 'completed')
-            ->count();
-    }
-
-    return view('user.therapist.clinic.appointment', compact('appointments'));
-}
-
-    /** ---------------- EMPLOYEES ---------------- */
-    public function employees(Request $request)
-    {
-        $clinic = Auth::user();
-
-        $query = User::where('clinic_id', $clinic->id)
-                ->where('role', 'employee');
-
-        if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+        // Add record count for each patient
+        foreach ($appointments as $appointment) {
+            $appointment->record_count = Appointment::where('provider_id', $clinic->id)
+                ->where('patient_id', $appointment->patient_id)
+                ->where('status', 'completed')
+                ->count();
         }
 
-        if ($request->filled('position')) {
-            $query->where('position', $request->position);
-        }
-
-        $employees = $query->get();
-
-        return view('user.therapist.clinic.employees', compact('employees'));
+        return view('user.therapist.clinic.appointment', compact('appointments'));
     }
+
 
     public function storeEmployee(Request $request)
     {
