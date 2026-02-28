@@ -218,6 +218,12 @@
 }
 
 /* Card Footer */
+.card-footer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 .btn-get-started {
     display: block;
     width: 100%;

@@ -54,7 +54,7 @@
         @else
             <div class="hc-table-container hc-table-responsive">
                 <table class="hc-table">
-                    <thead>
+                <thead>
                         <tr>
                             <th>Patient</th>
                             <th>Provider</th>
@@ -136,7 +136,10 @@
                     </tbody>
                 </table>
             </div>
-        @endif
+            <div class="mt-4">
+                {{ $appointments->withQueryString()->links('pagination.custom') }}
+            </div>
+@endif
 
 </div>
     <!-- Patient Profile Modal -->

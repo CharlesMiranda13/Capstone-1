@@ -146,6 +146,9 @@
                     </tbody>
                 </table>
             </div>
+            <div class="mt-4">
+                {{ $appointments->withQueryString()->links('pagination.custom') }}
+            </div>
         @endif
 
 </div>

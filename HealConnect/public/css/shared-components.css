@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 :root {
     --hc-primary: #3b82f6;
     --hc-primary-hover: #2563eb;
@@ -272,15 +276,18 @@
 .search-filter-form-new {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
     width: 100%;
     flex-wrap: wrap;
 }
 
 .search-input-wrapper {
     position: relative;
-    flex: 1 1 auto;
-    min-width: 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0%;
+    min-width: 250px;
+    z-index: 1;
 }
 
 .search-icon-inside {
@@ -309,8 +316,8 @@
 }
 
 .filter-select-new {
-    width: 160px;
-    flex: 0 0 160px;
+    width: 170px;
+    flex: 0 0 170px;
     height: 45px;
     padding: 0 0.75rem;
     border: 1px solid #e2e8f0;
@@ -321,7 +328,8 @@
     font-weight: 500;
     color: #334155;
     outline: none;
-    min-width: 0;
+    min-width: 150px;
+    flex-shrink: 0;
 }
 
 .hc-btn-search {
@@ -649,4 +657,63 @@
 .action-form {
     display: inline-block;
     margin: 0;
+}
+
+/* ====== PAGINATION STYLING ====== */
+.pagination-nav {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.page-item {
+    display: inline-block;
+}
+
+.page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    border-radius: 8px;
+    background: white;
+    border: 1px solid var(--hc-border);
+    color: var(--hc-text-muted);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.page-item.active .page-link {
+    background: linear-gradient(90deg, #4b8df8, #4ad0a9);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(75, 141, 248, 0.25);
+}
+
+.page-link:hover:not(.disabled) {
+    border-color: var(--hc-primary);
+    color: var(--hc-primary);
+    background: #f8faff;
+    transform: translateY(-1px);
+}
+
+.page-item.disabled .page-link {
+    color: #cbd5e1;
+    background: #f8fafc;
+    cursor: not-allowed;
+    pointer-events: none;
 }
