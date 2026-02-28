@@ -103,16 +103,21 @@
                                         @if($appointment->notes)
                                             <i class="fa fa-sticky-note" title="Notes: {{ $appointment->notes }}"></i>
                                         @endif
-                                        @if($appointment->referral)
-                                            <a href="{{ asset('storage/referrals/' . $appointment->referral) }}" target="_blank" class="hc-icon-btn" title="View Referral">
-                                                <i class="fa fa-file-medical"></i>
-                                            </a>
-                                        @endif
-                                        <button class="openModalBtn hc-icon-btn"
-                                            data-link="{{ route('therapist.patients.profile', $appointment->patient->id) }}"
-                                            title="View Patient Profile">
-                                            <i class="fa fa-user-circle"></i>
-                                        </button>
+                                        
+                                        <div class="hc-dropdown">
+                                            <button class="hc-dropdown-toggle">Options</button>
+                                            <div class="hc-dropdown-menu">
+                                                @if($appointment->referral)
+                                                    <a href="{{ asset('storage/referrals/' . $appointment->referral) }}" target="_blank" class="hc-dropdown-item">
+                                                        <i class="fa fa-file-medical"></i> Referral
+                                                    </a>
+                                                @endif
+                                                <button class="hc-dropdown-item openModalBtn"
+                                                    data-link="{{ route('therapist.patients.profile', $appointment->patient->id) }}">
+                                                    <i class="fa fa-user-circle"></i> Profile
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
 

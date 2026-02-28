@@ -95,14 +95,20 @@
                                         @if($appointment->notes)
                                             <i class="fa fa-sticky-note" title="Notes: {{ $appointment->notes }}"></i>
                                         @endif
-                                        @if($appointment->referral)
-                                            <a href="{{ route('clinic.referral.view', $appointment->id) }}" class="hc-icon-btn" title="View Referral">
-                                                <i class="fa fa-file-medical"></i>
-                                            </a>
-                                        @endif
-                                        <button class="openModalBtn hc-icon-btn" data-link="{{ route('clinic.patients.profile', ['id' => $appointment->patient->id, 'embed' => 1]) }}" title="View Profile">
-                                            <i class="fa fa-user-circle"></i>
-                                        </button>
+                                        
+                                        <div class="hc-dropdown">
+                                            <button class="hc-dropdown-toggle">Options</button>
+                                            <div class="hc-dropdown-menu">
+                                                @if($appointment->referral)
+                                                    <a href="{{ route('clinic.referral.view', $appointment->id) }}" class="hc-dropdown-item">
+                                                        <i class="fa fa-file-medical"></i> Referral
+                                                    </a>
+                                                @endif
+                                                <button class="hc-dropdown-item openModalBtn" data-link="{{ route('clinic.patients.profile', ['id' => $appointment->patient->id, 'embed' => 1]) }}">
+                                                    <i class="fa fa-user-circle"></i> Profile
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
                                 <td data-label="Status">

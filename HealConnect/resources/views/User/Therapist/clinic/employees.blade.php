@@ -79,12 +79,17 @@
                                 <td><span class="email-text">{{ $employee->email }}</span></td>
                                 <td><span class="phone-text">{{ $employee->position }}</span></td>
                                 <td class="text-center actions-cell">
-                                    <button class="hc-icon-btn hc-btn-outline edit-btn" data-id="{{ $employee->id }}" title="Edit">
-                                        <i class="fa fa-edit"></i>
-                                    </button>
-                                    <button class="hc-icon-btn hc-btn-danger delete-btn" data-id="{{ $employee->id }}" title="Delete">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
+                                    <div class="hc-dropdown">
+                                        <button class="hc-dropdown-toggle">Actions</button>
+                                        <div class="hc-dropdown-menu">
+                                            <button class="hc-dropdown-item edit-btn" data-id="{{ $employee->id }}">
+                                                <i class="fa fa-edit"></i> Edit Details
+                                            </button>
+                                            <button class="hc-dropdown-item hc-dropdown-item-danger delete-btn" data-id="{{ $employee->id }}">
+                                                <i class="fa fa-trash"></i> Delete Employee
+                                            </button>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         @empty

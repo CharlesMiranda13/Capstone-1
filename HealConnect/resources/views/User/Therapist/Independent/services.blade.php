@@ -117,14 +117,25 @@
                                 @endif
                             </td>
                             <td class="action-cell">
-                                <form action="{{ route('therapist.availability.toggle', $availability->id) }}" method="POST" class="action-form">
-                                    @csrf @method('PATCH')
-                                    <button class="hc-btn hc-btn-outline hc-btn-sm">{{ $availability->is_active ? 'Disable' : 'Enable' }}</button>
-                                </form>
-                                <form action="{{ route('therapist.availability.destroy', $availability->id) }}" method="POST" class="action-form">
-                                    @csrf @method('DELETE')
-                                    <button class="hc-btn hc-btn-danger hc-btn-sm">Delete</button>
-                                </form>
+                                <div class="hc-dropdown">
+                                    <button class="hc-dropdown-toggle">Actions</button>
+                                    <div class="hc-dropdown-menu">
+                                        <form action="{{ route('therapist.availability.toggle', $availability->id) }}" method="POST">
+                                            @csrf @method('PATCH')
+                                            <button type="submit" class="hc-dropdown-item">
+                                                <i class="fa {{ $availability->is_active ? 'fa-toggle-off' : 'fa-toggle-on' }}"></i>
+                                                {{ $availability->is_active ? 'Disable' : 'Enable' }}
+                                            </button>
+                                        </form>
+                                        <form action="{{ route('therapist.availability.destroy', $availability->id) }}" method="POST">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="hc-dropdown-item hc-dropdown-item-danger"
+                                                onclick="return confirm('Are you sure you want to delete this availability?');">
+                                                <i class="fa fa-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     @empty
@@ -134,8 +145,8 @@
             </table>
         </div>
 
-        <div class="pagination-container">
-            {{ $availabilities->links() }}
+        <div class="mt-4">
+            {{ $availabilities->links('pagination.custom') }}
         </div>
     </div>
 

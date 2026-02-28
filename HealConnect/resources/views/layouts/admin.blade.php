@@ -64,6 +64,7 @@
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script src="{{ asset('js/notifications.js') }}"></script>
     <script src="{{ asset('js/sidebar.js') }}"></script>
+    <script src="{{ asset('js/dropdown.js') }}"></script>
     @yield('scripts')
 </body>
 </html>

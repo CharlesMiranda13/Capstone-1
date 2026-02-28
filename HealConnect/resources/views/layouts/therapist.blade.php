@@ -90,6 +90,7 @@
     <script src="{{ asset('js/modal.js') }}"></script>
     <script src="{{ asset('js/notifications.js') }}"></script>
     <script src="{{ asset('js/sidebar.js') }}"></script>
+    <script src="{{ asset('js/dropdown.js') }}"></script>
     @yield('scripts')
 </body>
 </html>

@@ -56,11 +56,17 @@
         {{-- Quick Actions --}}
         <div class="header-actions">
             @if(strtolower($user->status) === 'pending')
-            <select id="adminActionRemote" class="hc-status-select" style="min-width: 160px;">
-                <option value="" disabled selected>Quick Actions...</option>
-                <option value="approve">Approve User</option>
-                <option value="decline">Decline User</option>
-            </select>
+            <div class="hc-dropdown">
+                <button class="hc-dropdown-toggle">Verification Actions</button>
+                <div class="hc-dropdown-menu">
+                    <button class="hc-dropdown-item" id="btnApproveUser">
+                        <i class="fa fa-check-circle"></i> Approve User
+                    </button>
+                    <button class="hc-dropdown-item hc-dropdown-item-danger" id="btnDeclineUser">
+                        <i class="fa fa-times-circle"></i> Decline User
+                    </button>
+                </div>
+            </div>
 
             {{-- Hidden Form for Approval --}}
             <form id="approveUserForm" action="{{ route('admin.users.verify', $user->id) }}" method="POST" style="display:none;">
@@ -313,21 +319,16 @@
 
 @section('scripts')
 <script>
-    document.getElementById('adminActionRemote')?.addEventListener('change', function() {
-        const action = this.value;
-        if (action === 'approve') {
-            if (confirm('Are you sure you want to approve this user?')) {
-                document.getElementById('approveUserForm').submit();
-            } else {
-                this.value = ''; // Reset select
-            }
-        } else if (action === 'decline') {
-            // openDeclineModal is defined in modal.js, but let's make sure it's accessible or trigger the click
-            const overlay = document.getElementById('declineModal');
-            if (overlay) {
-                overlay.style.display = 'flex';
-            }
-            this.value = ''; // Reset select
+    document.getElementById('btnApproveUser')?.addEventListener('click', function() {
+        if (confirm('Are you sure you want to approve this user?')) {
+            document.getElementById('approveUserForm').submit();
+        }
+    });
+
+    document.getElementById('btnDeclineUser')?.addEventListener('click', function() {
+        const overlay = document.getElementById('declineModal');
+        if (overlay) {
+            overlay.style.display = 'flex';
         }
     });
 

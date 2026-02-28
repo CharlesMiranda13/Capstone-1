@@ -61,7 +61,6 @@
                         <th>Patient</th>
                         <th>Email Address</th>
                         <th>Phone Number</th>
-                        <th class="text-center">Status</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -86,16 +85,18 @@
                             <td><span class="email-text">{{ $patient->email }}</span></td>
                             <td><span class="phone-text">{{ $patient->phone ?? '—' }}</span></td>
                             <td class="text-center">
-                                <a href="{{ route('therapist.patients_records', ['patientId' => $patient->id]) }}" class="hc-btn hc-btn-outline hc-btn-sm" title="Medical Records">
-                                    <i class="fa fa-folder-open"></i> Records
-                                </a>
-                            </td>
-                            <td class="text-center">
-                                <button class="hc-btn hc-btn-primary openModalBtn" 
-                                        data-link="{{ route('therapist.patients.profile', $patient->id) }}?embed=1"
-                                        title="View Profile">
-                                   <i class="fa fa-user-circle"></i>
-                                </button>
+                                <div class="hc-dropdown">
+                                    <button class="hc-dropdown-toggle">Actions</button>
+                                    <div class="hc-dropdown-menu">
+                                        <a href="{{ route('therapist.patients_records', ['patientId' => $patient->id]) }}" class="hc-dropdown-item">
+                                            <i class="fa fa-folder-open"></i> Medical Records
+                                        </a>
+                                        <button class="hc-dropdown-item openModalBtn" 
+                                                data-link="{{ route('therapist.patients.profile', $patient->id) }}?embed=1">
+                                           <i class="fa fa-user-circle"></i> View Profile
+                                        </button>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     @endforeach

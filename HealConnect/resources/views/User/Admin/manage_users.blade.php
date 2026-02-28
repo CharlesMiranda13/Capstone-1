@@ -60,19 +60,21 @@
                         </span>
                     </td>   
                     <td>
-                        <div class="action-buttons">
-                            <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-primary btn-sm">
-                                <i class="fa fa-eye"></i> View
-                            </a>
-
-                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-del btn-sm"
-                                    onclick="return confirm('Are you sure you want to delete this user?');">
-                                    <i class="fa fa-trash"></i> Delete
-                                </button>
-                            </form>
+                        <div class="hc-dropdown">
+                            <button class="hc-dropdown-toggle">Actions</button>
+                            <div class="hc-dropdown-menu">
+                                <a href="{{ route('admin.users.show', $user->id) }}" class="hc-dropdown-item">
+                                    <i class="fa fa-eye"></i> View Profile
+                                </a>
+                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="action-form">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="hc-dropdown-item hc-dropdown-item-danger"
+                                        onclick="return confirm('Are you sure you want to delete this user?');">
+                                        <i class="fa fa-trash"></i> Delete User
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </td>
                 </tr>
