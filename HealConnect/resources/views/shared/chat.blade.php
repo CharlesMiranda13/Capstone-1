@@ -92,7 +92,8 @@
             {{-- Chat Messages --}}
             <div class="chat-messages" id="chat-messages">
                 <div class="no-chat-selected">
-                    <p>Select a chat to start messaging.</p>
+                    <i class="far fa-comments"></i>
+                    <p>Select a conversation to start messaging.</p>
                 </div>
             </div>
 
@@ -102,20 +103,22 @@
                     @csrf
                     <input type="text" id="message-input" name="message" placeholder="Type your message..." required>
 
-                    {{-- File Upload --}}
-                    <input type="file" id="file-input" name="file" accept="image/*,video/*,application/pdf" style="display:none;">
-                    <button type="button" id="file-btn" title="Send file">
-                        <i class="fas fa-paperclip"></i>
-                    </button>
+                    <div class="input-actions">
+                        {{-- File Upload --}}
+                        <input type="file" id="file-input" name="file" accept="image/*,video/*,application/pdf" style="display:none;">
+                        <button type="button" id="file-btn" title="Send file">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
 
-                    {{-- Voice Message --}}
-                    <button type="button" id="record-btn" class="mic-btn" title="Voice message">
-                        <i class="fas fa-microphone"></i>
-                    </button>
+                        {{-- Voice Message --}}
+                        <button type="button" id="record-btn" class="mic-btn" title="Voice message">
+                            <i class="fas fa-microphone"></i>
+                        </button>
 
-                    <button type="submit" class="send-btn">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
+                        <button type="submit" class="send-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
                 </form>
             </footer>
         </section>

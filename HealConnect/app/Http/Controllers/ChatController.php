@@ -9,7 +9,8 @@ use App\Events\MessageSent;
 use App\Models\User;
 use App\Events\MessageUpdated;
 use App\Events\MessageDeleted;
-use App\Events\NewMessageEvent; 
+use App\Events\NewMessageEvent;
+use App\Events\MessageReadEvent;
 
 class ChatController extends Controller
 {
@@ -51,6 +52,11 @@ class ChatController extends Controller
                     ->where('is_read', false)
                     ->count();
 
+                // Check if video call is allowed today
+                $otherUser->can_video_call = ($otherUser->role === 'patient') 
+                    ? $user->hasActiveAppointmentToday($otherUser) 
+                    : true;
+
                 return $otherUser;
             })
             // Sort by latest message time descending 
@@ -69,6 +75,9 @@ class ChatController extends Controller
 
             // Broadcast updated unread count to current user
             $this->broadcastUnreadCount($user->id);
+
+            // Broadcast that messages were read to the sender
+            broadcast(new MessageReadEvent($user->id, $receiver->id))->toOthers();
         }
 
         return view('shared.chat', compact('user', 'conversations', 'receiver'));
@@ -76,12 +85,22 @@ class ChatController extends Controller
 
     public function getUserInfo($id)
     {
-        $user = User::select('id', 'name', 'profile_picture')->findOrFail($id);
-        $user->profile_picture = $user->profile_picture 
-            ? asset('storage/' . $user->profile_picture) 
-            : asset('images/logo1.png');
+        $otherUser = User::findOrFail($id);
+        $currUser = auth()->user();
+        
+        $canCall = ($otherUser->role === 'patient') 
+            ? $currUser->hasActiveAppointmentToday($otherUser) 
+            : true;
 
-        return response()->json($user);
+        return response()->json([
+            'id' => $otherUser->id,
+            'name' => $otherUser->name,
+            'profile_picture' => $otherUser->profile_picture 
+                ? asset('storage/' . $otherUser->profile_picture) 
+                : asset('images/logo1.png'),
+            'can_video_call' => $canCall,
+            'restriction_reason' => $canCall ? '' : 'Video calls are only allowed on the day of an active appointment.'
+        ]);
     }
 
     // Fetch messages between current user and selected user
@@ -98,6 +117,9 @@ class ChatController extends Controller
 
         // Broadcast updated unread count
         $this->broadcastUnreadCount($userId);
+
+        // Broadcast that messages were read to the sender
+        broadcast(new MessageReadEvent($userId, $receiverId))->toOthers();
 
         $messages = Message::where(function ($query) use ($userId, $receiverId) {
             $query->where('sender_id', $userId)

@@ -315,7 +315,24 @@ class User extends Authenticatable
         if ($this->subscription_status === 'inactive') {
             return $this->customer_count < 3;
         }
-
         return false;
+    }
+
+    /**
+     * Check if this therapist/clinic has an active (pending/confirmed) appointment today with a patient.
+     */
+    public function hasActiveAppointmentToday(User $patient)
+    {
+        // Clinics check for themselves or any of their employees
+        $providerIds = [$this->id];
+        if ($this->role === self::ROLE_CLINIC) {
+            $providerIds = $this->employees()->pluck('id')->push($this->id)->toArray();
+        }
+
+        return Appointment::whereIn('status', ['pending', 'confirmed'])
+            ->whereDate('appointment_date', \Carbon\Carbon::today())
+            ->where('patient_id', $patient->id)
+            ->whereIn('provider_id', $providerIds)
+            ->exists();
     }
 }

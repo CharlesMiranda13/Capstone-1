@@ -119,14 +119,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const time = dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         
         // Handle call ended messages with enhanced styling
-        if (msg.type === 'call_ended' || msg.message_type === 'call_ended') {
+        if (msg.type === 'call_ended' || msg.message_type === 'call_ended' || (msg.message && msg.message.includes('Video call ended'))) {
             const wrapper = document.createElement('div');
             wrapper.classList.add('message', 'call-ended-message');
             wrapper.dataset.messageId = msg.id;
             
             // Parse duration from message if it exists
             const durationMatch = msg.message.match(/(\d+h\s*\d+m|\d+m\s*\d+s|\d+s)/);
-            const duration = durationMatch ? durationMatch[0] : msg.duration || 'Unknown duration';
+            const duration = durationMatch ? durationMatch[0] : msg.duration || 'Video chat ended';
             
             wrapper.innerHTML = `
                 <div class="call-ended-content">
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <i class="fas fa-video"></i>
                     </div>
                     <div class="call-details">
-                        <span class="call-status">Video chat ended</span>
+                        <span class="call-status">Video Call</span>
                         <span class="call-duration">${duration}</span>
                     </div>
                     <span class="call-time">${time}</span>
@@ -152,8 +152,8 @@ document.addEventListener('DOMContentLoaded', function () {
             wrapper.dataset.messageId = msg.id;
             wrapper.innerHTML = `
                 <div class="message-content">
-                    <i class="fas fa-video"></i>
-                    ${msg.message}
+                    <i class="fas fa-info-circle"></i>
+                    <span>${msg.message}</span>
                 </div>
             `;
             chatMessages.appendChild(wrapper);
@@ -169,10 +169,12 @@ document.addEventListener('DOMContentLoaded', function () {
         let bubbleContent = '';
         if (msg.type === 'voice' || msg.message_type === 'voice') {
             bubbleContent = `
-                <audio controls preload="none">
-                    <source src="${msg.message_url || msg.message}" type="audio/webm">
-                    Your browser does not support the audio element.
-                </audio>
+                <div class="voice-wrapper">
+                    <audio controls preload="none">
+                        <source src="${msg.message_url || msg.message}" type="audio/webm">
+                        Your browser does not support audio.
+                    </audio>
+                </div>
             `;
         } else if ((msg.type === 'file' || msg.message_type === 'file') && (msg.file_url || msg.message)) {
             const fileUrl = msg.file_url || msg.message;
@@ -182,10 +184,18 @@ document.addEventListener('DOMContentLoaded', function () {
             } else if (['mp4','mov','avi'].includes(ext)) {
                 bubbleContent = `<video controls class="chat-file"><source src="${fileUrl}" type="video/${ext}"></video>`;
             } else {
-                bubbleContent = `<a href="${fileUrl}" target="_blank">Download File</a>`;
+                bubbleContent = `<a href="${fileUrl}" target="_blank" class="chat-file">
+                    <i class="fas fa-file-alt"></i> Download File
+                </a>`;
             }
         } else {
-            bubbleContent = `<p class="text">${msg.message}${msg.edited ? ' (edited)' : ''}</p>`;
+            bubbleContent = `<p class="text">${msg.message}${msg.edited ? ' <small>(edited)</small>' : ''}</p>`;
+        }
+
+        // Seen status
+        let seenHTML = '';
+        if (isOwn && (msg.is_read || msg.read_at || msg.read)) {
+            seenHTML = '<span class="seen-status">Seen</span>';
         }
 
         // Menu for own messages
@@ -193,15 +203,15 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isOwn) {
             actions = `
                 <div class="message-menu">
-                    <span class="menu-toggle">⋯</span>
+                    <span class="menu-toggle"><i class="fas fa-ellipsis-v"></i></span>
                     <div class="menu-options">
-                        ${(msg.type === 'text' || msg.message_type === 'text') ? `<span class="edit-message" data-message-id="${msg.id}">Edit</span>` : ''}
+                        ${(msg.type === 'text' || msg.message_type === 'text' || !msg.message_type) ? `<span class="edit-message" data-message-id="${msg.id}">Edit</span>` : ''}
                         <span class="delete-message" data-message-id="${msg.id}">Delete</span>
                     </div>
                 </div>
             `;
         }
-        wrapper.innerHTML = `<div class="bubble">${bubbleContent}${actions}<span class="timestamp">${time}</span></div>`;
+        wrapper.innerHTML = `<div class="bubble">${bubbleContent}${actions}<span class="timestamp">${seenHTML}${time}</span></div>`;
         chatMessages.appendChild(wrapper);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
@@ -305,10 +315,25 @@ document.addEventListener('DOMContentLoaded', function () {
         chatUsername.textContent = chatItem.querySelector('h4').textContent;
         chatUserImage.src = chatItem.querySelector('img').src;
 
-        // Show/hide video call button based on selection
-        if (startVideoCall) {
-            startVideoCall.style.display = 'flex';
-        }
+        // Fetch user info to check call restriction
+        fetch(`/messages/user-info/${currentReceiverId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (startVideoCall) {
+                    if (data.can_video_call) {
+                        startVideoCall.classList.remove('restricted-call');
+                        startVideoCall.title = 'Start Video Call';
+                    } else {
+                        startVideoCall.classList.add('restricted-call');
+                        startVideoCall.title = data.restriction_reason || 'Video calls are only allowed on the day of an active appointment.';
+                    }
+                    startVideoCall.style.display = 'flex';
+                }
+            })
+            .catch(err => {
+                console.error('Failed to fetch user info:', err);
+                if (startVideoCall) startVideoCall.style.display = 'flex';
+            });
 
         markMessagesAsRead(currentReceiverId);
         loadMessages(currentReceiverId);
@@ -376,6 +401,11 @@ document.addEventListener('DOMContentLoaded', function () {
         startVideoCall.addEventListener('click', async () => {
             if (!currentReceiverId) {
                 alert('Please select a conversation first.');
+                return;
+            }
+
+            if (startVideoCall.classList.contains('restricted-call')) {
+                alert(startVideoCall.title || 'Video calls are only allowed on the day of an active appointment.');
                 return;
             }
 
@@ -591,6 +621,24 @@ document.addEventListener('DOMContentLoaded', function () {
         moveChatToTop(msg.sender_id, preview);
     });
 
+    // Messages read event (Seen status)
+    channel.bind('messages.read', data => {
+        console.log('👀 Messages read by other user:', data);
+        if (data.readerId == currentReceiverId) {
+            // Update all my sent messages to "Seen"
+            const sentMessages = chatMessages.querySelectorAll('.message.sent');
+            sentMessages.forEach(msg => {
+                const timestamp = msg.querySelector('.timestamp');
+                if (timestamp && !timestamp.querySelector('.seen-status')) {
+                    const seen = document.createElement('span');
+                    seen.className = 'seen-status';
+                    seen.textContent = 'Seen';
+                    timestamp.prepend(seen);
+                }
+            });
+        }
+    });
+
     // ---------------- INCOMING VIDEO CALL EVENT ----------------
     channel.bind('video.call.started', data => {
         const incomingCallDiv = document.getElementById('incoming-call');
@@ -649,9 +697,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ---------------- Edit/Delete message ----------------
     chatMessages.addEventListener('click', e => {
+        const toggle = e.target.closest('.menu-toggle');
+        
+        if (toggle) {
+            const menu = toggle.nextElementSibling;
+            const isOpen = menu.style.display === 'block';
+            
+            // Close all other menus first
+            document.querySelectorAll('.menu-options').forEach(m => m.style.display = 'none');
+            
+            menu.style.display = isOpen ? 'none' : 'block';
+            return;
+        }
+
         const target = e.target;
-        if (target.classList.contains('menu-toggle')) 
-            { const menu = target.nextElementSibling; menu.style.display = menu.style.display === 'block' ? 'none' : 'block'; return; }
         if (!target.classList.contains('edit-message') && !target.classList.contains('delete-message')) 
             document.querySelectorAll('.menu-options').forEach(menu => menu.style.display = 'none');
 
