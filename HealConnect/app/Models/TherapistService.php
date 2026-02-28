@@ -19,6 +19,10 @@ class TherapistService extends Model
     ];
 
 
+    protected $casts = [
+        'appointment_type' => 'array',
+    ];
+
     public function serviceable()
     {
         return $this->morphTo();

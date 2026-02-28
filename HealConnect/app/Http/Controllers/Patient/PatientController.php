@@ -203,7 +203,6 @@ class PatientController extends Controller
 
         $servicesList = $therapist->services
             ->pluck('appointment_type')
-            ->map(fn($s) => explode(',', $s))
             ->flatten()
             ->all();
     
@@ -211,7 +210,7 @@ class PatientController extends Controller
         $servicesData = $therapist->services
             ->map(function($service) {
                 return [
-                    'appointment_types' => explode(',', $service->appointment_type),
+                    'appointment_types' => $service->appointment_type,
                     'price' => $service->price ?? 'Please inquire',
                 ];
             });

@@ -208,7 +208,7 @@ class ClinicController extends ptController
         $appointmentTypes = $request->appointment_types ?? [];
 
         $service->update([
-            'appointment_type' => implode(',', $appointmentTypes),
+            'appointment_type' => $appointmentTypes,
             'price' => $request->price,
         ]);
 

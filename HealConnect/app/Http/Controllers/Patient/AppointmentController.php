@@ -34,17 +34,7 @@ class AppointmentController extends Controller
         $servicesData = $therapist->services()->first();
         
         if ($servicesData && $servicesData->appointment_type) {
-            // Handle both comma-separated string and JSON array
-            if (is_string($servicesData->appointment_type)) {
-                $decoded = json_decode($servicesData->appointment_type, true);
-                if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                    $servicesList = $decoded;
-                } else {
-                    $servicesList = array_map('trim', explode(',', $servicesData->appointment_type));
-                }
-            } else {
-                $servicesList = (array) $servicesData->appointment_type;
-            }
+            $servicesList = (array) $servicesData->appointment_type;
         }
 
         // Get Availabilities based on role

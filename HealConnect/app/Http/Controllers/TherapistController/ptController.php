@@ -264,7 +264,7 @@ class ptController extends Controller
 
         if (!$service) return [];
 
-        return json_decode($service->appointment_type, true) ?? [];
+        return $service->appointment_type ?? [];
     }
 
     /**
@@ -278,7 +278,7 @@ class ptController extends Controller
                 'serviceable_type' => User::class,
             ],
             [
-                'appointment_type' => json_encode($types),
+                'appointment_type' => $types,
                 'price' => $price,
             ]
         );
