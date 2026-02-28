@@ -101,7 +101,7 @@
         <h3>Analytics Overview</h3>
         <div class="analytics-section">
             <div class="analytics-card">
-                <h4>Appointments This Month</h4>
+                <h4>Appointments Overview (Yearly)</h4>
                 <canvas id="monthlyChart"></canvas>
             </div>
             <div class="analytics-card">

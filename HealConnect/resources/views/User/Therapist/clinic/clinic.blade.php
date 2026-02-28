@@ -110,7 +110,7 @@
         <h3>Analytics Overview</h3>
         <div class="analytics-section">
             <div class="analytics-card">
-                <h4>Appointments This Month</h4>
+                <h4>Appointments Overview (Yearly)</h4>
                 <canvas id="monthlyChart"></canvas>
             </div>
             <div class="analytics-card">
@@ -127,7 +127,7 @@
 <script>
     window.dashboardData = {
         usergrowth: {
-            labels: {!! json_encode(range(1, now()->daysInMonth)) !!},
+            labels: {!! json_encode(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']) !!},
             values: {!! json_encode($monthlyData ?? []) !!}
         },
         appointmentTypeData: {

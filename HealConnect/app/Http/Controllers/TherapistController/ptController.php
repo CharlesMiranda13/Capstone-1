@@ -209,21 +209,21 @@ class ptController extends Controller
         // Cancellations
         $cancellations = (clone $appointmentsQuery)->where('status', 'cancelled')->count();
 
-        // Monthly appointments data
+        // Monthly appointments data for the current year
         $monthlyAppointments = (clone $appointmentsQuery)
             ->whereYear('appointment_date', $now->year)
             ->selectRaw('MONTH(appointment_date) as month, COUNT(*) as total')
             ->groupBy('month')
             ->orderBy('month')
-            ->pluck('total', 'month');
+            ->pluck('total', 'month')
+            ->toArray();
 
-        // Build labels & values
-        $monthlyLabels = [];
+        // Build fixed 12-month labels & values
+        $monthlyLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         $monthlyValues = [];
 
-        foreach ($monthlyAppointments as $month => $count) {
-            $monthlyLabels[] = Carbon::create()->month($month)->format('F'); // January
-            $monthlyValues[] = $count;
+        for ($m = 1; $m <= 12; $m++) {
+            $monthlyValues[] = $monthlyAppointments[$m] ?? 0;
         }
 
         // Appointments by type

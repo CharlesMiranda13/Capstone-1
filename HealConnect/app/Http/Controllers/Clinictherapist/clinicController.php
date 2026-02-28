@@ -71,10 +71,19 @@ class ClinicController extends ptController
         $appointmentsQuery = Appointment::where('provider_id', $clinic->id)
             ->where('provider_type', User::class);
 
-        $monthlyData = collect(range(1, $daysInMonth))->map(function ($day) use ($now, $appointmentsQuery) {
-            $date = $now->copy()->startOfMonth()->addDays($day - 1)->toDateString();
-            return (clone $appointmentsQuery)->whereDate('appointment_date', $date)->count();
-        });
+        // Monthly appointments data for the current year
+        $monthlyAppointments = (clone $appointmentsQuery)
+            ->whereYear('appointment_date', $now->year)
+            ->selectRaw('MONTH(appointment_date) as month, COUNT(*) as total')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->pluck('total', 'month')
+            ->toArray();
+
+        $monthlyData = [];
+        for ($m = 1; $m <= 12; $m++) {
+            $monthlyData[] = $monthlyAppointments[$m] ?? 0;
+        }
 
         return view('user.therapist.clinic.clinic', compact(
             'clinic',
