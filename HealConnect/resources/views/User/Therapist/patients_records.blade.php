@@ -39,7 +39,11 @@
         {{-- Patient Banner - Professional EMR Style --}}
         <div class="patient-banner">
             <div class="patient-banner-avatar">
-                {{ strtoupper(substr($patient->name, 0, 1)) }}
+                @if($patient->profile_picture)
+                    <img src="{{ asset('storage/' . $patient->profile_picture) }}" alt="{{ $patient->name }}">
+                @else
+                    {{ strtoupper(substr($patient->name, 0, 1)) }}
+                @endif
             </div>
             <div class="patient-banner-info">
                 <div class="d-flex align-items-center mb-1">
