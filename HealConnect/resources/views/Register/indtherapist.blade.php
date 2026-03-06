@@ -183,6 +183,12 @@
                             @error('city') <small class="field-error-msg">{{ $message }}</small> @enderror
                         </div>
 
+                        <div class="form-group">
+                            <label for="barangay">Barangay</label>
+                            <input type="text" id="barangay" name="barangay" class="form-control" value="{{ old('barangay') }}" placeholder="Enter barangay" required />
+                            @error('barangay') <small class="field-error-msg">{{ $message }}</small> @enderror
+                        </div>
+
                         <div class="form-group form-row-full">
                             <label for="street">Practice Street Address</label>
                             <input type="text" id="street" name="street" class="form-control" value="{{ old('street') }}" placeholder="House No., Street Name" required />
