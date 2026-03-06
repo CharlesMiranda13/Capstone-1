@@ -301,9 +301,12 @@ Route::prefix('subscribe')->name('subscribe.')->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/payment', [SubscriptionController::class, 'showPayment'])->name('payment.show');
     Route::post('/payment/checkout', [SubscriptionController::class, 'createCheckoutSession'])->name('payment.checkout');
-    Route::get('/payment/success', [SubscriptionController::class, 'paymentSuccess'])->name('payment.success');
-    Route::get('/payment/cancel', [SubscriptionController::class, 'paymentCancel'])->name('payment.cancel');
 });
+
+// Move these outside auth to handle session loss during redirect
+Route::get('/payment/success', [SubscriptionController::class, 'paymentSuccess'])->name('payment.success');
+Route::get('/payment/cancel', [SubscriptionController::class, 'paymentCancel'])->name('payment.cancel');
+
 
 // Subscription required page
 Route::get('/subscription/required', function() {

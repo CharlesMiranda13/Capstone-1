@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Stripe\Stripe;
-use Stripe\Checkout\Session as StripeSession;
+
 
 class SubscriptionManagementController extends Controller
 {
@@ -56,37 +55,58 @@ class SubscriptionManagementController extends Controller
         
         $subscriptionDetails = null;
         
-        // Fetch Stripe subscription details if available
-        if ($user->stripe_subscription_id) {
+        // Fetch Paymongo session details if available
+        if ($user->stripe_subscription_id) { // Keeping the column name for now
             try {
-                Stripe::setApiKey(config('services.stripe.secret'));
+                $secretKey = config('services.paymongo.secret_key');
+                $response = \Illuminate\Support\Facades\Http::withBasicAuth($secretKey, '')
+                    ->get("https://api.paymongo.com/v1/checkout_sessions/{$user->stripe_subscription_id}");
                 
-                // Retrieve the full subscription
-                $subscription = \Stripe\Subscription::retrieve($user->stripe_subscription_id);
-                
-                // Get the subscription item (contains period dates)
-                $subscriptionItem = $subscription->items->data[0] ?? null;
-                
-                // Create a custom object with all needed data
-                $subscriptionDetails = (object) [
-                    'id' => $subscription->id,
-                    'status' => $subscription->status,
-                    'current_period_start' => $subscriptionItem->current_period_start ?? null,
-                    'current_period_end' => $subscriptionItem->current_period_end ?? null,
-                    'cancel_at_period_end' => $subscription->cancel_at_period_end,
-                    'created' => $subscription->created,
-                    'currency' => $subscription->currency,
-                    'plan_amount' => $subscriptionItem->plan->amount ?? null,
-                ];
+                if ($response->successful()) {
+                    $session = $response->json('data');
+                    $attributes = $session['attributes'];
+                    
+                    // Try to find the payment status from payment_intent or payments array
+                    $paymentStatus = 'unknown';
+                    if (isset($attributes['payment_intent']['attributes']['status'])) {
+                        $paymentStatus = $attributes['payment_intent']['attributes']['status'];
+                    } elseif (isset($attributes['payment_intent']['data']['attributes']['status'])) {
+                        $paymentStatus = $attributes['payment_intent']['data']['attributes']['status'];
+                    }
+                    
+                    if ($paymentStatus !== 'succeeded' && !empty($attributes['payments'])) {
+                        foreach ($attributes['payments'] as $payment) {
+                            $status = $payment['attributes']['status'] ?? 
+                                     ($payment['data']['attributes']['status'] ?? 'unknown');
+                            if ($status === 'succeeded') {
+                                $paymentStatus = 'succeeded';
+                                break;
+                            }
+                        }
+                    }
+
+                    // Create a custom object with all needed data
+                    $subscriptionDetails = (object) [
+                        'id' => $session['id'],
+                        'status' => $paymentStatus,
+                        'current_period_start' => $user->subscription_started_at->timestamp ?? null,
+                        'current_period_end' => null, 
+                        'cancel_at_period_end' => false,
+                        'created' => $attributes['created_at'] ?? null,
+                        'currency' => 'PHP',
+                        'plan_amount' => $attributes['line_items'][0]['amount'] ?? null,
+                    ];
+                }
                 
             } catch (\Exception $e) {
-                \Log::error('Stripe subscription retrieval error: ' . $e->getMessage());
+                \Log::error('Paymongo session retrieval error: ' . $e->getMessage());
                 $subscriptionDetails = null;
             }
         }
 
         return view('user.admin.subscriptions.show', compact('user', 'subscriptionDetails'));
     }
+
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
@@ -96,18 +116,9 @@ class SubscriptionManagementController extends Controller
         $user = User::findOrFail($id);
         $user->subscription_status = $request->status;
         
-        if ($request->status === 'inactive' || $request->status === 'expired') {
-            // Optionally cancel Stripe subscription
-            if ($user->stripe_subscription_id) {
-                try {
-                    Stripe::setApiKey(config('services.stripe.secret'));
-                    $subscription = \Stripe\Subscription::retrieve($user->stripe_subscription_id);
-                    $subscription->cancel();
-                } catch (\Exception $e) {
-                    return back()->with('error', 'Failed to cancel Stripe subscription: ' . $e->getMessage());
-                }
-            }
-        }
+        // Paymongo doesn't have a direct 'cancel' for a simple checkout session once paid,
+        // unless you use their webhooks and subscription API.
+        // For now, we update the local status.
         
         $user->save();
 
@@ -133,16 +144,7 @@ class SubscriptionManagementController extends Controller
     {
         $user = User::findOrFail($id);
 
-        if ($user->stripe_subscription_id) {
-            try {
-                Stripe::setApiKey(config('services.stripe.secret'));
-                $subscription = \Stripe\Subscription::retrieve($user->stripe_subscription_id);
-                $subscription->cancel();
-            } catch (\Exception $e) {
-                return back()->with('error', 'Failed to cancel Stripe subscription: ' . $e->getMessage());
-            }
-        }
-
+        // Update local status as Paymongo checkout sessions are one-off or handled via webhooks for renewals
         $user->subscription_status = 'inactive';
         $user->save();
 

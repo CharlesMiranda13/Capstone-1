@@ -343,8 +343,8 @@
     color: #e83e8c;
 }
 
-/* Stripe Info Box */
-.stripe-info-card {
+/* PayMongo Info Box */
+.paymongo-info-card {
     background: #e7f3ff;
     border-left: 4px solid #007bff;
     padding: 20px;
@@ -352,7 +352,7 @@
     margin-bottom: 25px;
 }
 
-.stripe-info-card p {
+.paymongo-info-card p {
     margin: 0 0 12px 0;
 }
 

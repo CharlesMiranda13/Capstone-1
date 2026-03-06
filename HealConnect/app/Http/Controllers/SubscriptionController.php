@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Stripe\Stripe;
-use Stripe\Checkout\Session;
+use Illuminate\Support\Facades\Http;
+
 
 class SubscriptionController extends Controller
 {
@@ -114,35 +114,44 @@ class SubscriptionController extends Controller
         $user = Auth::user();
 
         try {
-            Stripe::setApiKey(config('services.stripe.secret'));
+            $secretKey = config('services.paymongo.secret_key');
+            
+            $response = Http::withBasicAuth($secretKey, '')
+                ->post('https://api.paymongo.com/v1/checkout_sessions', [
+                    'data' => [
+                        'attributes' => [
+                            'payment_method_types' => ['card', 'gcash', 'grab_pay', 'paymaya'],
+                            'line_items' => [[
+                                'currency' => 'PHP',
+                                'amount' => $planDetails['price_amount'] * 100, // Amount in cents
+                                'description' => $planDetails['description'],
+                                'name' => $planDetails['name'],
+                                'quantity' => 1,
+                            ]],
+                            'success_url' => route('payment.success') . '?u=' . $user->id,
+                            'cancel_url' => route('payment.cancel'),
+                            'description' => "Subscription for " . $planDetails['name'],
+                            'metadata' => [
+                                'user_id' => $user->id,
+                                'plan' => $plan
+                            ]
+                        ]
+                    ]
+                ]);
 
-            $checkoutSession = Session::create([
-                'payment_method_types' => ['card'],
-                'line_items' => [[
-                    'price_data' => [
-                        'currency' => 'php',
-                        'unit_amount' => $planDetails['price_amount'] * 100,
-                        'product_data' => [
-                            'name' => $planDetails['name'],
-                            'description' => $planDetails['description'],
-                        ],
-                        'recurring' => [
-                            'interval' => 'month',
-                        ],
-                    ],
-                    'quantity' => 1,
-                ]],
-                'mode' => 'subscription',
-                'success_url' => route('payment.success') . '?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => route('payment.cancel'),
-                'customer_email' => $user->email,
-                'metadata' => [
-                    'user_id' => $user->id,
-                    'plan' => $plan,
-                ],
-            ]);
+            if ($response->failed()) {
+                $error = $response->json('errors.0.detail') ?? 'Payment gateway error';
+                return back()->with('error', 'Payment setup failed: ' . $error);
+            }
 
-            return redirect($checkoutSession->url);
+            $sessionId = $response->json('data.id');
+            $checkoutUrl = $response->json('data.attributes.checkout_url');
+
+            // Store the session ID BEFORE redirecting since PayMongo doesn't pass it back
+            $user->stripe_subscription_id = $sessionId;
+            $user->save();
+            
+            return redirect($checkoutUrl);
 
         } catch (\Exception $e) {
             return back()->with('error', 'Payment setup failed: ' . $e->getMessage());
@@ -151,26 +160,86 @@ class SubscriptionController extends Controller
 
     public function paymentSuccess(Request $request)
     {
-        $sessionId = $request->get('session_id');
+        \Log::info('Entering paymentSuccess', ['all' => $request->all()]);
+        
+        // Try to get user from 'u' parameter if session is lost
+        $userId = $request->get('u');
+        $user = Auth::user();
+
+        if (!$user && $userId) {
+            $user = \App\Models\User::find($userId);
+        }
+
+        if (!$user) {
+            return redirect()->route('login')
+                             ->with('error', 'Could not identify your account. Please log in.');
+        }
+
+        $sessionId = $user->stripe_subscription_id;
 
         if (!$sessionId) {
             return redirect()->route('pricing.index')
-                             ->with('error', 'Invalid payment session.');
+                             ->with('error', 'No active payment session found for your account.');
         }
 
         try {
-            Stripe::setApiKey(config('services.stripe.secret'));
-            $session = Session::retrieve($sessionId);
+            $secretKey = config('services.paymongo.secret_key');
+            
+            $response = Http::withBasicAuth($secretKey, '')
+                ->get("https://api.paymongo.com/v1/checkout_sessions/{$sessionId}");
 
-            if ($session->payment_status === 'paid') {
-                $user = Auth::user();
-                $plan = $session->metadata->plan;
+            if ($response->failed()) {
+                \Log::error('PayMongo Session Verification Failed', ['session_id' => $sessionId, 'response' => $response->body()]);
+                return redirect()->route('pricing.index')
+                                 ->with('error', 'Could not verify payment status with PayMongo.');
+            }
+
+            $sessionAttributes = $response->json('data.attributes');
+            
+            // Log the response for debugging
+            \Log::info('PayMongo Checkout Session Response', ['session_id' => $sessionId, 'data' => $sessionAttributes]);
+
+            // Try to find the payment status from payment_intent or payments array
+            $paymentStatus = 'unknown';
+            
+            // Check payment_intent object
+            if (isset($sessionAttributes['payment_intent']['attributes']['status'])) {
+                $paymentStatus = $sessionAttributes['payment_intent']['attributes']['status'];
+            } elseif (isset($sessionAttributes['payment_intent']['data']['attributes']['status'])) {
+                $paymentStatus = $sessionAttributes['payment_intent']['data']['attributes']['status'];
+            }
+            
+            // Fallback: check payments array
+            if ($paymentStatus !== 'succeeded' && !empty($sessionAttributes['payments'])) {
+                foreach ($sessionAttributes['payments'] as $payment) {
+                    $status = $payment['attributes']['status'] ?? 
+                             ($payment['data']['attributes']['status'] ?? 'unknown');
+                    if ($status === 'succeeded') {
+                        $paymentStatus = 'succeeded';
+                        break;
+                    }
+                }
+            }
+
+            if ($paymentStatus === 'succeeded') {
+                // The user is already identified at the start of this function
+                
+                // Paymongo doesn't have a direct 'plan' metadata in the same way if not passed, 
+                // but we can use session or our metadata backup
+                $plan = session('selected_plan') ?? ($sessionAttributes['metadata']['plan'] ?? null); 
+
+                if (!$plan) {
+                  // Fallback: try to match from description or just use what we have
+                  $description = $sessionAttributes['description'] ?? '';
+                  $plan = str_contains($description, 'Pro Solo') ? 'pro solo' : 'pro clinic';
+                }
 
                 $user->plan = $plan;
                 $user->subscription_status = 'active';
-                $user->stripe_subscription_id = $session->subscription;
+                $user->stripe_subscription_id = $sessionId; // Storing the checkout session ID
                 $user->subscription_started_at = now();
                 $user->save();
+                \Log::info('User subscription activated', ['user_id' => $user->id, 'plan' => $plan, 'session_id' => $sessionId]);
 
                 session()->forget(['selected_plan', 'plan_details']);
 

@@ -66,16 +66,16 @@
                         N/A
                     @endif
                 </p>
-                <p><strong>Stripe ID:</strong> <code>{{ $user->stripe_subscription_id ?? 'N/A' }}</code></p>
+                <p><strong>PayMongo Session ID:</strong> <code>{{ $user->stripe_subscription_id ?? 'N/A' }}</code></p>
             </div>
         </div>
     </div>
 
-    <!-- Stripe Details-->
+    <!-- PayMongo Details-->
     @if($subscriptionDetails)
-    <div class="detail-card stripe-info-card">
+    <div class="detail-card paymongo-info-card">
         <div class="detail-card-header">
-            <h5>Stripe Subscription Details</h5>
+            <h5>PayMongo Session Details</h5>
         </div>
         <div class="detail-card-body">
             <p><strong>Subscription ID:</strong> <code>{{ $subscriptionDetails->id }}</code></p>

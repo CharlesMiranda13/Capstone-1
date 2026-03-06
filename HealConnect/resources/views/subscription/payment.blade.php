@@ -54,7 +54,7 @@
         <div class="info-box">
             <h6><strong>Payment Information:</strong></h6>
             <ul>
-                <li>Secure payment via Stripe</li>
+                <li>Secure payment via PayMongo</li>
                 <li>Charged: {{ $plan['price'] }}</li>
                 <li>Renews monthly</li>
                 <li>Cancel anytime</li>
@@ -70,7 +70,7 @@
         </form>
 
         <p class="powered">
-            <i class="bi bi-shield-check"></i> Powered by <strong>Stripe</strong>
+            <i class="bi bi-shield-check"></i> Powered by <strong>PayMongo</strong>
         </p>
 
         <div class="back-container">
