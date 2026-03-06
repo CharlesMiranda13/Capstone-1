@@ -62,7 +62,10 @@ Route::get('/privacy-policy', function () {
 
 Route::prefix('auth')->group(function () {
     Route::get('/login', [UserAuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [UserAuthController::class, 'login'])->name('login.submit');
+    // Throttle: max 5 login attempts per minute per IP to prevent brute-force attacks
+    Route::post('/login', [UserAuthController::class, 'login'])
+        ->middleware('throttle:5,1')
+        ->name('login.submit');
     Route::post('/logout', [UserAuthController::class, 'logout'])->name('logout');
 });
 

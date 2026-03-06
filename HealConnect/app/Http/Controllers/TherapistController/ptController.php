@@ -452,6 +452,16 @@ class ptController extends Controller
             'notes' => 'nullable|string',
         ]);
 
+        // Security: ensure this patient is actually linked to the current provider
+        $isLinked = Appointment::where('provider_id', Auth::id())
+            ->where('provider_type', User::class)
+            ->where('patient_id', $patientId)
+            ->exists();
+
+        if (!$isLinked) {
+            abort(403, 'Unauthorized access to this patient record.');
+        }
+
         $patient = User::findOrFail($patientId);
         
         // Build the EHR string from form fields
@@ -489,6 +499,16 @@ class ptController extends Controller
             'description' => 'required|string',
         ]);
 
+        // Security: ensure this patient is actually linked to the current provider
+        $isLinked = Appointment::where('provider_id', Auth::id())
+            ->where('provider_type', User::class)
+            ->where('patient_id', $patientId)
+            ->exists();
+
+        if (!$isLinked) {
+            abort(403, 'Unauthorized access to this patient record.');
+        }
+
         $patient = User::findOrFail($patientId);
         
         // Format with date from the form - THIS IS THE NEW ENTRY ONLY
@@ -523,6 +543,16 @@ class ptController extends Controller
         $request->validate([
             'notes' => 'required|string',
         ]);
+
+        // Security: ensure this patient is actually linked to the current provider
+        $isLinked = Appointment::where('provider_id', Auth::id())
+            ->where('provider_type', User::class)
+            ->where('patient_id', $patientId)
+            ->exists();
+
+        if (!$isLinked) {
+            abort(403, 'Unauthorized access to this patient record.');
+        }
 
         $patient = User::findOrFail($patientId);
         
@@ -559,7 +589,11 @@ class ptController extends Controller
             'status' => 'required|in:approved,rejected,completed,pending',
         ]);
 
-        $appointment = Appointment::findOrFail($id);
+        // Security: scope to current provider so therapists can't update each other's appointments
+        $appointment = Appointment::where('id', $id)
+            ->where('provider_id', Auth::id())
+            ->where('provider_type', User::class)
+            ->firstOrFail();
         $patientId = $appointment->patient_id;
         
         $appointment->status = $request->input('status');

@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Appointment;
 use Carbon\Carbon;
-use App\Events\AppointmentUpdateEvent; 
+use App\Events\AppointmentUpdateEvent;
+use Illuminate\Support\Facades\DB;
 
 class AppointmentController extends Controller
 {
@@ -191,37 +192,48 @@ class AppointmentController extends Controller
             }
         }
 
-        // Prevent double booking
-        $isTaken = Appointment::where('provider_id', $therapist->id)
-            ->where('provider_type', get_class($therapist))
-            ->where('appointment_date', $validated['appointment_date'])
-            ->where('appointment_time', $validated['appointment_time'])
-            ->whereIn('status', ['pending', 'confirmed'])
-            ->exists();
-
-        if ($isTaken) {
-            return back()->withInput()->with('error', 'This time slot is already booked. Please choose another one.');
-        }
-
-        // Handle referral file upload
+        // Handle referral file upload before transaction
         $referralPath = null;
         if ($request->hasFile('referral')) {
             $referralPath = $request->file('referral')->store('referrals', 'public');
         }
 
-        // Create appointment
-        Appointment::create([
-            'therapist_id' => $therapist->id,
-            'provider_id' => $therapist->id,
-            'provider_type' => get_class($therapist),
-            'appointment_type' => $validated['appointment_type'],
-            'appointment_date' => $validated['appointment_date'],
-            'appointment_time' => $validated['appointment_time'],
-            'notes' => $validated['notes'] ?? null,
-            'referral' => $referralPath,
-            'patient_id' => auth()->id(),
-            'status' => 'pending',
-        ]);
+        // Prevent double-booking atomically using a DB transaction + exclusive row lock.
+        // Without a lock, two concurrent requests could both pass the "exists" check
+        // and both create an appointment for the same slot (race condition).
+        $slotTaken = false;
+        DB::transaction(function () use ($therapist, $validated, $referralPath, &$slotTaken) {
+            $isTaken = Appointment::where('provider_id', $therapist->id)
+                ->where('provider_type', get_class($therapist))
+                ->where('appointment_date', $validated['appointment_date'])
+                ->where('appointment_time', $validated['appointment_time'])
+                ->whereIn('status', ['pending', 'confirmed'])
+                ->lockForUpdate()  // Exclusive lock prevents concurrent inserts
+                ->exists();
+
+            if ($isTaken) {
+                $slotTaken = true;
+                return;
+            }
+
+            // Create appointment inside the lock
+            Appointment::create([
+                'therapist_id' => $therapist->id,
+                'provider_id' => $therapist->id,
+                'provider_type' => get_class($therapist),
+                'appointment_type' => $validated['appointment_type'],
+                'appointment_date' => $validated['appointment_date'],
+                'appointment_time' => $validated['appointment_time'],
+                'notes' => $validated['notes'] ?? null,
+                'referral' => $referralPath,
+                'patient_id' => auth()->id(),
+                'status' => 'pending',
+            ]);
+        });
+
+        if ($slotTaken) {
+            return back()->withInput()->with('error', 'This time slot is already booked. Please choose another one.');
+        }
 
         // Notify the therapist about new appointment request
         $this->broadcastAppointmentNotification($therapist->id);

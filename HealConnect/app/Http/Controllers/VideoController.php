@@ -299,7 +299,20 @@ class VideoController extends Controller
     public function showRoom(Request $request, $room)
     {
         $user = auth()->user();
-        
+
+        // Security: validate the room name includes this user's ID.
+        // Room format: healconnect-{callerId}-{receiverId}-{timestamp}
+        // The calling user must be either the caller or the receiver.
+        $parts = explode('-', $room);
+        // Expected: ['healconnect', callerId, receiverId, timestamp]
+        if (count($parts) < 4 || ($parts[1] != $user->id && $parts[2] != $user->id)) {
+            Log::warning('Unauthorized video room access attempt', [
+                'user_id' => $user->id,
+                'room'    => $room,
+            ]);
+            abort(403, 'You are not authorized to join this video room.');
+        }
+
         Log::info('User joining room', [
             'user_id' => $user->id,
             'user_name' => $user->name,
