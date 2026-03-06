@@ -81,9 +81,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="clinic_email">Clinic Email Address</label>
-                            <input type="email" id="clinic_email" name="clinic_email" class="form-control" value="{{ old('clinic_email') }}" placeholder="clinic@email.com" required />
-                            @error('clinic_email') <small class="field-error-msg">{{ $message }}</small> @enderror
+                            <label for="email">Clinic Email Address</label>
+                            <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}" placeholder="clinic@email.com" required />
+                            @error('email') <small class="field-error-msg">{{ $message }}</small> @enderror
                         </div>
 
                         <div class="form-group">
@@ -101,6 +101,15 @@
                                 </button>
                             </div>
                             @error('password') <small class="field-error-msg">{{ $message }}</small> @enderror
+                        </div>
+                        <div class="form-group">
+                            <label for="password_confirmation">Confirm Password</label>
+                            <div class="password-field-wrapper">
+                                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Confirm password" required />
+                                <button type="button" class="toggle-password-btn" onclick="togglePassword('password_confirmation', this)" tabindex="-1">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -226,9 +235,9 @@
                             @error('ValidIDBack') <small class="field-error-msg">{{ $message }}</small> @enderror
                         </div>
                         <div class="upload-box">
-                            <label for="business_permit">Business Permit (Optional)</label>
-                            <input type="file" id="business_permit" name="business_permit" accept=".jpg, .jpeg, .png, .pdf" />
-                            @error('business_permit') <small class="field-error-msg">{{ $message }}</small> @enderror
+                            <label for="Business">Business Permit </label>
+                            <input type="file" id="Business" name="Business" accept=".jpg, .jpeg, .png, .pdf" required />
+                            @error('Business') <small class="field-error-msg">{{ $message }}</small> @enderror
                         </div>
                     </div>
                 </div>

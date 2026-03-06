@@ -284,10 +284,13 @@
     </div>
 </div>
 
-{{-- Standard Image Modal --}}
+{{-- Document Viewer Modal (image or PDF) --}}
 <div id="imageViewerModal" class="modal">
     <span class="close" id="closeImageViewer">&times;</span>
-    <img class="modal-content" id="imageViewerContent">
+    <img class="modal-content" id="imageViewerContent" style="display:none;">
+    <iframe id="pdfViewerContent" class="modal-content"
+            style="display:none; width:80vw; height:85vh; border:none; border-radius:8px;"
+            src=""></iframe>
 </div>
 
 {{-- DECLINE MODAL --}}

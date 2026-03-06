@@ -346,32 +346,41 @@ document.addEventListener("DOMContentLoaded", function () {
   function setupUserDetailsModals() {
       // 1. Image Viewer
       const imageModal = document.getElementById('imageViewerModal');
-      const modalImg = document.getElementById('imageViewerContent');
-      const closeImageContext = document.getElementById('closeImageViewer');
       
-      if(imageModal && modalImg) {
+      if(imageModal) {
+          const modalImg = document.getElementById('imageViewerContent');
+          const pdfViewer = document.getElementById('pdfViewerContent');
+
           document.querySelectorAll('.btn-view-doc').forEach(btn => {
               btn.addEventListener('click', function() {
-                  const imgSrc = this.getAttribute('data-img');
-                  if(imgSrc) {
-                      imageModal.style.display = 'flex';
-                      modalImg.src = imgSrc;
+                  const src = this.getAttribute('data-img');
+                  if (!src) return;
+
+                  const isPdf = src.toLowerCase().endsWith('.pdf');
+
+                  imageModal.style.display = 'flex';
+
+                  if (isPdf) {
+                      if (modalImg) { modalImg.style.display = 'none'; modalImg.src = ''; }
+                      if (pdfViewer) { pdfViewer.style.display = 'block'; pdfViewer.src = src; }
+                  } else {
+                      if (pdfViewer) { pdfViewer.style.display = 'none'; pdfViewer.src = ''; }
+                      if (modalImg) { modalImg.style.display = 'block'; modalImg.src = src; }
                   }
               });
           });
 
-          if(closeImageContext) {
-              closeImageContext.addEventListener('click', () => {
-                  imageModal.style.display = 'none';
-                  modalImg.src = '';
-              });
+          function closeDocViewer() {
+              imageModal.style.display = 'none';
+              if (modalImg) { modalImg.style.display = 'none'; modalImg.src = ''; }
+              if (pdfViewer) { pdfViewer.style.display = 'none'; pdfViewer.src = ''; }
           }
 
+          const closeImageContext = document.getElementById('closeImageViewer');
+          if(closeImageContext) closeImageContext.addEventListener('click', closeDocViewer);
+
           window.addEventListener('click', (e) => {
-              if (e.target === imageModal) {
-                  imageModal.style.display = 'none';
-                  modalImg.src = '';
-              }
+              if (e.target === imageModal) closeDocViewer();
           });
       }
       

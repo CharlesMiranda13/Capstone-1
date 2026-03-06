@@ -130,7 +130,7 @@ class RegisterController extends Controller
         // Create user
         $user = User::create([
             'name' => $type === 'clinic'
-                ? $request->Fname
+                ? $request->clinic_name
                 : $request->Fname . ' ' . $request->Mname . ' ' . $request->Lname,
             'email' => $request->email,
             'password' => Hash::make($request->password),
