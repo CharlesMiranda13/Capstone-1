@@ -45,14 +45,28 @@
         <a href="{{ route('subscribe.show', 'pro clinic') }}">Renew Now</a>
     </div>
 @elseif(auth()->user()->subscription_status === 'inactive' || !auth()->user()->plan)
-    <div class="subscription-expired">
-        <i class="fa fa-info-circle"></i>
-        <div>
-            <strong>No Active Subscription</strong>
-            Subscribe to a plan to unlock all features and start connecting with patients.
+    @php
+        $customerCount = auth()->user()->customer_count ?? 0;
+    @endphp
+    @if($customerCount >= 2)
+        <div class="subscription-expired">
+            <i class="fa fa-exclamation-triangle"></i>
+            <div>
+                <strong>Trial Limit Reached!</strong>
+                You currently have {{ $customerCount }} patients (the maximum allowed on the free trial). You must upgrade to accept more.
+            </div>
+            <a href="{{ route('subscribe.show', 'pro clinic') }}">Upgrade Now</a>
         </div>
-        <a href="{{ route('subscribe.show', 'pro clinic') }}">View Plans</a>
-    </div>
+    @else
+        <div class="subscription-warning" style="background-color: #e9f5ff; color: #0056b3; border-left: 5px solid #0056b3;">
+            <i class="fa fa-info-circle" style="color: #0056b3;"></i>
+            <div>
+                <strong>Free Trial Active</strong>
+                You have used {{ $customerCount }} out of your 2 free patient slots. Subscribe to unlock unlimited patients and all premium features.
+            </div>
+            <a href="{{ route('subscribe.show', 'pro clinic') }}" style="background-color: #0056b3; color: white;">View Plans</a>
+        </div>
+    @endif
 @endif
 <div class="welcome-header">
     <h2>Welcome, {{ $clinic->name ?? 'Clinic' }}!</h2>
