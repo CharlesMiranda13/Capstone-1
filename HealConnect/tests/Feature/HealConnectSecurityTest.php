@@ -332,4 +332,48 @@ class HealConnectSecurityTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    // ──────────────────────────────────────────────────
+    // Fix 6 — Freemium Booking Bypass Fix
+    // ──────────────────────────────────────────────────
+
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function patient_cannot_book_maxed_out_trial_therapist(): void
+    {
+        // Therapist is on free trial (inactive)
+        $therapist = User::factory()->create([
+            'role'                  => 'therapist',
+            'is_verified_by_admin'  => true,
+            'status'                => 'Active',
+            'subscription_status'   => 'inactive',
+        ]);
+
+        $date = now()->addDay()->toDateString();
+        $this->makeAvailability($therapist, $date, '08:00:00', '15:00:00');
+
+        // Create 2 completely different patients to fill the freemium limit
+        $existingPatient1 = $this->makePatient();
+        $existingPatient2 = $this->makePatient();
+
+        $this->makeAppointment($existingPatient1, $therapist, $date, '09:00:00');
+        $this->makeAppointment($existingPatient2, $therapist, $date, '10:00:00');
+
+        // The therapist's customer_count is now organically 2
+
+        // A brand new 3rd patient tries to book
+        $newPatient = $this->makePatient();
+
+        $response = $this->actingAs($newPatient)->post(route('patient.appointments.store'), [
+            'therapist_id'     => $therapist->id,
+            'appointment_type' => 'Consultation',
+            'appointment_date' => $date,
+            'appointment_time' => '11:00:00',
+        ]);
+
+        $response->assertSessionHas('error', 'This therapist has reached their patient capacity on the free trial and cannot accept new patients at this time.');
+        $this->assertDatabaseMissing('appointments', [
+            'patient_id' => $newPatient->id,
+            'provider_id' => $therapist->id,
+        ]);
+    }
 }

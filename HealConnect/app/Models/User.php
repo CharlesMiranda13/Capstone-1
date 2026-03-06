@@ -118,7 +118,7 @@ class User extends Authenticatable
                                    });
                             })
                             ->where('status', '!=', 'cancelled');
-                     }, '<', 3);
+                     }, '<', 2); // FIX: Must be < 2 to be shown, because 2 is the maximum limit on the free trial
               });
         });
     }

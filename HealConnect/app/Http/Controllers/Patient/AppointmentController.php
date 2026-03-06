@@ -149,6 +149,22 @@ class AppointmentController extends Controller
             return back()->withInput()->with('error', 'This therapist/clinic is currently not accepting new appointments due to subscription status.');
         }
 
+        // Explicitly enforce the Trial Limit (2 patients max) for direct booking bypassers
+        if ($therapist->subscription_status === 'inactive') {
+            $patientId = auth()->id();
+            
+            // Check if this patient is ALREADY a customer of this provider
+            $isExistingPatient = Appointment::where('provider_id', $therapist->id)
+                ->where('provider_type', get_class($therapist))
+                ->where('patient_id', $patientId)
+                ->exists();
+
+            // If they are NOT an existing patient, and the therapist is at max capacity (2+), block the booking
+            if (!$isExistingPatient && $therapist->customer_count >= 2) {
+                return back()->withInput()->with('error', 'This therapist has reached their patient capacity on the free trial and cannot accept new patients at this time.');
+            }
+        }
+
         // Validate availability based on role 
         if ($therapist->role === 'therapist') {
             // For independent therapist: check specific date availability
