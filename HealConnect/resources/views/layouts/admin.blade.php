@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ asset('Css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('Css/Admin.css') }}">
     <link rel="stylesheet" href="{{ asset('css/shared-components.css') }}">
+    <link rel="stylesheet" href="{{ asset('Css/print.css') }}">
     @yield('styles')
 </head>
 <body>

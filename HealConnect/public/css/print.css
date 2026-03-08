@@ -1,0 +1,84 @@
+/* Print specific styles for Admin Area */
+.print-only-title {
+    display: none;
+}
+
+.print-only {
+    display: none;
+}
+
+@media print {
+
+    /* Hide sidebar, navigation and interactive elements */
+    .sidebar,
+    .sidebar-overlay,
+    .hamburger-btn,
+    .search-filter-new,
+    .mt-4.d-flex.justify-content-center,
+    .hc-dropdown,
+    .action-form,
+    .page-header-row {
+        display: none !important;
+    }
+
+    /* Make the main content take full width */
+    .admin-main {
+        margin-left: 0 !important;
+        padding: 20px !important;
+        width: 100% !important;
+        background: white !important;
+    }
+
+    body {
+        background: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .print-only-title {
+        display: block !important;
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    .print-only {
+        display: table-cell !important;
+    }
+
+    .hide-on-print {
+        display: none !important;
+    }
+
+    /* Hide actions column */
+    .hc-table th.hide-on-print,
+    .hc-table td.hide-on-print {
+        display: none !important;
+    }
+
+    /* Adjust table for printing */
+    .hc-table {
+        width: 100% !important;
+        border-collapse: collapse;
+    }
+
+    .hc-table th,
+    .hc-table td {
+        border: 1px solid #ddd !important;
+        padding: 8px !important;
+        text-align: left !important;
+    }
+
+    /*  SYSTEM REPORTS */
+    .reports-container,
+    .report-card,
+    .report-card-body,
+    .page-header-row {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+}

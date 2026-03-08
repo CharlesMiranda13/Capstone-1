@@ -1,10 +1,24 @@
 @extends('layouts.admin')
 
 @section('title', 'Admin Dashboard')
+
+@section('styles')
+@endsection
+
 @section('content')
     <div class="page-header-row">
         <h2 class="page-title-new">Manage Users</h2>
         <p class="page-subtitle">View, search, and manage all registered users</p>
+    </div>
+
+    @php
+        $roleTitle = 'All Users';
+        if(request('role') == 'patient') $roleTitle = 'Patient Users';
+        elseif(request('role') == 'therapist') $roleTitle = 'Therapist Users';
+        elseif(request('role') == 'clinic') $roleTitle = 'Clinic Users';
+    @endphp
+    <div class="print-only-title">
+        HealConnect - {{ $roleTitle }}
     </div>
 
     <div class="search-filter-new">
@@ -23,6 +37,9 @@
                 <i class="fa fa-search"></i> Search
             </button>
         </form>
+        <button type="button" class="hc-btn hc-btn-secondary text-nowrap-btn" onclick="window.print()">
+            <i class="fa fa-print"></i> Print
+        </button>
     </div>
 
     <div class="hc-table-container hc-table-responsive">
@@ -32,9 +49,10 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th>Actions</th>
+                    <th class="print-only">Contact Number</th>
+                    <th class="hide-on-print">Role</th>
+                    <th class="hide-on-print">Status</th>
+                    <th class="hide-on-print">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,10 +65,11 @@
                         </div>
                     </td>
                     <td>{{ $user->email }}</td>
-                    <td>
+                    <td class="print-only">{{ $user->phone ?? 'N/A' }}</td>
+                    <td class="hide-on-print">
                         <span class="role-badge">{{ ucfirst($user->role_display) }}</span>
                     </td>
-                    <td>
+                    <td class="hide-on-print">
                         <span class="hc-badge 
                             @if($user->status == 'Pending') hc-badge-warning
                             @elseif($user->status == 'Active') hc-badge-success
@@ -59,7 +78,7 @@
                         {{ $user->status }}
                         </span>
                     </td>   
-                    <td>
+                    <td class="hide-on-print">
                         <div class="hc-dropdown">
                             <button class="hc-dropdown-toggle">Actions</button>
                             <div class="hc-dropdown-menu">

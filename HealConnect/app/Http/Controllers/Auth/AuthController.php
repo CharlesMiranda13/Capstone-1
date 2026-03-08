@@ -93,6 +93,13 @@ class AuthController extends Controller
             'cancelled' => Appointment::where('status', 'cancelled')->count(),
         ];
 
-        return view('user.admin.reports', compact('subscriptionStats', 'userStats', 'recentRegistrations', 'appointmentStats'));
+        // Active Subscribers for Revenue Table
+        $subscribedUsers = User::whereIn('role', ['therapist', 'clinic'])
+            ->whereNotNull('plan')
+            ->where('subscription_status', 'active')
+            ->orderBy('subscription_started_at', 'desc')
+            ->get();
+
+        return view('user.admin.reports', compact('subscriptionStats', 'userStats', 'recentRegistrations', 'appointmentStats', 'subscribedUsers'));
     }
 }

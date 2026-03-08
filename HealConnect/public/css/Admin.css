@@ -238,6 +238,23 @@
     margin-bottom: 20px;
 }
 
+.search-filter-new {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.search-filter-form-new {
+    flex-grow: 1;
+    margin-bottom: 0;
+}
+
+.text-nowrap-btn {
+    white-space: nowrap;
+}
+
 .filters form {
     display: flex;
     gap: 12px;
