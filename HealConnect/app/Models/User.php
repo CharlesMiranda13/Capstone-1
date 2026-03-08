@@ -329,8 +329,8 @@ class User extends Authenticatable
             $providerIds = $this->employees()->pluck('id')->push($this->id)->toArray();
         }
 
-        return Appointment::whereIn('status', ['pending', 'confirmed'])
-            ->whereDate('appointment_date', \Carbon\Carbon::today())
+        return Appointment::whereIn('status', ['pending', 'approved'])
+            ->whereDate('appointment_date', \Carbon\Carbon::now('Asia/Manila')->toDateString())
             ->where('patient_id', $patient->id)
             ->whereIn('provider_id', $providerIds)
             ->exists();

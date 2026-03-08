@@ -29,13 +29,18 @@ class VideoController extends Controller
             $receiver = User::find($receiverId);
 
             //RESTRICTION: Only allow calls on day of active appointment
-            if ($receiver->role === 'patient') {
-                if (!$caller->hasActiveAppointmentToday($receiver)) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Video calls are only allowed on the day of an active (pending/confirmed) appointment.'
-                    ], 403);
-                }
+            // ONLY ALLOW clinics/therapists to initiate calls to patients
+            $isAuthorized = false;
+            
+            if ($caller->role !== 'patient' && $receiver->role === 'patient') {
+                $isAuthorized = $caller->hasActiveAppointmentToday($receiver);
+            }
+
+            if (!$isAuthorized) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Video calls are only allowed on the day of an active (approved) appointment, and only providers can initiate the call.'
+                ], 403);
             }
 
             // Log the attempt

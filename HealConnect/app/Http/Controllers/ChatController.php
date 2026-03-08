@@ -53,9 +53,12 @@ class ChatController extends Controller
                     ->count();
 
                 // Check if video call is allowed today
-                $otherUser->can_video_call = ($otherUser->role === 'patient') 
-                    ? $user->hasActiveAppointmentToday($otherUser) 
-                    : true;
+                if ($user->role !== 'patient' && $otherUser->role === 'patient') {
+                    // Only providers (clinics/therapists) can call patients
+                    $otherUser->can_video_call = $user->hasActiveAppointmentToday($otherUser);
+                } else {
+                    $otherUser->can_video_call = false; 
+                }
 
                 return $otherUser;
             })
@@ -88,9 +91,12 @@ class ChatController extends Controller
         $otherUser = User::findOrFail($id);
         $currUser = auth()->user();
         
-        $canCall = ($otherUser->role === 'patient') 
-            ? $currUser->hasActiveAppointmentToday($otherUser) 
-            : true;
+        if ($currUser->role !== 'patient' && $otherUser->role === 'patient') {
+            // Only providers can call patients
+            $canCall = $currUser->hasActiveAppointmentToday($otherUser);
+        } else {
+            $canCall = false; 
+        }
 
         return response()->json([
             'id' => $otherUser->id,
