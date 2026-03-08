@@ -239,6 +239,11 @@
                             <input type="file" id="Business" name="Business" accept=".jpg, .jpeg, .png, .pdf" required />
                             @error('Business') <small class="field-error-msg">{{ $message }}</small> @enderror
                         </div>
+                        <div class="upload-box">
+                            <label for="business_permit_expiry">Business Permit Expiration Date</label>
+                            <input type="date" id="business_permit_expiry" name="business_permit_expiry" class="form-control" required value="{{ old('business_permit_expiry') }}" min="{{ date('Y-m-d') }}" />
+                            @error('business_permit_expiry') <small class="field-error-msg">{{ $message }}</small> @enderror
+                        </div>
                     </div>
                 </div>
 

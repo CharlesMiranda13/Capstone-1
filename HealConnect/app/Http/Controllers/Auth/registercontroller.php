@@ -74,6 +74,7 @@ class RegisterController extends Controller
             
             if ($type == 'clinic') {
                 $rules['Business'] = 'required|file|mimes:jpg,jpeg,png,pdf|max:2048';
+                $rules['business_permit_expiry'] = 'required|date|after:today';
             }
         }
         
@@ -139,6 +140,7 @@ class RegisterController extends Controller
             'valid_id_path' => $validIdPath,
             'license_path' => $licensePath,
             'business_permit_path' => $businessPermitPath,
+            'business_permit_expiry' => $request->business_permit_expiry,
             'status' => 'Pending',
             'phone' => $request->phone,
             'address' => $fullAddress,

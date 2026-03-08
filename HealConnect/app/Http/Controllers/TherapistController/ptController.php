@@ -103,6 +103,7 @@ class ptController extends Controller
             'specialization.*' => 'nullable|string|max:255',
             'license' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', 
             'Business' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'business_permit_expiry' => 'nullable|date',
         ];
 
         $validated = $request->validate($rules);
@@ -115,21 +116,40 @@ class ptController extends Controller
             'address'   => $validated['address'] ?? $user->address,
             'description'   => $validated['description'] ?? $user->description,
             'specialization' => $specializationString,
+            'business_permit_expiry' => $validated['business_permit_expiry'] ?? $user->business_permit_expiry,
         ];
+
+        $needsReverification = false;
 
         // Handle License Upload
         if ($request->hasFile('license')) {
             $updateData['license_path'] = $request->file('license')->store('licenses', 'public');
+            $needsReverification = true;
         }
 
         // Handle Business Permit Upload
         if ($request->hasFile('Business')) {
             $updateData['business_permit_path'] = $request->file('Business')->store('business_permits', 'public');
+            $needsReverification = true;
+        }
+
+        // Also require re-verification if the business permit expiry date was changed.
+        // This prevents a clinic from simply typing a future date to bypass the expired restriction.
+        $newExpiry = $validated['business_permit_expiry'] ?? null;
+        if ($newExpiry && $newExpiry !== ($user->business_permit_expiry ? $user->business_permit_expiry->format('Y-m-d') : null)) {
+            $needsReverification = true;
+        }
+
+        if ($needsReverification) {
+            $updateData['status'] = 'Re-verification Pending';
+            $updateData['is_verified_by_admin'] = false;
         }
 
         $user->update($updateData);
 
-        return back()->with('success', 'Profile updated successfully.');
+        return back()->with('success', $needsReverification 
+            ? 'Profile updated successfully. Your account is now pending re-verification. Our admin team will review your updated documents before restoring full access.' 
+            : 'Profile updated successfully.');
     }
 
     public function updatePassword(Request $request)

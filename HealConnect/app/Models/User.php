@@ -41,6 +41,7 @@ class User extends Authenticatable
         'valid_id_path',
         'license_path',
         'business_permit_path',
+        'business_permit_expiry',
         'clinic_id',
         'position',
         'description',
@@ -59,6 +60,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'subscription_started_at' => 'datetime',
             'dob'=> 'date',
+            'business_permit_expiry' => 'date',
         ];
     }
 
@@ -93,7 +95,11 @@ class User extends Authenticatable
     {
         return $query->whereIn('role', [self::ROLE_THERAPIST, self::ROLE_CLINIC])
                      ->where('is_verified_by_admin', true)
-                     ->where('status', 'Active');
+                     ->where('status', 'Active')
+                     ->where(function($q) {
+                         $q->whereNull('business_permit_expiry')
+                           ->orWhere('business_permit_expiry', '>=', now()->toDateString());
+                     });
     }
 
     /**
@@ -175,6 +181,22 @@ class User extends Authenticatable
     public function receiver()
     {
         return $this->hasMany(\App\Models\Message::class, 'receiver_id');
+    }
+
+    /** ---------------- EXPIRATION HELPERS ---------------- */
+    public function isBusinessPermitExpired()
+    {
+        if (!$this->business_permit_expiry) return false;
+        return $this->business_permit_expiry->isPast() && !$this->business_permit_expiry->isToday();
+    }
+
+    public function isBusinessPermitExpiringSoon()
+    {
+        if (!$this->business_permit_expiry) return false;
+        if ($this->isBusinessPermitExpired()) return false;
+        
+        $daysUntilExpiry = now()->diffInDays($this->business_permit_expiry, false);
+        return $daysUntilExpiry >= 0 && $daysUntilExpiry <= 30;
     }
 
     /** ---------------- ACCESSORS ---------------- */
@@ -292,13 +314,25 @@ class User extends Authenticatable
      */
     public function canAccessSystem()
     {
-        // If employee, check their clinic's subscription status
+        // If employee, check their clinic's subscription and permit status
         if ($this->role === 'employee' && $this->clinic_id) {
             $clinic = $this->clinic;
             return $clinic ? $clinic->canAccessSystem() : false;
         }
 
-        // Admin or Patient are not subject to these subscription rules here 
+        // Admin is not subject to these rules
+        if ($this->role === 'admin') {
+            return true;
+        }
+
+        // Check Business Permit Expiry first (for clinics/independent therapists)
+        if (in_array($this->role, [self::ROLE_CLINIC, self::ROLE_THERAPIST])) {
+            if ($this->isBusinessPermitExpired()) {
+                return false;
+            }
+        }
+
+        // Patient is not subject to subscription rules
         if ($this->role === 'patient') {
             return true;
         }

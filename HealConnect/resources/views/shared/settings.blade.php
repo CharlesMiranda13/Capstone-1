@@ -206,6 +206,17 @@
                             </small>
                         @endif
                     </div>
+
+                    <div class="form-group">
+                        <label for="business_permit_expiry">Business Permit Expiration Date</label>
+                        <input type="date" name="business_permit_expiry" id="business_permit_expiry" 
+                               value="{{ old('business_permit_expiry', Auth::user()->business_permit_expiry ? Auth::user()->business_permit_expiry->format('Y-m-d') : '') }}">
+                        @if(Auth::user()->business_permit_expiry)
+                            <small class="text-info" style="display:block; margin-top:5px;">
+                                <i class="fa fa-calendar-alt"></i> Current Expiry: {{ Auth::user()->business_permit_expiry->format('M d, Y') }}
+                            </small>
+                        @endif
+                    </div>
                     @endif
                     @endif
                     <button type="submit" class="hc-btn hc-btn-success">Save Changes</button>

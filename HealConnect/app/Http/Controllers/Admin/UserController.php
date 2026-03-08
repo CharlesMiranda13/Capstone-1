@@ -17,21 +17,27 @@ class UserController extends Controller
     {
         $query = User::query();
 
-        // Only clinics and independent therapists
-        $query->whereIn('role', ['patient','clinic', 'therapist'])
+        // Only clinics and independent therapists (top-level accounts)
+        $query->whereIn('role', ['patient', 'clinic', 'therapist'])
             ->whereNull('clinic_id');
 
         // Role filter
-        if ($request->has('role') && $request->role != 'all') {
+        if ($request->filled('role') && $request->role != 'all') {
             $query->where('role', $request->role);
         }
 
+        // Status filter
+        if ($request->filled('status') && $request->status != 'all') {
+            $query->where('status', $request->status);
+        }
+
         // Search filter
-        if ($request->has('search') && !empty($request->search)) {
+        if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%");
+                ->orWhere('email', 'like', "%{$search}%")
+                ->orWhere('status', 'like', "%{$search}%");
             });
         }
 
@@ -58,6 +64,20 @@ class UserController extends Controller
         }
 
         return back()->with('success', 'User has been approved and notified via email.');
+    }
+
+    // Update Business Permit Expiry (Admin Correction)
+    public function updateBusinessExpiry(Request $request, $id)
+    {
+        $request->validate([
+            'business_permit_expiry' => 'required|date',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->business_permit_expiry = $request->business_permit_expiry;
+        $user->save();
+
+        return back()->with('success', 'Business Permit expiration date has been updated successfully.');
     }
 
     // Decline user 
@@ -101,7 +121,7 @@ class UserController extends Controller
         $totalPatients = User::where('role', 'patient')->count();
         $totalTherapists = User::where('role', 'therapist')->count();
         $totalClinics = User::where('role', 'clinic')->count();
-        $pendingUsers = User::where('status', 'pending')->count();
+        $pendingUsers = User::whereIn('status', ['pending', 'Re-verification Pending'])->count();
 
         // Monthly user growth
         $userData = User::selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as count')
@@ -157,7 +177,7 @@ class UserController extends Controller
     {
         try {
             // Count users pending approval
-            $newUsers = \App\Models\User::where('status', 'Pending')->count();
+            $newUsers = \App\Models\User::whereIn('status', ['Pending', 'Re-verification Pending'])->count();
             
             // Count unread contact messages (is_read = false)
             $newConcerns = \App\Models\ContactMessage::where('is_read', false)->count();

@@ -18,6 +18,13 @@ class CheckSubscription
 
         // Only enforce for therapists, clinics, and their employees
         if ($user->role === 'therapist' || $user->role === 'clinic' || $user->role === 'employee') {
+
+            // Allow access to settings regardless of subscription/permit status
+            // so users can upload a new business permit or update their info.
+            if ($request->is('*/settings') || $request->is('*/settings/*')) {
+                return $next($request);
+            }
+
             $statusProvider = $user;
             
             // If employee, check their clinic's subscription

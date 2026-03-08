@@ -138,6 +138,17 @@
     color: #991b1b;
 }
 
+.status-badge.expired {
+    background-color: #4a0404;
+    color: #ffffff;
+}
+
+.status-badge.re-verification.pending {
+    background: #ffedd5;
+    color: #9a3412;
+    border: 1px solid #fed7aa;
+}
+
 /* --- Header Actions --- */
 .header-actions {
     display: flex;
@@ -319,6 +330,65 @@
     color: #334155;
 }
 
+.doc-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    gap: 4px;
+    flex: 1;
+}
+
+.doc-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.expiry-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.expiry-info.text-success {
+    color: #10b981;
+}
+
+.expiry-info.text-warning {
+    color: #d97706;
+}
+
+.expiry-info.text-danger {
+    color: #ef4444;
+}
+
+.expiry-info .badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+    line-height: normal;
+}
+
+.expiry-info .badge-danger {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.expiry-info .badge-warning {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
 .btn-view-doc {
     background: white;
     border: 1px solid #cbd5e1;
@@ -333,6 +403,55 @@
 .btn-view-doc:hover {
     border-color: #4f46e5;
     color: #4f46e5;
+}
+
+.expiry-edit-form {
+    display: none;
+    margin-top: 10px;
+    padding: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    width: 100%;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+}
+
+.expiry-edit-form form div {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.expiry-edit-form .form-control {
+    flex: 1;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-family: inherit;
+}
+
+.expiry-edit-form .btn-save {
+    background: #4f46e5;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.expiry-edit-form .btn-cancel-expiry {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #94a3b8;
+    padding: 4px;
+}
+
+.expiry-edit-form .btn-cancel-expiry:hover {
+    color: #ef4444;
 }
 
 /* --- Staff List --- */

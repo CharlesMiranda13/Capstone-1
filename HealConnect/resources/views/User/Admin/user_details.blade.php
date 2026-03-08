@@ -49,13 +49,22 @@
                 </div>
             </div>
             <div class="profile-status">
-                <span class="status-badge {{ strtolower($user->status) }}">{{ $user->status }}</span>
+                @php
+                    $displayStatus = $user->status;
+                    $statusClass = strtolower($user->status);
+                    
+                    if ($user->status === 'Active' && $user->isBusinessPermitExpired()) {
+                        $displayStatus = 'Expired';
+                        $statusClass = 'expired';
+                    }
+                @endphp
+                <span class="status-badge {{ $statusClass }}">{{ $displayStatus }}</span>
             </div>
         </div>
 
         {{-- Quick Actions --}}
         <div class="header-actions">
-            @if(strtolower($user->status) === 'pending')
+            @if(in_array(strtolower($user->status), ['pending', 're-verification pending']))
             <div class="hc-dropdown">
                 <button class="hc-dropdown-toggle">Verification Actions</button>
                 <div class="hc-dropdown-menu">
@@ -202,50 +211,95 @@
                         {{-- Valid ID --}}
                         <div class="doc-item">
                             <span class="doc-label">Valid ID</span>
-                            @if ($user->valid_id_path)
-                                @php
-                                    $validIds = json_decode($user->valid_id_path, true);
-                                    if (!is_array($validIds)) {
-                                        $validIds = ['front' => $user->valid_id_path];
-                                    }
-                                @endphp
-                                <div class="doc-actions">
-                                    @foreach($validIds as $key => $path)
-                                        <button class="hc-btn hc-btn-outline hc-btn-sm btn-view-doc" data-img="{{ asset('storage/' . $path) }}">
-                                            <i class="fa fa-eye"></i> {{ ucfirst($key) }}
-                                        </button>
-                                    @endforeach
-                                </div>
-                            @else
-                                <span class="text-danger"><i class="fa fa-times-circle"></i> Missing</span>
-                            @endif
+                            <div class="doc-content">
+                                @if ($user->valid_id_path)
+                                    @php
+                                        $validIds = json_decode($user->valid_id_path, true);
+                                        if (!is_array($validIds)) {
+                                            $validIds = ['front' => $user->valid_id_path];
+                                        }
+                                    @endphp
+                                    <div class="doc-actions">
+                                        @foreach($validIds as $key => $path)
+                                            <button class="hc-btn hc-btn-outline hc-btn-sm btn-view-doc" data-img="{{ asset('storage/' . $path) }}">
+                                                <i class="fa fa-eye"></i> {{ ucfirst($key) }}
+                                            </button>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <span class="text-danger"><i class="fa fa-times-circle"></i> Missing</span>
+                                @endif
+                            </div>
                         </div>
 
                         {{-- License --}}
                         @if (in_array($user->role, ['therapist','clinic']))
                         <div class="doc-item">
                             <span class="doc-label">License</span>
-                            @if ($user->license_path)
-                                <button class="hc-btn hc-btn-outline hc-btn-sm btn-view-doc" data-img="{{ asset('storage/' . $user->license_path) }}">
-                                    <i class="fa fa-file-alt"></i> View License
-                                </button>
-                            @else
-                                <span class="text-danger"><i class="fa fa-times-circle"></i> Missing</span>
-                            @endif
+                            <div class="doc-content">
+                                @if ($user->license_path)
+                                    <button class="hc-btn hc-btn-outline hc-btn-sm btn-view-doc" data-img="{{ asset('storage/' . $user->license_path) }}">
+                                        <i class="fa fa-certificate"></i> View License
+                                    </button>
+                                @else
+                                    <span class="text-danger"><i class="fa fa-times-circle"></i> Missing</span>
+                                @endif
+                            </div>
                         </div>
                         @endif
 
-                        {{-- Business Permit (Clinic Only) --}}
                         @if ($user->role === 'clinic')
                         <div class="doc-item">
                             <span class="doc-label">Business Permit</span>
-                            @if ($user->business_permit_path)
-                                <button class="hc-btn hc-btn-outline hc-btn-sm btn-view-doc" data-img="{{ asset('storage/' . $user->business_permit_path) }}">
-                                    <i class="fa fa-file-contract"></i> View Permit
-                                </button>
-                            @else
-                                <span class="text-danger"><i class="fa fa-times-circle"></i> Missing</span>
-                            @endif
+                            <div class="doc-content">
+                                <div class="doc-info">
+                                    @if ($user->business_permit_path)
+                                        <button class="hc-btn hc-btn-outline hc-btn-sm btn-view-doc" data-img="{{ asset('storage/' . $user->business_permit_path) }}">
+                                            <i class="fa fa-file-contract"></i> View Permit
+                                        </button>
+                                    @else
+                                        <span class="text-danger"><i class="fa fa-times-circle"></i> Missing</span>
+                                    @endif
+                                </div>
+                                
+                                @if($user->business_permit_expiry)
+                                    <div class="expiry-info {{ $user->isBusinessPermitExpired() ? 'text-danger' : ($user->isBusinessPermitExpiringSoon() ? 'text-warning' : 'text-success') }}">
+                                        <div class="expiry-date">
+                                            <i class="fa fa-calendar-alt"></i> 
+                                            Expires: <strong>{{ $user->business_permit_expiry->format('M d, Y') }}</strong>
+                                        </div>
+
+                                        @if($user->isBusinessPermitExpired())
+                                            <span class="badge badge-danger">EXPIRED</span>
+                                        @elseif($user->isBusinessPermitExpiringSoon())
+                                            <span class="badge badge-warning">EXPIRING SOON</span>
+                                        @endif
+                                        
+                                        {{-- Admin Correction Button --}}
+                                        <button type="button" class="hc-btn-icon btn-edit-expiry" title="Correct Date" style="border: none; background: transparent; cursor: pointer; color: #64748b; padding: 0 4px;">
+                                            <i class="fa fa-pencil-alt"></i>
+                                        </button>
+                                    </div>
+
+                                    {{-- Admin Correction Form (Hidden) --}}
+                                    <div class="expiry-edit-form" @if($errors->has('business_permit_expiry')) style="display: block;" @endif>
+                                        <form action="{{ route('admin.users.update_business_expiry', $user->id) }}" method="POST">
+                                            @csrf
+                                            @method('PATCH')
+                                            <div>
+                                                <input type="date" name="business_permit_expiry" class="form-control @error('business_permit_expiry') is-invalid @enderror" 
+                                                       value="{{ old('business_permit_expiry', $user->business_permit_expiry ? $user->business_permit_expiry->format('Y-m-d') : '') }}" 
+                                                       required>
+                                                <button type="submit" class="btn-save">Save</button>
+                                                <button type="button" class="btn-cancel-expiry"><i class="fa fa-times"></i></button>
+                                            </div>
+                                            @error('business_permit_expiry')
+                                                <div class="text-danger" style="font-size: 0.75rem; margin-top: 4px;">{{ $message }}</div>
+                                            @enderror
+                                        </form>
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                         @endif
                     </div>
@@ -319,13 +373,40 @@
     </div>
 </div>
 
+{{-- APPROVE CONFIRMATION MODAL --}}
+<div id="approveModal" class="decline-modal-overlay">
+    <div class="decline-modal-content" style="max-width: 420px;">
+        <span class="decline-modal-close" onclick="closeApproveModal()">&times;</span>
+        <div style="text-align: center; padding: 8px 0 16px;">
+            <div style="width: 56px; height: 56px; background: #d1fae5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                <i class="fa fa-check-circle" style="font-size: 1.6rem; color: #065f46;"></i>
+            </div>
+            <h2 class="decline-modal-title" style="color: #065f46;">Approve User?</h2>
+            <p style="color: #6b7280; font-size: 0.93rem; margin: 0 0 24px;">This user will be verified and granted full access to the platform.</p>
+        </div>
+        <div class="decline-modal-actions">
+            <button type="button" onclick="closeApproveModal()" class="btn-cancel">Cancel</button>
+            <button type="button" onclick="document.getElementById('approveUserForm').submit()" class="hc-btn hc-btn-primary" style="background:#059669; border-color:#059669;">
+                <i class="fa fa-check"></i> Approve
+            </button>
+        </div>
+    </div>
+</div>
+
 
 @section('scripts')
 <script>
     document.getElementById('btnApproveUser')?.addEventListener('click', function() {
-        if (confirm('Are you sure you want to approve this user?')) {
-            document.getElementById('approveUserForm').submit();
-        }
+        document.getElementById('approveModal').style.display = 'flex';
+    });
+
+    function closeApproveModal() {
+        document.getElementById('approveModal').style.display = 'none';
+    }
+
+    // Close approve modal when clicking outside
+    document.getElementById('approveModal')?.addEventListener('click', function(e) {
+        if (e.target === this) closeApproveModal();
     });
 
     document.getElementById('btnDeclineUser')?.addEventListener('click', function() {
@@ -344,5 +425,23 @@
 
     // Modal Close buttons
     document.querySelector('.closeDeclineModal')?.addEventListener('click', closeDeclineModal);
+    // Expiry Correction Logic
+    document.querySelector('.btn-edit-expiry')?.addEventListener('click', function() {
+        const form = document.querySelector('.expiry-edit-form');
+        const info = document.querySelector('.expiry-info');
+        if (form && info) {
+            form.style.display = 'block';
+            info.style.display = 'none';
+        }
+    });
+
+    document.querySelector('.btn-cancel-expiry')?.addEventListener('click', function() {
+        const form = document.querySelector('.expiry-edit-form');
+        const info = document.querySelector('.expiry-info');
+        if (form && info) {
+            form.style.display = 'none';
+            info.style.display = 'flex';
+        }
+    });
 </script>
 @endsection

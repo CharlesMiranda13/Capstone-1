@@ -12,7 +12,13 @@ class CheckUserStatus
     {
         $user = Auth::user();
 
-        if (!$user->is_verified_by_admin || $user->status !== 'Active') {
+        // Allow access to the settings page even for expired accounts,
+        // so clinics/therapists can upload a new business permit.
+        if ($request->is('*/settings') || $request->is('*/settings/*')) {
+            return $next($request);
+        }
+
+        if (!$user->is_verified_by_admin || $user->status !== 'Active' || ($user->role !== 'admin' && !$user->canAccessSystem())) {
             return redirect()->route('account.pending');
         }
 

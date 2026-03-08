@@ -33,6 +33,13 @@
                 <option value="therapist"{{ request('role') == 'therapist' ? 'selected' : '' }}>Therapists</option>
                 <option value="clinic"   {{ request('role') == 'clinic'    ? 'selected' : '' }}>Clinics</option>
             </select>
+            <select name="status" class="filter-select-new" onchange="this.form.submit()">
+                <option value="all"      {{ request('status') == 'all'       ? 'selected' : '' }}>All Status</option>
+                <option value="Active"   {{ request('status') == 'Active'    ? 'selected' : '' }}>Active</option>
+                <option value="Pending"  {{ request('status') == 'Pending'   ? 'selected' : '' }}>Pending</option>
+                <option value="Expired"  {{ request('status') == 'Expired'   ? 'selected' : '' }}>Expired</option>
+                <option value="Declined" {{ request('status') == 'Declined'  ? 'selected' : '' }}>Declined</option>
+            </select>
             <button type="submit" class="hc-btn hc-btn-primary hc-btn-search">
                 <i class="fa fa-search"></i> Search
             </button>
@@ -71,9 +78,10 @@
                     </td>
                     <td class="hide-on-print">
                         <span class="hc-badge 
-                            @if($user->status == 'Pending') hc-badge-warning
+                            @if($user->status == 'Pending' || $user->status == 'Re-verification Pending') hc-badge-warning
                             @elseif($user->status == 'Active') hc-badge-success
                             @elseif($user->status == 'Declined') hc-badge-danger
+                            @elseif($user->status == 'Expired') hc-badge-expired
                             @endif">
                         {{ $user->status }}
                         </span>

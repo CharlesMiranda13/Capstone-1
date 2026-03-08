@@ -68,6 +68,36 @@
         </div>
     @endif
 @endif
+
+{{-- Business Permit Expiry Warning --}}
+@if($clinic->role === 'clinic' && $clinic->business_permit_expiry)
+    @php
+        $expiryDate = $clinic->business_permit_expiry;
+    @endphp
+
+    @if($clinic->isBusinessPermitExpired())
+        <div class="subscription-expired" style="margin-top: 10px; background-color: #fff5f5; border-left: 5px solid #fc8181; color: #c53030;">
+            <i class="fa fa-file-contract"></i>
+            <div>
+                <strong>Business Permit Expired!</strong>
+                Your business permit expired on {{ $expiryDate->format('M d, Y') }}. Please upload a new permit in settings to maintain your account verification.
+            </div>
+            <a href="{{ route('therapist.settings') }}" style="background-color: #c53030; color: white;">Update Permit</a>
+        </div>
+    @elseif($clinic->isBusinessPermitExpiringSoon())
+        @php
+            $daysUntilExpiry = ceil(now()->diffInDays($expiryDate, false));
+        @endphp
+        <div class="subscription-warning" style="margin-top: 10px; background-color: #fffaf0; border-left: 5px solid #f6ad55; color: #9c4221;">
+            <i class="fa fa-clock"></i>
+            <div>
+                <strong>Business Permit Expiring Soon!</strong>
+                Your business permit will expire in {{ $daysUntilExpiry }} day{{ $daysUntilExpiry > 1 ? 's' : '' }} on {{ $expiryDate->format('M d, Y') }}.
+            </div>
+            <a href="{{ route('therapist.settings') }}" style="background-color: #f6ad55; color: white;">Update Permit</a>
+        </div>
+    @endif
+@endif
 <div class="welcome-header">
     <h2>Welcome, {{ $clinic->name ?? 'Clinic' }}!</h2>
     <a href="{{ route('therapist.settings') }}">

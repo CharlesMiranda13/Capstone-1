@@ -116,6 +116,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('manage-users');
         Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
         Route::patch('/users/{id}/verify', [UserController::class, 'verify'])->name('users.verify');
+        Route::patch('/users/{id}/update-business-expiry', [UserController::class, 'updateBusinessExpiry'])->name('users.update_business_expiry');
         Route::patch('/users/{id}/decline', [UserController::class, 'decline'])->name('users.decline');
         Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
         Route::get('/unread-counts', [UserController::class, 'getUnreadCounts'])->name('unread-counts');
