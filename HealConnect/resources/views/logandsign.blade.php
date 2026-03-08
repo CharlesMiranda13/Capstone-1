@@ -69,17 +69,61 @@
 
         <!-- Register Tab -->
         <div id="register" class="tab-content">
-            <h2 style="text-align:center;">Register as</h2>
-            <div class="Users">
-                <div class="User1">
-                    <a href="{{ url('register/therapist') }}{{ $plan ? '?plan='.$plan : '' }}">Independent PT</a>
-                </div>
-                <div class="User2">
-                    <a href="{{ url('register/clinic') }}{{ $plan ? '?plan='.$plan : '' }}">Clinic PT</a>
-                </div>
-                <div class="User3">
-                    <a href="{{ url('register/patient') }}{{ $plan ? '?plan='.$plan : '' }}">Patient</a>
-                </div>
+            <h2 style="text-align:center; margin-bottom: 24px;">Choose Account Type</h2>
+            <div class="role-selector-container">
+                <!-- Independent PT -->
+                <a href="{{ url('register/therapist') }}{{ $plan ? '?plan='.$plan : '' }}" class="role-card pt-card">
+                    <div class="role-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                    </div>
+                    <div class="role-info">
+                        <h3>Independent PT</h3>
+                        <p>Solo physical therapist managing individual practice.</p>
+                    </div>
+                    <div class="role-action">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </a>
+
+                <!-- Clinic PT -->
+                <a href="{{ url('register/clinic') }}{{ $plan ? '?plan='.$plan : '' }}" class="role-card clinic-card">
+                    <div class="role-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                    </div>
+                    <div class="role-info">
+                        <h3>Clinic PT</h3>
+                        <p>For organizations managing multiple therapists.</p>
+                    </div>
+                    <div class="role-action">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </a>
+
+                <!-- Patient -->
+                <a href="{{ url('register/patient') }}{{ $plan ? '?plan='.$plan : '' }}" class="role-card patient-card">
+                    <div class="role-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </div>
+                    <div class="role-info">
+                        <h3>Patient</h3>
+                        <p>Seeking physical therapy services and guidance.</p>
+                    </div>
+                    <div class="role-action">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
