@@ -13,11 +13,11 @@ use Carbon\Carbon;
  * HealConnect Security & Business Logic Tests
  *
  * Covers the 5 bugs fixed per the QA report:
- *   Fix 1 — Double-booking prevention (with DB lock)
- *   Fix 2 — EMR write ownership check
- *   Fix 3 — Appointment status update ownership check
- *   Fix 4 — Login brute-force throttling
- *   Fix 5 — Video room URL authorization
+ *   Fix 1 — Double-booking prevention
+ *   Fix 2 — EMR write ownership
+ *   Fix 3 — Appointment status updates
+ *   Fix 4 — Login brute-force
+ *   Fix 5 — Video room URL auth
  *
  * Run: php artisan test --filter HealConnectSecurityTest
  */
@@ -25,57 +25,8 @@ class HealConnectSecurityTest extends TestCase
 {
     use RefreshDatabase;
 
-    // ──────────────────────────────────────────────────
-    // Helpers
-    // ──────────────────────────────────────────────────
+    // --- Helpers ---
 
-    /** Create a verified/active patient user */
-    private function makePatient(array $attrs = []): User
-    {
-        return User::factory()->create(array_merge([
-            'role'                  => 'patient',
-            'is_verified_by_admin'  => true,
-            'status'                => 'Active',
-            'subscription_status'   => 'active',
-        ], $attrs));
-    }
-
-    /**
-     * Create a verified/active independent therapist.
-     * subscription_status='active' is required to pass CheckSubscription middleware.
-     */
-    private function makeTherapist(array $attrs = []): User
-    {
-        return User::factory()->create(array_merge([
-            'role'                  => 'therapist',
-            'is_verified_by_admin'  => true,
-            'status'                => 'Active',
-            'subscription_status'   => 'active',
-        ], $attrs));
-    }
-
-    /**
-     * Create an active availability slot for a therapist on a specific date.
-     * day_of_week is NOT NULL in the schema, so we compute it from the date.
-     */
-    private function makeAvailability(
-        User $therapist,
-        string $date,
-        string $start = '10:00:00',
-        string $end = '11:00:00'
-    ): Availability {
-        return Availability::create([
-            'provider_id'   => $therapist->id,
-            'provider_type' => User::class,
-            'date'          => $date,
-            'day_of_week'   => Carbon::parse($date)->format('l'), // e.g. "Saturday"
-            'start_time'    => $start,
-            'end_time'      => $end,
-            'is_active'     => true,
-        ]);
-    }
-
-    /** Create an appointment */
     private function makeAppointment(
         User $patient,
         User $therapist,
@@ -94,16 +45,53 @@ class HealConnectSecurityTest extends TestCase
         ]);
     }
 
-    // ──────────────────────────────────────────────────
-    // Fix 1 — Double-Booking Prevention
-    // ──────────────────────────────────────────────────
+    private function makePatient(array $attrs = []): User
+    {
+        return User::factory()->create(array_merge([
+            'role'                  => 'patient',
+            'is_verified_by_admin'  => true,
+            'status'                => 'Active',
+            'subscription_status'   => 'active',
+        ], $attrs));
+    }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    private function makeTherapist(array $attrs = []): User
+    {
+        return User::factory()->create(array_merge([
+            'role'                  => 'therapist',
+            'is_verified_by_admin'  => true,
+            'status'                => 'Active',
+            'subscription_status'   => 'active',
+        ], $attrs));
+    }
+
+    private function makeAvailability(
+        User $therapist,
+        string $date,
+        string $start = '10:00:00',
+        string $end = '11:00:00'
+    ): Availability {
+        return Availability::create([
+            'provider_id'   => $therapist->id,
+            'provider_type' => User::class,
+            'date'          => $date,
+            'day_of_week'   => Carbon::parse($date)->format('l'), 
+            'start_time'    => $start,
+            'end_time'      => $end,
+            'is_active'     => true,
+        ]);
+    }
+
+    /*
+     * Fix 1 - Double-booking
+     */
+
+    /** @test */
     public function it_rejects_a_booking_for_an_already_taken_slot(): void
     {
         $therapist = $this->makeTherapist();
-        $patient1  = $this->makePatient();
-        $patient2  = $this->makePatient();
+        $p1  = $this->makePatient();
+        $p2  = $this->makePatient();
 
         $date = now()->addDay()->toDateString();
         $time = '10:00:00';
@@ -111,10 +99,10 @@ class HealConnectSecurityTest extends TestCase
         $this->makeAvailability($therapist, $date, '10:00:00', '11:00:00');
 
         // Patient 1 already holds this slot
-        $this->makeAppointment($patient1, $therapist, $date, $time, 'pending');
+        $this->makeAppointment($p1, $therapist, $date, $time, 'pending');
 
         // Patient 2 tries to book the same slot
-        $response = $this->actingAs($patient2)->post(route('patient.appointments.store'), [
+        $response = $this->actingAs($p2)->post(route('patient.appointments.store'), [
             'therapist_id'     => $therapist->id,
             'appointment_type' => 'Consultation',
             'appointment_date' => $date,
@@ -126,20 +114,20 @@ class HealConnectSecurityTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function it_allows_booking_a_different_time_slot(): void
+    public function test_allows_booking_a_different_time_slot(): void
     {
         $therapist = $this->makeTherapist();
-        $patient1  = $this->makePatient();
-        $patient2  = $this->makePatient();
+        $user1  = $this->makePatient();
+        $user2  = $this->makePatient();
 
         $date = now()->addDay()->toDateString();
 
         $this->makeAvailability($therapist, $date, '09:00:00', '12:00:00');
 
-        $this->makeAppointment($patient1, $therapist, $date, '09:00:00', 'pending');
+        $this->makeAppointment($user1, $therapist, $date, '09:00:00', 'pending');
 
-        // Patient 2 books a different time inside the same availability window
-        $this->actingAs($patient2)->post(route('patient.appointments.store'), [
+        // Try booking a different time inside the window
+        $this->actingAs($user2)->post(route('patient.appointments.store'), [
             'therapist_id'     => $therapist->id,
             'appointment_type' => 'Consultation',
             'appointment_date' => $date,
@@ -149,31 +137,29 @@ class HealConnectSecurityTest extends TestCase
         $this->assertDatabaseCount('appointments', 2);
     }
 
-    // ──────────────────────────────────────────────────
-    // Fix 2 — EMR Write Ownership
-    // ──────────────────────────────────────────────────
+    // Fix 2 - EMR Ownership
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    /** @test */
     public function therapist_cannot_update_ehr_of_unlinked_patient(): void
     {
-        $therapistA = $this->makeTherapist();
-        $therapistB = $this->makeTherapist();
-        $patientA   = $this->makePatient();
+        $docA = $this->makeTherapist();
+        $docB = $this->makeTherapist();
+        $patient   = $this->makePatient();
 
-        // Patient A is linked ONLY to Therapist A
-        $this->makeAppointment($patientA, $therapistA, now()->addDay()->toDateString(), '10:00:00');
+        // Linked to A only
+        $this->makeAppointment($patient, $docA, now()->addDay()->toDateString(), '10:00:00');
 
-        // Therapist B tries to update Patient A's EHR
-        $response = $this->actingAs($therapistB)->put(
-            route('therapist.ehr.update', $patientA->id),
+        // B tries to sneak an update
+        $response = $this->actingAs($docB)->put(
+            route('therapist.ehr.update', $patient->id),
             ['diagnosis' => 'Unauthorized update attempt']
         );
 
-        $response->assertForbidden(); // Expect 403
+        $response->assertForbidden();
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function therapist_can_update_ehr_of_linked_patient(): void
+    public function test_therapist_can_update_ehr_of_linked_patient(): void
     {
         $therapist = $this->makeTherapist();
         $patient   = $this->makePatient();
@@ -189,8 +175,8 @@ class HealConnectSecurityTest extends TestCase
         $response->assertSessionHas('success');
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function therapist_cannot_update_treatment_of_unlinked_patient(): void
+    /** @test */
+    public function unauthorized_therapist_cannot_modify_treatment_records(): void
     {
         $therapistA = $this->makeTherapist();
         $therapistB = $this->makeTherapist();
@@ -207,37 +193,34 @@ class HealConnectSecurityTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function therapist_cannot_update_progress_of_unlinked_patient(): void
+    public function test_therapist_cannot_update_progress_of_unlinked_patient(): void
     {
-        $therapistA = $this->makeTherapist();
-        $therapistB = $this->makeTherapist();
-        $patientA   = $this->makePatient();
+        $t1 = $this->makeTherapist();
+        $t2 = $this->makeTherapist();
+        $p   = $this->makePatient();
 
-        $this->makeAppointment($patientA, $therapistA, now()->addDay()->toDateString(), '10:00:00');
+        $this->makeAppointment($p, $t1, now()->addDay()->toDateString(), '10:00:00');
 
-        $response = $this->actingAs($therapistB)->put(
-            route('therapist.progress.update', $patientA->id),
+        $response = $this->actingAs($t2)->put(
+            route('therapist.progress.update', $p->id),
             ['notes' => 'Unauthorized progress note']
         );
 
         $response->assertForbidden();
     }
 
-    // ──────────────────────────────────────────────────
-    // Fix 3 — Appointment Status Update Ownership
-    // ──────────────────────────────────────────────────
+    // Fix 3 - Appointment Status Updates
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    /** @test */
     public function therapist_cannot_update_status_of_another_therapists_appointment(): void
     {
         $therapistA = $this->makeTherapist();
         $therapistB = $this->makeTherapist();
         $patient    = $this->makePatient();
 
-        // Appointment belongs to Therapist A
         $appointment = $this->makeAppointment($patient, $therapistA, now()->addDay()->toDateString(), '10:00:00');
 
-        // Therapist B tries to update its status — should 404 (firstOrFail with provider scope)
+        // B tries to approve A's appointment
         $response = $this->actingAs($therapistB)->patch(
             route('therapist.appointments.updateStatus', $appointment->id),
             ['status' => 'approved']
@@ -247,7 +230,7 @@ class HealConnectSecurityTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
-    public function therapist_can_update_status_of_own_appointment(): void
+    public function test_can_update_status_of_own_appointment(): void
     {
         $therapist = $this->makeTherapist();
         $patient   = $this->makePatient();
@@ -263,16 +246,13 @@ class HealConnectSecurityTest extends TestCase
         $this->assertDatabaseHas('appointments', ['id' => $appointment->id, 'status' => 'approved']);
     }
 
-    // ──────────────────────────────────────────────────
-    // Fix 4 — Login Brute-Force Throttling
-    // ──────────────────────────────────────────────────
+    // Fix 4 - Throttling
 
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function login_endpoint_throttles_after_5_failed_attempts(): void
+    /** @test */
+    public function login_throttles_after_five_failed_attempts(): void
     {
         $this->makePatient(['email' => 'test@example.com']);
 
-        // 5 wrong attempts
         for ($i = 0; $i < 5; $i++) {
             $this->post(route('login.submit'), [
                 'email'    => 'test@example.com',
@@ -280,33 +260,28 @@ class HealConnectSecurityTest extends TestCase
             ]);
         }
 
-        // 6th attempt should be throttled
         $response = $this->post(route('login.submit'), [
             'email'    => 'test@example.com',
             'password' => 'wrong-password',
         ]);
 
-        $response->assertStatus(429); // Too Many Requests
+        $response->assertStatus(429);
     }
 
-    // ──────────────────────────────────────────────────
-    // Fix 5 — Video Room URL Authorization
-    // ──────────────────────────────────────────────────
+    // Fix 5 - Video Auth
 
     #[\PHPUnit\Framework\Attributes\Test]
     public function unauthorized_user_cannot_join_video_room_via_url(): void
     {
         $intruder = $this->makePatient();
-
-        // Room name contains IDs 999 and 888 — neither matches $intruder->id
         $room = 'healconnect-999-888-' . time();
 
         $response = $this->actingAs($intruder)->get(route('video.room', ['room' => $room]));
 
-        $response->assertForbidden(); // Expect 403
+        $response->assertForbidden();
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    /** @test */
     public function caller_can_join_their_own_video_room(): void
     {
         $caller   = $this->makePatient();
@@ -316,7 +291,6 @@ class HealConnectSecurityTest extends TestCase
 
         $response = $this->actingAs($caller)->get(route('video.room', ['room' => $room]));
 
-        // Should not 403; 200 expected (video page renders without API key in test env)
         $response->assertStatus(200);
     }
 
@@ -333,14 +307,11 @@ class HealConnectSecurityTest extends TestCase
         $response->assertStatus(200);
     }
 
-    // ──────────────────────────────────────────────────
-    // Fix 6 — Freemium Booking Bypass Fix
-    // ──────────────────────────────────────────────────
+    // Fix 6 - Trials
 
-    #[\PHPUnit\Framework\Attributes\Test]
-    public function patient_cannot_book_maxed_out_trial_therapist(): void
+    /** @test */
+    public function test_patient_cannot_book_maxed_out_trial_therapist(): void
     {
-        // Therapist is on free trial (inactive)
         $therapist = User::factory()->create([
             'role'                  => 'therapist',
             'is_verified_by_admin'  => true,
@@ -351,16 +322,12 @@ class HealConnectSecurityTest extends TestCase
         $date = now()->addDay()->toDateString();
         $this->makeAvailability($therapist, $date, '08:00:00', '15:00:00');
 
-        // Create 2 completely different patients to fill the freemium limit
-        $existingPatient1 = $this->makePatient();
-        $existingPatient2 = $this->makePatient();
+        $p1 = $this->makePatient();
+        $p2 = $this->makePatient();
 
-        $this->makeAppointment($existingPatient1, $therapist, $date, '09:00:00');
-        $this->makeAppointment($existingPatient2, $therapist, $date, '10:00:00');
+        $this->makeAppointment($p1, $therapist, $date, '09:00:00');
+        $this->makeAppointment($p2, $therapist, $date, '10:00:00');
 
-        // The therapist's customer_count is now organically 2
-
-        // A brand new 3rd patient tries to book
         $newPatient = $this->makePatient();
 
         $response = $this->actingAs($newPatient)->post(route('patient.appointments.store'), [
