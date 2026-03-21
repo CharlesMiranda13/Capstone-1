@@ -93,14 +93,11 @@
                                 <a href="{{ route('admin.users.show', $user->id) }}" class="hc-dropdown-item">
                                     <i class="fa fa-eye"></i> View Profile
                                 </a>
-                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="action-form">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="hc-dropdown-item hc-dropdown-item-danger"
-                                        onclick="return confirm('Are you sure you want to delete this user?');">
-                                        <i class="fa fa-trash"></i> Delete User
-                                    </button>
-                                </form>
+                                <button type="button" class="hc-dropdown-item hc-dropdown-item-danger btn-trigger-delete"
+                                    data-action="{{ route('admin.users.destroy', $user->id) }}"
+                                    data-name="{{ $user->name }}">
+                                    <i class="fa fa-trash"></i> Delete User
+                                </button>
                             </div>
                         </div>
                     </td>
@@ -112,4 +109,39 @@
     <div class="mt-4 d-flex justify-content-center">
         {{ $users->withQueryString()->links('pagination.custom') }}
     </div>
+
+    {{-- Hidden delete form --}}
+    <form id="deleteUserForm" method="POST" style="display:none;">
+        @csrf
+        @method('DELETE')
+    </form>
+
+    {{-- DELETE CONFIRMATION MODAL --}}
+    <div id="deleteModal" class="delete-modal-overlay">
+        <div class="delete-modal-content">
+            <button class="delete-modal-close" onclick="closeDeleteModal()">&times;</button>
+
+            <div class="delete-modal-icon">
+                <i class="fa fa-trash-alt"></i>
+            </div>
+
+            <h2 class="delete-modal-title">Delete User?</h2>
+            <p class="delete-modal-subtitle">You are about to permanently delete:</p>
+            <span class="delete-modal-username" id="deleteUserName"></span>
+
+            <div class="delete-modal-warning">
+                <i class="fa fa-exclamation-triangle"></i>
+                <span>This action <strong>cannot be undone</strong>. All data associated with this user including appointments, messages, and records will be permanently removed.</span>
+            </div>
+
+            <div class="delete-modal-actions">
+                <button type="button" class="btn-delete-cancel" onclick="closeDeleteModal()">Cancel</button>
+                <button type="button" class="btn-delete-confirm" onclick="confirmDelete()">
+                    <i class="fa fa-trash-alt"></i> Yes, Delete
+                </button>
+            </div>
+        </div>
+    </div>
 @endsection
+
+

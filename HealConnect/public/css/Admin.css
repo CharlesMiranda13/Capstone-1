@@ -1062,3 +1062,141 @@
         padding: 10px 15px;
     }
 }
+
+.delete-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.delete-modal-content {
+    background: white;
+    padding: 32px 28px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.delete-modal-icon {
+    width: 60px;
+    height: 60px;
+    background: #fee2e2;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+}
+
+.delete-modal-icon i {
+    font-size: 1.7rem;
+    color: #dc2626;
+}
+
+.delete-modal-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 8px;
+}
+
+.delete-modal-subtitle {
+    color: #6b7280;
+    font-size: 0.92rem;
+    margin: 0 0 6px;
+}
+
+.delete-modal-username {
+    font-weight: 700;
+    color: #dc2626;
+    font-size: 1rem;
+    margin: 0 0 20px;
+    display: block;
+}
+
+.delete-modal-warning {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    color: #991b1b;
+    margin-bottom: 24px;
+    text-align: left;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.delete-modal-warning i {
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.delete-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.delete-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 18px;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: #94a3b8;
+    background: none;
+    border: none;
+    line-height: 1;
+}
+
+.delete-modal-close:hover {
+    color: #475569;
+}
+
+.btn-delete-confirm {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+
+.btn-delete-confirm:hover {
+    background: #b91c1c;
+}
+
+.btn-delete-cancel {
+    background: #f1f5f9;
+    color: #475569;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-delete-cancel:hover {
+    background: #e2e8f0;
+}
