@@ -19,6 +19,10 @@
     @endphp
     <div class="print-only-title">
         HealConnect - {{ $roleTitle }}
+        <div style="font-size: 14px; font-weight: normal; margin-top: 5px; color: #555;">
+            Printed by: {{ auth()->user()->name ?? 'Admin' }}<br>
+            Date: {{ now()->format('F j, Y, g:i A') }}
+        </div>
     </div>
 
     <div class="search-filter-new">

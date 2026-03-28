@@ -76,6 +76,10 @@
                 <div class="print-only-title" style="text-align: center; font-size: 26px; font-weight: bold; margin-bottom: 30px;">
                     HealConnect - <span id="printReportTitle">Estimated Monthly Revenue Details</span> <br>
                     <span style="font-size: 16px; font-weight: normal; color: #555;">{{ now()->format('F Y') }}</span>
+                    <div style="font-size: 14px; font-weight: normal; margin-top: 10px; color: #666;">
+                        Printed by: {{ auth()->user()->name ?? 'Admin' }}<br>
+                        Date: {{ now()->format('F j, Y, g:i A') }}
+                    </div>
                 </div>
                 <table class="hc-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
                     <thead>
