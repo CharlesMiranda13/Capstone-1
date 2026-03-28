@@ -409,4 +409,31 @@ document.addEventListener("DOMContentLoaded", function () {
       }
   }
   setupUserDetailsModals();
+
+  // ---------- DELETE USER MODAL (Manage Users page) ----------
+  function setupDeleteUserModal() {
+    const modal = document.getElementById('deleteModal');
+    if (!modal) return;
+
+    document.querySelectorAll('.btn-trigger-delete').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.getElementById('deleteUserName').textContent = this.dataset.name;
+        document.getElementById('deleteUserForm').action = this.dataset.action;
+        modal.style.display = 'flex';
+      });
+    });
+
+    window.closeDeleteModal = function() {
+      modal.style.display = 'none';
+    };
+
+    window.confirmDelete = function() {
+      document.getElementById('deleteUserForm').submit();
+    };
+
+    modal.addEventListener('click', function(e) {
+      if (e.target === this) closeDeleteModal();
+    });
+  }
+  setupDeleteUserModal();
 });
