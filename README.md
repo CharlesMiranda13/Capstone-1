@@ -96,10 +96,61 @@ Use the following default credentials to access the administrative dashboard for
 ---
 
 ## API Docs
-HealConnect utilizes Laravel's routing system. Primary endpoints include:
-- `GET /api/messages/fetch`: Retrieves conversation history for the authenticated user.
-- `POST /api/messages/send`: Sends text, files, or voice messages securely.
-- `POST /video/create-room`: Initializes a secure video consultation room.
+HealConnect utilizes Laravel's routing system. All endpoints require an active authenticated session (or appropriate Bearer token) and are strictly protected to ensure data privacy.
+
+- **`GET /api/messages/fetch`**
+  - **Description:** Retrieves the conversation history between the authenticated user and a specific recipient.
+  - **Parameters:**
+    - `receiver_id` (integer, required) - The ID of the recipient user.
+  - **Example Response:**
+    ```json
+    [
+      {
+        "id": 1,
+        "sender_id": 2,
+        "receiver_id": 5,
+        "message": "Hello, how is your progress today?",
+        "type": "text",
+        "created_at": "2023-10-01T10:00:00.000000Z"
+      }
+    ]
+    ```
+
+- **`POST /api/messages/send`**
+  - **Description:** Sends text, files, or voice messages securely to a recipient. Triggers real-time WebSocket events via Pusher.
+  - **Parameters:**
+    - `receiver_id` (integer, required) - The ID of the recipient.
+    - `message` (string, optional) - The text content to send.
+    - `file` (file, optional) - An attachment (e.g., pdf, image).
+    - `voice_message` (file, optional) - A recorded voice note.
+  - **Example Response:**
+    ```json
+    {
+      "success": true,
+      "message": {
+        "id": 2,
+        "sender_id": 5,
+        "receiver_id": 2,
+        "message": "I'm feeling much better!",
+        "type": "text"
+      }
+    }
+    ```
+
+- **`POST /video/create-room`**
+  - **Description:** Initializes a secure video consultation room for telehealth sessions (powered by Daily.co). Only authorized providers can initiate calls to patients with active appointments.
+  - **Parameters:**
+    - `receiver_id` (integer, required) - The ID of the patient to call.
+  - **Example Response:**
+    ```json
+    {
+      "success": true,
+      "room_name": "healconnect-5-2-1696154400",
+      "room_url": "https://yourdomain.daily.co/healconnect-5-2-1696154400",
+      "token": "eyJhbGciOiJIUzI1NiIsInR...",
+      "redirect": "https://healconnect.com/video/room/healconnect-5-2-1696154400?token=..."
+    }
+    ```
 
 ---
 
@@ -119,7 +170,7 @@ HealConnect prioritizes data privacy. All User records are stored securely, and 
 ---
 
 ## License
-Distributed under the **MIT License**.
+HealConnect is an academic capstone project developed for research and educational purposes. This repository and its contents are provided for demonstration and evaluation only. Commercial use, redistribution, or reuse of the system, source code, or documentation without written permission from the project proponents is not permitted.
 
 ---
 
