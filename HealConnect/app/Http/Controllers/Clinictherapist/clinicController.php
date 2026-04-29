@@ -338,15 +338,17 @@ class ClinicController extends ptController
             $profilePicture = $request->file('profile_picture')->store('profile_pictures', 'public');
         }
 
-        User::create([
+        $employeeUser = new User([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt('password123'),
             'position' => $request->position,
-            'role' => 'employee',
             'clinic_id' => $clinic->id,
             'profile_picture' => $profilePicture,
         ]);
+        $employeeUser->role = 'employee';
+        $employeeUser->status = 'Active';
+        $employeeUser->save();
 
         return back()->with('success', 'Employee added successfully!');
     }

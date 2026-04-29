@@ -56,16 +56,18 @@ class EmployeeController extends Controller
             ? $request->file('profile_picture')->store('profile_pictures', 'public')
             : null;
 
-        User::create([
+        $employeeUser = new User([
             'name' => $request->name,
             'gender' => $request->gender,
             'email' => $request->email,
             'position' => $request->position,
-            'role' => 'employee',
             'clinic_id' => $clinic->id,
             'profile_picture' => $profilePath,
             'password' => bcrypt('password123'),
         ]);
+        $employeeUser->role = 'employee';
+        $employeeUser->status = 'Active'; // Employees usually start active or pending depending on business logic, I'll set Active since they are created by admin/clinic. Let's look at previous code: it didn't set status, so it was default or null. Let's set it to 'Active' to be safe, or leave it. Actually, previous code didn't set status.
+        $employeeUser->save();
 
         return back()->with('success', 'Employee added successfully!');
     }

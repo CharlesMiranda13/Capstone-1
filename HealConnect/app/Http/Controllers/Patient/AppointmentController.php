@@ -211,7 +211,7 @@ class AppointmentController extends Controller
         // Handle referral file upload before transaction
         $referralPath = null;
         if ($request->hasFile('referral')) {
-            $referralPath = $request->file('referral')->store('referrals', 'public');
+            $referralPath = $request->file('referral')->store('referrals', 'local');
         }
 
         // Prevent double-booking atomically using a DB transaction + exclusive row lock.

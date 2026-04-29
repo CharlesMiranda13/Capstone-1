@@ -105,8 +105,8 @@ class RegisterController extends Controller
         $verificationCode = Str::upper(Str::random(6));
 
         // Handle file uploads
-        $front = $request->file('ValidIDFront')->store('valid_ids', 'public');
-        $back  = $request->file('ValidIDBack')->store('valid_ids', 'public');
+        $front = $request->file('ValidIDFront')->store('valid_ids', 'local');
+        $back  = $request->file('ValidIDBack')->store('valid_ids', 'local');
 
         $validIdPath = json_encode([
             'front' => $front,
@@ -114,11 +114,11 @@ class RegisterController extends Controller
         ]);
 
         $licensePath = ($type === 'clinic' || $type === 'therapist')
-            ? $request->file('license')->store('licenses', 'public')
+            ? $request->file('license')->store('licenses', 'local')
             : null;
 
         $businessPermitPath = ($type === 'clinic')
-            ? $request->file('Business')->store('business_permits', 'public')
+            ? $request->file('Business')->store('business_permits', 'local')
             : null;
 
         $startDate = ($type === 'clinic' || $type === 'therapist')
@@ -129,19 +129,17 @@ class RegisterController extends Controller
         $fullAddress = $this->formatAddress($request);
 
         // Create user
-        $user = User::create([
+        $user = new User([
             'name' => $type === 'clinic'
                 ? $request->clinic_name
                 : $request->Fname . ' ' . $request->Mname . ' ' . $request->Lname,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $type, // patient, therapist, or clinic
             'verification_code' => $verificationCode,
             'valid_id_path' => $validIdPath,
             'license_path' => $licensePath,
             'business_permit_path' => $businessPermitPath,
             'business_permit_expiry' => $request->business_permit_expiry,
-            'status' => 'Pending',
             'phone' => $request->phone,
             'address' => $fullAddress,
             'street' => $request->street,
@@ -157,9 +155,12 @@ class RegisterController extends Controller
                 : null,
             'start_year' => $startDate,
             'clinic_type' => $type === 'clinic' ? $request->clinic_type : null, 
-            'plan'=> null,
-            'subscription_status' => 'inactive',
         ]);
+        
+        $user->role = $type; // patient, therapist, or clinic
+        $user->status = 'Pending';
+        $user->subscription_status = 'inactive';
+        $user->save();
 
         // Send verification email
         Mail::to($user->email)->send(new VerificationCodeMail($user));

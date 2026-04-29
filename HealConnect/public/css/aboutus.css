@@ -63,10 +63,6 @@
     border-top-color: #3498db;
 }
 
-.about-card.full-width {
-    /* Values section spans full width, handled by parent */
-}
-
 .about-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.11);

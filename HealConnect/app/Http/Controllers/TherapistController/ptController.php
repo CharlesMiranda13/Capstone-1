@@ -123,13 +123,13 @@ class ptController extends Controller
 
         // Handle License Upload
         if ($request->hasFile('license')) {
-            $updateData['license_path'] = $request->file('license')->store('licenses', 'public');
+            $updateData['license_path'] = $request->file('license')->store('licenses', 'local');
             $needsReverification = true;
         }
 
         // Handle Business Permit Upload
         if ($request->hasFile('Business')) {
-            $updateData['business_permit_path'] = $request->file('Business')->store('business_permits', 'public');
+            $updateData['business_permit_path'] = $request->file('Business')->store('business_permits', 'local');
             $needsReverification = true;
         }
 

@@ -23,6 +23,7 @@ use App\Models\Setting;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\Admin\AdminContactController;
 use App\Http\Controllers\VideoController;
+use App\Http\Controllers\SecureFileController;
 
 
 Broadcast::routes(['middleware' => ['auth']]);
@@ -41,7 +42,7 @@ Route::get('/contact', function () {
     $settings = Setting::first(); 
     return view('contact', compact('settings'));
 })->name('contact');
-Route::post('/contact-submit', [ContactMessageController::class, 'store'])->name('contact.submit');
+Route::post('/contact-submit', [ContactMessageController::class, 'store'])->middleware('throttle:5,1')->name('contact.submit');
 
 
 Route::get('/ptlist', [PatientController::class, 'publicTherapists'])->name('ptlist');
@@ -75,12 +76,14 @@ Route::prefix('password')->group(function () {
         ->name('password.request');
 
     Route::post('/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+        ->middleware('throttle:5,1')
         ->name('password.email');
 
     Route::get('/reset/{token}', [ResetPasswordController::class, 'showResetForm'])
         ->name('password.reset');
 
     Route::post('/reset', [ResetPasswordController::class, 'reset'])
+        ->middleware('throttle:5,1')
         ->name('password.update');
 });
 
@@ -91,7 +94,7 @@ Route::view('/logandsign', 'logandsign')->name('user.auth');
 
 Route::prefix('register')->group(function () {
     Route::get('/{type}', [RegisterController::class, 'showRegistrationForm'])->name('register.form');
-    Route::post('/{type}', [RegisterController::class, 'register'])->name('register.store');
+    Route::post('/{type}', [RegisterController::class, 'register'])->middleware('throttle:5,1')->name('register.store');
 });
 
 // Account Pending Page
@@ -306,6 +309,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/payment', [SubscriptionController::class, 'showPayment'])->name('payment.show');
     Route::post('/payment/checkout', [SubscriptionController::class, 'createCheckoutSession'])->name('payment.checkout');
 });
+
+// Secure file serving route (auth logic handled in controller for both admin and web guards)
+Route::get('/secure-file/{path}', [SecureFileController::class, 'show'])
+    ->where('path', '.*')
+    ->name('secure.file');
 
 // Move these outside auth to handle session loss during redirect
 Route::get('/payment/success', [SubscriptionController::class, 'paymentSuccess'])->name('payment.success');

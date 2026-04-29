@@ -221,7 +221,7 @@
                                     @endphp
                                     <div class="doc-actions">
                                         @foreach($validIds as $key => $path)
-                                            <button class="hc-btn hc-btn-outline hc-btn-sm btn-view-doc" data-img="{{ asset('storage/' . $path) }}">
+                                            <button class="hc-btn hc-btn-outline hc-btn-sm btn-view-doc" data-img="{{ route('secure.file', ['path' => $path]) }}">
                                                 <i class="fa fa-eye"></i> {{ ucfirst($key) }}
                                             </button>
                                         @endforeach
@@ -238,7 +238,7 @@
                             <span class="doc-label">License</span>
                             <div class="doc-content">
                                 @if ($user->license_path)
-                                    <button class="hc-btn hc-btn-outline hc-btn-sm btn-view-doc" data-img="{{ asset('storage/' . $user->license_path) }}">
+                                    <button class="hc-btn hc-btn-outline hc-btn-sm btn-view-doc" data-img="{{ route('secure.file', ['path' => $user->license_path]) }}">
                                         <i class="fa fa-certificate"></i> View License
                                     </button>
                                 @else
@@ -254,7 +254,7 @@
                             <div class="doc-content">
                                 <div class="doc-info">
                                     @if ($user->business_permit_path)
-                                        <button class="hc-btn hc-btn-outline hc-btn-sm btn-view-doc" data-img="{{ asset('storage/' . $user->business_permit_path) }}">
+                                        <button class="hc-btn hc-btn-outline hc-btn-sm btn-view-doc" data-img="{{ route('secure.file', ['path' => $user->business_permit_path]) }}">
                                             <i class="fa fa-file-contract"></i> View Permit
                                         </button>
                                     @else

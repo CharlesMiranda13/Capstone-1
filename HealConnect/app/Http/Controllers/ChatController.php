@@ -141,10 +141,10 @@ class ChatController extends Controller
 
             if ($msg->message_type === 'file') {
                 $msg->type = 'file';
-                $msg->file_url = asset('storage/' . $msg->message);
+                $msg->file_url = route('secure.file', ['path' => $msg->message]);
             } elseif ($msg->message_type === 'voice') {
                 $msg->type = 'voice';
-                $msg->message_url = asset('storage/' . $msg->message);
+                $msg->message_url = route('secure.file', ['path' => $msg->message]);
             } else {
                 $msg->type = 'text';
             }
@@ -194,8 +194,8 @@ class ChatController extends Controller
             mkdir($storagePath, 0755, true);
         }
 
-        $path = $request->file('voice_message')->store('voice_messages', 'public');
-        $url = asset('storage/' . $path); 
+        $path = $request->file('voice_message')->store('voice_messages', 'local');
+        $url = route('secure.file', ['path' => $path]);
 
         // Save to database
         $message = Message::create([
@@ -232,8 +232,8 @@ class ChatController extends Controller
             mkdir($storagePath, 0755, true);
         }
 
-        $path = $request->file('file')->store('chat_files', 'public');
-        $url = asset('storage/' . $path);
+        $path = $request->file('file')->store('chat_files', 'local');
+        $url = route('secure.file', ['path' => $path]);
 
         $message = Message::create([
             'sender_id' => Auth::id(),
