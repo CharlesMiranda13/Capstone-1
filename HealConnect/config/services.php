@@ -34,11 +34,7 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
-    'stripe' =>[
-        'key' => env('STRIPE_KEY'),
-        'secret' => env('STRIPE_SECRET'),
-    ],
-    
+
     'daily' => [
         'api_key' => env('DAILY_API_KEY'),
         'domain' => env('DAILY_DOMAIN', 'project-healconnect'),
