@@ -73,12 +73,6 @@
             <i class="bi bi-shield-check"></i> Powered by <strong>PayMongo</strong>
         </p>
 
-        <div class="back-container">
-            <a href="{{ route('pricing.index') }}" class="back-link">
-                <i class="bi bi-arrow-left"></i> Back to Plans
-            </a>
-        </div>
-
     </div>
 </div>
 @endsection
