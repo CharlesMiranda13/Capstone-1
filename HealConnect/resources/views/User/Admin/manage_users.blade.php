@@ -119,33 +119,6 @@
         @csrf
         @method('DELETE')
     </form>
-
-    {{-- DELETE CONFIRMATION MODAL --}}
-    <div id="deleteModal" class="delete-modal-overlay">
-        <div class="delete-modal-content">
-            <button class="delete-modal-close" onclick="closeDeleteModal()">&times;</button>
-
-            <div class="delete-modal-icon">
-                <i class="fa fa-trash-alt"></i>
-            </div>
-
-            <h2 class="delete-modal-title">Delete User?</h2>
-            <p class="delete-modal-subtitle">You are about to permanently delete:</p>
-            <span class="delete-modal-username" id="deleteUserName"></span>
-
-            <div class="delete-modal-warning">
-                <i class="fa fa-exclamation-triangle"></i>
-                <span>This action <strong>cannot be undone</strong>. All data associated with this user including appointments, messages, and records will be permanently removed.</span>
-            </div>
-
-            <div class="delete-modal-actions">
-                <button type="button" class="btn-delete-cancel" onclick="closeDeleteModal()">Cancel</button>
-                <button type="button" class="btn-delete-confirm" onclick="confirmDelete()">
-                    <i class="fa fa-trash-alt"></i> Yes, Delete
-                </button>
-            </div>
-        </div>
-    </div>
 @endsection
 
 

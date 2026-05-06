@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ asset('Css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('Css/Admin.css') }}">
     <link rel="stylesheet" href="{{ asset('css/shared-components.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/modals.css') }}">
     <link rel="stylesheet" href="{{ asset('Css/print.css') }}">
     @yield('styles')
 </head>
@@ -61,7 +62,10 @@
     <div class="admin-main">
         @yield('content')
     </div>
-    <script src="{{ asset('js/modal.js') }}"></script>
+
+    @include('shared.modal')
+
+    <script src="{{ asset('js/modal-system.js') }}"></script>
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script src="{{ asset('js/notifications.js') }}"></script>
     <script src="{{ asset('js/sidebar.js') }}"></script>

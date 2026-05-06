@@ -49,22 +49,26 @@
         $customerCount = auth()->user()->customer_count ?? 0;
     @endphp
     @if($customerCount >= 2)
-        <div class="subscription-expired">
-            <i class="fa fa-exclamation-triangle"></i>
-            <div>
+        <div class="alert-banner alert-banner-danger">
+            <i class="fa fa-exclamation-triangle alert-banner-icon"></i>
+            <div class="alert-banner-content">
                 <strong>Trial Limit Reached!</strong>
                 You currently have {{ $customerCount }} patients (the maximum allowed on the free trial). You must upgrade to accept more.
             </div>
-            <a href="{{ route('subscribe.show', 'pro clinic') }}">Upgrade Now</a>
+            <div class="alert-banner-action">
+                <a href="{{ route('subscribe.show', 'pro clinic') }}" class="btn-banner btn-banner-danger">Upgrade Now</a>
+            </div>
         </div>
     @else
-        <div class="subscription-warning" style="background-color: #e9f5ff; color: #0056b3; border-left: 5px solid #0056b3;">
-            <i class="fa fa-info-circle" style="color: #0056b3;"></i>
-            <div>
+        <div class="alert-banner alert-banner-info">
+            <i class="fa fa-info-circle alert-banner-icon"></i>
+            <div class="alert-banner-content">
                 <strong>Free Trial Active</strong>
                 You have used {{ $customerCount }} out of your 2 free patient slots. Subscribe to unlock unlimited patients and all premium features.
             </div>
-            <a href="{{ route('subscribe.show', 'pro clinic') }}" style="background-color: #0056b3; color: white;">View Plans</a>
+            <div class="alert-banner-action">
+                <a href="{{ route('subscribe.show', 'pro clinic') }}" class="btn-banner btn-banner-primary">Subscribe Now</a>
+            </div>
         </div>
     @endif
 @endif

@@ -127,10 +127,10 @@
                                                 {{ $availability->is_active ? 'Disable' : 'Enable' }}
                                             </button>
                                         </form>
-                                        <form action="{{ route('therapist.availability.destroy', $availability->id) }}" method="POST">
+                                        <form action="{{ route('therapist.availability.destroy', $availability->id) }}" method="POST" class="delete-availability-form">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="hc-dropdown-item hc-dropdown-item-danger"
-                                                onclick="return confirm('Are you sure you want to delete this availability?');">
+                                            <button type="button" class="hc-dropdown-item hc-dropdown-item-danger"
+                                                data-delete-availability>
                                                 <i class="fa fa-trash"></i> Delete
                                             </button>
                                         </form>

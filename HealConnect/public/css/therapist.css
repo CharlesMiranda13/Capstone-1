@@ -379,55 +379,98 @@
     max-height: 300px;
 }
 
-/* ---------- SUBSCRIPTION WARNINGS ---------- */
-.subscription-warning {
-    background: #fff3cd;
-    border-left: 4px solid #ffc107;
-    padding: 40px;
-    margin: 50px auto;
-    max-width: 600px;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    animation: slideDown 0.3s ease-out;
+/* --- ALERT BANNERS --- */
+.alert-banner {
+    display: flex;
+    align-items: center;
+    padding: 1.25rem 2rem;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    animation: slideDown 0.4s ease-out;
 }
 
-.subscription-warning h2 {
+.alert-banner-info {
+    background-color: #e9f5ff;
+    color: #0056b3;
+    border-left: 5px solid #0056b3;
+}
+
+.alert-banner-warning {
+    background-color: #fff3cd;
     color: #856404;
-    margin-bottom: 20px;
-    font-size: 2rem;
+    border-left: 5px solid #ffc107;
 }
 
-.subscription-warning p {
-    color: #666;
-    font-size: 1.1rem;
-    margin-bottom: 25px;
+.alert-banner-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 5px solid #dc3545;
 }
 
-.subscription-warning i {
-    color: #856404;
-    font-size: 20px;
-    flex-shrink: 0;
+.alert-banner-icon {
+    font-size: 1.5rem;
+    margin-right: 1.25rem;
 }
 
-.subscription-warning strong {
-    color: #856404;
+.alert-banner-content {
+    flex-grow: 1;
 }
 
-.subscription-warning a {
-    color: white;
-    background: linear-gradient(90deg, #4b8df8, #4ad0a9);
-    padding: 12px 30px;
-    border-radius: 6px;
-    font-weight: bold;
-    text-decoration: none;
+.alert-banner-action {
+    margin-left: 1.5rem;
+    white-space: nowrap;
+}
+
+.btn-banner {
     display: inline-block;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
     transition: all 0.3s ease;
 }
 
-.subscription-warning a:hover {
+.btn-banner-primary {
+    background-color: #0056b3;
+    color: #fff !important;
+}
+
+.btn-banner-primary:hover {
+    background-color: #004494;
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(75, 141, 248, 0.4);
+}
+
+.btn-banner-danger {
+    background-color: #dc3545;
+    color: #fff !important;
+}
+
+.btn-banner-danger:hover {
+    background-color: #a71d2a;
+    transform: translateY(-2px);
+}
+
+.btn-banner-warning {
+    background-color: #f6ad55;
+    color: #fff !important;
+}
+
+.btn-banner-warning:hover {
+    background-color: #9c4221;
+    transform: translateY(-2px);
+}
+
+.subscription-warning {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .subscription-expired {

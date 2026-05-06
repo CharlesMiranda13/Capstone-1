@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{{ asset('Css/settings.css') }}">
     <link rel="stylesheet" href="{{ asset('Css/tts.css') }}">
     <link rel="stylesheet" href="{{ asset('css/shared-components.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/modals.css') }}">
 
     @yield('styles')
 </head>
@@ -81,10 +82,12 @@
     <div class="main-content">
         @yield('content')
     </div>
+
+    @include('shared.modal')
     
     {{-- Scripts --}}
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-    <script src="{{ asset('js/modal.js') }}"></script>
+    <script src="{{ asset('js/modal-system.js') }}"></script>
     <script src="{{ asset('js/notifications.js') }}"></script>
     <script src="{{ asset('js/sidebar.js') }}"></script>
     @yield('scripts')

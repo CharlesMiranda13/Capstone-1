@@ -146,11 +146,11 @@
                 @if($user->subscription_status == 'active')
                 <div class="action-section">
                     <h6>Cancel Subscription</h6>
-                    <form action="{{ route('admin.subscriptions.cancel', $user->id) }}" method="POST" 
-                          onsubmit="return confirm('Are you sure you want to cancel this subscription?');">
+                    <form action="{{ route('admin.subscriptions.cancel', $user->id) }}" method="POST"
+                          id="cancelSubscriptionForm">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn-danger">
+                        <button type="button" class="btn-danger" id="cancelSubscriptionBtn">
                             <i class="fa-solid fa-xmark"></i> Cancel Subscription
                         </button>
                     </form>

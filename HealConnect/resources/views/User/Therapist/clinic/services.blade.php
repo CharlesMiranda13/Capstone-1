@@ -133,10 +133,10 @@
                                                 {{ $schedule->is_active ? 'Disable' : 'Enable' }}
                                             </button>
                                         </form>
-                                        <form action="{{ route('clinic.schedules.destroy', $schedule->id) }}" method="POST">
+                                        <form action="{{ route('clinic.schedules.destroy', $schedule->id) }}" method="POST" class="delete-schedule-form">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="hc-dropdown-item hc-dropdown-item-danger"
-                                                onclick="return confirm('Are you sure you want to delete this schedule?');">
+                                            <button type="button" class="hc-dropdown-item hc-dropdown-item-danger"
+                                                data-delete-schedule>
                                                 <i class="fa fa-trash"></i> Delete
                                             </button>
                                         </form>
