@@ -39,10 +39,11 @@ class SubscriptionController extends Controller
     public function index()
     {
         if (Auth::check()) {
-            if (Auth::user()->role === 'therapist') {
-                return redirect()->route('subscribe.show', 'pro solo');
-            } elseif (Auth::user()->role === 'clinic') {
-                return redirect()->route('subscribe.show', 'pro clinic');
+            $user = Auth::user();
+            if ($user->role === 'therapist') {
+                return $this->show('pro solo');
+            } elseif ($user->role === 'clinic') {
+                return $this->show('pro clinic');
             }
         }
 
@@ -56,10 +57,17 @@ class SubscriptionController extends Controller
             abort(404, 'Plan not found.');
         }
 
-        return view('subscription.show', [
-            'planKey' => $plan,
-            'plan' => $this->plans[$plan],
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Please log in to subscribe.');
+        }
+
+        // Store selected plan in session and go directly to payment
+        session([
+            'selected_plan' => $plan,
+            'plan_details' => $this->plans[$plan]
         ]);
+
+        return redirect()->route('payment.show');
     }
 
     // Activate subscription
