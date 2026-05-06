@@ -62,7 +62,13 @@
                         @endif
                     </div>
                 @empty
-                    <p class="no-chats">No conversations yet.</p>
+                    <div class="empty-chat-list">
+                        <div class="empty-chat-icon">
+                            <i class="fa-regular fa-comment-dots"></i>
+                        </div>
+                        <h4>No messages yet</h4>
+                        <p>Start a conversation with your clients or therapists.</p>
+                    </div>
                 @endforelse
             </div>
         </aside>
@@ -92,8 +98,9 @@
             {{-- Chat Messages --}}
             <div class="chat-messages" id="chat-messages">
                 <div class="no-chat-selected">
-                    <i class="far fa-comments"></i>
-                    <p>Select a conversation to start messaging.</p>
+                    <i class="fa-regular fa-comments"></i>
+                    <h3>Select a conversation</h3>
+                    <p>Choose a contact from the left menu to start your conversation.</p>
                 </div>
             </div>
 
