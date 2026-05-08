@@ -211,6 +211,102 @@
     margin-top: 0.35rem;
 }
 
+/* --- GRID SYSTEM --- */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-group-full {
+    grid-column: span 2;
+}
+
+/* --- TAG SYSTEM (Specializations) --- */
+.spec-tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding: 0.75rem;
+    border: 2px solid #e2e5e8;
+    border-radius: 12px;
+    background: #fcfcfc;
+    min-height: 50px;
+    margin-bottom: 1rem;
+}
+
+.spec-tag {
+    display: inline-flex;
+    align-items: center;
+    background: #eef7ff;
+    color: #4a90e2;
+    padding: 0.35rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid rgba(74, 144, 226, 0.2);
+    transition: all 0.2s ease;
+}
+
+.spec-tag:hover {
+    background: #d9ecff;
+}
+
+.spec-tag .remove-tag {
+    margin-left: 0.6rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: #a7a7a7;
+    transition: color 0.2s ease;
+}
+
+.spec-tag .remove-tag:hover {
+    color: #e74c3c;
+}
+
+.spec-input-group {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.spec-input-group input {
+    flex: 1;
+}
+
+/* --- SECTIONING --- */
+.section-divider {
+    margin: 2.5rem 0 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f1f3f5;
+    color: #666;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.section-divider i {
+    color: #4a90e2;
+}
+
+.doc-upload-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    transition: all 0.2s ease;
+}
+
+.doc-upload-card:hover {
+    border-color: #cbd5e1;
+    background: #f1f5f9;
+}
+
 /* --- BUTTONS --- */
 .submit-button {
     padding: 0.85rem 2rem;
@@ -426,6 +522,15 @@
     .confirm-btn,
     .cancel-btn {
         width: 100%;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .form-group-full {
+        grid-column: span 1;
     }
 }
 

@@ -104,122 +104,118 @@
                     @csrf
                     @method('PUT')
 
-                    {{-- NAME --}}
-                    <div class="form-group">
-                        <label for="name">{{ $role === 'clinic' ? 'Clinic Name' : 'Full Name' }}</label>
-                        <input type="text"
-                               name="name"
-                               id="name"
-                               value="{{ old('name', Auth::user()->name) }}"
-                               required>
-                    </div>
-
-                    {{-- PHONE --}}
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel"
-                               name="phone"
-                               id="phone"
-                               value="{{ old('phone', Auth::user()->phone) }}"
-                               pattern="^(09\d{9}|\+639\d{9})$"
-                               placeholder="09XXXXXXXXX or +639XXXXXXXXX"
-                               required>
-                    </div>
-
-                    {{-- ADDRESS --}}
-                    <div class="form-group">
-                        <label for="address">Address</label>
-                        <input type="text"
-                               name="address"
-                               id="address"
-                               value="{{ old('address', Auth::user()->address) }}"
-                               required>
-                    </div>
-
-                    {{-- PATIENT SPECIFIC FIELDS --}}
-                    @if($role === 'patient')
+                    <div class="form-grid">
+                        {{-- NAME --}}
                         <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email"
-                                   name="email"
-                                   id="email"
-                                   value="{{ old('email', Auth::user()->email) }}"
-                                   required>
+                            <label for="name">{{ $role === 'clinic' ? 'Clinic Name' : 'Full Name' }}</label>
+                            <input type="text" name="name" id="name" value="{{ old('name', Auth::user()->name) }}" required>
                         </div>
 
+                        {{-- PHONE --}}
                         <div class="form-group">
-                            <label for="gender">Sex</label>
-                            <input type="text" id="gender" value="{{ Auth::user()->gender }}" disabled>
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" name="phone" id="phone" value="{{ old('phone', Auth::user()->phone) }}" 
+                                   pattern="^(09\d{9}|\+639\d{9})$" placeholder="09XXXXXXXXX" required>
                         </div>
-                    @endif
+
+                        {{-- ADDRESS (Full Width) --}}
+                        <div class="form-group form-group-full">
+                            <label for="address">Full Address</label>
+                            <input type="text" name="address" id="address" value="{{ old('address', Auth::user()->address) }}" required>
+                        </div>
+
+                        {{-- PATIENT SPECIFIC FIELDS --}}
+                        @if($role === 'patient')
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" name="email" id="email" value="{{ old('email', Auth::user()->email) }}" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gender">Sex</label>
+                                <input type="text" id="gender" value="{{ Auth::user()->gender }}" disabled>
+                            </div>
+                        @endif
+                    </div>
 
                     {{-- THERAPIST SPECIFIC FIELDS --}}
                     @if($role === 'therapist' || $role === 'clinic')
-                    <div class="form-group">
-                        <label>Specializations</label>
-
-                        <div id="specialization-wrapper">
-
-                            @php
-                                $specializations = Auth::user()->specialization
-                                    ? explode(',', Auth::user()->specialization)
-                                    : [];
-                            @endphp
-
-                            @foreach($specializations as $spec)
-                                <div class="specialization-item" style="display:flex; gap:10px; margin-bottom:8px;">
-                                    <input type="text" name="specialization[]" class="specialization-input" value="{{ $spec }}">
-                                    <button type="button" class="remove-spec hc-icon-btn hc-btn-danger" style="border:none;">
-                                        <i class="fa fa-times"></i>
-                                    </button>
-                                </div>
-                            @endforeach
+                        <div class="section-divider">
+                            <i class="fa fa-stethoscope"></i> Professional Expertise
                         </div>
 
-                        <button type="button" id="add-specialization" class="hc-btn hc-btn-outline">
-                            <i class="fa fa-plus"></i> Add Specialization
+                        <div class="form-group">
+                            <label>Specializations</label>
+                            <p class="text-muted" style="font-size: 0.85rem; margin-bottom: 0.75rem;">
+                                Add your areas of expertise (e.g., Physical Therapy, Occupational Therapy).
+                            </p>
+                            
+                            <div id="spec-tag-container" class="spec-tag-container">
+                                @php
+                                    $specializations = Auth::user()->specialization
+                                        ? explode(',', Auth::user()->specialization)
+                                        : [];
+                                @endphp
+
+                                @foreach($specializations as $spec)
+                                    @if(trim($spec))
+                                    <div class="spec-tag">
+                                        <span>{{ trim($spec) }}</span>
+                                        <input type="hidden" name="specialization[]" value="{{ trim($spec) }}">
+                                        <i class="fa fa-times remove-tag"></i>
+                                    </div>
+                                    @endif
+                                @endforeach
+                            </div>
+
+                            <div class="spec-input-group">
+                                <input type="text" id="new-spec-input" placeholder="Type a specialization..." class="form-control">
+                                <button type="button" id="add-spec-btn" class="hc-btn hc-btn-primary">
+                                    <i class="fa fa-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="section-divider">
+                            <i class="fa fa-file-shield"></i> Verification Documents
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="doc-upload-card">
+                                <label for="license">Clinic License / Accreditation</label>
+                                <input type="file" name="license" id="license" accept=".jpg, .jpeg, .png, .pdf">
+                                @if(Auth::user()->license_path)
+                                    <small class="text-success" style="display:block; margin-top:8px;">
+                                        <i class="fa fa-check-circle"></i> <a href="{{ route('secure.file', ['path' => Auth::user()->license_path]) }}" target="_blank">View Current</a>
+                                    </small>
+                                @endif
+                            </div>
+
+                            @if($role === 'clinic')
+                                <div class="doc-upload-card">
+                                    <label for="Business">Business Permit</label>
+                                    <input type="file" name="Business" id="Business" accept=".jpg, .jpeg, .png, .pdf">
+                                    @if(Auth::user()->business_permit_path)
+                                    <small class="text-success" style="display:block; margin-top:8px;">
+                                        <i class="fa fa-check-circle"></i> <a href="{{ route('secure.file', ['path' => Auth::user()->business_permit_path]) }}" target="_blank">View Current</a>
+                                    </small>
+                                @endif
+                                </div>
+
+                                <div class="form-group form-group-full">
+                                    <label for="business_permit_expiry">Business Permit Expiration Date</label>
+                                    <input type="date" name="business_permit_expiry" id="business_permit_expiry" 
+                                           value="{{ old('business_permit_expiry', Auth::user()->business_permit_expiry ? Auth::user()->business_permit_expiry->format('Y-m-d') : '') }}">
+                                </div>
+                            @endif
+                        </div>
+                    @endif
+
+                    <div style="margin-top: 2rem; text-align: right;">
+                        <button type="submit" class="hc-btn hc-btn-success hc-btn-lg">
+                            <i class="fa fa-save"></i> Save All Changes
                         </button>
                     </div>
-
-                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-                    <h5 style="margin-bottom: 15px; color: #666;">Verification Documents</h5>
-
-                    <div class="form-group">
-                        <label for="license">Clinic License / DOH Accreditation</label>
-                        <input type="file" name="license" id="license" accept=".jpg, .jpeg, .png, .pdf">
-                        @if(Auth::user()->license_path)
-                            <small class="text-success" style="display:block; margin-top:5px;">
-                                <i class="fa fa-check-circle"></i> Document uploaded. 
-                                <a href="{{ asset('storage/' . Auth::user()->license_path) }}" target="_blank" style="color: #0d6efd; text-decoration: underline;">View Current</a>
-                            </small>
-                        @endif
-                    </div>
-
-                    @if($role === 'clinic')
-                    <div class="form-group">
-                        <label for="Business">Business Permit</label>
-                        <input type="file" name="Business" id="Business" accept=".jpg, .jpeg, .png, .pdf">
-                        @if(Auth::user()->business_permit_path)
-                            <small class="text-success" style="display:block; margin-top:5px;">
-                                <i class="fa fa-check-circle"></i> Document uploaded.
-                                <a href="{{ asset('storage/' . Auth::user()->business_permit_path) }}" target="_blank" style="color: #0d6efd; text-decoration: underline;">View Current</a>
-                            </small>
-                        @endif
-                    </div>
-
-                    <div class="form-group">
-                        <label for="business_permit_expiry">Business Permit Expiration Date</label>
-                        <input type="date" name="business_permit_expiry" id="business_permit_expiry" 
-                               value="{{ old('business_permit_expiry', Auth::user()->business_permit_expiry ? Auth::user()->business_permit_expiry->format('Y-m-d') : '') }}">
-                        @if(Auth::user()->business_permit_expiry)
-                            <small class="text-info" style="display:block; margin-top:5px;">
-                                <i class="fa fa-calendar-alt"></i> Current Expiry: {{ Auth::user()->business_permit_expiry->format('M d, Y') }}
-                            </small>
-                        @endif
-                    </div>
-                    @endif
-                    @endif
-                    <button type="submit" class="hc-btn hc-btn-success">Save Changes</button>
                 </form>
             </div>
         </div>

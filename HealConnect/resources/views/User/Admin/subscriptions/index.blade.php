@@ -116,7 +116,15 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="empty-state">No subscriptions found</td>
+                        <td colspan="7">
+                            <div class="hc-empty-state">
+                                <div class="hc-empty-icon">
+                                    <i class="fa fa-credit-card"></i>
+                                </div>
+                                <h3 class="hc-empty-title">No Subscriptions Found</h3>
+                                <p class="hc-empty-text">We couldn't find any subscriptions matching your current search or filters. Try adjusting your criteria.</p>
+                            </div>
+                        </td>
                     </tr>
                     @endforelse
                 </tbody>

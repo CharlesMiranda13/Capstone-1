@@ -107,7 +107,13 @@
             {{ $patients->withQueryString()->links('pagination.custom') }}
         </div>
         @else
-            <p>You currently have no patients.</p>
+            <div class="hc-empty-state">
+                <div class="hc-empty-icon">
+                    <i class="fa fa-users"></i>
+                </div>
+                <h3 class="hc-empty-title">No Patients Found</h3>
+                <p class="hc-empty-text">It looks like you don't have any patients in your list yet. Patients will appear here automatically once they book an appointment with you.</p>
+            </div>
         @endif
     </div>
 </main>

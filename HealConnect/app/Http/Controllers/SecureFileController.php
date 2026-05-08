@@ -14,19 +14,21 @@ class SecureFileController extends Controller
      */
     public function show($path)
     {
-        // Decode path if necessary
         $path = urldecode($path);
 
-        if (!Storage::disk('local')->exists($path)) {
+        if (!\Storage::disk('local')->exists($path)) {
             abort(404, 'File not found.');
         }
 
-        if (!Auth::guard('admin')->check() && !Auth::guard('web')->check()) {
+        if (!\Auth::guard('admin')->check() && !\Auth::guard('web')->check()) {
             abort(403, 'Unauthorized.');
         }
 
-        $fullPath = Storage::disk('local')->path($path);
+        $file = \Storage::disk('local')->get($path);
+        $type = \Storage::disk('local')->mimeType($path);
 
-        return response()->file($fullPath);
+        return response($file, 200)
+            ->header('Content-Type', $type)
+            ->header('Content-Disposition', 'inline; filename="' . basename($path) . '"');
     }
 }

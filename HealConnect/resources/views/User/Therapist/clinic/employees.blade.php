@@ -94,7 +94,15 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="no-data">No employees found.</td>
+                                <td colspan="7">
+                                    <div class="hc-empty-state">
+                                        <div class="hc-empty-icon">
+                                            <i class="fa fa-user-plus"></i>
+                                        </div>
+                                        <h3 class="hc-empty-title">No Employees Found</h3>
+                                        <p class="hc-empty-text">Your clinic doesn't have any employees listed yet. Click the "Add Employee" button to start building your team.</p>
+                                    </div>
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>

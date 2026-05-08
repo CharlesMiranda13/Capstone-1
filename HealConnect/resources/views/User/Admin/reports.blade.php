@@ -105,7 +105,15 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" style="border: 1px solid #ddd; padding: 8px; text-align: center;">No active subscriptions found.</td>
+                                <td colspan="4">
+                                    <div class="hc-empty-state hc-empty-state-small">
+                                        <div class="hc-empty-icon">
+                                            <i class="fa fa-credit-card"></i>
+                                        </div>
+                                        <h4 class="hc-empty-title">No Active Subscriptions</h4>
+                                        <p class="hc-empty-text">No active subscription data found for this period.</p>
+                                    </div>
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -206,7 +214,15 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="2" class="empty-state">No recent registrations</td>
+                            <td colspan="2">
+                                <div class="hc-empty-state hc-empty-state-small">
+                                    <div class="hc-empty-icon">
+                                        <i class="fa fa-chart-line"></i>
+                                    </div>
+                                    <h4 class="hc-empty-title">No Recent Activity</h4>
+                                    <p class="hc-empty-text">There haven't been any new registrations in the last 30 days.</p>
+                                </div>
+                            </td>
                         </tr>
                         @endforelse
                     </tbody>

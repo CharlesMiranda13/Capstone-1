@@ -67,7 +67,7 @@
                 </tr>
             </thead>
             <tbody>
-            @foreach ($users as $user)
+            @forelse ($users as $user)
                 <tr>
                     <td>#{{ $user->id }}</td>
                     <td>
@@ -106,7 +106,19 @@
                         </div>
                     </td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="7">
+                        <div class="hc-empty-state">
+                            <div class="hc-empty-icon">
+                                <i class="fa fa-search"></i>
+                            </div>
+                            <h3 class="hc-empty-title">No Users Found</h3>
+                            <p class="hc-empty-text">We couldn't find any users matching your current search or filter criteria. Try clearing the filters to see more results.</p>
+                        </div>
+                    </td>
+                </tr>
+            @endforelse
             </tbody>
         </table>
     </div>

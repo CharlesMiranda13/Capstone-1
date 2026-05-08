@@ -139,7 +139,17 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="5" class="empty-message">No availability set.</td></tr>
+                        <tr>
+                            <td colspan="5">
+                                <div class="hc-empty-state hc-empty-state-small">
+                                    <div class="hc-empty-icon">
+                                        <i class="fa fa-calendar-plus"></i>
+                                    </div>
+                                    <h4 class="hc-empty-title">No Availability Found</h4>
+                                    <p class="hc-empty-text">You haven't added any availability slots yet. Patients won't be able to book you until you set your working hours.</p>
+                                </div>
+                            </td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>

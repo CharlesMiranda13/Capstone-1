@@ -1,40 +1,51 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const specInput = document.getElementById('new-spec-input');
+    const addBtn = document.getElementById('add-spec-btn');
+    const container = document.getElementById('spec-tag-container');
 
-    // Add new specialization field
-    const addBtn = document.getElementById('add-specialization');
-    const wrapper = document.getElementById('specialization-wrapper');
+    if (!specInput || !addBtn || !container) return;
 
-    if (addBtn) {
-        addBtn.addEventListener('click', function () {
-            const item = document.createElement('div');
-            item.classList.add('specialization-item');
-            item.style.display = 'flex';
-            item.style.gap = '10px';
-            item.style.marginBottom = '8px';
+    function createTag(text) {
+        text = text.trim();
+        if (!text) return;
 
-            item.innerHTML = `
-                <input type="text" name="specialization[]" class="specialization-input">
-                <button type="button" class="remove-spec"
-                    style="background:#dc3545;color:white;border:none;padding:6px 10px;border-radius:6px;">X</button>
-            `;
+        // Check if duplicate
+        const existing = Array.from(container.querySelectorAll('input[type="hidden"]'))
+            .map(input => input.value.toLowerCase());
+        
+        if (existing.includes(text.toLowerCase())) {
+            specInput.classList.add('is-invalid');
+            setTimeout(() => specInput.classList.remove('is-invalid'), 2000);
+            return;
+        }
 
-            wrapper.appendChild(item);
+        const tag = document.createElement('div');
+        tag.className = 'spec-tag';
+        tag.innerHTML = `
+            <span>${text}</span>
+            <input type="hidden" name="specialization[]" value="${text}">
+            <i class="fa fa-times remove-tag"></i>
+        `;
 
-            // Attach remove event to new buttons
-            addRemoveEvent(item.querySelector('.remove-spec'));
-        });
+        container.appendChild(tag);
+        specInput.value = '';
     }
 
-    // Remove specialization field
-    function addRemoveEvent(button) {
-        button.addEventListener('click', function () {
-            this.parentElement.remove();
-        });
-    }
+    // Add on button click
+    addBtn.addEventListener('click', () => createTag(specInput.value));
 
-    // Attach remove events to existing buttons
-    document.querySelectorAll('.remove-spec').forEach(btn => {
-        addRemoveEvent(btn);
+    // Add on Enter key
+    specInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            createTag(specInput.value);
+        }
     });
 
+    // Remove tags (Event Delegation)
+    container.addEventListener('click', (e) => {
+        if (e.target.classList.contains('remove-tag')) {
+            e.target.closest('.spec-tag').remove();
+        }
+    });
 });

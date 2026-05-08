@@ -145,7 +145,17 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td colspan="4" class="empty-message">No schedule yet.</td></tr>
+                        <tr>
+                            <td colspan="4">
+                                <div class="hc-empty-state hc-empty-state-small">
+                                    <div class="hc-empty-icon">
+                                        <i class="fa fa-calendar-plus"></i>
+                                    </div>
+                                    <h4 class="hc-empty-title">No Schedule Added</h4>
+                                    <p class="hc-empty-text">You haven't added any availability slots yet. Use the form on the left to set your clinic's working hours.</p>
+                                </div>
+                            </td>
+                        </tr>
                     @endforelse
                 </tbody>
             </table>

@@ -35,7 +35,13 @@
                         </p>
                     </div>
                 @empty
-                <p class="empty-state"> No appointments scheduled.</p>
+                    <div class="hc-empty-state hc-empty-state-small">
+                        <div class="hc-empty-icon">
+                            <i class="fa fa-calendar-check"></i>
+                        </div>
+                        <h4 class="hc-empty-title">All Clear</h4>
+                        <p class="hc-empty-text">No upcoming appointments scheduled.</p>
+                    </div>
                 @endforelse
                 </div>
             </div>
@@ -54,7 +60,13 @@
                             </p>
                         </div>
                     @empty
-                        <p class="empty-state">No medical records yet.</p>
+                        <div class="hc-empty-state hc-empty-state-small">
+                            <div class="hc-empty-icon">
+                                <i class="fa fa-folder-open"></i>
+                            </div>
+                            <h4 class="hc-empty-title">No Records</h4>
+                            <p class="hc-empty-text">No medical records available yet.</p>
+                        </div>
                     @endforelse
                 </div>
                 <a href="{{ route('patient.records') }}" class="view-all-link">View All Records →</a>
@@ -78,7 +90,13 @@
                             </p>
                         </div>
                     @else
-                        <p class="empty-state">No progress notes yet.</p>
+                        <div class="hc-empty-state hc-empty-state-small">
+                            <div class="hc-empty-icon">
+                                <i class="fa fa-sticky-note"></i>
+                            </div>
+                            <h4 class="hc-empty-title">No Notes</h4>
+                            <p class="hc-empty-text">Your therapist hasn't added any progress notes yet.</p>
+                        </div>
                     @endif
                 </div>
             </div>

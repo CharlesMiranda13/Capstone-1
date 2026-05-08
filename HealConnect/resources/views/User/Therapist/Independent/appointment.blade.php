@@ -50,7 +50,13 @@
 
         {{-- Table --}}
         @if($appointments->isEmpty())
-            <p class="empty-message">No appointments yet.</p>
+            <div class="hc-empty-state">
+                <div class="hc-empty-icon">
+                    <i class="fa fa-calendar-times"></i>
+                </div>
+                <h3 class="hc-empty-title">No Appointments Found</h3>
+                <p class="hc-empty-text">You don't have any appointments scheduled at the moment. When patients book with you, they will appear in this list.</p>
+            </div>
         @else
             <div class="hc-table-container hc-table-responsive">
                 <table class="hc-table">

@@ -93,11 +93,12 @@
                         </div>
                     </div>
                 @else
-                    <div class="text-center py-4">
-                        <div class="empty-icon-wrap" style="background: #eff6ff;">
-                            <i class="fas fa-folder-open" style="color: #2563eb; font-size: 2rem;"></i>
+                    <div class="hc-empty-state hc-empty-state-small">
+                        <div class="hc-empty-icon" style="background: #eff6ff; color: #2563eb;">
+                            <i class="fas fa-folder-open"></i>
                         </div>
-                        <p class="text-muted mt-2">No health record data available for this snapshot.</p>
+                        <h4 class="hc-empty-title">No Data Available</h4>
+                        <p class="hc-empty-text">No health record data was available for this specific snapshot.</p>
                     </div>
                 @endif
             </div>
@@ -146,11 +147,12 @@
                         </div>
                     @endif
                 @else
-                    <div class="text-center py-4">
-                        <div class="empty-icon-wrap" style="background: #f0fdf4;">
-                            <i class="fas fa-hand-holding-medical" style="color: #10b981; font-size: 2rem;"></i>
+                    <div class="hc-empty-state hc-empty-state-small">
+                        <div class="hc-empty-icon" style="background: #f0fdf4; color: #10b981;">
+                            <i class="fas fa-hand-holding-medical"></i>
                         </div>
-                        <p class="text-muted mt-2">No treatment strategies recorded in this snapshot.</p>
+                        <h4 class="hc-empty-title">No Plan Recorded</h4>
+                        <p class="hc-empty-text">No treatment strategies were recorded for this period.</p>
                     </div>
                 @endif
             </div>
@@ -203,11 +205,12 @@
                         </div>
                     @endif
                 @else
-                    <div class="text-center py-4">
-                        <div class="empty-icon-wrap" style="background: #f0f9ff;">
-                            <i class="fas fa-book-medical" style="color: #0ea5e9; font-size: 2rem;"></i>
+                    <div class="hc-empty-state hc-empty-state-small">
+                        <div class="hc-empty-icon" style="background: #f0f9ff; color: #0ea5e9;">
+                            <i class="fas fa-book-medical"></i>
                         </div>
-                        <p class="text-muted mt-2">No progress notes archived for this period.</p>
+                        <h4 class="hc-empty-title">No Progress Notes</h4>
+                        <p class="hc-empty-text">There are no progress notes archived for this health record entry.</p>
                     </div>
                 @endif
             </div>

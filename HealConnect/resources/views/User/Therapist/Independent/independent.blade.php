@@ -110,7 +110,13 @@
                     <p><strong>Type:</strong> {{ ucfirst($appointment->appointment_type) }}</p>
                 </div>
             @empty
-                <p class="empty-state">No upcoming appointments.</p>
+                <div class="hc-empty-state hc-empty-state-small">
+                    <div class="hc-empty-icon">
+                        <i class="fa fa-calendar-check"></i>
+                    </div>
+                    <h4 class="hc-empty-title">All Clear</h4>
+                    <p class="hc-empty-text">No upcoming appointments for now.</p>
+                </div>
             @endforelse
         </div>
     </div>
