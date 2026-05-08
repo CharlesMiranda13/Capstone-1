@@ -95,12 +95,62 @@ function setupSimpleModal(modalId, openBtnSelector, closeBtnSelector, displayTyp
     const modal = document.getElementById(modalId);
     if (!modal) return;
     document.querySelectorAll(openBtnSelector).forEach(btn => {
-        btn.addEventListener("click", (e) => { e.preventDefault(); modal.style.display = displayType; });
+        btn.addEventListener("click", (e) => { 
+            if (btn.tagName === 'A' || btn.tagName === 'BUTTON') e.preventDefault(); 
+            modal.style.display = displayType; 
+        });
     });
-    const closeBtn = modal.querySelector(closeBtnSelector);
-    closeBtn?.addEventListener("click", () => { modal.style.display = "none"; });
+    modal.querySelectorAll(closeBtnSelector).forEach(btn => {
+        btn.addEventListener("click", () => { modal.style.display = "none"; });
+    });
     window.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
-    if (modal.querySelector(".success-msg")?.textContent.trim() !== "") modal.style.display = displayType;
+    
+    // Auto-show if success message exists
+    const successMsg = modal.querySelector(".success-msg");
+    if (successMsg && successMsg.textContent.trim() !== "") {
+        modal.style.display = displayType;
+    }
+}
+
+function setupDocumentViewer() {
+    const modal    = document.getElementById('imageViewerModal');
+    const imgCont  = document.getElementById('imageViewerContent');
+    const pdfCont  = document.getElementById('pdfViewerContent');
+    const closeBtn = document.getElementById('closeImageViewer');
+
+    if (!modal) return;
+
+    document.querySelectorAll('.btn-view-doc').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const url = this.getAttribute('data-img');
+            if (!url) return;
+
+            const isPdf = url.toLowerCase().includes('.pdf') || url.includes('pdf');
+
+            // Reset
+            if (imgCont) { imgCont.style.display = 'none'; imgCont.src = ''; }
+            if (pdfCont) { pdfCont.style.display = 'none'; pdfCont.src = ''; }
+
+            if (isPdf && pdfCont) {
+                pdfCont.src = url;
+                pdfCont.style.display = 'block';
+            } else if (imgCont) {
+                imgCont.src = url;
+                imgCont.style.display = 'block';
+            }
+
+            modal.style.display = 'flex';
+        });
+    });
+
+    const closeAll = () => {
+        modal.style.display = 'none';
+        if (imgCont) imgCont.src = '';
+        if (pdfCont) pdfCont.src = '';
+    };
+
+    closeBtn?.addEventListener('click', closeAll);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeAll(); });
 }
 
 function setupDynamicModal(modalId, bodyId, btnSelector, urlBuilder) {
@@ -158,17 +208,25 @@ function setupTabSwitchWithDetection() {
 
     const capture = () => {
         originalData = {};
-        forms.forEach(f => f.querySelectorAll('input, textarea, select').forEach(i => { if (i.name) originalData[i.name] = i.value; }));
+        forms.forEach(f => f.querySelectorAll('input, textarea, select').forEach(i => { 
+            if (i.name) originalData[i.name] = i.value.trim(); 
+        }));
     };
     const hasChanged = () => {
         let changed = false;
         forms.forEach(f => f.querySelectorAll('input, textarea, select').forEach(i => {
-            if (i.name && originalData[i.name] !== i.value) changed = true;
+            if (i.name) {
+                const currentVal = i.value.trim();
+                const originalVal = (originalData[i.name] || "").trim();
+                if (originalVal !== currentVal) changed = true;
+            }
         }));
         return changed;
     };
 
     capture();
+    setTimeout(capture, 1000); // Re-capture after 1s to account for browser autofill
+
     forms.forEach(f => f.addEventListener('input', () => formChanged = hasChanged()));
     tabs.forEach(t => t.addEventListener('click', (e) => {
         e.preventDefault();
@@ -193,12 +251,13 @@ function setupTabSwitchWithDetection() {
 }
 
 function setupPasswordUpdateConfirmation() {
-    const form = document.querySelector("form");
     const saveBtn = document.querySelector(".save-btn");
     const modal = document.getElementById("passwordConfirmModal");
     const confirmBtn = document.getElementById("confirmPasswordUpdate");
 
-    if (!form || !saveBtn || !modal || !confirmBtn) return;
+    if (!saveBtn || !modal || !confirmBtn) return;
+    const form = saveBtn.closest("form");
+    if (!form) return;
 
     let bypass = false;
     saveBtn.addEventListener("click", function (e) {
@@ -207,7 +266,7 @@ function setupPasswordUpdateConfirmation() {
         const newPass = document.getElementById("new_password")?.value;
         const confirm = document.getElementById("confirm_password")?.value;
 
-        if (current || newPass || confirm) {
+        if (newPass || confirm) {
             e.preventDefault();
             e.stopPropagation();
             modal.style.display = "flex";
@@ -229,7 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Standard Modals
     setupSimpleModal("addEmployeeModal", "#addEmployeeBtn", ".close");
     setupSimpleModal("forgotModal", ".openForgotBtn", ".close", "flex");
-    setupSimpleModal("tabSwitchModal", ".openTabSwitchModal", ".closeTabSwitch", "flex");
+    setupSimpleModal("tabSwitchModal", ".openTabSwitchModal", ".closeTabModal, .closeTabSwitch", "flex");
     setupSimpleModal("passwordConfirmModal", ".openPasswordModal", ".closePasswordModal", "flex");
 
     // Dynamic Content Modals
@@ -246,8 +305,20 @@ document.addEventListener("DOMContentLoaded", function () {
     // Tab Detection
     setupTabSwitchWithDetection();
 
-    // Password Update Confirmation
-    setupPasswordUpdateConfirmation();
+    // Expiry Correction UI (Admin)
+    document.querySelector('.btn-edit-expiry')?.addEventListener('click', function() {
+        const form = document.querySelector('.expiry-edit-form');
+        const info = document.querySelector('.expiry-info');
+        if (form && info) { form.style.display = 'block'; info.style.display = 'none'; }
+    });
+    document.querySelector('.btn-cancel-expiry')?.addEventListener('click', function() {
+        const form = document.querySelector('.expiry-edit-form');
+        const info = document.querySelector('.expiry-info');
+        if (form && info) { form.style.display = 'none'; info.style.display = 'flex'; }
+    });
+
+    // Document Viewer
+    setupDocumentViewer();
 
     // Event Delegation
     document.addEventListener('click', async (e) => {

@@ -339,13 +339,14 @@
 </div>
 
 {{-- Document Viewer Modal (image or PDF) --}}
-<div id="imageViewerModal" class="modal">
-    <span class="close" id="closeImageViewer">&times;</span>
-    <img class="modal-content" id="imageViewerContent" style="display:none;">
-    <iframe id="pdfViewerContent" class="modal-content"
-            style="display:none; width:80vw; height:85vh; border:none; border-radius:8px;"
-            src=""></iframe>
+<div id="imageViewerModal" class="doc-viewer-overlay">
+    <div class="doc-viewer-container">
+        <button id="closeImageViewer" class="doc-viewer-close" aria-label="Close">&times;</button>
+        <img id="imageViewerContent" class="doc-viewer-img" style="display:none;" alt="Document">
+        <iframe id="pdfViewerContent" class="doc-viewer-pdf" style="display:none;" src=""></iframe>
+    </div>
 </div>
+
 
 {{-- DECLINE MODAL --}}
 <div id="declineModal" class="decline-modal-overlay">
@@ -362,7 +363,7 @@
                       placeholder="Enter reason..." required></textarea>
 
             <div class="decline-modal-actions">
-                <button type="button" onclick="closeDeclineModal()" class="btn-cancel">
+                <button type="button" class="btn-cancel">
                     Cancel
                 </button>
                 <button type="submit" class="btn-decline">
@@ -376,7 +377,7 @@
 {{-- APPROVE CONFIRMATION MODAL --}}
 <div id="approveModal" class="decline-modal-overlay">
     <div class="decline-modal-content" style="max-width: 420px;">
-        <span class="decline-modal-close" onclick="closeApproveModal()">&times;</span>
+        <span class="decline-modal-close">&times;</span>
         <div style="text-align: center; padding: 8px 0 16px;">
             <div style="width: 56px; height: 56px; background: #d1fae5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
                 <i class="fa fa-check-circle" style="font-size: 1.6rem; color: #065f46;"></i>
@@ -385,63 +386,25 @@
             <p style="color: #6b7280; font-size: 0.93rem; margin: 0 0 24px;">This user will be verified and granted full access to the platform.</p>
         </div>
         <div class="decline-modal-actions">
-            <button type="button" onclick="closeApproveModal()" class="btn-cancel">Cancel</button>
-            <button type="button" onclick="document.getElementById('approveUserForm').submit()" class="hc-btn hc-btn-primary" style="background:#059669; border-color:#059669;">
+            <button type="button" class="btn-cancel">Cancel</button>
+            <button type="button" id="submitApproveUser" class="hc-btn hc-btn-primary" style="background:#059669; border-color:#059669;">
                 <i class="fa fa-check"></i> Approve
             </button>
         </div>
     </div>
 </div>
 
+@endsection
 
 @section('scripts')
 <script>
-    document.getElementById('btnApproveUser')?.addEventListener('click', function() {
-        document.getElementById('approveModal').style.display = 'flex';
-    });
+    // Initialize modals using shared system
+    setupSimpleModal("approveModal", "#btnApproveUser", ".decline-modal-close, .btn-cancel");
+    setupSimpleModal("declineModal", "#btnDeclineUser", ".closeDeclineModal, .btn-cancel");
 
-    function closeApproveModal() {
-        document.getElementById('approveModal').style.display = 'none';
-    }
-
-    // Close approve modal when clicking outside
-    document.getElementById('approveModal')?.addEventListener('click', function(e) {
-        if (e.target === this) closeApproveModal();
-    });
-
-    document.getElementById('btnDeclineUser')?.addEventListener('click', function() {
-        const overlay = document.getElementById('declineModal');
-        if (overlay) {
-            overlay.style.display = 'flex';
-        }
-    });
-
-    function closeDeclineModal() {
-        const overlay = document.getElementById('declineModal');
-        if (overlay) {
-            overlay.style.display = 'none';
-        }
-    }
-
-    // Modal Close buttons
-    document.querySelector('.closeDeclineModal')?.addEventListener('click', closeDeclineModal);
-    // Expiry Correction Logic
-    document.querySelector('.btn-edit-expiry')?.addEventListener('click', function() {
-        const form = document.querySelector('.expiry-edit-form');
-        const info = document.querySelector('.expiry-info');
-        if (form && info) {
-            form.style.display = 'block';
-            info.style.display = 'none';
-        }
-    });
-
-    document.querySelector('.btn-cancel-expiry')?.addEventListener('click', function() {
-        const form = document.querySelector('.expiry-edit-form');
-        const info = document.querySelector('.expiry-info');
-        if (form && info) {
-            form.style.display = 'none';
-            info.style.display = 'flex';
-        }
+    // Handle approval submission
+    document.getElementById('submitApproveUser')?.addEventListener('click', function() {
+        document.getElementById('approveUserForm').submit();
     });
 </script>
 @endsection
