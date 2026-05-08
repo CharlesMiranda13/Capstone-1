@@ -108,6 +108,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const dateObj = new Date(msg.created_at || Date.now());
         const currentDate = dateObj.toDateString();
 
+        // Clear empty state if it exists
+        const emptyState = chatMessages.querySelector('.hc-empty-state');
+        if (emptyState) {
+            emptyState.remove();
+        }
+
         if (lastMessageDate !== currentDate) {
             const dateHeader = document.createElement('div');
             dateHeader.classList.add('date-divider');
@@ -281,7 +287,17 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(data => {
                 chatMessages.innerHTML = '';
                 lastMessageDate = null;
-                if (data.length === 0) chatMessages.innerHTML = `<p class="no-messages">No messages yet. Start the conversation!</p>`;
+                if (data.length === 0) {
+                    chatMessages.innerHTML = `
+                        <div class="hc-empty-state hc-empty-state-small">
+                            <div class="hc-empty-icon">
+                                <i class="fa-regular fa-comment-dots"></i>
+                            </div>
+                            <h4 class="hc-empty-title">No messages yet</h4>
+                            <p class="hc-empty-text">Start the conversation by typing a message below.</p>
+                        </div>
+                    `;
+                }
                 else data.forEach(msg => renderMessage(msg, msg.sender_id === window.userId));
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             });
