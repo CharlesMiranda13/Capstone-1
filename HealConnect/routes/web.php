@@ -106,7 +106,7 @@ Route::get('/account/pending', function () {
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1')->name('login.submit');
 
     Route::middleware('auth:admin')->group(function () {
         Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
@@ -156,7 +156,7 @@ Route::prefix('patient')->name('patient.')->middleware(['auth', 'check.status'])
         
     // Settings 
     Route::get('/settings', [PatientController::class, 'settings'])->name('settings');
-    Route::put('/settings/profile', [PatientController::class, 'updateProfile'])->name('update.profile');
+    Route::put('/settings/profile', [PatientController::class, 'updateProfile'])->middleware('throttle:5,1')->name('update.profile');
     Route::put('/settings/info', [PatientController::class, 'updateInfo'])->name('update.info');
     Route::put('/settings/password', [PatientController::class, 'updatePassword'])->name('update.password');
 
@@ -213,7 +213,7 @@ Route::prefix('therapist')->name('therapist.')->middleware(['auth', 'check.statu
 
     //settings
     Route::get('/settings', [IndtherapistController::class, 'settings'])->name('settings');
-    Route::put('/settings/profile', [IndtherapistController::class, 'updateProfile'])->name('update.profile');
+    Route::put('/settings/profile', [IndtherapistController::class, 'updateProfile'])->middleware('throttle:5,1')->name('update.profile');
     Route::put('/settings/info', [IndtherapistController::class, 'updateInfo'])->name('update.info');
     Route::put('/settings/password', [IndtherapistController::class, 'updatePassword'])->name('update.password');
 
@@ -262,7 +262,7 @@ Route::prefix('clinic')->name('clinic.')->middleware(['auth', 'check.status', 'c
     //Route::delete('/employees/schedule/{scheduleId}', [App\Http\Controllers\Clinictherapist\EmployeeController::class, 'destroySchedule'])->name('employees.schedule.destroy');
     // Settings
     Route::get('/settings', [ClinicController::class, 'settings'])->name('settings');
-    Route::put('/settings/profile', [ClinicController::class, 'updateProfile'])->name('update.profile');
+    Route::put('/settings/profile', [ClinicController::class, 'updateProfile'])->middleware('throttle:5,1')->name('update.profile');
     Route::put('/settings/info', [ClinicController::class, 'updateInfo'])->name('update.info');
     Route::put('/settings/password', [ClinicController::class, 'updatePassword'])->name('update.password');
 });
@@ -281,9 +281,9 @@ Route::middleware(['auth', 'check.status', 'check.subscription'])->group(functio
     Route::get('/messages', [ChatController::class, 'index'])->name('messages');
     Route::get('/messages/user-info/{id}', [ChatController::class, 'getUserInfo']);
     Route::get('/messages/fetch', [ChatController::class, 'fetch'])->name('messages.fetch');
-    Route::post('/messages/send', [ChatController::class, 'send'])->name('messages.send');
-    Route::post('/messages/send-voice', [ChatController::class, 'sendVoice'])->name('messages.sendVoice');
-    Route::post('/messages/send-file', [ChatController::class, 'sendFile'])->name('messages.sendFile');
+    Route::post('/messages/send', [ChatController::class, 'send'])->middleware('throttle:5,1')->name('messages.send');
+    Route::post('/messages/send-voice', [ChatController::class, 'sendVoice'])->middleware('throttle:5,1')->name('messages.sendVoice');
+    Route::post('/messages/send-file', [ChatController::class, 'sendFile'])->middleware('throttle:5,1')->name('messages.sendFile');
     Route::put('/messages/{id}/edit', [ChatController::class, 'update'])->name('messages.update');
     Route::delete('/messages/{id}', [ChatController::class, 'destroy'])->name('messages.destroy');
     Route::post('/messages/mark-as-read/{userId}', [ChatController::class, 'markAsRead'])->name('messages.markAsRead');
@@ -293,8 +293,8 @@ Route::middleware(['auth', 'check.status', 'check.subscription'])->group(functio
 /* Email Verification*/
 Route::prefix('verify')->name('verification.')->group(function () {
     Route::get('/', [VerificationController::class, 'show'])->name('notice');
-    Route::post('/confirm', [VerificationController::class, 'confirm'])->name('confirm');
-    Route::post('/resend', [VerificationController::class, 'resend'])->name('resend');
+    Route::post('/confirm', [VerificationController::class, 'confirm'])->middleware('throttle:5,1')->name('confirm');
+    Route::post('/resend', [VerificationController::class, 'resend'])->middleware('throttle:5,1')->name('resend');
 });
 
 
@@ -339,7 +339,7 @@ Route::middleware('auth')->group(function () {
 
 /* Video Call Routes */
 Route::middleware(['auth'])->group(function () {
-    Route::post('/video/create-room', [VideoController::class, 'createRoom'])->name('video.create');
+    Route::post('/video/create-room', [VideoController::class, 'createRoom'])->middleware('throttle:10,1')->name('video.create');
     Route::get('/video/room/{room}', [VideoController::class, 'showRoom'])->name('video.room');
     Route::delete('/video/room/{room}', [VideoController::class, 'deleteRoom'])->name('video.delete');
     Route::post('/messages/call-ended', [VideoController::class, 'callEnded'])->name('messages.callEnded');

@@ -61,6 +61,17 @@ class User extends Authenticatable
         ];
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+        static::deleting(function ($user) {
+            $user->appointments()->delete();
+            $user->services()->delete();
+            $user->availability()->delete();
+            $user->employees()->delete();
+        });
+    }
+
     public function getFullAddressAttribute()
     {
         $parts = array_filter([

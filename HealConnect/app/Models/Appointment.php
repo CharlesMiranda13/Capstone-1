@@ -20,6 +20,7 @@ class Appointment extends Model
         'preferred_gender',
         'notes',
         'status',
+        'video_room_url',
     ];
 
     /** ---------------- RELATIONSHIPS ---------------- */

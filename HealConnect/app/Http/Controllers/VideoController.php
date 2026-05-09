@@ -10,6 +10,7 @@ use App\Events\VideoCallStarted;
 use App\Events\MessageSent;
 use App\Models\User;
 use App\Models\Message;
+use Illuminate\Support\Str;
 
 class VideoController extends Controller
 {
@@ -51,8 +52,8 @@ class VideoController extends Controller
                 'receiver_name' => $receiver->name
             ]);
 
-            // Generate unique room name
-            $roomName = 'healconnect-' . $caller->id . '-' . $receiverId . '-' . time();
+            // Generate unique room name using UUID to prevent predictability
+            $roomName = 'hc-room-' . Str::uuid()->toString();
 
             // Check if API key is configured
             $apiKey = config('services.daily.api_key') ?? env('DAILY_API_KEY');
@@ -123,6 +124,18 @@ class VideoController extends Controller
                     'room_name' => $roomName,
                     'room_url' => $roomData['url']
                 ]);
+
+                // Save the room to the active appointment
+                $appointment = \App\Models\Appointment::where(function($q) use ($caller, $receiverId) {
+                    $q->where('patient_id', $caller->id)->where('provider_id', $receiverId);
+                })->orWhere(function($q) use ($caller, $receiverId) {
+                    $q->where('patient_id', $receiverId)->where('provider_id', $caller->id);
+                })->whereDate('appointment_date', today())->whereIn('status', ['approved', 'confirmed'])->first();
+
+                if ($appointment) {
+                    $appointment->video_room_url = $roomName;
+                    $appointment->save();
+                }
 
                 // Create meeting tokens for both caller and receiver
                 $callerToken = $this->createMeetingToken($apiKey, $roomName, $caller->name, true);
@@ -305,17 +318,32 @@ class VideoController extends Controller
     {
         $user = auth()->user();
 
-        // Security: validate the room name includes this user's ID.
-        // Room format: healconnect-{callerId}-{receiverId}-{timestamp}
-        // The calling user must be either the caller or the receiver.
-        $parts = explode('-', $room);
-        // Expected: ['healconnect', callerId, receiverId, timestamp]
-        if (count($parts) < 4 || ($parts[1] != $user->id && $parts[2] != $user->id)) {
-            Log::warning('Unauthorized video room access attempt', [
-                'user_id' => $user->id,
-                'room'    => $room,
-            ]);
-            abort(403, 'You are not authorized to join this video room.');
+        // Security: For UUID-based room names, we verify the room is assigned to an appointment for this user
+        if (str_starts_with($room, 'hc-room-')) {
+            $appointment = \App\Models\Appointment::where('video_room_url', $room)
+                ->where(function($q) use ($user) {
+                    $q->where('patient_id', $user->id)
+                      ->orWhere('provider_id', $user->id);
+                })->first();
+
+            if (!$appointment) {
+                Log::warning('Unauthorized video room access attempt (UUID)', [
+                    'user_id' => $user->id,
+                    'room'    => $room,
+                ]);
+                abort(403, 'You are not authorized to join this video room.');
+            }
+        } else {
+            // Legacy room format fallback (if any active calls use it)
+            $parts = explode('-', $room);
+            // Expected: ['healconnect', callerId, receiverId, timestamp]
+            if (count($parts) < 4 || ($parts[1] != $user->id && $parts[2] != $user->id)) {
+                Log::warning('Unauthorized video room access attempt', [
+                    'user_id' => $user->id,
+                    'room'    => $room,
+                ]);
+                abort(403, 'You are not authorized to join this video room.');
+            }
         }
 
         Log::info('User joining room', [

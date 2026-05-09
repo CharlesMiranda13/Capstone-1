@@ -19,42 +19,45 @@ class ChatController extends Controller
     {
         $user = Auth::user();
 
-        // Get users who have exchanged messages with the current user
-        $conversations = User::whereHas('sender', function ($query) use ($user) {
-                $query->where('receiver_id', $user->id);
-            })
-            ->orWhereHas('receiver', function ($query) use ($user) {
-                $query->where('sender_id', $user->id);
-            })
-            ->where('id', '!=', $user->id)
+        // 1. Get users with unread counts
+        $conversations = User::where('id', '!=', $user->id)
             ->where('role', '!=', 'admin')
-            ->get()
-            ->map(function ($otherUser) use ($user) {
-                // Get latest message exchanged between the two users
-                $latestMessage = Message::where(function ($query) use ($user, $otherUser) {
-                        $query->where('sender_id', $user->id)
-                            ->where('receiver_id', $otherUser->id);
-                    })
-                    ->orWhere(function ($query) use ($user, $otherUser) {
-                        $query->where('sender_id', $otherUser->id)
-                            ->where('receiver_id', $user->id);
-                    })
-                    ->latest('created_at')
-                    ->first();
+            ->where(function ($query) use ($user) {
+                $query->whereHas('sender', function ($q) use ($user) {
+                    $q->where('receiver_id', $user->id);
+                })->orWhereHas('receiver', function ($q) use ($user) {
+                    $q->where('sender_id', $user->id);
+                });
+            })
+            ->withCount(['sender as unread_count' => function ($query) use ($user) {
+                $query->where('receiver_id', $user->id)->where('is_read', false);
+            }])
+            ->get();
 
-                // Attach latest message text and time to the user object
-                $otherUser->latest_message = $latestMessage ? $latestMessage->message : null;
-                $otherUser->latest_message_time = $latestMessage ? $latestMessage->created_at : now()->subYears(10);
+        if ($conversations->isEmpty()) {
+            $conversations = collect([]);
+        } else {
+            // 2. Fetch all latest messages between auth user and conversations in one query
+            $userIds = $conversations->pluck('id')->toArray();
+            
+            $latestMessages = Message::where(function($q) use ($user, $userIds) {
+                $q->where('sender_id', $user->id)->whereIn('receiver_id', $userIds);
+            })->orWhere(function($q) use ($user, $userIds) {
+                $q->where('receiver_id', $user->id)->whereIn('sender_id', $userIds);
+            })->latest('created_at')->get()->groupBy(function($msg) use ($user) {
+                return $msg->sender_id == $user->id ? $msg->receiver_id : $msg->sender_id;
+            });
 
-                // Calculate unread count for this conversation
-                $otherUser->unread_count = Message::where('sender_id', $otherUser->id)
-                    ->where('receiver_id', $user->id)
-                    ->where('is_read', false)
-                    ->count();
+            $conversations = $conversations->map(function ($otherUser) use ($user, $latestMessages) {
+                $latestMessage = clone ($latestMessages->get($otherUser->id)?->first() ?? new Message());
+                
+                $otherUser->latest_message = $latestMessage->exists ? $latestMessage->message : null;
+                $otherUser->latest_message_time = $latestMessage->exists ? $latestMessage->created_at : now()->subYears(10);
+                
+                // Unread count is automatically eager loaded as `unread_count` via withCount above
 
                 // Check if video call is allowed today
                 if ($user->role !== 'patient' && $otherUser->role === 'patient') {
-                    // Only providers (clinics/therapists) can call patients
                     $otherUser->can_video_call = $user->hasActiveAppointmentToday($otherUser);
                 } else {
                     $otherUser->can_video_call = false; 
@@ -62,9 +65,9 @@ class ChatController extends Controller
 
                 return $otherUser;
             })
-            // Sort by latest message time descending 
             ->sortByDesc('latest_message_time')
             ->values();
+        }
 
         $receiverId = $request->query('receiver_id');
         $receiver = $receiverId ? User::find($receiverId) : null;
