@@ -157,6 +157,4 @@
     </div>
 </div>
 
-<script src="{{ asset('js/include.js') }}"></script>
-<script src="{{ asset('js/modal.js') }}"></script>
 @endsection

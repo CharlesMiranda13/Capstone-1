@@ -41,7 +41,7 @@
     <script src="{{ asset('js/include.js') }}"></script>
     <script src="{{ asset('js/loading.js') }}"></script>
     <script src="{{ asset('js/tts.js') }}"></script>
-    <script src="{{ asset('js/modal.js')}}"></script>
+    <script src="{{ asset('js/modal-system.js')}}"></script>
     @yield('scripts')
 </body> 
 </html>

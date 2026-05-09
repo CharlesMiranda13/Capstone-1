@@ -269,6 +269,6 @@
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('js/modal.js') }}"></script>
+    <script src="{{ asset('js/modal-system.js') }}"></script>
     <script src="{{ asset('js/specialization.js') }}"></script>
 @endsection
