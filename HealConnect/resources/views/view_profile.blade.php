@@ -10,7 +10,7 @@
 <main class="therapist-profile">
     <div class="container">
         <div class="header">
-            <h2>{{ $therapist->name }}'s Profile</h2>
+            <h2>Therapist <span class="brand-highlight">Profile</span></h2>
         </div>
 
         {{-- PROFILE CARD --}}
@@ -52,12 +52,12 @@
                     @endif
                 </div>
                 
-                <div class ="app"> 
+                <div class="app"> 
                     <a href="{{ url('/logandsign') }}" class="btn-book">
                         <i class="fa-solid fa-calendar-check"></i> Book Appointment
                     </a>
 
-                    <a href="{{ url('/logandsign') }}" class="btn-book">
+                    <a href="{{ url('/logandsign') }}" class="btn-message">
                         <i class="fa-solid fa-comments"></i> Message Therapist
                     </a>
                 </div>

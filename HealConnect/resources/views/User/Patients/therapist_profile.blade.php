@@ -11,7 +11,7 @@
     <div class="container">
 
         <div class="header">
-            <h2>{{ $therapist->name }}'s Profile</h2>
+            <h2>Therapist <span class="brand-highlight">Profile</span></h2>
         </div>
 
         {{-- PROFILE CARD --}}
@@ -58,7 +58,7 @@
                         <i class="fa-solid fa-calendar-check"></i> Book Appointment
                     </a>
 
-                    <a href="{{ route('messages', ['receiver_id' => $therapist->id]) }}" class="btn-book">
+                    <a href="{{ route('messages', ['receiver_id' => $therapist->id]) }}" class="btn-message">
                         <i class="fa-solid fa-comments"></i> Message Therapist
                     </a>
                 </div>

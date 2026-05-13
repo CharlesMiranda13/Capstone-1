@@ -250,6 +250,49 @@ function setupTabSwitchWithDetection() {
     };
 }
 
+function setupProfileModal() {
+    const modal = document.getElementById('profileModal');
+    const modalContent = document.getElementById('modalProfileContent');
+    if (!modal || !modalContent) return;
+
+    const closeBtn = modal.querySelector('.modal-close');
+    
+    // Use delegation to handle dynamic buttons if necessary
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.view-profile-btn');
+        if (!btn) return;
+
+        e.preventDefault();
+        const therapistId = btn.getAttribute('data-id');
+        const fetchUrl = btn.getAttribute('data-url') || `/therapists/${therapistId}/profile`;
+        
+        modal.classList.add('active');
+        modalContent.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading profile...</div>';
+        
+        fetch(fetchUrl, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.text())
+        .then(html => {
+            modalContent.innerHTML = html;
+        })
+        .catch(error => {
+            modalContent.innerHTML = '<p class="error">Error loading profile. Please try again.</p>';
+            console.error('Error:', error);
+        });
+    });
+
+    closeBtn?.addEventListener('click', () => {
+        modal.classList.remove('active');
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+        }
+    });
+}
+
 function setupPasswordUpdateConfirmation() {
     const saveBtn = document.querySelector(".save-btn");
     const modal = document.getElementById("passwordConfirmModal");
@@ -304,6 +347,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Tab Detection
     setupTabSwitchWithDetection();
+
+    // Profile Modal
+    setupProfileModal();
 
     // Expiry Correction UI (Admin)
     document.querySelector('.btn-edit-expiry')?.addEventListener('click', function() {

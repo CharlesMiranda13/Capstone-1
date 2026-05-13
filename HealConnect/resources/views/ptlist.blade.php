@@ -2,6 +2,11 @@
 
 @section('title', 'HealConnect - Therapists & Clinics')
 
+@section('styles')
+<link rel="stylesheet" href="{{ asset('css/modals.css') }}">
+<link rel="stylesheet" href="{{ asset('css/profile.css') }}">
+@endsection
+
 @section('content')
 <div class="page-header-row">
     <h2 class="page-title-new">Verified Therapists & Clinics</h2>
@@ -107,7 +112,11 @@
 
                         <div class="therapist-actions">
                             <a href="{{ url('/logandsign') }}" class="btn-book">Book Now</a>
-                            <a href="{{ route('view_profile', $therapist->id) }}" class="btn-profile">View Profile</a>
+                            <button type="button" class="btn-profile view-profile-btn" 
+                                    data-id="{{ $therapist->id }}" 
+                                    data-url="{{ route('view_profile', $therapist->id) }}">
+                                View Profile
+                            </button>
                         </div>
                     </div>
 
@@ -122,4 +131,20 @@
         <p class="no-results">No verified therapists or clinics registered at the moment.</p>
     @endif
 </main>
+
+{{-- Profile Modal --}}
+<div id="profileModal" class="modal-overlay">
+    <div class="modal-container modal-lg">
+        <div class="modal-header">
+            <h3>Therapist Profile</h3>
+            <button class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body" id="modalProfileContent">
+            {{-- Content loaded via AJAX --}}
+            <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i> Loading profile...
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

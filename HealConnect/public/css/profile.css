@@ -1,476 +1,391 @@
-body .therapist-profile .employees-list .employee-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 12px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border: 1px solid #e9ecef;
-}
-
-body .therapist-profile .employee-avatar img {
-    width: 55px;
-    height: 55px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #007bff;
-}
-
-body .therapist-profile .employee-info .employee-name {
-    font-weight: 600;
-    font-size: 20px;
-    margin: 0 0 4px 0;
-    color: #2c3e50;
-}
-
-body .therapist-profile .employee-info .employee-position {
-    font-size: 16px;
-    color: #6c757d;
-    margin: 0 0 4px 0;
-    font-weight: 500;
-}
-
-body .therapist-profile .employee-info .employee-gender {
-    font-size: 15px;
-    color: #868e96;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-body .therapist-profile .employee-info .employee-gender i {
-    color: #007bff;
-}
-
 .therapist-profile {
-    min-height: 100vh;
-    padding: 40px 20px;
-    font-family: "Poppins", sans-serif;
+    padding: 2rem 2%;
+    background-color: var(--slate-50);
+    font-family: var(--font-main);
+}
+
+/* Modal specific overrides */
+.modal-body .modal-profile-header {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    min-height: 100%;
+    background: var(--white);
+}
+
+.modal-body .profile-left {
+    height: 100%;
+    position: sticky;
+    top: 0;
+    border-right: 1px solid var(--slate-100);
+    padding: 3rem 2.5rem;
+}
+
+.modal-body .profile-right {
+    padding: 3rem;
+    background: #f8fafc;
+}
+
+.modal-body {
+    padding: 0 !important;
 }
 
 .container {
-    max-width: 1300px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
+/* ── HEADER ──────────────────────────────────── */
 .header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 3rem;
 }
 
 .header h2 {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 5px;
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 800;
+    color: var(--slate-900);
+    margin-bottom: 0.5rem;
 }
 
-.header p {
-    color: #777;
-    font-size: 0.95rem;
-}
-
-/* PROFILE CARD GRID */
+/* ── PROFILE CARD GRID ───────────────────────── */
 .profile-card {
     display: grid;
-    grid-template-columns: 1fr 2fr;
-    background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    grid-template-columns: minmax(300px, 1fr) 2.5fr;
+    background: var(--white);
+    border-radius: 24px;
+    box-shadow: var(--shadow-lg);
     overflow: hidden;
-    transition: transform 0.2s ease;
+    border: 1px solid var(--slate-200);
 }
 
-/* LEFT SIDE */
+/* ── LEFT SIDE (Sidebar) ─────────────────────── */
 .profile-left {
-    background-color: #faf3ee;
-    padding: 30px;
+    background-color: var(--slate-100);
+    padding: 3rem 2rem;
     text-align: center;
-    border-right: 1px solid #eee;
+    border-right: 1px solid var(--slate-200);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-pic {
+    position: relative;
+    margin-bottom: 1.5rem;
 }
 
 .profile-pic img {
-    width: 130px;
-    height: 130px;
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
     object-fit: cover;
-    border: 4px solid #242220;
+    border: 5px solid var(--white);
+    box-shadow: var(--shadow-md);
 }
 
 .profile-left h3 {
-    margin-top: 15px;
-    color: #333;
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--slate-900);
+    margin-bottom: 0.5rem;
 }
 
 .role-display .role {
-    color: #000000;
-    font-size: 20px;
-    margin-bottom: 10px;
-    font-weight: 500;
+    display: inline-block;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .bio-section .bio {
-    font-size: 1.2rem;
-    color: #1a1616;
-    margin: 10px 0 20px;
+    font-size: 1rem;
+    color: var(--slate-600);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+
+/* Contact Info */
+.contact-info {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--white);
+    border-radius: 16px;
+    border: 1px solid var(--slate-200);
 }
 
 .contact-info p {
-    font-size: 0.9rem;
-    color: #444;
-    margin: 8px 0;
-    margin-bottom: 15px;
+    font-size: 0.95rem;
+    color: var(--slate-700);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 0;
 }
 
 .contact-info i {
-    color: #000000;
-    margin-right: 8px;
+    color: var(--primary);
+    width: 18px;
+    margin-top: 3px;
+    font-size: 1.1rem;
 }
 
-/* BUTTONS */
+/* Action Buttons */
 .app {
     display: flex;
-    gap: 10px;
-    margin-top: 15px;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
 }
 
 .app a {
-    flex: 1;
-    text-align: center;
-    padding: 10px 15px;
-    border-radius: 8px;
-    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1rem;
     text-decoration: none;
-    color: white;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .btn-book {
-    background-color: #f28b64;
+    background-color: var(--primary);
+    color: var(--white);
+    box-shadow: 0 4px 12px rgba(14, 94, 241, 0.2);
 }
 
 .btn-book:hover {
-    background-color: #e27a53;
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(14, 94, 241, 0.3);
 }
 
-.btn-message {
-    background-color: #64b6f2;
+.app a:last-child {
+    background-color: var(--white);
+    color: var(--primary);
+    border: 2px solid var(--primary);
 }
 
-.btn-message:hover {
-    background-color: #519ed4;
+.app a:last-child:hover {
+    background-color: var(--primary-light);
+    transform: translateY(-2px);
 }
 
-/* RIGHT SIDE - Three Column Layout (for clinics) */
-.profile-right.three-col {
+/* ── RIGHT SIDE (Content) ────────────────────── */
+.profile-right {
+    padding: 3rem;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 20px;
-    padding: 30px;
-}
-
-.profile-right.three-col .col-1.row-1 {
-    grid-column: 1;
-    grid-row: 1;
-}
-
-.profile-right.three-col .col-2.row-1 {
-    grid-column: 2;
-    grid-row: 1;
-}
-
-.profile-right.three-col .col-1.row-2 {
-    grid-column: 1;
-    grid-row: 2;
-}
-
-.profile-right.three-col .col-2.row-2 {
-    grid-column: 2;
-    grid-row: 2;
-}
-
-.profile-right.three-col .col-3.staff-section {
-    grid-column: 3;
-    grid-row: 1 / 3;
+    gap: 2rem;
 }
 
 .profile-right.two-col {
-    display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 20px;
-    padding: 30px;
 }
 
-.profile-right.two-col .col-1.row-1 {
-    grid-column: 1;
-    grid-row: 1;
+.profile-right.three-col {
+    grid-template-columns: 1fr 1fr 1.2fr;
 }
 
-.profile-right.two-col .col-2.row-1 {
-    grid-column: 2;
-    grid-row: 1;
-}
-
-.profile-right.two-col .col-1.row-2 {
-    grid-column: 1;
-    grid-row: 2;
-}
-
-.profile-right.two-col .col-2.row-2 {
-    grid-column: 2;
-    grid-row: 2;
-}
-
-/* Card Section Styling */
+/* Section Cards */
 .card-section {
-    background: #ffffff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-.card-section.staff-section {
-    max-height: none;
-    overflow-y: auto;
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 20px;
+    border: 1px solid var(--slate-200);
+    box-shadow: var(--shadow-sm);
     display: flex;
     flex-direction: column;
-    height: 100%;
 }
 
 .card-section h4 {
-    color: #333;
-    margin-bottom: 15px;
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--slate-900);
+    margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-weight: 600;
+    gap: 12px;
+    border-bottom: 1px solid var(--slate-100);
+    padding-bottom: 1rem;
 }
 
-/* SPECIALIZATIONS */
+.card-section h4 i {
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+/* Specializations */
 .specializations {
     list-style: none;
-    padding-left: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .specializations li {
-    background-color: #fff7f2;
-    border-radius: 10px;
-    margin-bottom: 8px;
-    padding: 12px 15px;
-    color: #333;
-    font-weight: 500;
-    display: block;
-    line-height: 1.4;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
-.specializations li::before {
-    content: "•";
-    color: #ff9f50;
-    margin-right: 10px;
-}
-
-/* AVAILABILITY */
+/* Availability */
 .availability {
     list-style: none;
-    padding-left: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .availability li {
-    background: #e0f7fa;
-    padding: 10px 15px;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-    color: #444;
-    gap: 4px;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
+    background: var(--slate-50);
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--slate-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-/* SERVICES */
-.services-list {
-    list-style: none;
-    padding-left: 0;
+.availability li .date {
+    font-weight: 700;
+    color: var(--slate-900);
 }
 
-.services-list li {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
-    padding: 8px 0;
-    border-bottom: 1px solid #f0f0f0;
+.availability li .time {
+    color: var(--slate-600);
+    font-weight: 500;
 }
 
-.services-list li:last-child {
-    border-bottom: none;
-}
-
-/* FEES */
+/* Services & Fees */
+.services-list,
 .fees-list {
     list-style: none;
-    padding-left: 0;
+    padding: 0;
 }
 
+.services-list li,
 .fees-list li {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
-    padding: 8px 0;
-    border-bottom: 1px solid #f0f0f0;
-    font-weight: 600;
-    color: #2c3e50;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--slate-100);
+    color: var(--slate-700);
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
 }
 
+.services-list li:last-child,
 .fees-list li:last-child {
     border-bottom: none;
 }
 
-/* EMPLOYEES / STAFF */
+/* Staff Section */
+.staff-section {
+    grid-row: 1 / span 2;
+}
+
 .employees-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-top: 12px;
-    flex: 1;
-    max-height: 400px;
-    overflow-y: auto;
-    padding-right: 5px;
+    gap: 1rem;
 }
 
 .employee-item {
     display: flex;
     align-items: center;
-    gap: 15px;
-    padding: 12px;
-    background: #f8f9fa;
-    border-radius: 8px;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--slate-50);
+    border-radius: 16px;
+    border: 1px solid var(--slate-200);
     transition: all 0.3s ease;
-    border: 1px solid #e9ecef;
 }
 
 .employee-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-color: #007bff;
-}
-
-.employee-avatar {
-    flex-shrink: 0;
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+    border-color: var(--secondary);
+    transform: translateX(5px);
 }
 
 .employee-avatar img {
-    width: 55px;
-    height: 55px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #007bff;
-}
-
-.employee-info {
-    flex: 1;
+    border: 2px solid var(--secondary);
 }
 
 .employee-name {
-    font-weight: 600;
-    font-size: 16px;
-    margin: 0 0 4px 0;
-    color: #2c3e50;
+    font-weight: 700;
+    color: var(--slate-900);
+    margin: 0;
 }
 
 .employee-position {
-    font-size: 14px;
-    color: #6c757d;
-    margin: 0 0 4px 0;
-    font-weight: 500;
-}
-
-.employee-gender {
-    font-size: 13px;
-    color: #868e96;
+    font-size: 0.85rem;
+    color: var(--slate-500);
     margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 5px;
 }
 
-.employee-gender i {
-    color: #007bff;
-}
-
-/* --- RESPONSIVENESS --- */
+/* ── RESPONSIVE ──────────────────────────────── */
 @media (max-width: 1200px) {
-    .profile-right.three-col {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto auto auto;
-    }
-
-    .profile-right.three-col .col-3.staff-section {
-        grid-column: 1 / 3;
-        grid-row: 3;
-    }
-}
-
-@media (max-width: 992px) {
     .profile-card {
         grid-template-columns: 1fr;
     }
 
     .profile-left {
         border-right: none;
-        border-bottom: 1px solid #eee;
+        border-bottom: 1px solid var(--slate-200);
     }
 
-    .profile-right.three-col,
-    .profile-right.two-col {
-        grid-template-columns: 1fr;
+    .profile-right.three-col {
+        grid-template-columns: 1fr 1fr;
     }
 
-    .profile-right.three-col .col-1.row-1,
-    .profile-right.three-col .col-2.row-1,
-    .profile-right.three-col .col-1.row-2,
-    .profile-right.three-col .col-2.row-2,
-    .profile-right.three-col .col-3.staff-section {
-        grid-column: 1;
+    .staff-section {
+        grid-column: span 2;
         grid-row: auto;
     }
 }
 
 @media (max-width: 768px) {
-    .therapist-profile {
-        padding: 20px;
+
+    .profile-right.two-col,
+    .profile-right.three-col {
+        grid-template-columns: 1fr;
     }
 
-    .profile-left,
+    .staff-section {
+        grid-column: auto;
+    }
+
     .profile-right {
-        padding: 20px;
-    }
-
-    .app {
-        flex-direction: column;
-    }
-
-    .specializations li,
-    .services-list li,
-    .availability li {
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 500px) {
-    .profile-pic img {
-        width: 100px;
-        height: 100px;
+        padding: 2rem 1.5rem;
     }
 
     .header h2 {
-        font-size: 1.5rem;
+        font-size: 1.75rem;
     }
 }

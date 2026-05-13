@@ -82,16 +82,26 @@ class PatientController extends Controller
     }
 
     /** ---------------- THERAPIST PROFILE ---------------- */
-    public function showProfile($id)
+    public function showProfile(Request $request, $id)
     {
-        $therapist = $this->loadTherapist($id);
-        return view('user.patients.therapist_profile', $therapist);
+        $therapistData = $this->loadTherapist($id);
+        
+        if ($request->ajax()) {
+            return view('partials.therapist_profile_content', $therapistData);
+        }
+
+        return view('user.patients.therapist_profile', $therapistData);
     }
 
-    public function publicTherapistProfile($id)
+    public function publicTherapistProfile(Request $request, $id)
     {
-        $therapist = $this->loadTherapist($id);
-        return view('view_profile', $therapist);
+        $therapistData = $this->loadTherapist($id);
+        
+        if ($request->ajax()) {
+            return view('partials.therapist_profile_content', $therapistData);
+        }
+
+        return view('view_profile', $therapistData);
     }
 
     /** ---------------- SETTINGS ---------------- */

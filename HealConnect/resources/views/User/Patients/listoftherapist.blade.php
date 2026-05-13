@@ -4,6 +4,8 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/tts.css') }}">
+<link rel="stylesheet" href="{{ asset('css/modals.css') }}">
+<link rel="stylesheet" href="{{ asset('css/profile.css') }}">
 @endsection
 
 @section('content')
@@ -223,7 +225,11 @@
 
                         <div class="therapist-actions">
                             <a href="{{ route('patient.appointments.create', $therapist->id) }}" class="btn-book">Book Now</a>
-                            <a href="{{ route('patient.therapists.profile', $therapist->id) }}" class="btn-profile">View Profile</a>
+                            <button type="button" class="btn-profile view-profile-btn" 
+                                    data-id="{{ $therapist->id }}" 
+                                    data-url="{{ route('patient.therapists.profile', $therapist->id) }}">
+                                View Profile
+                            </button>
                         </div>
                     </div>
 
@@ -242,15 +248,19 @@
 
 </main>
 
-<script>
-function toggleAdvancedFilters() {
-    const filters = document.getElementById('advancedFilters');
-    if (filters.style.display === 'none' || filters.style.display === '') {
-        filters.style.display = 'block';
-    } else {
-        filters.style.display = 'none';
-    }
-}
-</script>
-
+{{-- Profile Modal --}}
+<div id="profileModal" class="modal-overlay">
+    <div class="modal-container modal-lg">
+        <div class="modal-header">
+            <h3>Therapist Profile</h3>
+            <button class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modal-body" id="modalProfileContent">
+            {{-- Content loaded via AJAX --}}
+            <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i> Loading profile...
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

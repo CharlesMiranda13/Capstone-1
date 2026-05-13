@@ -1,356 +1,322 @@
-/* ------------------ Login Container ------------------ */
-.login-container {
-  max-width: 400px;
-  margin: 80px auto;
-  padding: 40px 32px 32px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-}
+/* =============================================
+   LOGIN & REGISTER — Modernized Design System
+   ============================================= */
 
-.login-container h2 {
-  font-size: 28px;
-  font-weight: 600;
-  color: #1f2937;
-  margin-bottom: 32px;
-  text-align: center;
-}
-
-.form-group {
-  margin-bottom: 20px;
-  width: 100%;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  color: #374151;
-  font-weight: 500;
-  font-size: 14px;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 16px;
-  background-color: #fff;
-  box-sizing: border-box;
-  transition: border-color 0.3s ease;
-}
-
-.form-group input:hover {
-  border-color: #d1d5db;
-}
-
-.login-container button {
-  width: 100%;
-  background-color: #059669;
-  color: white;
-  border: none;
-  padding: 14px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-bottom: 24px;
-  transition: background 0.3s ease;
-}
-
-.login-container button:hover {
-  background-color: #047857;
-}
-
-.login-container button:active {
-  background-color: #065f46;
-}
-
-.login-container p {
-  text-align: center;
-  color: #6b7280;
-  font-size: 14px;
-  margin: 0;
-}
-
-.login-container p a {
-  color: #059669;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.login-container p a:hover {
-  text-decoration: underline;
-  color: #047857;
-}
-
-/* ------------------ Tabs ------------------ */
 .tab-container {
   max-width: 900px;
-  margin: 80px auto;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  margin: 6rem auto;
+  border-radius: 32px;
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
-  background: #fff;
+  background: var(--white);
+  border: 1px solid var(--slate-200);
 }
 
 .tab-header {
   display: flex;
-  border-bottom: 2px solid #eee;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  background: var(--slate-50);
+  border-bottom: 1px solid var(--slate-200);
 }
 
 .tab-header button {
   flex: 1;
-  padding: 14px 0;
+  padding: 20px 0;
   border: none;
-  background: #f3f4f6;
+  background: transparent;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--slate-500);
   transition: all 0.3s ease;
+  position: relative;
 }
 
 .tab-header button.active {
-  background: #1361f3;
-  color: #fff;
-  box-shadow: inset 0 -2px 0 rgba(255, 255, 255, 0.2);
+  color: var(--primary);
+  background: var(--white);
+}
+
+.tab-header button.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--primary);
 }
 
 .tab-content {
-  padding: 40px 30px;
+  padding: 4rem 3rem;
   display: none;
 }
 
 .tab-content.active {
   display: block;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.logo-image {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.logo-image img {
+  max-width: 120px;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+  background: var(--white);
+  padding: 10px;
+}
+
+.admin-login {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-login .tab-container {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1000px;
+  animation: slideUp 0.6s ease-out;
+  padding: 0;
+}
+
+.admin-login-card {
+  display: flex;
+  min-height: 550px;
+  width: 100%;
+}
+
+.admin-left-side {
+  flex: 1;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: var(--white);
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.admin-left-side .logo-white {
+  background: var(--white);
+  padding: 15px;
+  border-radius: 24px;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.admin-left-side .logo-white img {
+  max-width: 100px;
+  height: auto;
+}
+
+.admin-left-side h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  font-family: var(--font-heading);
+}
+
+.admin-left-side p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  max-width: 300px;
+}
+
+.admin-right-side {
+  flex: 1.2;
+  padding: 4rem 3rem;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (max-width: 992px) {
+  .admin-left-side {
+    display: none;
+  }
+  .admin-login .tab-container {
+    max-width: 500px;
+  }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ------------------ Login Tab ------------------ */
+.login-container {
+  max-width: 450px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-container h2 {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--slate-900);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--slate-700);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-left: 4px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px 20px;
+  border: 2px solid var(--slate-100);
+  border-radius: 14px;
+  font-size: 1rem;
+  background-color: var(--slate-50);
+  transition: all 0.3s ease;
+  box-sizing: border-box; /* Crucial for equal length */
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: var(--white);
+  box-shadow: 0 0 0 4px var(--primary-light);
+}
+
+.login-container button[type="submit"] {
+  width: 100%;
+  background-color: var(--primary);
+  color: var(--white);
+  border: none;
+  padding: 16px;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(14, 94, 241, 0.2);
+}
+
+.login-container button[type="submit"]:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(14, 94, 241, 0.3);
 }
 
 /* ------------------ Role Selection Cards ------------------ */
 .role-selector-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  max-width: 500px;
-  margin: 20px auto 10px;
+  gap: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .role-card {
   display: flex;
   align-items: center;
-  background: #fff;
-  border: 2px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 20px 24px;
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: 20px;
+  padding: 1.5rem 2rem;
   text-decoration: none;
-  font-family: inherit;
-  color: #1f2937;
+  color: var(--slate-900);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  box-shadow: var(--shadow-sm);
 }
 
 .role-card:hover {
-  border-color: #1361f3;
-  box-shadow: 0 10px 25px -5px rgba(19, 97, 243, 0.15), 0 8px 10px -6px rgba(19, 97, 243, 0.1);
-  transform: translateY(-2px);
-}
-
-.role-card.patient-card:hover {
-  border-color: #059669;
-  box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.15), 0 8px 10px -6px rgba(5, 150, 105, 0.1);
+  border-color: var(--primary-light);
+  transform: translateX(10px);
+  box-shadow: var(--shadow-md);
+  background: var(--slate-50);
 }
 
 .role-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 12px;
-  background: #eff6ff;
-  color: #1361f3;
-  margin-right: 20px;
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: var(--primary-light);
+  color: var(--primary);
+  margin-right: 1.5rem;
   flex-shrink: 0;
   transition: all 0.3s ease;
 }
 
 .role-card.patient-card .role-icon {
-  background: #ecfdf5;
-  color: #059669;
-}
-
-.role-card:hover .role-icon,
-.role-card.patient-card:hover .role-icon {
-  background: currentColor;
-  color: #fff;
+  background: var(--secondary-light);
+  color: var(--secondary);
 }
 
 .role-card:hover .role-icon {
-  background: #1361f3;
+  background: var(--primary);
+  color: var(--white);
+  transform: scale(1.1) rotate(5deg);
 }
 
 .role-card.patient-card:hover .role-icon {
-  background: #059669;
+  background: var(--secondary);
+  color: var(--white);
 }
 
 .role-info {
   flex-grow: 1;
-  text-align: left;
 }
 
 .role-info h3 {
-  font-size: 18px;
-  font-weight: 600;
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
   margin: 0 0 4px 0;
-  color: #111827;
+  color: var(--slate-900);
 }
 
 .role-info p {
-  font-size: 14px;
-  color: #6b7280;
+  font-size: 0.95rem;
+  color: var(--slate-600);
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .role-action {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #9ca3af;
-  transform: translateX(-10px);
-  opacity: 0;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  margin-left: 15px;
+  color: var(--slate-300);
+  transition: all 0.3s ease;
 }
 
 .role-card:hover .role-action {
-  transform: translateX(0);
-  opacity: 1;
-  color: #1361f3;
-}
-
-.role-card.patient-card:hover .role-action {
-  color: #059669;
-}
-
-/* ------------------ Selected Plan Box ------------------ */
-.selected-plan {
-  font-size: 16px;
-  font-weight: 500;
-  background: #f9f9f9;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  text-align: center;
-  width: fit-content;
-  margin: 15px auto;
-}
-
-/* ------------------ Forgot Password Modal ------------------ */
-.forgot-modal {
-  display: none;
-  position: fixed;
-  z-index: 999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  justify-content: center;
-  align-items: center;
-}
-
-.forgot-modal-content {
-  background: #fff;
-  padding: 30px 40px;
-  border-radius: 12px;
-  max-width: 400px;
-  width: 90%;
-  position: relative;
-  text-align: center;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-}
-
-.forgot-modal-content h2 {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  color: #1f2937;
-}
-
-.forgot-modal-content .close {
-  position: absolute;
-  top: 12px;
-  right: 16px;
-  font-size: 22px;
-  font-weight: 700;
-  cursor: pointer;
-  color: #374151;
-}
-
-.forgot-modal-content .form-group {
-  margin-bottom: 20px;
-  text-align: left;
-}
-
-.forgot-modal-content .form-group input {
-  width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #e5e7eb;
-  border-radius: 8px;
-  font-size: 16px;
-  background-color: #fff;
-}
-
-.forgot-modal-content .modal-submit-btn {
-  width: 100%;
-  padding: 14px 0;
-  background: #1361f3;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.forgot-modal-content .modal-submit-btn:hover {
-  background: #0f4dc4;
-}
-
-.success-msg {
-  margin-top: 12px;
-  color: #059669;
-  font-weight: 500;
-  font-size: 14px;
-}
-
-/* ------------------ Alert ------------------ */
-.alert-danger {
-  background-color: #f8d7da;
-  color: #842029;
-  border: 1px solid #f5c2c7;
-  padding: 10px 15px;
-  border-radius: 6px;
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-/* ------------------ Logo------------------ */
-.logo-image img {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  display: block;
-  margin: 0 auto 20px;
+  color: var(--primary);
+  transform: translateX(5px);
 }
 
 /* ------------------ Password Toggle ------------------ */
@@ -360,223 +326,119 @@
 }
 
 .password-wrapper input {
-  padding-right: 45px !important;
+  padding-right: 50px !important;
 }
 
 .toggle-password {
   position: absolute;
-  right: 12px;
+  right: 15px;
   top: 50%;
   transform: translateY(-50%);
   background: transparent !important;
   border: none !important;
   cursor: pointer;
-  padding: 8px !important;
+  color: var(--slate-400);
+  transition: color 0.3s ease;
+  padding: 0 !important;
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: #6b7280;
-  transition: color 0.3s ease;
-  width: auto !important;
-  margin: 0 !important;
-  box-shadow: none !important;
-  z-index: 10;
 }
 
 .toggle-password:hover {
-  color: #374151;
-  background: transparent !important;
+  color: var(--primary);
 }
 
-.toggle-password:focus {
-  outline: none;
+/* ------------------ Forgot Password Modal ------------------ */
+.forgot-modal {
+  display: none;
+  position: fixed;
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+  justify-content: center;
+  align-items: center;
 }
 
-.toggle-password:active {
-  background: transparent !important;
+.forgot-modal-content {
+  background: var(--white);
+  padding: 3rem;
+  border-radius: 32px;
+  max-width: 450px;
+  width: 90%;
+  position: relative;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--slate-200);
+  animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalPop {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.forgot-modal-content h2 {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  color: var(--slate-900);
+}
+
+.forgot-modal-content .close {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 2rem;
+  cursor: pointer;
+  color: var(--slate-400);
+  transition: color 0.3s ease;
+}
+
+.forgot-modal-content .close:hover {
+  color: var(--primary);
+}
+
+.modal-submit-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-submit-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
 }
 
 /* ------------------ Responsive ------------------ */
-@media (max-width: 1024px) {
-  .tab-container {
-    margin: 60px 20px;
-  }
-
-  .role-selector-container {
-    max-width: 100%;
-    padding: 0 15px;
-  }
-}
-
 @media (max-width: 768px) {
   .tab-container {
-    margin: 40px 20px;
+    margin: 3rem 1.5rem;
+    border-radius: 24px;
   }
-
-  .login-container {
-    margin: 40px auto;
-    padding: 32px 20px;
-    max-width: 90%;
-  }
-
-  .login-container h2 {
-    font-size: 24px;
-    margin-bottom: 24px;
-  }
-
+  
   .tab-content {
-    padding: 30px 20px;
+    padding: 3rem 1.5rem;
   }
-
+  
   .role-card {
-    padding: 16px 20px;
+    padding: 1.25rem 1.5rem;
   }
-
+  
   .role-icon {
-    width: 48px;
-    height: 48px;
-    margin-right: 16px;
-  }
-
-  .role-icon svg {
-    width: 24px;
-    height: 24px;
-  }
-
-  .role-info h3 {
-    font-size: 16px;
-  }
-
-  .role-info p {
-    font-size: 13px;
-  }
-
-  .role-action {
-    display: none;
-    /* Hide arrow on small screens for cleaner look or keep it, let's keep it but smaller */
-  }
-}
-
-@media (max-width: 480px) {
-  .tab-container {
-    margin: 30px 15px;
-  }
-
-  .login-container {
-    margin: 30px auto;
-    padding: 24px 20px;
-    max-width: 95%;
-  }
-
-  .login-container h2 {
-    font-size: 22px;
-    margin-bottom: 20px;
-  }
-
-  .tab-header button {
-    font-size: 14px;
-    padding: 12px 10px;
-  }
-
-  .tab-content {
-    padding: 25px 15px;
-  }
-
-  .form-group {
-    margin-bottom: 16px;
-  }
-
-  .form-group input {
-    padding: 10px 14px;
-    font-size: 15px;
-  }
-
-  .login-container button {
-    padding: 12px 20px;
-    font-size: 15px;
-    margin-bottom: 20px;
-  }
-
-  .role-card {
-    padding: 14px 16px;
-  }
-
-  .role-icon {
-    width: 44px;
-    height: 44px;
-    margin-right: 14px;
-  }
-
-  .role-icon svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .forgot-modal-content {
-    padding: 25px 20px;
-    width: 85%;
-  }
-
-  .selected-plan {
-    font-size: 14px;
-    padding: 10px;
-    margin: 10px 15px;
-  }
-}
-
-@media (max-width: 360px) {
-  .tab-container {
-    margin: 20px 10px;
-  }
-
-  .login-container {
-    margin: 20px auto;
-    padding: 20px 15px;
-    max-width: 95%;
-  }
-
-  .login-container h2 {
-    font-size: 20px;
-    margin-bottom: 18px;
-  }
-
-  .tab-header button {
-    font-size: 13px;
-    padding: 10px 8px;
-  }
-
-  .tab-content {
-    padding: 20px 12px;
-  }
-
-  .form-group input {
-    padding: 9px 12px;
-    font-size: 14px;
-  }
-
-  .login-container button {
-    padding: 11px 18px;
-    font-size: 14px;
-  }
-
-  .role-card {
-    padding: 12px 14px;
-  }
-
-  .role-info p {
-    display: none;
-    /* Hide subtitle on very small screens to save space */
-  }
-
-  .role-icon {
-    width: 40px;
-    height: 40px;
-    margin-right: 12px;
-  }
-
-  .selected-plan {
-    font-size: 13px;
-    padding: 8px;
-    margin: 8px 10px;
+    width: 54px;
+    height: 54px;
+    margin-right: 1rem;
   }
 }

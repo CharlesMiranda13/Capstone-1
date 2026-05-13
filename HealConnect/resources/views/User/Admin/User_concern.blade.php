@@ -11,6 +11,12 @@
         <p class="page-subtitle">Review and respond to submitted user messages</p>
     </div>
 
+    @if(session('success'))
+        <div class="page-alert">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <div class="hc-card">
     @if ($messages->isEmpty())
         <p class="empty-message">No user concerns yet.</p>
@@ -42,7 +48,7 @@
     @endif
     </div>{{-- end hc-card --}}
 
-<div id="concernViewModal" class="modal-overlay">
+<div id="concernViewModal" class="modal">
     <div class="modal-box">
         <button class="close">&times;</button>
 
@@ -51,5 +57,8 @@
         </div>
     </div>
 </div>
+@endsection
 
+@section('scripts')
+<script src="{{ asset('js/admin-concerns.js') }}?v={{ time() }}"></script>
 @endsection

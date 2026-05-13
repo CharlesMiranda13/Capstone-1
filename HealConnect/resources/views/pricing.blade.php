@@ -20,6 +20,9 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/pricing.css') }}">
+<style>
+    footer { display: none !important; }
+</style>
 @endsection
 
 @section('content')
