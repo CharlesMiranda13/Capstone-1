@@ -14,7 +14,7 @@
     <!-- TOP ROW: Who We Are | Our Mission -->
     <div class="about-grid-2">
         <div class="about-card" id="about-intro">
-            <div class="card-icon">🏥</div>
+            <div class="card-icon"><i class="fas fa-hospital-user"></i></div>
             <h2>Who We Are</h2>
             <p>
                 HealConnect is a web-based platform that bridges the gap between patients and physical therapists.
@@ -25,7 +25,7 @@
             <button class="speak-btn" data-target="about-intro"></button>
         </div>
         <div class="about-card" id="about-mission">
-            <div class="card-icon">🎯</div>
+            <div class="card-icon"><i class="fas fa-bullseye"></i></div>
             <h2>Our Mission</h2>
             <p>
                 We're on a mission to make physical therapy more accessible, efficient, and effective. By leveraging
@@ -40,7 +40,7 @@
     <!-- BOTTOM ROW: For Patients | For Therapists -->
     <div class="about-grid-2">
         <div class="about-card accent-blue" id="about-patients">
-            <div class="card-icon">🤝</div>
+            <div class="card-icon"><i class="fas fa-user-injured"></i></div>
             <h2>For Patients</h2>
             <p>
                 We understand that recovering from injury or managing chronic conditions can be challenging.
@@ -52,7 +52,7 @@
             <button class="speak-btn" data-target="about-patients"></button>
         </div>
         <div class="about-card accent-blue" id="about-therapists">
-            <div class="card-icon">💼</div>
+            <div class="card-icon"><i class="fas fa-user-md"></i></div>
             <h2>For Therapists</h2>
             <p>
                 HealConnect empowers physical therapists to expand their practice beyond traditional clinic walls.
@@ -71,22 +71,22 @@
         <h2 class="values-heading">Our Values</h2>
         <div class="values-grid">
             <div class="value-item">
-                <span class="value-icon">🌍</span>
+                <span class="value-icon"><i class="fas fa-globe-americas"></i></span>
                 <h3>Accessibility</h3>
                 <p>Healthcare should reach everyone, everywhere. We break down barriers of distance and mobility.</p>
             </div>
             <div class="value-item">
-                <span class="value-icon">⭐</span>
+                <span class="value-icon"><i class="fas fa-star"></i></span>
                 <h3>Quality Care</h3>
                 <p>We never compromise on the standard of care. Our platform supports evidence-based practice and personalized treatment.</p>
             </div>
             <div class="value-item">
-                <span class="value-icon">🔒</span>
+                <span class="value-icon"><i class="fas fa-user-shield"></i></span>
                 <h3>Privacy & Security</h3>
                 <p>Your health information is sacred. We employ industry-leading security measures to protect your data.</p>
             </div>
             <div class="value-item">
-                <span class="value-icon">💡</span>
+                <span class="value-icon"><i class="fas fa-lightbulb"></i></span>
                 <h3>Innovation</h3>
                 <p>We continuously evolve our platform based on user feedback and emerging healthcare technologies.</p>
             </div>

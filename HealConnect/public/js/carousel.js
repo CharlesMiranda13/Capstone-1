@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // auto-slide every 10 seconds
     let slideInterval;
     const startTimer = () => {
-        slideInterval = setInterval(nextSlide, 10000); 
+        slideInterval = setInterval(nextSlide, 5000); 
     };
 
     const stopTimer = () => {

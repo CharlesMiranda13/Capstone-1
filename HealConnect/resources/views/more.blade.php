@@ -23,7 +23,7 @@
             <!-- Slide 1: Assessment and Diagnosis -->
             <div class="carousel-slide active" id="assessment">
                 <div class="slide-content">
-                    <div class="card-icon">🏥</div>
+                    <div class="card-icon"><i class="fas fa-stethoscope"></i></div>
                     <h2>1. Assessment and Diagnosis</h2>
                     <p>
                         Physiotherapists evaluate neurological, musculoskeletal, and orthopaedic cases using 
@@ -36,7 +36,7 @@
             <!-- Slide 2: Therapeutic Interventions -->
             <div class="carousel-slide" id="interventions">
                 <div class="slide-content">
-                    <div class="card-icon">🎯</div>
+                    <div class="card-icon"><i class="fas fa-hand-holding-medical"></i></div>
                     <h2>2. Therapeutic Interventions</h2>
                     <div class="sub-grid">
                         <div class="sub-card">
@@ -63,7 +63,7 @@
             <!-- Slide 3: Prevention and Education -->
             <div class="carousel-slide" id="prevention">
                 <div class="slide-content">
-                    <div class="card-icon">🌍</div>
+                    <div class="card-icon"><i class="fas fa-user-shield"></i></div>
                     <h2>3. Prevention and Education</h2>
                     <p>
                         Focus on injury prevention, posture correction, and self-management strategies such as home exercise programs
@@ -80,9 +80,9 @@
 
         <!-- Indicators -->
         <div class="carousel-indicators">
-            <button class="active"></button>
-            <button></button>
-            <button></button>
+            <button class="active" aria-label="Slide 1"></button>
+            <button aria-label="Slide 2"></button>
+            <button aria-label="Slide 3"></button>
         </div>
     </div>
 </main>

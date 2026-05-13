@@ -21,8 +21,8 @@
       <section class="main-section carousel-slide" id="hero-slide">
         <div class="main-content">
           <h1>Connecting Patients and Therapists for Better Recovery</h1>
-          <p>Your journey to better health starts here.</p>
-          <button class="get-started-btn" onclick="window.location.href='{{ url('/about') }}'">About Us</button>
+          <p>Your journey to better health starts here. We provide personalized care and professional guidance to help you regain your mobility and live pain-free.</p>
+          <button class="get-started-btn" onclick="window.location.href='{{ url('/logandsign') }}'">Get Started Today</button>
         </div>  
         <div class="flip-card">
           <div class="flip-card-inner">
@@ -133,10 +133,10 @@
 
     <!-- Indicators -->
     <div class="carousel-indicators">
-      <button class="carousel-dot active"></button>
-      <button class="carousel-dot"></button>
-      <button class="carousel-dot"></button>
-      <button class="carousel-dot"></button>
+      <button class="active" aria-label="Slide 1"></button>
+      <button aria-label="Slide 2"></button>
+      <button aria-label="Slide 3"></button>
+      <button aria-label="Slide 4"></button>
     </div>
   </div>
 
