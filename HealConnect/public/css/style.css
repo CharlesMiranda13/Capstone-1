@@ -31,7 +31,12 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-family: var(--font-heading);
 }
 
@@ -983,4 +988,52 @@ footer,
 
 .hc-status-select:focus {
     border-color: #3b82f6;
+}
+
+.alert {
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin: 15px 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid transparent;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.alert-success {
+    background-color: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    border-left: 6px solid #10b981;
+    color: #065f46;
+}
+
+.alert-success::before {
+    content: "\f058";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 1.25rem;
+    color: #10b981;
+    flex-shrink: 0;
+}
+
+.alert-danger {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-left: 6px solid #ef4444;
+    color: #991b1b;
+}
+
+.alert-danger::before {
+    content: "\f06a";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 1.25rem;
+    color: #ef4444;
+    flex-shrink: 0;
 }

@@ -1,8 +1,3 @@
-/**
- * registration-wizard.js
- * Handles the multi-step registration form logic.
- */
-
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('form');
     const steps = Array.from(document.querySelectorAll('.form-step'));
@@ -40,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 item.classList.add('active');
             } else if (index < n) {
                 item.classList.add('completed');
-                // Change icon to checkmark if needed, though we use numbers/circles
+                
             }
         });
     }
@@ -54,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         inputs.forEach(input => {
             if (!input.value.trim()) {
                 isValid = false;
-                input.classList.add('is-invalid'); // Add an error class if you have one
+                input.classList.add('is-invalid'); 
                 
                 // Show a small error text if it doesn't exist
                 let errorMsg = input.parentElement.querySelector('.field-error-msg');

@@ -3,19 +3,18 @@
    ============================================= */
 
 .pricing-main {
-    height: calc(100vh - 70px);
-    overflow: hidden;
+    min-height: calc(100vh - 70px);
     background-color: var(--slate-50);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    padding-bottom: 3rem;
 }
 
 .container {
     max-width: 1600px;
     margin: 0 auto;
     padding: 0 30px;
-    height: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -213,9 +212,11 @@
 /* =========================================
    RESPONSIVE
    ========================================= */
-@media (max-width: 1200px) {
+@media (max-width: 1350px) {
     .pricing-layout-wrapper {
+        display: grid;
         grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
     }
     
     .why-join-side {
@@ -232,11 +233,17 @@
         grid-column: span 2;
         grid-row: 2;
     }
+
+    .info-side-card {
+        max-width: none;
+    }
 }
 
 @media (max-width: 768px) {
     .pricing-layout-wrapper {
+        display: grid;
         grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
     
     .why-join-side, .eligibility-side, .pricing-grid {
@@ -244,11 +251,15 @@
         grid-row: auto;
     }
     
+    .pricing-grid {
+        grid-template-columns: 1fr;
+    }
+    
     .pricing-hero-strip {
-        padding: 4rem 1.5rem;
+        padding: 2.5rem 1.5rem;
     }
     
     .pricing-card {
-        padding: 2.5rem 1.5rem;
+        padding: 2rem 1.5rem;
     }
 }
